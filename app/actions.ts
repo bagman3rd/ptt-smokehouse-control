@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
+import { ensureDefaultData } from '@/lib/bootstrap';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid service date');
@@ -18,12 +19,26 @@ function numberField(formData: FormData, key: string, fallback = 0, min = 0, max
 }
 
 export async function createCookPlan(formData: FormData) {
-  const serviceDateStr = String(formData.get('serviceDate'));
-  const scenarioId = String(formData.get('scenarioId'));
+  await ensureDefaultData(prisma);
+
+  const serviceDateStr = String(formData.get('serviceDate') || '');
+  let scenarioId = String(formData.get('scenarioId') || '');
   const eventMultiplier = numberField(formData, 'eventMultiplier', 1, 0.5, 5);
   const serviceDate = toDateOnly(serviceDateStr);
-  const scenario = await prisma.forecastScenario.findUniqueOrThrow({ where: { id: scenarioId } });
+
+  let scenario = scenarioId
+    ? await prisma.forecastScenario.findUnique({ where: { id: scenarioId } })
+    : null;
+
+  if (!scenario) {
+    scenario = await prisma.forecastScenario.findFirst({ orderBy: { annualSales: 'asc' } });
+    if (!scenario) throw new Error('No forecast scenarios exist. Open Settings or run seed data.');
+    scenarioId = scenario.id;
+  }
+
   const proteins = await prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
+  if (proteins.length === 0) throw new Error('No active proteins exist. Open Settings or run seed data.');
+
   const day = await prisma.dayMultiplier.findUnique({ where: { dayOfWeek: serviceDate.getUTCDay() } });
   const month = await prisma.monthMultiplier.findUnique({ where: { month: serviceDate.getUTCMonth() + 1 } });
   const logsCount = await prisma.endOfDayLog.count();
@@ -36,59 +51,40 @@ export async function createCookPlan(formData: FormData) {
     include: { proteinLogs: true }
   });
 
-  await prisma.cookPlan.upsert({
-    where: { serviceDate },
-    update: {
-      scenarioId,
-      forecastSales,
-      forecastBbqSales,
-      confidence: confidenceForHistory(logsCount),
-      status: 'DRAFT',
-      items: {
-        deleteMany: {},
-        create: proteins.map((protein) => {
-          const prior = lastLog?.proteinLogs.find((log) => log.proteinId === protein.id);
-          const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
-          const result = forecastProteinLoad({
-            protein,
-            scenario,
-            forecastBbqSales,
-            usableLeftoverLb
-          });
-          return {
-            proteinId: protein.id,
-            cookedLbNeeded: result.cookedLbNeeded,
-            usableLeftoverLb,
-            safetyFactorPct: scenario.safetyFactorPct,
-            rawLbNeeded: result.rawLbNeeded,
-            recommendedCookUnits: result.recommendedCookUnits
-          };
-        })
-      }
-    },
-    create: {
-      serviceDate,
-      scenarioId,
-      forecastSales,
-      forecastBbqSales,
-      confidence: confidenceForHistory(logsCount),
-      items: {
-        create: proteins.map((protein) => {
-          const prior = lastLog?.proteinLogs.find((log) => log.proteinId === protein.id);
-          const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
-          const result = forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftoverLb });
-          return {
-            proteinId: protein.id,
-            cookedLbNeeded: result.cookedLbNeeded,
-            usableLeftoverLb,
-            safetyFactorPct: scenario.safetyFactorPct,
-            rawLbNeeded: result.rawLbNeeded,
-            recommendedCookUnits: result.recommendedCookUnits
-          };
-        })
-      }
-    }
+  const items = proteins.map((protein) => {
+    const prior = lastLog?.proteinLogs.find((log) => log.proteinId === protein.id);
+    const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
+    const result = forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftoverLb });
+    return {
+      proteinId: protein.id,
+      cookedLbNeeded: result.cookedLbNeeded,
+      usableLeftoverLb,
+      safetyFactorPct: scenario.safetyFactorPct,
+      rawLbNeeded: result.rawLbNeeded,
+      recommendedCookUnits: result.recommendedCookUnits,
+      approvedCookUnits: null,
+      overrideReason: null
+    };
   });
+
+  await prisma.$transaction(async (tx) => {
+    // Regeneration should be idempotent. Delete/recreate avoids nested upsert edge cases
+    // and makes repeated Generate Plan clicks reliable for the same service date.
+    await tx.cookPlan.deleteMany({ where: { serviceDate } });
+    await tx.cookPlan.create({
+      data: {
+        serviceDate,
+        scenarioId,
+        forecastSales,
+        forecastBbqSales,
+        confidence: confidenceForHistory(logsCount),
+        status: 'DRAFT',
+        notes: `Generated with event multiplier ${eventMultiplier}`,
+        items: { create: items }
+      }
+    });
+  });
+
   revalidatePath('/cook-plan');
   revalidatePath('/dashboard');
   redirect('/cook-plan');

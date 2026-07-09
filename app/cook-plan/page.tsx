@@ -2,6 +2,7 @@ import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { approveCookPlan, createCookPlan } from '@/app/actions';
+import { SubmitButton } from '@/components/SubmitButton';
 
 function today() { return new Date().toISOString().slice(0,10); }
 function money(n: number) { return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }); }
@@ -37,7 +38,7 @@ export default async function CookPlanPage() {
           <label className="label">Event Multiplier</label>
           <input className="field mt-1" name="eventMultiplier" type="number" step="0.05" min="0.5" defaultValue="1" required />
         </div>
-        <div className="flex items-end"><button className="btn-primary w-full">Generate Plan</button></div>
+        <div className="flex items-end"><SubmitButton pendingText="Generating...">Generate Plan</SubmitButton></div>
       </form>
     </section>
 
@@ -66,7 +67,7 @@ export default async function CookPlanPage() {
             </div>
           </div>
         </div>)}
-        <button className="btn-primary w-full md:w-auto">Approve Cook Plan</button>
+        <button className="btn-primary w-full md:w-auto" type="submit">Approve Cook Plan</button>
       </form>}
     </section>
   </Shell>;
