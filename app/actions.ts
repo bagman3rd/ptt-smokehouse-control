@@ -6,13 +6,21 @@ import { prisma } from '@/lib/prisma';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
 
 function toDateOnly(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid service date');
   return new Date(`${value}T00:00:00.000Z`);
+}
+
+function numberField(formData: FormData, key: string, fallback = 0, min = 0, max = Number.MAX_SAFE_INTEGER) {
+  const raw = formData.get(key);
+  const n = raw === null || raw === '' ? fallback : Number(raw);
+  if (!Number.isFinite(n)) return fallback;
+  return Math.min(max, Math.max(min, n));
 }
 
 export async function createCookPlan(formData: FormData) {
   const serviceDateStr = String(formData.get('serviceDate'));
   const scenarioId = String(formData.get('scenarioId'));
-  const eventMultiplier = Number(formData.get('eventMultiplier') || 1);
+  const eventMultiplier = numberField(formData, 'eventMultiplier', 1, 0.5, 5);
   const serviceDate = toDateOnly(serviceDateStr);
   const scenario = await prisma.forecastScenario.findUniqueOrThrow({ where: { id: scenarioId } });
   const proteins = await prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
@@ -90,7 +98,7 @@ export async function approveCookPlan(formData: FormData) {
   const cookPlanId = String(formData.get('cookPlanId'));
   const itemIds = formData.getAll('itemId').map(String);
   for (const itemId of itemIds) {
-    const approvedCookUnits = Number(formData.get(`approved-${itemId}`) || 0);
+    const approvedCookUnits = numberField(formData, `approved-${itemId}`);
     const overrideReason = String(formData.get(`reason-${itemId}`) || '');
     await prisma.cookPlanItem.update({ where: { id: itemId }, data: { approvedCookUnits, overrideReason } });
   }
@@ -101,8 +109,8 @@ export async function approveCookPlan(formData: FormData) {
 
 export async function saveEndOfDayLog(formData: FormData) {
   const serviceDate = toDateOnly(String(formData.get('serviceDate')));
-  const totalSales = Number(formData.get('totalSales') || 0);
-  const bbqSales = Number(formData.get('bbqSales') || 0);
+  const totalSales = numberField(formData, 'totalSales');
+  const bbqSales = numberField(formData, 'bbqSales');
   const notes = String(formData.get('notes') || '');
   const proteins = await prisma.protein.findMany({ where: { active: true } });
   await prisma.endOfDayLog.upsert({
@@ -115,10 +123,10 @@ export async function saveEndOfDayLog(formData: FormData) {
         deleteMany: {},
         create: proteins.map((protein) => ({
           proteinId: protein.id,
-          cookedUnits: Number(formData.get(`cookedUnits-${protein.id}`) || 0),
-          soldCookedLb: Number(formData.get(`soldCookedLb-${protein.id}`) || 0),
-          usableLeftoverLb: Number(formData.get(`usableLeftoverLb-${protein.id}`) || 0),
-          wasteLb: Number(formData.get(`wasteLb-${protein.id}`) || 0),
+          cookedUnits: numberField(formData, `cookedUnits-${protein.id}`),
+          soldCookedLb: numberField(formData, `soldCookedLb-${protein.id}`),
+          usableLeftoverLb: numberField(formData, `usableLeftoverLb-${protein.id}`),
+          wasteLb: numberField(formData, `wasteLb-${protein.id}`),
           eightySixed: formData.get(`eightySixed-${protein.id}`) === 'on',
           wasteReason: String(formData.get(`wasteReason-${protein.id}`) || '')
         }))
@@ -132,10 +140,10 @@ export async function saveEndOfDayLog(formData: FormData) {
       proteinLogs: {
         create: proteins.map((protein) => ({
           proteinId: protein.id,
-          cookedUnits: Number(formData.get(`cookedUnits-${protein.id}`) || 0),
-          soldCookedLb: Number(formData.get(`soldCookedLb-${protein.id}`) || 0),
-          usableLeftoverLb: Number(formData.get(`usableLeftoverLb-${protein.id}`) || 0),
-          wasteLb: Number(formData.get(`wasteLb-${protein.id}`) || 0),
+          cookedUnits: numberField(formData, `cookedUnits-${protein.id}`),
+          soldCookedLb: numberField(formData, `soldCookedLb-${protein.id}`),
+          usableLeftoverLb: numberField(formData, `usableLeftoverLb-${protein.id}`),
+          wasteLb: numberField(formData, `wasteLb-${protein.id}`),
           eightySixed: formData.get(`eightySixed-${protein.id}`) === 'on',
           wasteReason: String(formData.get(`wasteReason-${protein.id}`) || '')
         }))
@@ -152,14 +160,14 @@ export async function updateScenario(formData: FormData) {
   await prisma.forecastScenario.update({
     where: { id },
     data: {
-      annualSales: Number(formData.get('annualSales')),
-      bbqSalesPercent: Number(formData.get('bbqSalesPercent')),
-      safetyFactorPct: Number(formData.get('safetyFactorPct')),
-      brisketMixPct: Number(formData.get('brisketMixPct')),
-      porkMixPct: Number(formData.get('porkMixPct')),
-      ribsMixPct: Number(formData.get('ribsMixPct')),
-      chickenMixPct: Number(formData.get('chickenMixPct')),
-      averagePricePerLbCooked: Number(formData.get('averagePricePerLbCooked'))
+      annualSales: numberField(formData, 'annualSales', 6000000, 1),
+      bbqSalesPercent: numberField(formData, 'bbqSalesPercent', 55, 1, 100),
+      safetyFactorPct: numberField(formData, 'safetyFactorPct', 8, 0, 50),
+      brisketMixPct: numberField(formData, 'brisketMixPct', 30, 0, 100),
+      porkMixPct: numberField(formData, 'porkMixPct', 40, 0, 100),
+      ribsMixPct: numberField(formData, 'ribsMixPct', 15, 0, 100),
+      chickenMixPct: numberField(formData, 'chickenMixPct', 15, 0, 100),
+      averagePricePerLbCooked: numberField(formData, 'averagePricePerLbCooked', 31, 1)
     }
   });
   revalidatePath('/settings');
@@ -170,15 +178,34 @@ export async function updateProtein(formData: FormData) {
   await prisma.protein.update({
     where: { id },
     data: {
-      rawWeightEachLb: Number(formData.get('rawWeightEachLb')),
-      cookedYieldPercent: Number(formData.get('cookedYieldPercent')),
-      sandwichOz: Number(formData.get('sandwichOz')),
-      plateOz: Number(formData.get('plateOz')),
-      minCookUnits: Number(formData.get('minCookUnits')),
-      maxCookUnits: Number(formData.get('maxCookUnits')),
-      maxReuseHours: Number(formData.get('maxReuseHours')),
+      rawWeightEachLb: numberField(formData, 'rawWeightEachLb', 1, 0.1),
+      cookedYieldPercent: numberField(formData, 'cookedYieldPercent', 50, 1, 100),
+      sandwichOz: numberField(formData, 'sandwichOz', 5, 0),
+      plateOz: numberField(formData, 'plateOz', 7, 0),
+      minCookUnits: numberField(formData, 'minCookUnits', 0, 0),
+      maxCookUnits: numberField(formData, 'maxCookUnits', 999, 0),
+      maxReuseHours: numberField(formData, 'maxReuseHours', 24, 0, 168),
       reusableLeftover: formData.get('reusableLeftover') === 'on'
     }
+  });
+  revalidatePath('/settings');
+}
+
+
+export async function updateDayMultiplier(formData: FormData) {
+  const id = String(formData.get('id'));
+  await prisma.dayMultiplier.update({
+    where: { id },
+    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3) }
+  });
+  revalidatePath('/settings');
+}
+
+export async function updateMonthMultiplier(formData: FormData) {
+  const id = String(formData.get('id'));
+  await prisma.monthMultiplier.update({
+    where: { id },
+    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3) }
   });
   revalidatePath('/settings');
 }

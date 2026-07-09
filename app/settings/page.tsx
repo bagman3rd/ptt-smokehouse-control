@@ -1,6 +1,6 @@
 import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
-import { updateProtein, updateScenario } from '@/app/actions';
+import { updateDayMultiplier, updateMonthMultiplier, updateProtein, updateScenario } from '@/app/actions';
 
 export default async function SettingsPage() {
   const [proteins, scenarios, days, months] = await Promise.all([
@@ -61,13 +61,13 @@ export default async function SettingsPage() {
     <section className="mt-6 grid gap-4 lg:grid-cols-2">
       <div className="card p-5">
         <h2 className="text-xl font-black">Day Multipliers</h2>
-        <p className="mt-2 text-sm text-slate-600">Seed values only. Edit directly in DB/admin later or extend settings UI.</p>
-        <div className="mt-3 space-y-2">{days.map(d => <div key={d.id} className="flex justify-between rounded-xl border border-slate-200 p-3"><span className="font-bold">{d.label}</span><span>{d.multiplier}</span></div>)}</div>
+        <p className="mt-2 text-sm text-slate-600">Editable launch assumptions for day-of-week demand.</p>
+        <div className="mt-3 space-y-2">{days.map(d => <form key={d.id} action={updateDayMultiplier} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3"><input type="hidden" name="id" value={d.id} /><span className="font-bold">{d.label}</span><div className="flex items-center gap-2"><input className="field w-24" name="multiplier" type="number" min="0.1" max="3" step="0.01" defaultValue={d.multiplier} /><button className="btn-secondary">Save</button></div></form>)}</div>
       </div>
       <div className="card p-5">
         <h2 className="text-xl font-black">Month Multipliers</h2>
-        <p className="mt-2 text-sm text-slate-600">Pigeon Forge seasonality placeholders.</p>
-        <div className="mt-3 grid grid-cols-2 gap-2">{months.map(m => <div key={m.id} className="flex justify-between rounded-xl border border-slate-200 p-3"><span className="font-bold">{m.label}</span><span>{m.multiplier}</span></div>)}</div>
+        <p className="mt-2 text-sm text-slate-600">Editable Pigeon Forge seasonality placeholders.</p>
+        <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">{months.map(m => <form key={m.id} action={updateMonthMultiplier} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3"><input type="hidden" name="id" value={m.id} /><span className="font-bold">{m.label}</span><div className="flex items-center gap-2"><input className="field w-24" name="multiplier" type="number" min="0.1" max="3" step="0.01" defaultValue={m.multiplier} /><button className="btn-secondary">Save</button></div></form>)}</div>
       </div>
     </section>
   </Shell>;

@@ -2,7 +2,7 @@
 
 Private consultant dashboard for Pigeon Toed Tavern BBQ production planning.
 
-## MVP v1 Scope
+## Build 1.2 Scope
 
 - Password login scaffolding
 - Daily cook-plan forecast
@@ -15,6 +15,10 @@ Private consultant dashboard for Pigeon Toed Tavern BBQ production planning.
 - Waste, leftover, sold pounds, and 86 tracking
 - Dashboard and 30-day report views
 - Render + GitHub deployment files
+- Build 1.2 Render logout redirect fix
+- Build 1.2 editable day-of-week and month multipliers
+- Build 1.2 numeric input validation/clamping
+- Build 1.2 test report: `TEST_REPORT_BUILD_1_2.md`
 
 ## Operating Model
 
@@ -101,6 +105,10 @@ npm run prisma:seed
 8. Subtract usable leftovers from prior log
 9. Apply safety factor
 10. Convert cooked pounds to raw pounds and recommended cook units
+
+## Build 1.2 Test Report
+
+See `TEST_REPORT_BUILD_1_2.md` for use-case testing, button/dropdown review, and recommendations.
 
 ## Next Release Ideas
 
