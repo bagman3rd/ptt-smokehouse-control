@@ -9,12 +9,12 @@ export async function ensureDefaultData(prisma: PrismaClient) {
     prisma.monthMultiplier.count()
   ]);
 
-  if (proteinCount === 0) {
+  {
     const proteins = [
       { name: 'Brisket', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 13, cookedYieldPercent: 50, sandwichOz: 5, plateOz: 7, minCookUnits: 1, maxCookUnits: 88, reusableLeftover: true, maxReuseHours: 24 },
-      { name: 'Pulled Pork', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 9, cookedYieldPercent: 50, sandwichOz: 5, plateOz: 7, minCookUnits: 2, maxCookUnits: 84, reusableLeftover: true, maxReuseHours: 36 },
-      { name: 'Ribs', inputUnit: ProteinUnit.RACK, rawWeightEachLb: 3.2, cookedYieldPercent: 72, sandwichOz: 0, plateOz: 0, minCookUnits: 6, maxCookUnits: 240, reusableLeftover: true, maxReuseHours: 24 },
-      { name: 'Pulled Chicken', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 2.75, cookedYieldPercent: 58, sandwichOz: 5, plateOz: 7, minCookUnits: 8, maxCookUnits: 220, reusableLeftover: true, maxReuseHours: 36 }
+      { name: 'Pulled Pork', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 9, cookedYieldPercent: 55, sandwichOz: 5, plateOz: 7, minCookUnits: 2, maxCookUnits: 84, reusableLeftover: true, maxReuseHours: 36 },
+      { name: 'Ribs', inputUnit: ProteinUnit.RACK, rawWeightEachLb: 3.2, cookedYieldPercent: 90, sandwichOz: 0, plateOz: 0, minCookUnits: 6, maxCookUnits: 240, reusableLeftover: true, maxReuseHours: 24 },
+      { name: 'Pulled Chicken', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 2.75, cookedYieldPercent: 75, sandwichOz: 5, plateOz: 7, minCookUnits: 8, maxCookUnits: 220, reusableLeftover: true, maxReuseHours: 36 }
     ];
     for (const p of proteins) await prisma.protein.upsert({ where: { name: p.name }, update: p, create: p });
   }
@@ -55,9 +55,9 @@ export async function ensureDefaultData(prisma: PrismaClient) {
   ];
   for (const s of scenarios) await prisma.forecastScenario.upsert({ where: { name: s.name }, update: s, create: s });
 
-  if (dayCount === 0) {
+  {
     const days = [
-      [0, 'Sunday', 1.04], [1, 'Monday', 0.78], [2, 'Tuesday', 0.82], [3, 'Wednesday', 0.88], [4, 'Thursday', 0.96], [5, 'Friday', 1.17], [6, 'Saturday', 1.35]
+      [0, 'Sunday', 1.33], [1, 'Monday', 0.63], [2, 'Tuesday', 0.56], [3, 'Wednesday', 0.70], [4, 'Thursday', 0.84], [5, 'Friday', 1.19], [6, 'Saturday', 1.75]
     ] as const;
     for (const [dayOfWeek, label, multiplier] of days) await prisma.dayMultiplier.upsert({ where: { dayOfWeek }, update: { label, multiplier }, create: { dayOfWeek, label, multiplier } });
   }

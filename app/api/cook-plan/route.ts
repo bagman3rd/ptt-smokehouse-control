@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
+import { getDayPatternByKey, getDayPatternMultiplier, inferDayPatternKey } from '@/lib/dayProfiles';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid service date');
@@ -22,6 +23,7 @@ export async function POST(request: Request) {
     const serviceDateStr = String(body.serviceDate || '');
     let scenarioId = String(body.scenarioId || '');
     const eventMultiplier = numberValue(body.eventMultiplier, 1, 0.5, 5);
+    const requestedDayPatternKey = body.dayPatternKey ? String(body.dayPatternKey) : '';
     const serviceDate = toDateOnly(serviceDateStr);
 
     let scenario = scenarioId
@@ -37,8 +39,7 @@ export async function POST(request: Request) {
     const proteins = await prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
     if (proteins.length === 0) throw new Error('No active proteins exist. Seed data was not created.');
 
-    const [day, month, logsCount, lastLog] = await Promise.all([
-      prisma.dayMultiplier.findUnique({ where: { dayOfWeek: serviceDate.getUTCDay() } }),
+    const [month, logsCount, lastLog] = await Promise.all([
       prisma.monthMultiplier.findUnique({ where: { month: serviceDate.getUTCMonth() + 1 } }),
       prisma.endOfDayLog.count(),
       prisma.endOfDayLog.findFirst({
@@ -48,9 +49,13 @@ export async function POST(request: Request) {
       })
     ]);
 
+    const dayPatternKey = requestedDayPatternKey || inferDayPatternKey(scenario.name);
+    const dayPattern = getDayPatternByKey(dayPatternKey);
+    const dayMultiplier = getDayPatternMultiplier(dayPattern.key, serviceDate.getUTCDay());
+
     const forecastSales = dailySalesForecast(
       scenario.annualSales,
-      day?.multiplier ?? 1,
+      dayMultiplier,
       month?.multiplier ?? 1,
       eventMultiplier
     );
@@ -82,7 +87,7 @@ export async function POST(request: Request) {
           forecastBbqSales,
           confidence: confidenceForHistory(logsCount),
           status: 'DRAFT',
-          notes: `Generated with event multiplier ${eventMultiplier}`,
+          notes: `Generated with ${dayPattern.name} day pattern · event multiplier ${eventMultiplier}`,
           items: { create: items }
         },
         include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }
@@ -96,6 +101,8 @@ export async function POST(request: Request) {
       serviceDate: serviceDateStr,
       scenarioName: plan.scenario.name,
       eventMultiplier,
+      dayPatternName: dayPattern.name,
+      dayPatternKey: dayPattern.key,
       forecastSales,
       forecastBbqSales,
       items: plan.items.map((item) => ({

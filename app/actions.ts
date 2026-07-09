@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
+import { getDayPatternByKey, getDayPatternMultiplier, inferDayPatternKey } from '@/lib/dayProfiles';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid service date');
@@ -24,6 +25,7 @@ export async function createCookPlan(formData: FormData) {
   const serviceDateStr = String(formData.get('serviceDate') || '');
   let scenarioId = String(formData.get('scenarioId') || '');
   const eventMultiplier = numberField(formData, 'eventMultiplier', 1, 0.5, 5);
+  const requestedDayPatternKey = String(formData.get('dayPatternKey') || '');
   const serviceDate = toDateOnly(serviceDateStr);
 
   let scenario = scenarioId
@@ -39,10 +41,12 @@ export async function createCookPlan(formData: FormData) {
   const proteins = await prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
   if (proteins.length === 0) throw new Error('No active proteins exist. Open Settings or run seed data.');
 
-  const day = await prisma.dayMultiplier.findUnique({ where: { dayOfWeek: serviceDate.getUTCDay() } });
   const month = await prisma.monthMultiplier.findUnique({ where: { month: serviceDate.getUTCMonth() + 1 } });
   const logsCount = await prisma.endOfDayLog.count();
-  const forecastSales = dailySalesForecast(scenario.annualSales, day?.multiplier ?? 1, month?.multiplier ?? 1, eventMultiplier);
+  const dayPatternKey = requestedDayPatternKey || inferDayPatternKey(scenario.name);
+  const dayPattern = getDayPatternByKey(dayPatternKey);
+  const dayMultiplier = getDayPatternMultiplier(dayPattern.key, serviceDate.getUTCDay());
+  const forecastSales = dailySalesForecast(scenario.annualSales, dayMultiplier, month?.multiplier ?? 1, eventMultiplier);
   const forecastBbqSales = Math.round(forecastSales * (scenario.bbqSalesPercent / 100));
 
   const lastLog = await prisma.endOfDayLog.findFirst({
@@ -79,7 +83,7 @@ export async function createCookPlan(formData: FormData) {
         forecastBbqSales,
         confidence: confidenceForHistory(logsCount),
         status: 'DRAFT',
-        notes: `Generated with event multiplier ${eventMultiplier}`,
+        notes: `Generated with ${dayPattern.name} day pattern · event multiplier ${eventMultiplier}`,
         items: { create: items }
       }
     });

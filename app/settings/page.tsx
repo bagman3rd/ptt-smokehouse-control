@@ -2,9 +2,11 @@ import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { updateDayMultiplier, updateMonthMultiplier, updateProtein, updateScenario } from '@/app/actions';
+import { dayPatternRows } from '@/lib/dayProfiles';
 
 export default async function SettingsPage() {
   await ensureDefaultData(prisma);
+  const dayProfiles = dayPatternRows();
   const [proteins, scenarios, days, months] = await Promise.all([
     prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
     prisma.forecastScenario.findMany({ where: activeScenarioWhere(), orderBy: { annualSales: 'asc' } }),
@@ -62,9 +64,24 @@ export default async function SettingsPage() {
 
     <section className="mt-6 grid gap-4 lg:grid-cols-2">
       <div className="card p-5">
-        <h2 className="text-xl font-black">Day Multipliers</h2>
-        <p className="mt-2 text-sm text-slate-600">Editable launch assumptions for day-of-week demand.</p>
-        <div className="mt-3 space-y-2">{days.map(d => <form key={d.id} action={updateDayMultiplier} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3"><input type="hidden" name="id" value={d.id} /><span className="font-bold">{d.label}</span><div className="flex items-center gap-2"><input className="field w-24" name="multiplier" type="number" min="0.1" max="3" step="0.01" defaultValue={d.multiplier} /><button className="btn-secondary">Save</button></div></form>)}</div>
+        <h2 className="text-xl font-black">Day Pattern Profiles</h2>
+        <p className="mt-2 text-sm text-slate-600">Cook Plan now uses selectable weekly sales patterns. Default Tourist is the global starting assumption.</p>
+        <div className="mt-4 space-y-4">
+          {dayProfiles.map(profile => <div key={profile.key} className="rounded-2xl border border-slate-200 p-4">
+            <div className="text-lg font-black">{profile.name}</div>
+            <div className="mt-3 grid grid-cols-7 gap-2 text-center text-xs md:text-sm">
+              {profile.days.map(day => <div key={day.dayOfWeek} className="rounded-xl bg-slate-50 p-2">
+                <div className="font-black">{day.label}</div>
+                <div>{day.share}%</div>
+                <div className="text-slate-500">×{day.multiplier.toFixed(2)}</div>
+              </div>)}
+            </div>
+          </div>)}
+        </div>
+        <details className="mt-4">
+          <summary className="cursor-pointer text-sm font-black text-slate-600">Legacy editable default multipliers</summary>
+          <div className="mt-3 space-y-2">{days.map(d => <form key={d.id} action={updateDayMultiplier} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3"><input type="hidden" name="id" value={d.id} /><span className="font-bold">{d.label}</span><div className="flex items-center gap-2"><input className="field w-24" name="multiplier" type="number" min="0.1" max="3" step="0.01" defaultValue={d.multiplier} /><button className="btn-secondary">Save</button></div></form>)}</div>
+        </details>
       </div>
       <div className="card p-5">
         <h2 className="text-xl font-black">Month Multipliers</h2>

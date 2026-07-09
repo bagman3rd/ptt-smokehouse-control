@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { dayPatternProfiles, inferDayPatternKey } from '@/lib/dayProfiles';
 
 type Scenario = {
   id: string;
@@ -22,12 +23,19 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
   const [serviceDate, setServiceDate] = useState(today());
   const [scenarioId, setScenarioId] = useState(scenarios[0]?.id ?? '');
   const [eventMultiplier, setEventMultiplier] = useState('1');
+  const [dayPatternKey, setDayPatternKey] = useState('default-tourist');
   const [isGenerating, setIsGenerating] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [lastResult, setLastResult] = useState<any>(null);
 
   const selectedScenario = useMemo(() => scenarios.find((scenario) => scenario.id === scenarioId), [scenarios, scenarioId]);
+  const selectedDayPattern = useMemo(() => dayPatternProfiles.find((profile) => profile.key === dayPatternKey) ?? dayPatternProfiles[0], [dayPatternKey]);
+
+  useEffect(() => {
+    if (!selectedScenario) return;
+    setDayPatternKey(inferDayPatternKey(selectedScenario.name));
+  }, [selectedScenario?.id]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -43,14 +51,14 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
         cache: 'no-store',
-        body: JSON.stringify({ serviceDate, scenarioId, eventMultiplier })
+        body: JSON.stringify({ serviceDate, scenarioId, eventMultiplier, dayPatternKey })
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || data.ok === false) {
         throw new Error(data.message || `Generate failed with status ${response.status}`);
       }
       setLastResult(data);
-      setMessage(`Generated ${data.scenarioName || 'cook plan'} for ${serviceDate}. Loading updated meat numbers...`);
+      setMessage(`Generated ${data.scenarioName || 'cook plan'} using ${data.dayPatternName || selectedDayPattern.name} for ${serviceDate}. Loading updated meat numbers...`);
       // Force a full navigation to the specific newly-created plan. router.refresh() alone can leave
       // stale server-component output visible on Render/browser caches.
       window.location.assign(data.redirectUrl || `/cook-plan?generatedAt=${Date.now()}`);
@@ -63,7 +71,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4 grid gap-4 md:grid-cols-4">
+    <form onSubmit={handleSubmit} className="mt-4 grid gap-4 md:grid-cols-5">
       <div>
         <label className="label">Service Date</label>
         <input className="field mt-1" value={serviceDate} onChange={(event) => setServiceDate(event.target.value)} type="date" required />
@@ -74,6 +82,14 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
           {scenarios.length === 0 ? <option value="">No scenarios found — open Settings or run seed</option> : scenarios.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
         {selectedScenario ? <div className="mt-1 text-xs text-slate-500">{formatMoney(selectedScenario.annualSales)} annual · {selectedScenario.bbqSalesPercent}% BBQ sales</div> : null}
+      </div>
+
+      <div>
+        <label className="label">Day Pattern</label>
+        <select className="field mt-1" value={dayPatternKey} onChange={(event) => setDayPatternKey(event.target.value)} required>
+          {dayPatternProfiles.map((profile) => <option key={profile.key} value={profile.key}>{profile.name}</option>)}
+        </select>
+        <div className="mt-1 text-xs text-slate-500">Sat {selectedDayPattern.shares[6]}% · Sun {selectedDayPattern.shares[0]}%</div>
       </div>
       <div>
         <label className="label">Event Multiplier</label>

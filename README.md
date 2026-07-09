@@ -1,22 +1,50 @@
-# PTT Smokehouse Control — Build 1.3.3
+# PTT Smokehouse Control — Build 1.3.4
 
-Build 1.3.3 updates the monthly seasonality multipliers using the cleaned 2025 Pigeon Forge gross revenue curve supplied for planning. It keeps the Build 1.3.2 scenario set: Base $6M, Aggressive $8M, and ROD RUN at a $12M annual-sales basis.
+Build 1.3.4 updates the BBQ production assumptions per Archer's latest planning model.
 
-## Scenario changes
+## Changes in Build 1.3.4
 
-- Removed **Conservative $6M** from active planning screens.
-- Kept **Base $6M**.
-- Kept **Aggressive $8M**.
-- Renamed **Event Day** to **ROD RUN**.
-- Set **ROD RUN** annual sales basis to **$12,000,000**.
+### Protein yield defaults
 
-Existing databases are normalized automatically by `ensureDefaultData()` and the seed script:
+These are now normalized automatically on seed/bootstrap so existing Render databases update without manual editing:
 
-- `Conservative $6M` is renamed to `Legacy Conservative $6M` and hidden from active planning screens.
-- `Event Day` is renamed to `ROD RUN` when possible.
-- If both `Event Day` and `ROD RUN` already exist, the old `Event Day` row is renamed to `Legacy Event Day` and hidden.
+| Protein | Cooked Yield % |
+|---|---:|
+| Brisket | 50% |
+| Pulled Pork | 55% |
+| Ribs | 90% |
+| Pulled Chicken | 75% |
 
-## Render build command
+Pulled Chicken is set to 75% because the launch assumption is skinless boneless breast.
+
+### Weekly day-of-week sales pattern
+
+Default Tourist is now the default app assumption:
+
+| Day | % of Weekly Sales | Multiplier |
+|---|---:|---:|
+| Monday | 9% | 0.63 |
+| Tuesday | 8% | 0.56 |
+| Wednesday | 10% | 0.70 |
+| Thursday | 12% | 0.84 |
+| Friday | 17% | 1.19 |
+| Saturday | 25% | 1.75 |
+| Sunday | 19% | 1.33 |
+
+### Day Pattern profiles added to Cook Plan
+
+The Cook Plan screen now includes a **Day Pattern** dropdown:
+
+| Profile | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Default Tourist | 9% | 8% | 10% | 12% | 17% | 25% | 19% |
+| Summer | 10% | 10% | 12% | 13% | 16% | 22% | 17% |
+| Shoulder Season | 8% | 7% | 9% | 11% | 18% | 28% | 19% |
+| Rod Run / Event | 5% | 5% | 7% | 13% | 24% | 32% | 14% |
+
+ROD RUN scenario auto-selects the Rod Run / Event pattern. Other scenarios default to Default Tourist, but the dropdown can be changed manually before generating.
+
+## Render deploy settings
 
 Use this exact Render Build Command:
 
@@ -24,13 +52,13 @@ Use this exact Render Build Command:
 corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
 ```
 
-## Render start command
+Start Command:
 
 ```bash
 npm run start
 ```
 
-## Required Render environment variables
+Required environment variables:
 
 ```text
 DATABASE_URL
@@ -47,7 +75,7 @@ NODE_VERSION=20.18.1
 NEXT_PUBLIC_APP_NAME=PTT Smokehouse Control
 ```
 
-Remove these if present:
+Do not use these old variables:
 
 ```text
 NEXTAUTH_SECRET
@@ -57,43 +85,19 @@ PORT
 
 ## Deploy with GitHub Desktop
 
-1. Unzip the flat ZIP.
-2. Copy all files from the ZIP root.
-3. Paste into the existing `ptt-smokehouse-control` repo folder.
-4. Choose **Replace files in destination**.
-5. Commit: `Build 1.3.3 update Pigeon Forge 2025 monthly revenue curve`.
+1. Unzip this flat ZIP.
+2. Copy everything from the ZIP root.
+3. Paste into your existing `ptt-smokehouse-control` repo folder.
+4. Replace files.
+5. Commit: `Build 1.3.4 update yields and day patterns`.
 6. Push origin.
-7. Render: **Manual Deploy → Clear build cache & deploy**.
+7. Render → Manual Deploy → Clear build cache & deploy.
 
-## Test after deploy
+## Post-deploy test
 
-1. Open Cook Plan.
-2. Confirm Scenario dropdown only shows:
-   - Base $6M
-   - Aggressive $8M
-   - ROD RUN
-3. Confirm **Conservative $6M** is gone.
-4. Confirm **Event Day** is gone.
-5. Generate ROD RUN and confirm the annual sales note shows **$12,000,000**.
-6. Generate Base $6M, Aggressive $8M, and ROD RUN for the same date and confirm meat numbers change.
-
-## Build 1.3.3 monthly seasonality curve
-
-The app now uses these month multipliers. They are calculated as:
-
-`month multiplier = monthly share of annual Pigeon Forge revenue / 8.333%`
-
-| Month | 2025 Pigeon Forge revenue share | App multiplier |
-|---|---:|---:|
-| January | 4.9% | 0.584 |
-| February | 4.6% | 0.555 |
-| March | 6.7% | 0.808 |
-| April | 7.8% | 0.935 |
-| May | 8.0% | 0.954 |
-| June | 11.0% | 1.320 |
-| July | 12.5% | 1.506 |
-| August | 9.7% | 1.163 |
-| September | 7.4% | 0.890 |
-| October | 10.3% | 1.232 |
-| November | 6.8% | 0.821 |
-| December | 10.3% | 1.232 |
+1. Open Settings and confirm Pulled Chicken yield is 75%, Pulled Pork 55%, and Ribs 90%.
+2. Open Cook Plan.
+3. Generate Base $6M with Default Tourist.
+4. Generate Base $6M with Summer.
+5. Generate Base $6M with Shoulder Season.
+6. Generate ROD RUN and confirm Rod Run / Event is selected and the Saturday number is heavier.
