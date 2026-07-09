@@ -1,8 +1,10 @@
 import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
+import { ensureDefaultData } from '@/lib/bootstrap';
 import { updateDayMultiplier, updateMonthMultiplier, updateProtein, updateScenario } from '@/app/actions';
 
 export default async function SettingsPage() {
+  await ensureDefaultData(prisma);
   const [proteins, scenarios, days, months] = await Promise.all([
     prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
     prisma.forecastScenario.findMany({ orderBy: { annualSales: 'asc' } }),

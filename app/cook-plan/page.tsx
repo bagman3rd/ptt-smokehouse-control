@@ -1,5 +1,6 @@
 import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
+import { ensureDefaultData } from '@/lib/bootstrap';
 import { approveCookPlan, createCookPlan } from '@/app/actions';
 
 function today() { return new Date().toISOString().slice(0,10); }
@@ -7,6 +8,7 @@ function money(n: number) { return n.toLocaleString('en-US', { style: 'currency'
 function fmtDate(d: Date) { return d.toISOString().slice(0,10); }
 
 export default async function CookPlanPage() {
+  await ensureDefaultData(prisma);
   const [scenarios, plan] = await Promise.all([
     prisma.forecastScenario.findMany({ orderBy: { annualSales: 'asc' } }),
     prisma.cookPlan.findFirst({ orderBy: { serviceDate: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
@@ -28,7 +30,7 @@ export default async function CookPlanPage() {
         <div>
           <label className="label">Scenario</label>
           <select className="field mt-1" name="scenarioId" required>
-            {scenarios.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+            {scenarios.length === 0 ? <option value="">No scenarios found — open Settings or run seed</option> : scenarios.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
         </div>
         <div>

@@ -2,11 +2,13 @@ import Link from 'next/link';
 import { Shell } from '@/components/Shell';
 import { StatCard } from '@/components/StatCard';
 import { prisma } from '@/lib/prisma';
+import { ensureDefaultData } from '@/lib/bootstrap';
 
 function money(n: number) { return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }); }
 function fmtDate(d: Date) { return d.toISOString().slice(0,10); }
 
 export default async function DashboardPage() {
+  await ensureDefaultData(prisma);
   const [latestPlan, latestLog, scenarios, logs] = await Promise.all([
     prisma.cookPlan.findFirst({ orderBy: { serviceDate: 'desc' }, include: { items: { include: { protein: true } }, scenario: true } }),
     prisma.endOfDayLog.findFirst({ orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true } } } }),

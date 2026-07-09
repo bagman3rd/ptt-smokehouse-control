@@ -121,3 +121,15 @@ See `TEST_REPORT_BUILD_1_2.md` for use-case testing, button/dropdown review, and
 - Vendor ordering module
 - Food-cost spreadsheet import/export
 - Role-based users beyond single-password MVP
+
+## Build 1.2.1 Hotfix
+
+Fixes empty Scenario dropdowns on newly deployed databases by auto-creating default proteins, forecast scenarios, day multipliers, and month multipliers when the database has no seed data.
+
+If the Render database is already empty, open `/cook-plan`, `/dashboard`, `/settings`, or `/end-of-day` after deploying this build. The defaults will self-heal automatically.
+
+Manual option on Render Shell:
+
+```bash
+npm run prisma:seed
+```

@@ -1,11 +1,13 @@
 import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
+import { ensureDefaultData } from '@/lib/bootstrap';
 import { saveEndOfDayLog } from '@/app/actions';
 
 function today() { return new Date().toISOString().slice(0,10); }
 function fmtDate(d: Date) { return d.toISOString().slice(0,10); }
 
 export default async function EndOfDayPage() {
+  await ensureDefaultData(prisma);
   const [proteins, latestLog] = await Promise.all([
     prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
     prisma.endOfDayLog.findFirst({ orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true } } } })
