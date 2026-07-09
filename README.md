@@ -1,32 +1,30 @@
-# PTT Smokehouse Control — Build 1.2.2 Clean ZIP
+# PTT Smokehouse Control — Build 1.2.3 Clean
 
-This is a clean, Render-ready project with files at the ZIP root. Do not upload the ZIP as a nested folder inside another folder.
+Clean Render-ready build.
 
 ## Render settings
 
-Build command:
+Build Command:
 
 ```bash
-npm install --legacy-peer-deps && npx prisma generate && npx prisma migrate deploy && npm run build
+npm ci --legacy-peer-deps && npx prisma generate && npx prisma migrate deploy && npm run build
 ```
 
-Start command:
+Start Command:
 
 ```bash
 npm start
 ```
 
-Environment variable required:
+Environment variables required:
 
 ```bash
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DATABASE?schema=public
+DATABASE_URL=postgresql://...
+NODE_VERSION=20.20.2
+NEXT_TELEMETRY_DISABLED=1
 ```
 
-## Local test
+## Important
 
-```bash
-npm install --legacy-peer-deps
-npx prisma generate
-npm run build
-npm start
-```
+This ZIP includes `package-lock.json`, so use `npm ci`, not `npm install`.
+Files are at the ZIP root; do not upload a nested folder.
