@@ -7,148 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  CONSULTANT
-  OWNER
-  KM
-  PITMASTER
-  VIEWER
-}
-
-enum ScenarioType {
-  CONSERVATIVE
-  BASE
-  AGGRESSIVE
-  EVENT_DAY
-}
-
-enum ProteinUnit {
-  EACH
-  RACK
-  LB_RAW
-  LB_COOKED
-}
-
 model User {
   id        String   @id @default(cuid())
-  name      String
   email     String   @unique
-  role      Role     @default(VIEWER)
-  active    Boolean  @default(true)
+  name      String?
+  role      String   @default("admin")
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model Protein {
-  id                  String      @id @default(cuid())
-  name                String      @unique
-  inputUnit           ProteinUnit
-  rawWeightEachLb     Float       @default(0)
-  cookedYieldPercent  Float       @default(50)
-  sandwichOz          Float       @default(5)
-  plateOz             Float       @default(7)
-  minCookUnits        Float       @default(0)
-  maxCookUnits        Float       @default(999)
-  reusableLeftover    Boolean     @default(true)
-  maxReuseHours       Int         @default(24)
-  active              Boolean     @default(true)
-  createdAt           DateTime    @default(now())
-  cookPlanItems       CookPlanItem[]
-  logs                EndOfDayProteinLog[]
-}
-
-model ForecastScenario {
-  id               String       @id @default(cuid())
-  name             String       @unique
-  type             ScenarioType
-  annualSales      Float
-  bbqSalesPercent  Float        @default(55)
-  safetyFactorPct  Float        @default(8)
-  brisketMixPct    Float        @default(30)
-  porkMixPct       Float        @default(40)
-  ribsMixPct       Float        @default(15)
-  chickenMixPct    Float        @default(15)
-  averagePricePerLbCooked Float @default(31)
-  createdAt        DateTime     @default(now())
-  cookPlans        CookPlan[]
-}
-
-model DayMultiplier {
-  id          String @id @default(cuid())
-  dayOfWeek   Int    @unique
-  label       String
-  multiplier  Float  @default(1)
-}
-
-model MonthMultiplier {
-  id          String @id @default(cuid())
-  month       Int    @unique
-  label       String
-  multiplier  Float  @default(1)
-}
-
-model EventModifier {
-  id          String   @id @default(cuid())
-  name        String
-  startsOn    DateTime
-  endsOn      DateTime
-  multiplier  Float    @default(1.25)
-  notes       String?
-  createdAt   DateTime @default(now())
-}
-
-model CookPlan {
+model SmokehouseScenario {
   id              String   @id @default(cuid())
-  serviceDate     DateTime @unique
-  scenarioId      String
-  scenario        ForecastScenario @relation(fields: [scenarioId], references: [id])
-  forecastSales   Float
-  forecastBbqSales Float
-  confidence      String   @default("LOW")
-  status          String   @default("DRAFT")
+  name            String
+  dailySales      Int
+  meatCostPercent Float
+  laborPercent    Float
   notes           String?
-  createdBy       String   @default("Archer")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  items           CookPlanItem[]
 }
 
-model CookPlanItem {
-  id                    String   @id @default(cuid())
-  cookPlanId            String
-  cookPlan              CookPlan @relation(fields: [cookPlanId], references: [id], onDelete: Cascade)
-  proteinId             String
-  protein               Protein @relation(fields: [proteinId], references: [id])
-  cookedLbNeeded        Float
-  usableLeftoverLb      Float    @default(0)
-  safetyFactorPct       Float
-  rawLbNeeded           Float
-  recommendedCookUnits  Float
-  approvedCookUnits     Float?
-  overrideReason        String?
-  notes                 String?
-}
-
-model EndOfDayLog {
-  id             String   @id @default(cuid())
-  serviceDate    DateTime @unique
-  enteredBy       String   @default("KM")
-  totalSales      Float    @default(0)
-  bbqSales        Float    @default(0)
-  notes           String?
-  createdAt       DateTime @default(now())
-  proteinLogs     EndOfDayProteinLog[]
-}
-
-model EndOfDayProteinLog {
-  id              String   @id @default(cuid())
-  endOfDayLogId   String
-  endOfDayLog     EndOfDayLog @relation(fields: [endOfDayLogId], references: [id], onDelete: Cascade)
-  proteinId       String
-  protein         Protein @relation(fields: [proteinId], references: [id])
-  cookedUnits     Float    @default(0)
-  soldCookedLb    Float    @default(0)
-  usableLeftoverLb Float   @default(0)
-  wasteLb         Float    @default(0)
-  eightySixed     Boolean  @default(false)
-  wasteReason     String?
+model ProductionCheck {
+  id        String   @id @default(cuid())
+  area      String
+  item      String
+  status    String   @default("open")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
