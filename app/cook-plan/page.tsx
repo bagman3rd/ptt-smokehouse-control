@@ -1,10 +1,9 @@
 import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
-import { approveCookPlan, createCookPlan } from '@/app/actions';
-import { SubmitButton } from '@/components/SubmitButton';
+import { approveCookPlan } from '@/app/actions';
+import { CreateCookPlanForm } from '@/app/cook-plan/CreateCookPlanForm';
 
-function today() { return new Date().toISOString().slice(0,10); }
 function money(n: number) { return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }); }
 function fmtDate(d: Date) { return d.toISOString().slice(0,10); }
 
@@ -23,23 +22,7 @@ export default async function CookPlanPage() {
 
     <section className="card p-5">
       <h2 className="text-xl font-black">Create Forecast</h2>
-      <form action={createCookPlan} className="mt-4 grid gap-4 md:grid-cols-4">
-        <div>
-          <label className="label">Service Date</label>
-          <input className="field mt-1" name="serviceDate" type="date" defaultValue={today()} required />
-        </div>
-        <div>
-          <label className="label">Scenario</label>
-          <select className="field mt-1" name="scenarioId" required>
-            {scenarios.length === 0 ? <option value="">No scenarios found — open Settings or run seed</option> : scenarios.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className="label">Event Multiplier</label>
-          <input className="field mt-1" name="eventMultiplier" type="number" step="0.05" min="0.5" defaultValue="1" required />
-        </div>
-        <div className="flex items-end"><SubmitButton pendingText="Generating...">Generate Plan</SubmitButton></div>
-      </form>
+      <CreateCookPlanForm scenarios={scenarios} />
     </section>
 
     <section className="card mt-6 p-5">
