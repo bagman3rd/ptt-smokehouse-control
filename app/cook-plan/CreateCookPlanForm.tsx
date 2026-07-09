@@ -65,7 +65,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
         throw new Error(data.message || `Generate failed with status ${response.status}`);
       }
       setLastResult(data);
-      setMessage(`Generated ${data.scenarioName || 'cook plan'} using ${data.dayPatternName || selectedDayPattern.name} for ${formatDateWithDow(serviceDate)}. Loading updated meat numbers...`);
+      setMessage(`Generated load plan for ${formatDateWithDow(serviceDate)}. Brisket/pork use next-day demand; ribs/chicken use same-day demand. Loading updated meat numbers...`);
       // Force a full navigation to the specific newly-created plan. router.refresh() alone can leave
       // stale server-component output visible on Render/browser caches.
       window.location.assign(data.redirectUrl || `/cook-plan?generatedAt=${Date.now()}`);
@@ -80,7 +80,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
   return (
     <form onSubmit={handleSubmit} className="mt-4 grid gap-4 md:grid-cols-5">
       <div>
-        <label className="label">Service Date</label>
+        <label className="label">Load Date</label>
         <input className="field mt-1" value={serviceDate} onChange={(event) => setServiceDate(event.target.value)} type="date" required />
         <div className="mt-1 text-xs font-bold text-slate-500">{formatDateWithDow(serviceDate)}</div>
       </div>

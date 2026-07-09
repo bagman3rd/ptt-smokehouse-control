@@ -124,3 +124,14 @@ Production timing update:
 - Cook plan now applies prior EOD usable leftover credits to brisket, pulled pork, ribs, and pulled chicken.
 - Cook plan keeps timing clarity: brisket and pork are prior-day production; ribs and chicken are same-day production, but all four proteins can receive leftover credits.
 - Added clearer saved log display showing cooked units, sold pounds, leftover units/pounds, waste, and 86 status.
+
+
+## Build 1.4.2
+
+Build 1.4.2 fixes the production-date delay logic for brisket and pulled pork.
+
+- The selected Cook Plan date is now treated as the load/production date.
+- Brisket and pulled pork forecast loads use the next day's service estimate.
+- Ribs and pulled chicken forecast loads use the same day's service estimate.
+- The Cook Plan page now explicitly explains: load today for tomorrow vs load today for today.
+- Example: a Sunday load plan uses Monday estimates for brisket and pork, while using Sunday estimates for ribs and chicken.

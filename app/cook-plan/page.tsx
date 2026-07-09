@@ -38,13 +38,13 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
     prisma.cookPlan.findFirst({ orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
   ]);
   const plan = selectedPlan ?? latestPlan;
-  const serviceDate = plan?.serviceDate ?? null;
-  const priorProductionDate = serviceDate ? addUtcDays(serviceDate, -1) : null;
+  const loadDate = plan?.serviceDate ?? null;
+  const nextDayServiceDate = loadDate ? addUtcDays(loadDate, 1) : null;
 
   return <Shell>
     <div className="mb-6">
-      <h1 className="text-3xl font-black tracking-tight">Daily Cook Plan</h1>
-      <p className="mt-2 text-slate-600">Generate, review, and approve service-day demand with prior-day production timing for brisket and pork.</p>
+      <h1 className="text-3xl font-black tracking-tight">Daily Load Plan</h1>
+      <p className="mt-2 text-slate-600">Generate, review, and approve the actual smoker load for the selected production date. Brisket and pork use next-day service estimates; ribs and chicken use same-day estimates.</p>
     </div>
 
     <section className="card p-5">
@@ -52,26 +52,26 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
       <CreateCookPlanForm scenarios={scenarios} />
     </section>
 
-    {plan && serviceDate && priorProductionDate ? <section className="card mt-6 p-5">
+    {plan && loadDate && nextDayServiceDate ? <section className="card mt-6 p-5">
       <h2 className="text-xl font-black">Production Timing Summary</h2>
-      <p className="mt-2 text-slate-600">This plan is for guest service on <strong>{fmtDateWithDow(serviceDate)}</strong>. Brisket and pork are prepared the day before service; ribs and chicken are cooked the same day.</p>
+      <p className="mt-2 text-slate-600">This is a <strong>load plan for {fmtDateWithDow(loadDate)}</strong>, not a single service-day forecast. Brisket and pork are loaded/cooked today from <strong>{fmtDateWithDow(nextDayServiceDate)}</strong> demand. Ribs and chicken are cooked today from <strong>{fmtDateWithDow(loadDate)}</strong> demand.</p>
       <div className="mt-4 grid gap-3 md:grid-cols-2">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
-          <div className="text-sm font-black uppercase text-amber-800">Prior-day production</div>
-          <div className="mt-1 text-lg font-black">{fmtDateWithDow(priorProductionDate)}</div>
+          <div className="text-sm font-black uppercase text-amber-800">Load today for tomorrow</div>
+          <div className="mt-1 text-lg font-black">{fmtDateWithDow(loadDate)} → {fmtDateWithDow(nextDayServiceDate)}</div>
           <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-amber-950">
-            <li>Brisket: cook 9:00 AM–9:00 PM, then hold overnight.</li>
-            <li>Pulled pork: load butts at 5:00 PM for next-day service.</li>
-            <li>Usable leftover brisket/pork from the prior EOD log is credited before calculating new load.</li>
+            <li>Brisket: cook 9:00 AM–9:00 PM today, then hold overnight for next-day service.</li>
+            <li>Pulled pork: load butts at 5:00 PM today for next-day service.</li>
+            <li>These loads use tomorrow’s sales curve, not today’s sales curve.</li>
           </ul>
         </div>
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-          <div className="text-sm font-black uppercase text-emerald-800">Same-day production</div>
-          <div className="mt-1 text-lg font-black">{fmtDateWithDow(serviceDate)}</div>
+          <div className="text-sm font-black uppercase text-emerald-800">Load today for today</div>
+          <div className="mt-1 text-lg font-black">{fmtDateWithDow(loadDate)}</div>
           <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-emerald-950">
-            <li>Ribs: cook/load same day.</li>
-            <li>Pulled chicken: cook/load same day.</li>
-            <li>Usable leftover ribs and chicken from the prior EOD log are credited before calculating same-day load.</li>
+            <li>Ribs: cook/load same day using today’s demand.</li>
+            <li>Pulled chicken: cook/load same day using today’s demand.</li>
+            <li>Usable leftover ribs and chicken are credited before calculating same-day load.</li>
           </ul>
         </div>
       </div>
@@ -81,7 +81,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-black">Latest Plan</h2>
-          {plan ? <p className="text-slate-600">{fmtDateWithDow(plan.serviceDate)} · {plan.scenario.name} · {money(plan.forecastSales)} total forecast · {money(plan.forecastBbqSales)} BBQ forecast · {plan.confidence} confidence</p> : null}
+          {plan ? <p className="text-slate-600">Load date {fmtDateWithDow(plan.serviceDate)} · {plan.scenario.name} · same-day ribs/chicken forecast {money(plan.forecastSales)} total / {money(plan.forecastBbqSales)} BBQ · {plan.confidence} confidence</p> : null}
           {plan?.notes ? <p className="mt-1 text-sm font-bold text-slate-500">{plan.notes} · Created {plan.createdAt.toLocaleString('en-US', { timeZone: 'America/New_York' })}</p> : null}
           {searchParams?.generatedAt ? <p className="mt-1 text-sm font-black text-emerald-700">Showing newly generated plan.</p> : null}
         </div>
@@ -98,7 +98,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
               <div className="flex flex-wrap items-center gap-2"><span className="text-lg font-black">{item.protein.name}</span><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">{timing.badge}</span></div>
               <div className="mt-1 text-sm font-bold text-slate-600">{item.notes}</div>
               <div className="mt-3 grid gap-2 text-sm text-slate-600 md:grid-cols-3">
-                <div className="rounded-xl bg-slate-50 p-3"><span className="block text-xs font-black uppercase text-slate-500">Forecast need for service</span><strong className="text-xl text-slate-950">{item.forecastCookUnits || item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
+                <div className="rounded-xl bg-slate-50 p-3"><span className="block text-xs font-black uppercase text-slate-500">Gross forecast need</span><strong className="text-xl text-slate-950">{item.forecastCookUnits || item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
                 <div className={timing.usesCredit ? "rounded-xl bg-amber-50 p-3" : "rounded-xl bg-slate-50 p-3"}><span className={timing.usesCredit ? "block text-xs font-black uppercase text-amber-700" : "block text-xs font-black uppercase text-slate-500"}>{timing.usesCredit ? 'Prior EOD leftover credit' : 'Leftover credit not used'}</span><strong className={timing.usesCredit ? "text-xl text-amber-900" : "text-xl text-slate-500"}>{item.usableLeftoverUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)} <span className="text-xs">/ {item.usableLeftoverLb} lb</span></div>
                 <div className="rounded-xl bg-emerald-50 p-3"><span className="block text-xs font-black uppercase text-emerald-700">{timing.label}</span><strong className="text-xl text-emerald-900">{item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
               </div>
