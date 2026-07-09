@@ -24,8 +24,8 @@ function timingCategory(proteinName: string) {
   const lower = proteinName.toLowerCase();
   if (lower.includes('brisket')) return { label: 'Prior-day cook', badge: '9 AM–9 PM + overnight hold', usesCredit: true };
   if (lower.includes('pork')) return { label: 'Prior-day load', badge: '5 PM butt load', usesCredit: true };
-  if (lower.includes('rib')) return { label: 'Same-day cook', badge: 'Same-day ribs', usesCredit: false };
-  if (lower.includes('chicken')) return { label: 'Same-day cook', badge: 'Same-day chicken', usesCredit: false };
+  if (lower.includes('rib')) return { label: 'Same-day load after leftover credit', badge: 'Same-day ribs', usesCredit: true };
+  if (lower.includes('chicken')) return { label: 'Same-day load after leftover credit', badge: 'Same-day chicken', usesCredit: true };
   return { label: 'Cook/load', badge: 'Service-day production', usesCredit: false };
 }
 
@@ -71,7 +71,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
           <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-emerald-950">
             <li>Ribs: cook/load same day.</li>
             <li>Pulled chicken: cook/load same day.</li>
-            <li>Ribs and chicken leftover counts are tracked in EOD, but they do not drive the next-day overnight load.</li>
+            <li>Usable leftover ribs and chicken from the prior EOD log are credited before calculating same-day load.</li>
           </ul>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
               <div className="mt-1 text-sm font-bold text-slate-600">{item.notes}</div>
               <div className="mt-3 grid gap-2 text-sm text-slate-600 md:grid-cols-3">
                 <div className="rounded-xl bg-slate-50 p-3"><span className="block text-xs font-black uppercase text-slate-500">Forecast need for service</span><strong className="text-xl text-slate-950">{item.forecastCookUnits || item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
-                <div className={timing.usesCredit ? "rounded-xl bg-amber-50 p-3" : "rounded-xl bg-slate-50 p-3"}><span className={timing.usesCredit ? "block text-xs font-black uppercase text-amber-700" : "block text-xs font-black uppercase text-slate-500"}>{timing.usesCredit ? 'Prior-day leftover credit' : 'Leftover credit not used'}</span><strong className={timing.usesCredit ? "text-xl text-amber-900" : "text-xl text-slate-500"}>{item.usableLeftoverUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)} <span className="text-xs">/ {item.usableLeftoverLb} lb</span></div>
+                <div className={timing.usesCredit ? "rounded-xl bg-amber-50 p-3" : "rounded-xl bg-slate-50 p-3"}><span className={timing.usesCredit ? "block text-xs font-black uppercase text-amber-700" : "block text-xs font-black uppercase text-slate-500"}>{timing.usesCredit ? 'Prior EOD leftover credit' : 'Leftover credit not used'}</span><strong className={timing.usesCredit ? "text-xl text-amber-900" : "text-xl text-slate-500"}>{item.usableLeftoverUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)} <span className="text-xs">/ {item.usableLeftoverLb} lb</span></div>
                 <div className="rounded-xl bg-emerald-50 p-3"><span className="block text-xs font-black uppercase text-emerald-700">{timing.label}</span><strong className="text-xl text-emerald-900">{item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
               </div>
               <div className="mt-2 text-sm text-slate-600">Net cooked production need {item.cookedLbNeeded} lb · net raw need {item.rawLbNeeded} lb · safety factor {item.safetyFactorPct}%</div>

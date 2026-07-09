@@ -8,6 +8,25 @@ type Protein = {
   inputUnit: string;
 };
 
+type InitialProteinLog = {
+  proteinId: string;
+  cookedUnits: number;
+  soldCookedLb: number;
+  usableLeftoverUnits: number;
+  usableLeftoverLb: number;
+  wasteLb: number;
+  wasteReason?: string | null;
+  eightySixed: boolean;
+};
+
+type InitialLog = {
+  serviceDate: string;
+  totalSales: number;
+  bbqSales: number;
+  notes?: string | null;
+  proteinLogs: InitialProteinLog[];
+} | null;
+
 function today() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -33,12 +52,13 @@ function numberFromForm(formData: FormData, key: string) {
   return value === null || value === '' ? 0 : Number(value);
 }
 
-export function EndOfDayForm({ proteins }: { proteins: Protein[] }) {
-  const [serviceDate, setServiceDate] = useState(today());
+export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; initialLog?: InitialLog }) {
+  const [serviceDate, setServiceDate] = useState(initialLog?.serviceDate || today());
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const dateLabel = useMemo(() => formatDateWithDow(serviceDate), [serviceDate]);
+  const logByProteinId = useMemo(() => new Map((initialLog?.proteinLogs || []).map((log) => [log.proteinId, log])), [initialLog]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -78,7 +98,7 @@ export function EndOfDayForm({ proteins }: { proteins: Protein[] }) {
         throw new Error(data.message || `Save failed with status ${response.status}`);
       }
       setMessage(`Saved end-of-day log for ${formatDateWithDow(serviceDate)}. Loading saved values...`);
-      window.location.assign(data.redirectUrl || `/end-of-day?savedAt=${Date.now()}`);
+      window.location.assign(data.redirectUrl || `/end-of-day?serviceDate=${encodeURIComponent(serviceDate)}&savedAt=${Date.now()}`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Save end-of-day log failed.';
       setError(errorMessage);
@@ -97,30 +117,32 @@ export function EndOfDayForm({ proteins }: { proteins: Protein[] }) {
             <input className="field mt-1" type="date" value={serviceDate} onChange={(event) => setServiceDate(event.target.value)} required />
             <div className="mt-1 text-xs font-bold text-slate-500">{dateLabel}</div>
           </div>
-          <div><label className="label">Total Sales</label><input className="field mt-1" type="number" step="1" name="totalSales" placeholder="0" /></div>
-          <div><label className="label">BBQ Sales</label><input className="field mt-1" type="number" step="1" name="bbqSales" placeholder="0" /></div>
-          <div><label className="label">Notes</label><input className="field mt-1" name="notes" placeholder="Weather, events, service issues" /></div>
+          <div><label className="label">Total Sales</label><input className="field mt-1" type="number" step="1" name="totalSales" defaultValue={initialLog?.totalSales ?? ''} placeholder="0" /></div>
+          <div><label className="label">BBQ Sales</label><input className="field mt-1" type="number" step="1" name="bbqSales" defaultValue={initialLog?.bbqSales ?? ''} placeholder="0" /></div>
+          <div><label className="label">Notes</label><input className="field mt-1" name="notes" defaultValue={initialLog?.notes ?? ''} placeholder="Weather, events, service issues" /></div>
         </div>
       </section>
 
       <section className="card p-5">
         <h2 className="text-xl font-black">Protein Results</h2>
-        <p className="mt-1 text-sm text-slate-600">Enter usable leftovers in cook units for tomorrow&apos;s load credit. Example: 6 leftover chicken entered here subtracts 6 from tomorrow&apos;s recommended chicken load.</p>
+        <p className="mt-1 text-sm text-slate-600">Enter usable leftovers in cook units for the next plan&apos;s load credit. Ribs and chicken are same-day cooks, but usable leftover units still reduce the next service day&apos;s load.</p>
         <div className="mt-4 space-y-4">
-          {proteins.map((protein) => (
+          {proteins.map((protein) => {
+            const saved = logByProteinId.get(protein.id);
+            return (
             <div key={protein.id} className="rounded-2xl border border-slate-200 p-4">
               <div className="mb-3 text-lg font-black">{protein.name}</div>
               <div className="grid gap-3 md:grid-cols-7">
-                <div><label className="label">Cooked Units</label><input className="field mt-1" name={`cookedUnits-${protein.id}`} type="number" step="0.1" /></div>
-                <div><label className="label">Sold Cooked lb</label><input className="field mt-1" name={`soldCookedLb-${protein.id}`} type="number" step="0.1" /></div>
-                <div><label className="label">Usable Leftover Units</label><input className="field mt-1" name={`usableLeftoverUnits-${protein.id}`} type="number" step="0.1" placeholder={displayUnit(protein.name, protein.inputUnit)} /></div>
-                <div><label className="label">Usable Leftover lb</label><input className="field mt-1" name={`usableLeftoverLb-${protein.id}`} type="number" step="0.1" /></div>
-                <div><label className="label">Waste lb</label><input className="field mt-1" name={`wasteLb-${protein.id}`} type="number" step="0.1" /></div>
-                <div><label className="label">Waste Reason</label><select className="field mt-1" name={`wasteReason-${protein.id}`}><option value="">None</option><option>Overproduced</option><option>Dried out</option><option>Quality reject</option><option>Dropped/spoiled</option><option>Other</option></select></div>
-                <label className="flex items-center gap-2 pt-7 text-sm font-bold"><input name={`eightySixed-${protein.id}`} type="checkbox" className="h-5 w-5" /> 86?</label>
+                <div><label className="label">Cooked Units</label><input className="field mt-1" name={`cookedUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.cookedUnits ?? ''} /></div>
+                <div><label className="label">Sold Cooked lb</label><input className="field mt-1" name={`soldCookedLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.soldCookedLb ?? ''} /></div>
+                <div><label className="label">Usable Leftover Units</label><input className="field mt-1" name={`usableLeftoverUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.usableLeftoverUnits ?? ''} placeholder={displayUnit(protein.name, protein.inputUnit)} /></div>
+                <div><label className="label">Usable Leftover lb</label><input className="field mt-1" name={`usableLeftoverLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.usableLeftoverLb ?? ''} /></div>
+                <div><label className="label">Waste lb</label><input className="field mt-1" name={`wasteLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.wasteLb ?? ''} /></div>
+                <div><label className="label">Waste Reason</label><select className="field mt-1" name={`wasteReason-${protein.id}`} defaultValue={saved?.wasteReason || ''}><option value="">None</option><option>Overproduced</option><option>Dried out</option><option>Quality reject</option><option>Dropped/spoiled</option><option>Other</option></select></div>
+                <label className="flex items-center gap-2 pt-7 text-sm font-bold"><input name={`eightySixed-${protein.id}`} type="checkbox" defaultChecked={saved?.eightySixed ?? false} className="h-5 w-5" /> 86?</label>
               </div>
             </div>
-          ))}
+          )})}
         </div>
         <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center">
           <button className="btn-primary w-full md:w-auto" type="submit" disabled={isSaving}>{isSaving ? 'Saving...' : 'Save End-of-Day Log'}</button>

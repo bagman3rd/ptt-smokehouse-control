@@ -105,7 +105,7 @@ NEXT_PUBLIC_APP_NAME=PTT Smokehouse Control
 
 Same logic applies to pork butts and ribs when entered as usable leftover units.
 
-## Build 1.4.0
+## Build 1.4.1
 
 Production timing update:
 
@@ -114,4 +114,13 @@ Production timing update:
 - Ribs and pulled chicken are now shown as same-day production.
 - Cook Plan page now includes a Production Timing Summary with service date, prior production date, and same-day production date.
 - Leftover credit is applied to brisket and pork only for next-day production planning; ribs and chicken leftovers remain tracked in EOD but do not drive the next-day load calculation.
-- Build badge updated to Build 1.4.0.
+- Build badge updated to Build 1.4.1.
+
+
+## Build 1.4.1
+
+- Fixed End-of-Day save persistence by replacing nested upsert with explicit transaction: create/update parent log, delete old protein rows, create fresh protein rows.
+- End-of-Day now reloads the saved service date and pre-populates saved amounts back into the form.
+- Cook plan now applies prior EOD usable leftover credits to brisket, pulled pork, ribs, and pulled chicken.
+- Cook plan keeps timing clarity: brisket and pork are prior-day production; ribs and chicken are same-day production, but all four proteins can receive leftover credits.
+- Added clearer saved log display showing cooked units, sold pounds, leftover units/pounds, waste, and 86 status.

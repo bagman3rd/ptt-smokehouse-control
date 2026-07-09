@@ -29,52 +29,35 @@ export async function POST(request: Request) {
     if (proteins.length === 0) throw new Error('No active proteins exist. Seed data was not created.');
 
     const byProteinId = new Map(entries.map((entry: any) => [String(entry.proteinId), entry]));
+    const proteinRows = proteins.map((protein) => {
+      const entry: any = byProteinId.get(protein.id) || {};
+      return {
+        proteinId: protein.id,
+        cookedUnits: numberValue(entry.cookedUnits),
+        soldCookedLb: numberValue(entry.soldCookedLb),
+        usableLeftoverLb: numberValue(entry.usableLeftoverLb),
+        usableLeftoverUnits: numberValue(entry.usableLeftoverUnits),
+        wasteLb: numberValue(entry.wasteLb),
+        eightySixed: Boolean(entry.eightySixed),
+        wasteReason: String(entry.wasteReason || '')
+      };
+    });
 
-    const log = await prisma.endOfDayLog.upsert({
-      where: { serviceDate },
-      update: {
-        totalSales,
-        bbqSales,
-        notes,
-        proteinLogs: {
-          deleteMany: {},
-          create: proteins.map((protein) => {
-            const entry: any = byProteinId.get(protein.id) || {};
-            return {
-              proteinId: protein.id,
-              cookedUnits: numberValue(entry.cookedUnits),
-              soldCookedLb: numberValue(entry.soldCookedLb),
-              usableLeftoverLb: numberValue(entry.usableLeftoverLb),
-              usableLeftoverUnits: numberValue(entry.usableLeftoverUnits),
-              wasteLb: numberValue(entry.wasteLb),
-              eightySixed: Boolean(entry.eightySixed),
-              wasteReason: String(entry.wasteReason || '')
-            };
-          })
-        }
-      },
-      create: {
-        serviceDate,
-        totalSales,
-        bbqSales,
-        notes,
-        proteinLogs: {
-          create: proteins.map((protein) => {
-            const entry: any = byProteinId.get(protein.id) || {};
-            return {
-              proteinId: protein.id,
-              cookedUnits: numberValue(entry.cookedUnits),
-              soldCookedLb: numberValue(entry.soldCookedLb),
-              usableLeftoverLb: numberValue(entry.usableLeftoverLb),
-              usableLeftoverUnits: numberValue(entry.usableLeftoverUnits),
-              wasteLb: numberValue(entry.wasteLb),
-              eightySixed: Boolean(entry.eightySixed),
-              wasteReason: String(entry.wasteReason || '')
-            };
-          })
-        }
-      },
-      include: { proteinLogs: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }
+    const log = await prisma.$transaction(async (tx) => {
+      const existing = await tx.endOfDayLog.findUnique({ where: { serviceDate } });
+      const parent = existing
+        ? await tx.endOfDayLog.update({ where: { id: existing.id }, data: { totalSales, bbqSales, notes } })
+        : await tx.endOfDayLog.create({ data: { serviceDate, totalSales, bbqSales, notes } });
+
+      await tx.endOfDayProteinLog.deleteMany({ where: { endOfDayLogId: parent.id } });
+      await tx.endOfDayProteinLog.createMany({
+        data: proteinRows.map((row) => ({ endOfDayLogId: parent.id, ...row }))
+      });
+
+      return tx.endOfDayLog.findUniqueOrThrow({
+        where: { id: parent.id },
+        include: { proteinLogs: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }
+      });
     });
 
     revalidatePath('/end-of-day');
@@ -98,7 +81,7 @@ export async function POST(request: Request) {
         eightySixed: proteinLog.eightySixed,
         wasteReason: proteinLog.wasteReason
       })),
-      redirectUrl: `/end-of-day?savedAt=${Date.now()}`,
+      redirectUrl: `/end-of-day?serviceDate=${encodeURIComponent(serviceDateStr)}&savedAt=${Date.now()}`,
       message: 'End-of-day log saved.'
     });
   } catch (error) {

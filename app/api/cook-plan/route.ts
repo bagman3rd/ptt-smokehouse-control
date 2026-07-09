@@ -66,10 +66,9 @@ export async function POST(request: Request) {
 
     const items = proteins.map((protein) => {
       const lower = protein.name.toLowerCase();
-      const usesPriorDayLeftoverCredit = lower.includes('pork') || lower.includes('brisket');
       const prior = lastLog?.proteinLogs.find((log) => log.proteinId === protein.id);
-      const usableLeftoverLb = usesPriorDayLeftoverCredit ? (prior?.usableLeftoverLb ?? 0) : 0;
-      const usableLeftoverUnits = usesPriorDayLeftoverCredit ? (prior?.usableLeftoverUnits ?? 0) : 0;
+      const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
+      const usableLeftoverUnits = prior?.usableLeftoverUnits ?? 0;
       const result = forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
       const timingNote = lower.includes('brisket')
         ? `${fmtDateWithDow(priorProductionDate)}: cook 9:00 AM–9:00 PM, then hold overnight for ${fmtDateWithDow(serviceDate)} service.`
@@ -105,7 +104,7 @@ export async function POST(request: Request) {
           forecastBbqSales,
           confidence: confidenceForHistory(logsCount),
           status: 'DRAFT',
-          notes: `Service ${fmtDateWithDow(serviceDate)} · prior-day brisket/pork production ${fmtDateWithDow(addUtcDays(serviceDate, -1))} · same-day ribs/chicken · ${dayPattern.name} day pattern · event multiplier ${eventMultiplier}`,
+          notes: `Service ${fmtDateWithDow(serviceDate)} · prior-day brisket/pork production ${fmtDateWithDow(addUtcDays(serviceDate, -1))} · same-day ribs/chicken with leftover credits · ${dayPattern.name} day pattern · event multiplier ${eventMultiplier}`,
           items: { create: items }
         },
         include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }
