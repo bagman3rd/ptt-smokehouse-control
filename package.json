@@ -1,16 +1,16 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "prisma:seed": "tsx prisma/seed.ts",
-    "render-build": "prisma generate && prisma migrate deploy && next build"
+    "render-build": "npm run prisma:generate && npm run prisma:migrate && npm run build"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

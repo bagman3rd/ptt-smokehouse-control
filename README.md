@@ -72,3 +72,21 @@ PORT
 - Waste/leftover/86 tracking
 - Reports
 - Editable protein, scenario, day, and month settings
+
+## Build 1.2.5 Render Deployment Fix
+
+Use this Render Build Command:
+
+```bash
+npm install --no-audit --no-fund --legacy-peer-deps --include=dev && npm run render-build
+```
+
+Use this Start Command:
+
+```bash
+npm run start
+```
+
+Set `NODE_VERSION=20.18.1` in Render Environment Variables.
+
+Build 1.2.5 fixes the Render npm failure by ensuring `render-build` does not run `npm install` internally.
