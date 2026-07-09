@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { getDayPatternByKey, getDayPatternMultiplier, inferDayPatternKey } from '@/lib/dayProfiles';
+import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid service date');
@@ -61,11 +62,24 @@ export async function POST(request: Request) {
     );
     const forecastBbqSales = Math.round(forecastSales * (scenario.bbqSalesPercent / 100));
 
+    const priorProductionDate = addUtcDays(serviceDate, -1);
+
     const items = proteins.map((protein) => {
+      const lower = protein.name.toLowerCase();
+      const usesPriorDayLeftoverCredit = lower.includes('pork') || lower.includes('brisket');
       const prior = lastLog?.proteinLogs.find((log) => log.proteinId === protein.id);
-      const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
-      const usableLeftoverUnits = prior?.usableLeftoverUnits ?? 0;
+      const usableLeftoverLb = usesPriorDayLeftoverCredit ? (prior?.usableLeftoverLb ?? 0) : 0;
+      const usableLeftoverUnits = usesPriorDayLeftoverCredit ? (prior?.usableLeftoverUnits ?? 0) : 0;
       const result = forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
+      const timingNote = lower.includes('brisket')
+        ? `${fmtDateWithDow(priorProductionDate)}: cook 9:00 AM–9:00 PM, then hold overnight for ${fmtDateWithDow(serviceDate)} service.`
+        : lower.includes('pork')
+          ? `${fmtDateWithDow(priorProductionDate)}: load pork butts at 5:00 PM for ${fmtDateWithDow(serviceDate)} service.`
+          : lower.includes('rib')
+            ? `${fmtDateWithDow(serviceDate)}: cook/load ribs same day for service.`
+            : lower.includes('chicken')
+              ? `${fmtDateWithDow(serviceDate)}: cook/load pulled chicken same day for service.`
+              : `${fmtDateWithDow(serviceDate)}: cook/load for service.`;
       return {
         proteinId: protein.id,
         cookedLbNeeded: result.cookedLbNeeded,
@@ -76,7 +90,8 @@ export async function POST(request: Request) {
         rawLbNeeded: result.rawLbNeeded,
         recommendedCookUnits: result.recommendedCookUnits,
         approvedCookUnits: null,
-        overrideReason: null
+        overrideReason: null,
+        notes: timingNote
       };
     });
 
@@ -90,7 +105,7 @@ export async function POST(request: Request) {
           forecastBbqSales,
           confidence: confidenceForHistory(logsCount),
           status: 'DRAFT',
-          notes: `Generated with ${dayPattern.name} day pattern · event multiplier ${eventMultiplier}`,
+          notes: `Service ${fmtDateWithDow(serviceDate)} · prior-day brisket/pork production ${fmtDateWithDow(addUtcDays(serviceDate, -1))} · same-day ribs/chicken · ${dayPattern.name} day pattern · event multiplier ${eventMultiplier}`,
           items: { create: items }
         },
         include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }

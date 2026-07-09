@@ -104,3 +104,14 @@ NEXT_PUBLIC_APP_NAME=PTT Smokehouse Control
    - Load today: forecast need minus 6
 
 Same logic applies to pork butts and ribs when entered as usable leftover units.
+
+## Build 1.4.0
+
+Production timing update:
+
+- Brisket is now shown as prior-day production: cook 9:00 AM–9:00 PM, hold overnight, serve next day.
+- Pulled pork is now shown as prior-day production: load butts at 5:00 PM for next-day service.
+- Ribs and pulled chicken are now shown as same-day production.
+- Cook Plan page now includes a Production Timing Summary with service date, prior production date, and same-day production date.
+- Leftover credit is applied to brisket and pork only for next-day production planning; ribs and chicken leftovers remain tracked in EOD but do not drive the next-day load calculation.
+- Build badge updated to Build 1.4.0.
