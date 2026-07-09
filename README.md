@@ -145,3 +145,8 @@ Build 1.4.4 fixes EOD-to-Cook-Plan leftover credit visibility and fallback behav
 ## Build 1.4.4
 
 Build 1.4.4 removes ROD RUN as an active forecast scenario. Active forecast scenarios are now only Base $6M and Aggressive $8M. Rod Run and other surge days should be modeled with the Event Multiplier input. Existing deployed databases are self-cleaned: ROD RUN, Event Day, and Conservative $6M are renamed to legacy scenarios and excluded from active dropdowns and settings.
+
+
+## Build 1.4.5
+
+Build 1.4.5 fixes dashboard date selection. The dashboard no longer sorts plans by farthest future service date, which could make an accidental 2027 test plan look current. It now shows only operational plans in the rolling current window from yesterday through the next 14 days, ordered by creation time. If an out-of-window future plan exists, the dashboard displays a warning instead of treating it as the current cook recommendation.
