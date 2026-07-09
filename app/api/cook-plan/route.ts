@@ -88,16 +88,19 @@ export async function POST(request: Request) {
       const prior = leftoverLog?.proteinLogs.find((log) => log.proteinId === protein.id);
       const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
       const usableLeftoverUnits = prior?.usableLeftoverUnits ?? 0;
+      const leftoverSourceNote = leftoverLog
+        ? `Leftover credit source: EOD ${fmtDateWithDow(leftoverLog.serviceDate)}.`
+        : `Leftover credit source: no prior EOD log found before ${fmtDateWithDow(targetServiceDate)}.`;
       const result = forecastProteinLoad({ protein, scenario, forecastBbqSales: targetForecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
       const timingNote = lower.includes('brisket')
-        ? `${fmtDateWithDow(loadDate)}: cook brisket 9:00 AM–9:00 PM using ${fmtDateWithDow(targetServiceDate)} service forecast, then hold overnight.`
+        ? `${fmtDateWithDow(loadDate)}: cook brisket 9:00 AM–9:00 PM using ${fmtDateWithDow(targetServiceDate)} service forecast, then hold overnight. ${leftoverSourceNote}`
         : lower.includes('pork')
-          ? `${fmtDateWithDow(loadDate)}: load pork butts at 5:00 PM using ${fmtDateWithDow(targetServiceDate)} service forecast.`
+          ? `${fmtDateWithDow(loadDate)}: load pork butts at 5:00 PM using ${fmtDateWithDow(targetServiceDate)} service forecast. ${leftoverSourceNote}`
           : lower.includes('rib')
-            ? `${fmtDateWithDow(loadDate)}: cook/load ribs same day using ${fmtDateWithDow(targetServiceDate)} service forecast.`
+            ? `${fmtDateWithDow(loadDate)}: cook/load ribs same day using ${fmtDateWithDow(targetServiceDate)} service forecast. ${leftoverSourceNote}`
             : lower.includes('chicken')
-              ? `${fmtDateWithDow(loadDate)}: cook/load pulled chicken same day using ${fmtDateWithDow(targetServiceDate)} service forecast.`
-              : `${fmtDateWithDow(loadDate)}: cook/load using ${fmtDateWithDow(targetServiceDate)} service forecast.`;
+              ? `${fmtDateWithDow(loadDate)}: cook/load pulled chicken same day using ${fmtDateWithDow(targetServiceDate)} service forecast. ${leftoverSourceNote}`
+              : `${fmtDateWithDow(loadDate)}: cook/load using ${fmtDateWithDow(targetServiceDate)} service forecast. ${leftoverSourceNote}`;
       return {
         proteinId: protein.id,
         cookedLbNeeded: result.cookedLbNeeded,

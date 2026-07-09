@@ -125,7 +125,7 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
 
       <section className="card p-5">
         <h2 className="text-xl font-black">Protein Results</h2>
-        <p className="mt-1 text-sm text-slate-600">Enter usable leftovers in cook units for the next plan&apos;s load credit. Ribs and chicken are same-day cooks, but usable leftover units still reduce the next service day&apos;s load.</p>
+        <p className="mt-1 text-sm text-slate-600">Enter actual usable leftovers in the <strong>Usable Leftover Units</strong> column. That field is what credits the next cook plan. If cooked units are entered but sold/waste are left at 0, the app will treat those cooked units as usable leftovers as a safety fallback.</p>
         <div className="mt-4 space-y-4">
           {proteins.map((protein) => {
             const saved = logByProteinId.get(protein.id);
@@ -133,9 +133,9 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
             <div key={protein.id} className="rounded-2xl border border-slate-200 p-4">
               <div className="mb-3 text-lg font-black">{protein.name}</div>
               <div className="grid gap-3 md:grid-cols-7">
-                <div><label className="label">Cooked Units</label><input className="field mt-1" name={`cookedUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.cookedUnits ?? ''} /></div>
+                <div><label className="label">Cooked Units / fallback leftover</label><input className="field mt-1" name={`cookedUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.cookedUnits ?? ''} /></div>
                 <div><label className="label">Sold Cooked lb</label><input className="field mt-1" name={`soldCookedLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.soldCookedLb ?? ''} /></div>
-                <div><label className="label">Usable Leftover Units</label><input className="field mt-1" name={`usableLeftoverUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.usableLeftoverUnits ?? ''} placeholder={displayUnit(protein.name, protein.inputUnit)} /></div>
+                <div><label className="label">Usable Leftover Units — credits next plan</label><input className="field mt-1" name={`usableLeftoverUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.usableLeftoverUnits ?? ''} placeholder={displayUnit(protein.name, protein.inputUnit)} /></div>
                 <div><label className="label">Usable Leftover lb</label><input className="field mt-1" name={`usableLeftoverLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.usableLeftoverLb ?? ''} /></div>
                 <div><label className="label">Waste lb</label><input className="field mt-1" name={`wasteLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.wasteLb ?? ''} /></div>
                 <div><label className="label">Waste Reason</label><select className="field mt-1" name={`wasteReason-${protein.id}`} defaultValue={saved?.wasteReason || ''}><option value="">None</option><option>Overproduced</option><option>Dried out</option><option>Quality reject</option><option>Dropped/spoiled</option><option>Other</option></select></div>

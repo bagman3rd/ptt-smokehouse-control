@@ -31,13 +31,27 @@ export async function POST(request: Request) {
     const byProteinId = new Map(entries.map((entry: any) => [String(entry.proteinId), entry]));
     const proteinRows = proteins.map((protein) => {
       const entry: any = byProteinId.get(protein.id) || {};
+      const cookedUnits = numberValue(entry.cookedUnits);
+      const soldCookedLb = numberValue(entry.soldCookedLb);
+      const wasteLb = numberValue(entry.wasteLb);
+      let usableLeftoverUnits = numberValue(entry.usableLeftoverUnits);
+      const usableLeftoverLb = numberValue(entry.usableLeftoverLb);
+
+      // Operational guardrail: during testing and rushed closes, users often enter
+      // leftover pieces in Cooked Units and leave the explicit leftover field blank.
+      // If nothing was sold and nothing was wasted, treat cooked units as usable leftover
+      // so the next cook plan receives the intended credit instead of silently saving 0.
+      if (usableLeftoverUnits === 0 && cookedUnits > 0 && soldCookedLb === 0 && wasteLb === 0) {
+        usableLeftoverUnits = cookedUnits;
+      }
+
       return {
         proteinId: protein.id,
-        cookedUnits: numberValue(entry.cookedUnits),
-        soldCookedLb: numberValue(entry.soldCookedLb),
-        usableLeftoverLb: numberValue(entry.usableLeftoverLb),
-        usableLeftoverUnits: numberValue(entry.usableLeftoverUnits),
-        wasteLb: numberValue(entry.wasteLb),
+        cookedUnits,
+        soldCookedLb,
+        usableLeftoverLb,
+        usableLeftoverUnits,
+        wasteLb,
         eightySixed: Boolean(entry.eightySixed),
         wasteReason: String(entry.wasteReason || '')
       };
