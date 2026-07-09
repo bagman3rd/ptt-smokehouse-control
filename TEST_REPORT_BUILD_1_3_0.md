@@ -1,4 +1,4 @@
-# PTT Smokehouse Control — Build 1.3.0 Test Report
+# PTT Smokehouse Control — Build 1.3.1 Test Report
 
 ## Primary fix
 Replaced the Generate Plan server-action form with a client-side button that calls `/api/cook-plan`. This provides visible success/failure feedback, avoids silent server-action failures, prevents double-submit conflicts, and refreshes the latest plan after a successful response.

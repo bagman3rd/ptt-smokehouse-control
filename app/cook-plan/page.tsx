@@ -1,18 +1,26 @@
+import { unstable_noStore as noStore } from 'next/cache';
 import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { approveCookPlan } from '@/app/actions';
 import { CreateCookPlanForm } from '@/app/cook-plan/CreateCookPlanForm';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 function money(n: number) { return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }); }
 function fmtDate(d: Date) { return d.toISOString().slice(0,10); }
+function unitLabel(value: string) { return value.toLowerCase().replace('_', ' '); }
 
-export default async function CookPlanPage() {
+export default async function CookPlanPage({ searchParams }: { searchParams?: { planId?: string; generatedAt?: string } }) {
+  noStore();
   await ensureDefaultData(prisma);
-  const [scenarios, plan] = await Promise.all([
+  const [scenarios, selectedPlan, latestPlan] = await Promise.all([
     prisma.forecastScenario.findMany({ orderBy: { annualSales: 'asc' } }),
-    prisma.cookPlan.findFirst({ orderBy: { serviceDate: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
+    searchParams?.planId ? prisma.cookPlan.findUnique({ where: { id: searchParams.planId }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } }) : Promise.resolve(null),
+    prisma.cookPlan.findFirst({ orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
   ]);
+  const plan = selectedPlan ?? latestPlan;
 
   return <Shell>
     <div className="mb-6">
@@ -25,11 +33,13 @@ export default async function CookPlanPage() {
       <CreateCookPlanForm scenarios={scenarios} />
     </section>
 
-    <section className="card mt-6 p-5">
+    <section id="latest-plan" className="card mt-6 p-5">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-black">Latest Plan</h2>
           {plan ? <p className="text-slate-600">{fmtDate(plan.serviceDate)} · {plan.scenario.name} · {money(plan.forecastSales)} total forecast · {money(plan.forecastBbqSales)} BBQ forecast · {plan.confidence} confidence</p> : null}
+          {plan?.notes ? <p className="mt-1 text-sm font-bold text-slate-500">{plan.notes} · Created {plan.createdAt.toLocaleString('en-US', { timeZone: 'America/New_York' })}</p> : null}
+          {searchParams?.generatedAt ? <p className="mt-1 text-sm font-black text-emerald-700">Showing newly generated plan.</p> : null}
         </div>
         {plan ? <div className="rounded-full bg-slate-100 px-4 py-2 text-sm font-black">{plan.status}</div> : null}
       </div>
@@ -40,7 +50,7 @@ export default async function CookPlanPage() {
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
               <div className="text-lg font-black">{item.protein.name}</div>
-              <div className="mt-1 text-sm text-slate-600">Recommended: <strong>{item.recommendedCookUnits}</strong> {item.protein.inputUnit.toLowerCase().replace('_', ' ')} · cooked need {item.cookedLbNeeded} lb · raw need {item.rawLbNeeded} lb</div>
+              <div className="mt-1 text-sm text-slate-600">Recommended: <strong className="text-xl text-slate-950">{item.recommendedCookUnits}</strong> {unitLabel(item.protein.inputUnit)} · cooked need {item.cookedLbNeeded} lb · raw need {item.rawLbNeeded} lb</div>
               <div className="text-sm text-slate-600">Leftover credit: {item.usableLeftoverLb} lb · safety factor {item.safetyFactorPct}%</div>
             </div>
             <div className="grid gap-2 md:w-72">

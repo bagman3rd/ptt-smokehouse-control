@@ -1,24 +1,33 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 
 type Scenario = {
   id: string;
   name: string;
+  annualSales?: number;
+  bbqSalesPercent?: number;
 };
 
 function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function formatMoney(value: number | undefined) {
+  if (value === undefined || Number.isNaN(value)) return '—';
+  return value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+}
+
 export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
-  const router = useRouter();
   const [serviceDate, setServiceDate] = useState(today());
   const [scenarioId, setScenarioId] = useState(scenarios[0]?.id ?? '');
   const [eventMultiplier, setEventMultiplier] = useState('1');
   const [isGenerating, setIsGenerating] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [lastResult, setLastResult] = useState<any>(null);
+
+  const selectedScenario = useMemo(() => scenarios.find((scenario) => scenario.id === scenarioId), [scenarios, scenarioId]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -26,22 +35,28 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
 
     setIsGenerating(true);
     setMessage(null);
+    setError(null);
+    setLastResult(null);
 
     try {
       const response = await fetch('/api/cook-plan', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+        cache: 'no-store',
         body: JSON.stringify({ serviceDate, scenarioId, eventMultiplier })
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || data.ok === false) {
         throw new Error(data.message || `Generate failed with status ${response.status}`);
       }
-      setMessage('Plan generated. Refreshing latest plan...');
-      router.refresh();
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Generate plan failed.';
-      setMessage(errorMessage);
+      setLastResult(data);
+      setMessage(`Generated ${data.scenarioName || 'cook plan'} for ${serviceDate}. Loading updated meat numbers...`);
+      // Force a full navigation to the specific newly-created plan. router.refresh() alone can leave
+      // stale server-component output visible on Render/browser caches.
+      window.location.assign(data.redirectUrl || `/cook-plan?generatedAt=${Date.now()}`);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Generate plan failed.';
+      setError(errorMessage);
     } finally {
       setIsGenerating(false);
     }
@@ -58,6 +73,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
         <select className="field mt-1" value={scenarioId} onChange={(event) => setScenarioId(event.target.value)} required>
           {scenarios.length === 0 ? <option value="">No scenarios found — open Settings or run seed</option> : scenarios.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
+        {selectedScenario ? <div className="mt-1 text-xs text-slate-500">{formatMoney(selectedScenario.annualSales)} annual · {selectedScenario.bbqSalesPercent}% BBQ sales</div> : null}
       </div>
       <div>
         <label className="label">Event Multiplier</label>
@@ -67,7 +83,12 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
         <button className="btn-primary w-full" type="submit" disabled={isGenerating || scenarios.length === 0}>
           {isGenerating ? 'Generating...' : 'Generate Plan'}
         </button>
-        {message ? <div className="text-xs font-bold text-slate-600">{message}</div> : null}
+        {message ? <div className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800">{message}</div> : null}
+        {error ? <div className="rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-red-800">{error}</div> : null}
+        {lastResult?.items ? <div className="rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-700">
+          <div className="font-black">API returned:</div>
+          {lastResult.items.map((item: any) => <div key={item.protein}>{item.protein}: {item.recommendedCookUnits} units</div>)}
+        </div> : null}
       </div>
     </form>
   );

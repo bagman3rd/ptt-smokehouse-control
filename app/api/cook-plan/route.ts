@@ -84,11 +84,30 @@ export async function POST(request: Request) {
           status: 'DRAFT',
           notes: `Generated with event multiplier ${eventMultiplier}`,
           items: { create: items }
-        }
+        },
+        include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }
       });
     });
 
-    return NextResponse.json({ ok: true, cookPlanId: plan.id, message: 'Cook plan generated.' });
+    const stamp = Date.now();
+    return NextResponse.json({
+      ok: true,
+      cookPlanId: plan.id,
+      serviceDate: serviceDateStr,
+      scenarioName: plan.scenario.name,
+      eventMultiplier,
+      forecastSales,
+      forecastBbqSales,
+      items: plan.items.map((item) => ({
+        protein: item.protein.name,
+        recommendedCookUnits: item.recommendedCookUnits,
+        cookedLbNeeded: item.cookedLbNeeded,
+        rawLbNeeded: item.rawLbNeeded,
+        usableLeftoverLb: item.usableLeftoverLb
+      })),
+      redirectUrl: `/cook-plan?planId=${encodeURIComponent(plan.id)}&generatedAt=${stamp}`,
+      message: 'Cook plan generated.'
+    });
   } catch (error) {
     console.error('Generate cook plan failed:', error);
     const message = error instanceof Error ? error.message : 'Unknown error while generating cook plan.';
