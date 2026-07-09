@@ -137,6 +137,11 @@ Build 1.4.2 fixes the production-date delay logic for brisket and pulled pork.
 - Example: a Sunday load plan uses Monday estimates for brisket and pork, while using Sunday estimates for ribs and chicken.
 
 
-## Build 1.4.3
+## Build 1.4.4
 
-Build 1.4.3 fixes EOD-to-Cook-Plan leftover credit visibility and fallback behavior. If a user enters cooked units with sold/waste left at zero and leaves usable leftover units blank, the app treats those cooked units as usable leftovers so the next cook plan receives the expected credit. Cook Plan notes now show the exact EOD log date used for leftover credit.
+Build 1.4.4 fixes EOD-to-Cook-Plan leftover credit visibility and fallback behavior. If a user enters cooked units with sold/waste left at zero and leaves usable leftover units blank, the app treats those cooked units as usable leftovers so the next cook plan receives the expected credit. Cook Plan notes now show the exact EOD log date used for leftover credit.
+
+
+## Build 1.4.4
+
+Build 1.4.4 removes ROD RUN as an active forecast scenario. Active forecast scenarios are now only Base $6M and Aggressive $8M. Rod Run and other surge days should be modeled with the Event Multiplier input. Existing deployed databases are self-cleaned: ROD RUN, Event Day, and Conservative $6M are renamed to legacy scenarios and excluded from active dropdowns and settings.

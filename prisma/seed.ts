@@ -11,20 +11,17 @@ async function main() {
   ];
   for (const p of proteins) await prisma.protein.upsert({ where: { name: p.name }, update: p, create: p });
 
-  const rodRunDefaults = { name: 'ROD RUN', type: ScenarioType.EVENT_DAY, annualSales: 12000000, bbqSalesPercent: 60, safetyFactorPct: 15, brisketMixPct: 32, porkMixPct: 38, ribsMixPct: 16, chickenMixPct: 14, averagePricePerLbCooked: 32 };
-  const existingRodRun = await prisma.forecastScenario.findUnique({ where: { name: 'ROD RUN' } });
-  const existingEventDay = await prisma.forecastScenario.findUnique({ where: { name: 'Event Day' } });
-  if (existingEventDay && !existingRodRun) {
-    await prisma.forecastScenario.update({ where: { id: existingEventDay.id }, data: rodRunDefaults });
-  } else if (existingEventDay && existingRodRun) {
-    await prisma.forecastScenario.update({ where: { id: existingEventDay.id }, data: { name: 'Legacy Event Day', annualSales: 12000000 } }).catch(() => null);
+  // ROD RUN is no longer a forecast scenario; use Base/Aggressive plus the Event Multiplier.
+  for (const legacyName of ['Conservative $6M', 'Event Day', 'ROD RUN']) {
+    await prisma.forecastScenario.updateMany({
+      where: { name: legacyName },
+      data: { name: `Legacy ${legacyName}` }
+    }).catch(() => null);
   }
-  await prisma.forecastScenario.updateMany({ where: { name: 'Conservative $6M' }, data: { name: 'Legacy Conservative $6M' } }).catch(() => null);
 
   const scenarios = [
     { name: 'Base $6M', type: ScenarioType.BASE, annualSales: 6000000, bbqSalesPercent: 55, safetyFactorPct: 8, brisketMixPct: 30, porkMixPct: 40, ribsMixPct: 15, chickenMixPct: 15, averagePricePerLbCooked: 31 },
-    { name: 'Aggressive $8M', type: ScenarioType.AGGRESSIVE, annualSales: 8000000, bbqSalesPercent: 58, safetyFactorPct: 10, brisketMixPct: 30, porkMixPct: 40, ribsMixPct: 15, chickenMixPct: 15, averagePricePerLbCooked: 31 },
-    rodRunDefaults
+    { name: 'Aggressive $8M', type: ScenarioType.AGGRESSIVE, annualSales: 8000000, bbqSalesPercent: 58, safetyFactorPct: 10, brisketMixPct: 30, porkMixPct: 40, ribsMixPct: 15, chickenMixPct: 15, averagePricePerLbCooked: 31 }
   ];
   for (const s of scenarios) await prisma.forecastScenario.upsert({ where: { name: s.name }, update: s, create: s });
 
@@ -40,8 +37,8 @@ async function main() {
 
   await prisma.eventModifier.upsert({
     where: { id: 'rod-run-placeholder' },
-    update: { name: 'ROD RUN Placeholder', multiplier: 1.75, notes: 'Use ROD RUN scenario plus manual event multiplier until event calendar automation is added.' },
-    create: { id: 'rod-run-placeholder', name: 'ROD RUN Placeholder', startsOn: new Date('2026-09-10T00:00:00Z'), endsOn: new Date('2026-09-13T00:00:00Z'), multiplier: 1.75, notes: 'Use ROD RUN scenario plus manual event multiplier until event calendar automation is added.' }
+    update: { name: 'Rod Run Multiplier Reference', multiplier: 1.75, notes: 'Use Base/Aggressive forecast scenario plus manual event multiplier for Rod Run and event surges.' },
+    create: { id: 'rod-run-placeholder', name: 'Rod Run Multiplier Reference', startsOn: new Date('2026-09-10T00:00:00Z'), endsOn: new Date('2026-09-13T00:00:00Z'), multiplier: 1.75, notes: 'Use Base/Aggressive forecast scenario plus manual event multiplier for Rod Run and event surges.' }
   });
 }
 

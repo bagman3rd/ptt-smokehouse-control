@@ -1,6 +1,6 @@
 import { PrismaClient, ProteinUnit, ScenarioType, Role } from '@prisma/client';
 
-const activeScenarioNames = ['Base $6M', 'Aggressive $8M', 'ROD RUN'];
+const activeScenarioNames = ['Base $6M', 'Aggressive $8M'];
 
 export async function ensureDefaultData(prisma: PrismaClient) {
   const [proteinCount, dayCount, monthCount] = await Promise.all([
@@ -21,37 +21,17 @@ export async function ensureDefaultData(prisma: PrismaClient) {
 
   // Forecast scenarios are normalized every time the app boots so deployed databases
   // pick up planning-model changes without manual database editing.
-  const rodRunDefaults = {
-    name: 'ROD RUN',
-    type: ScenarioType.EVENT_DAY,
-    annualSales: 12000000,
-    bbqSalesPercent: 60,
-    safetyFactorPct: 15,
-    brisketMixPct: 32,
-    porkMixPct: 38,
-    ribsMixPct: 16,
-    chickenMixPct: 14,
-    averagePricePerLbCooked: 32
-  };
-
-  const existingRodRun = await prisma.forecastScenario.findUnique({ where: { name: 'ROD RUN' } });
-  const existingEventDay = await prisma.forecastScenario.findUnique({ where: { name: 'Event Day' } });
-  if (existingEventDay && !existingRodRun) {
-    await prisma.forecastScenario.update({ where: { id: existingEventDay.id }, data: rodRunDefaults });
-  } else if (existingEventDay && existingRodRun) {
-    // If old plans reference Event Day, deletion can fail. In that case, rename it so it stays hidden.
-    await prisma.forecastScenario.update({ where: { id: existingEventDay.id }, data: { name: 'Legacy Event Day', annualSales: 12000000 } }).catch(() => null);
+  // ROD RUN is no longer a forecast scenario; use Base/Aggressive plus the Event Multiplier.
+  for (const legacyName of ['Conservative $6M', 'Event Day', 'ROD RUN']) {
+    await prisma.forecastScenario.updateMany({
+      where: { name: legacyName },
+      data: { name: `Legacy ${legacyName}` }
+    }).catch(() => null);
   }
-
-  await prisma.forecastScenario.updateMany({
-    where: { name: 'Conservative $6M' },
-    data: { name: 'Legacy Conservative $6M' }
-  }).catch(() => null);
 
   const scenarios = [
     { name: 'Base $6M', type: ScenarioType.BASE, annualSales: 6000000, bbqSalesPercent: 55, safetyFactorPct: 8, brisketMixPct: 30, porkMixPct: 40, ribsMixPct: 15, chickenMixPct: 15, averagePricePerLbCooked: 31 },
-    { name: 'Aggressive $8M', type: ScenarioType.AGGRESSIVE, annualSales: 8000000, bbqSalesPercent: 58, safetyFactorPct: 10, brisketMixPct: 30, porkMixPct: 40, ribsMixPct: 15, chickenMixPct: 15, averagePricePerLbCooked: 31 },
-    rodRunDefaults
+    { name: 'Aggressive $8M', type: ScenarioType.AGGRESSIVE, annualSales: 8000000, bbqSalesPercent: 58, safetyFactorPct: 10, brisketMixPct: 30, porkMixPct: 40, ribsMixPct: 15, chickenMixPct: 15, averagePricePerLbCooked: 31 }
   ];
   for (const s of scenarios) await prisma.forecastScenario.upsert({ where: { name: s.name }, update: s, create: s });
 
