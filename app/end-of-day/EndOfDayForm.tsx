@@ -118,7 +118,7 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
             <div className="mt-1 text-xs font-bold text-slate-500">{dateLabel}</div>
           </div>
           <div><label className="label">Total Sales</label><input className="field mt-1" type="number" step="1" name="totalSales" defaultValue={initialLog?.totalSales ?? ''} placeholder="0" /></div>
-          <div><label className="label">BBQ Sales</label><input className="field mt-1" type="number" step="1" name="bbqSales" defaultValue={initialLog?.bbqSales ?? ''} placeholder="0" /></div>
+          <div><label className="label">Smoked Meat Sales</label><input className="field mt-1" type="number" step="1" name="bbqSales" defaultValue={initialLog?.bbqSales ?? ''} placeholder="0" /></div>
           <div><label className="label">Notes</label><input className="field mt-1" name="notes" defaultValue={initialLog?.notes ?? ''} placeholder="Weather, events, service issues" /></div>
         </div>
       </section>

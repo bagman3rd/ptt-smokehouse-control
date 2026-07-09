@@ -52,7 +52,7 @@ Build 1.2 was reviewed against the deployed Render workflow and the current sour
 
 **Expected result**
 - A draft cook plan is created or updated for that service date.
-- Forecast uses annual sales, day multiplier, month multiplier, event multiplier, BBQ sales %, protein mix, leftover credit, safety factor, yield, and min/max cook units.
+- Forecast uses annual sales, day multiplier, month multiplier, event multiplier, smoked meat sales %, protein mix, leftover credit, safety factor, yield, and min/max cook units.
 - Latest plan displays recommended cook units for brisket, pulled pork, ribs, and pulled chicken.
 
 **Status**: PASS by action/form review and forecast math check.
@@ -77,7 +77,7 @@ Build 1.2 was reviewed against the deployed Render workflow and the current sour
 
 **Steps**
 1. Go to `End of Day`.
-2. Enter total sales and BBQ sales.
+2. Enter total sales and smoked meat sales.
 3. Enter cooked units, sold cooked pounds, usable leftover pounds, waste pounds for each protein.
 4. Choose a waste reason from dropdown.
 5. Check 86 box for one protein.
@@ -107,7 +107,7 @@ Build 1.2 was reviewed against the deployed Render workflow and the current sour
 
 **Steps**
 1. Go to `Settings`.
-2. Edit annual sales, BBQ sales %, safety %, protein mix %, or average $/cooked lb.
+2. Edit annual sales, smoked meat sales %, safety %, protein mix %, or average $/cooked lb.
 3. Click `Save Scenario`.
 4. Generate a new cook plan.
 
@@ -152,7 +152,7 @@ Build 1.2 was reviewed against the deployed Render workflow and the current sour
 2. Go to `Reports`.
 
 **Expected result**
-- 30-day BBQ sales, BBQ mix, waste vs sold pounds, 86 count, and recent daily logs display.
+- 30-day smoked meat sales, BBQ mix, waste vs sold pounds, 86 count, and recent daily logs display.
 
 **Status**: PASS by query/render review.
 
@@ -184,7 +184,7 @@ Build 1.2 was reviewed against the deployed Render workflow and the current sour
 Example: Base $6M, Saturday multiplier 1.35, July multiplier 1.28, no event multiplier.
 
 - Forecast sales: approximately $28,405
-- BBQ sales at 55%: approximately $15,623
+- smoked meat sales at 55%: approximately $15,623
 - Brisket at 30% mix and $31 per cooked lb: approximately 151 cooked lb before safety
 - With 8% safety: approximately 163 cooked lb
 - At 50% yield and 13 lb raw briskets: approximately 26 briskets

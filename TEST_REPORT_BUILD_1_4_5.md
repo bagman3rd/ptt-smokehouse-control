@@ -1,8 +1,8 @@
-# PTT Smokehouse Control — Build 1.4.5 Test Report
+# PTT Smokehouse Control — Build 1.4.6 Test Report
 
 ## Fix
 
-Build 1.4.5 fixes the dashboard date bug where an accidental far-future cook plan, such as a 2027 test date, could appear as the Latest Forecast because the dashboard previously sorted plans by serviceDate descending.
+Build 1.4.6 fixes the dashboard date bug where an accidental far-future cook plan, such as a 2027 test date, could appear as the Latest Forecast because the dashboard previously sorted plans by serviceDate descending.
 
 ## Expected behavior
 

@@ -66,7 +66,7 @@ export default async function EndOfDayPage({ searchParams }: { searchParams?: { 
 
     {displayLog ? <section className="card mt-6 p-5">
       <h2 className="text-xl font-black">Saved Log Displayed</h2>
-      <p className="mt-1 text-slate-600">{fmtDateWithDow(displayLog.serviceDate)} · Total sales ${displayLog.totalSales.toLocaleString()} · BBQ sales ${displayLog.bbqSales.toLocaleString()}</p>
+      <p className="mt-1 text-slate-600">{fmtDateWithDow(displayLog.serviceDate)} · Total sales ${displayLog.totalSales.toLocaleString()} · smoked meat sales ${displayLog.bbqSales.toLocaleString()}</p>
       <div className="mt-4 grid gap-3 md:grid-cols-2">
         {displayLog.proteinLogs.map(log => <div key={log.id} className="rounded-xl border border-slate-200 p-3 text-sm"><strong>{log.protein.name}</strong>: cooked {log.cookedUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} · sold {log.soldCookedLb} lb · leftover {log.usableLeftoverUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} / {log.usableLeftoverLb} lb · waste {log.wasteLb} lb {log.eightySixed ? '· 86' : ''}</div>)}
       </div>

@@ -28,7 +28,7 @@ export default async function SettingsPage() {
           <div className="mb-3 text-lg font-black">{s.name}</div>
           <div className="grid gap-3 md:grid-cols-4">
             <div><label className="label">Annual Sales</label><input className="field mt-1" name="annualSales" type="number" defaultValue={s.annualSales} /></div>
-            <div><label className="label">BBQ Sales %</label><input className="field mt-1" name="bbqSalesPercent" type="number" step="0.1" defaultValue={s.bbqSalesPercent} /></div>
+            <div><label className="label">Smoked Meat % of Total Sales</label><input className="field mt-1" name="bbqSalesPercent" type="number" step="0.1" defaultValue={s.bbqSalesPercent} /></div>
             <div><label className="label">Safety %</label><input className="field mt-1" name="safetyFactorPct" type="number" step="0.1" defaultValue={s.safetyFactorPct} /></div>
             <div><label className="label">Avg $/Cooked lb</label><input className="field mt-1" name="averagePricePerLbCooked" type="number" step="0.1" defaultValue={s.averagePricePerLbCooked} /></div>
             <div><label className="label">Brisket Mix %</label><input className="field mt-1" name="brisketMixPct" type="number" step="0.1" defaultValue={s.brisketMixPct} /></div>

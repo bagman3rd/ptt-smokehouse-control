@@ -61,7 +61,7 @@ model ForecastScenario {
   name             String       @unique
   type             ScenarioType
   annualSales      Float
-  bbqSalesPercent  Float        @default(55)
+  bbqSalesPercent  Float        @default(40)
   safetyFactorPct  Float        @default(8)
   brisketMixPct    Float        @default(30)
   porkMixPct       Float        @default(40)

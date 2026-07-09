@@ -89,7 +89,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
         <select className="field mt-1" value={scenarioId} onChange={(event) => setScenarioId(event.target.value)} required>
           {scenarios.length === 0 ? <option value="">No scenarios found — open Settings or run seed</option> : scenarios.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
-        {selectedScenario ? <div className="mt-1 text-xs text-slate-500">{formatMoney(selectedScenario.annualSales)} annual · {selectedScenario.bbqSalesPercent}% BBQ sales</div> : null}
+        {selectedScenario ? <div className="mt-1 text-xs text-slate-500">{formatMoney(selectedScenario.annualSales)} annual · {selectedScenario.bbqSalesPercent}% smoked meat sales</div> : null}
       </div>
 
       <div>

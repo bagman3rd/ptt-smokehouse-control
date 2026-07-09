@@ -52,7 +52,7 @@ export default async function DashboardPage() {
 
     <div className="grid gap-4 md:grid-cols-4">
       <StatCard label="Latest Forecast" value={latestPlan ? money(latestPlan.forecastSales) : 'No plan'} note={latestPlan ? `${fmtDateWithDow(latestPlan.serviceDate)} · ${latestPlan.scenario.name}` : 'Create first cook plan'} />
-      <StatCard label="BBQ Forecast" value={latestPlan ? money(latestPlan.forecastBbqSales) : '—'} note={latestPlan ? `Confidence: ${latestPlan.confidence}` : undefined} />
+      <StatCard label="Smoked Meat Forecast" value={latestPlan ? money(latestPlan.forecastBbqSales) : '—'} note={latestPlan ? `Confidence: ${latestPlan.confidence}` : undefined} />
       <StatCard label="Usable Leftover" value={`${Math.round(leftoverUnits)} units`} note={`${Math.round(leftoverLb)} lb from latest EOD log`} />
       <StatCard label="7-Day Sellouts" value={`${sellouts7}`} note={`7-day waste: ${Math.round(wasteLb7)} lb`} />
     </div>
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
         <div className="mt-4 space-y-3">
           {scenarios.map(s => <div key={s.id} className="rounded-xl border border-slate-200 p-4">
             <div className="flex items-center justify-between"><div className="font-bold">{s.name}</div><div className="font-black">{money(s.annualSales)}</div></div>
-            <div className="mt-1 text-sm text-slate-600">BBQ {s.bbqSalesPercent}% · Safety {s.safetyFactorPct}% · Mix B/P/R/C {s.brisketMixPct}/{s.porkMixPct}/{s.ribsMixPct}/{s.chickenMixPct}</div>
+            <div className="mt-1 text-sm text-slate-600">Smoked meat {s.bbqSalesPercent}% · Safety {s.safetyFactorPct}% · Mix B/P/R/C {s.brisketMixPct}/{s.porkMixPct}/{s.ribsMixPct}/{s.chickenMixPct}</div>
           </div>)}
         </div>
       </div>

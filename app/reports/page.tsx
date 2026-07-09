@@ -15,11 +15,11 @@ export default async function ReportsPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Reports</h1>
-      <p className="mt-2 text-slate-600">Early operating reports for waste, sellouts, BBQ sales, and forecast tuning.</p>
+      <p className="mt-2 text-slate-600">Early operating reports for waste, sellouts, smoked meat sales, and forecast tuning.</p>
     </div>
     <div className="grid gap-4 md:grid-cols-4">
-      <div className="card p-5"><div className="text-sm font-bold text-slate-500">30-Day BBQ Sales</div><div className="mt-2 text-3xl font-black">${Math.round(bbqSales).toLocaleString()}</div><div className="mt-1 text-sm text-slate-500">Total sales ${Math.round(totalSales).toLocaleString()}</div></div>
-      <div className="card p-5"><div className="text-sm font-bold text-slate-500">BBQ Sales Mix</div><div className="mt-2 text-3xl font-black">{totalSales ? pct((bbqSales/totalSales)*100) : '—'}</div></div>
+      <div className="card p-5"><div className="text-sm font-bold text-slate-500">30-Day Smoked Meat Sales</div><div className="mt-2 text-3xl font-black">${Math.round(bbqSales).toLocaleString()}</div><div className="mt-1 text-sm text-slate-500">Total sales ${Math.round(totalSales).toLocaleString()}</div></div>
+      <div className="card p-5"><div className="text-sm font-bold text-slate-500">Smoked Meat Sales Mix</div><div className="mt-2 text-3xl font-black">{totalSales ? pct((bbqSales/totalSales)*100) : '—'}</div></div>
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">Waste vs Sold lb</div><div className="mt-2 text-3xl font-black">{soldLb ? pct((wasteLb/soldLb)*100) : '—'}</div><div className="mt-1 text-sm text-slate-500">{Math.round(wasteLb)} lb waste</div></div>
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">86 Events</div><div className="mt-2 text-3xl font-black">{sellouts}</div></div>
     </div>
@@ -28,7 +28,7 @@ export default async function ReportsPage() {
       <div className="border-b border-slate-200 p-5"><h2 className="text-xl font-black">Recent Daily Logs</h2></div>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] text-left text-sm">
-          <thead className="bg-slate-50 text-slate-600"><tr><th className="p-3">Date</th><th className="p-3">Total Sales</th><th className="p-3">BBQ Sales</th><th className="p-3">Sold lb</th><th className="p-3">Leftover Units</th><th className="p-3">Leftover lb</th><th className="p-3">Waste lb</th><th className="p-3">86s</th></tr></thead>
+          <thead className="bg-slate-50 text-slate-600"><tr><th className="p-3">Date</th><th className="p-3">Total Sales</th><th className="p-3">Smoked Meat Sales</th><th className="p-3">Sold lb</th><th className="p-3">Leftover Units</th><th className="p-3">Leftover lb</th><th className="p-3">Waste lb</th><th className="p-3">86s</th></tr></thead>
           <tbody>
             {logs.map(l => {
               const sold = l.proteinLogs.reduce((s,x)=>s+x.soldCookedLb,0);

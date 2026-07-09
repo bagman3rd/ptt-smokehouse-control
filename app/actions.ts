@@ -166,7 +166,7 @@ export async function updateScenario(formData: FormData) {
     where: { id },
     data: {
       annualSales: numberField(formData, 'annualSales', 6000000, 1),
-      bbqSalesPercent: numberField(formData, 'bbqSalesPercent', 55, 1, 100),
+      bbqSalesPercent: numberField(formData, 'bbqSalesPercent', 40, 1, 100),
       safetyFactorPct: numberField(formData, 'safetyFactorPct', 8, 0, 50),
       brisketMixPct: numberField(formData, 'brisketMixPct', 30, 0, 100),
       porkMixPct: numberField(formData, 'porkMixPct', 40, 0, 100),
