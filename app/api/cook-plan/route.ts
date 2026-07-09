@@ -64,11 +64,14 @@ export async function POST(request: Request) {
     const items = proteins.map((protein) => {
       const prior = lastLog?.proteinLogs.find((log) => log.proteinId === protein.id);
       const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
-      const result = forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftoverLb });
+      const usableLeftoverUnits = prior?.usableLeftoverUnits ?? 0;
+      const result = forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
       return {
         proteinId: protein.id,
         cookedLbNeeded: result.cookedLbNeeded,
         usableLeftoverLb,
+        usableLeftoverUnits,
+        forecastCookUnits: result.forecastCookUnits,
         safetyFactorPct: scenario.safetyFactorPct,
         rawLbNeeded: result.rawLbNeeded,
         recommendedCookUnits: result.recommendedCookUnits,
@@ -107,10 +110,12 @@ export async function POST(request: Request) {
       forecastBbqSales,
       items: plan.items.map((item) => ({
         protein: item.protein.name,
+        forecastCookUnits: item.forecastCookUnits,
         recommendedCookUnits: item.recommendedCookUnits,
         cookedLbNeeded: item.cookedLbNeeded,
         rawLbNeeded: item.rawLbNeeded,
-        usableLeftoverLb: item.usableLeftoverLb
+        usableLeftoverLb: item.usableLeftoverLb,
+        usableLeftoverUnits: item.usableLeftoverUnits
       })),
       redirectUrl: `/cook-plan?planId=${encodeURIComponent(plan.id)}&generatedAt=${stamp}`,
       message: 'Cook plan generated.'

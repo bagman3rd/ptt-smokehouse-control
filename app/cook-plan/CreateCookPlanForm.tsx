@@ -14,6 +14,13 @@ function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function formatDateWithDow(dateValue: string) {
+  if (!dateValue) return '';
+  const date = new Date(`${dateValue}T00:00:00.000Z`);
+  const dow = date.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' });
+  return `${dateValue} ${dow}`;
+}
+
 function formatMoney(value: number | undefined) {
   if (value === undefined || Number.isNaN(value)) return '—';
   return value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
@@ -58,7 +65,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
         throw new Error(data.message || `Generate failed with status ${response.status}`);
       }
       setLastResult(data);
-      setMessage(`Generated ${data.scenarioName || 'cook plan'} using ${data.dayPatternName || selectedDayPattern.name} for ${serviceDate}. Loading updated meat numbers...`);
+      setMessage(`Generated ${data.scenarioName || 'cook plan'} using ${data.dayPatternName || selectedDayPattern.name} for ${formatDateWithDow(serviceDate)}. Loading updated meat numbers...`);
       // Force a full navigation to the specific newly-created plan. router.refresh() alone can leave
       // stale server-component output visible on Render/browser caches.
       window.location.assign(data.redirectUrl || `/cook-plan?generatedAt=${Date.now()}`);
@@ -75,6 +82,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
       <div>
         <label className="label">Service Date</label>
         <input className="field mt-1" value={serviceDate} onChange={(event) => setServiceDate(event.target.value)} type="date" required />
+        <div className="mt-1 text-xs font-bold text-slate-500">{formatDateWithDow(serviceDate)}</div>
       </div>
       <div>
         <label className="label">Scenario</label>
@@ -103,7 +111,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
         {error ? <div className="rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-red-800">{error}</div> : null}
         {lastResult?.items ? <div className="rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-700">
           <div className="font-black">API returned:</div>
-          {lastResult.items.map((item: any) => <div key={item.protein}>{item.protein}: {item.recommendedCookUnits} units</div>)}
+          {lastResult.items.map((item: any) => <div key={item.protein}>{item.protein}: forecast {item.forecastCookUnits || item.recommendedCookUnits}, leftover {item.usableLeftoverUnits || 0}, load {item.recommendedCookUnits}</div>)}
         </div> : null}
       </div>
     </form>

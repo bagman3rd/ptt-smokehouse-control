@@ -4,6 +4,7 @@ export type ProteinForecastInput = {
   rawWeightEachLb: number;
   minCookUnits: number;
   maxCookUnits: number;
+  inputUnit?: string;
 };
 
 export type ScenarioInput = {
@@ -42,18 +43,33 @@ export function forecastProteinLoad(args: {
   scenario: ScenarioInput;
   forecastBbqSales: number;
   usableLeftoverLb: number;
+  usableLeftoverUnits?: number;
 }) {
   const mixPct = proteinMixPercent(args.protein.name, args.scenario) / 100;
   const targetCookedLbBeforeLeftover = (args.forecastBbqSales * mixPct) / args.scenario.averagePricePerLbCooked;
-  const netCookedLb = Math.max(0, targetCookedLbBeforeLeftover - args.usableLeftoverLb);
-  const withSafety = netCookedLb * (1 + args.scenario.safetyFactorPct / 100);
-  const rawLbNeeded = args.protein.cookedYieldPercent > 0 ? withSafety / (args.protein.cookedYieldPercent / 100) : withSafety;
-  const cookUnits = args.protein.rawWeightEachLb > 0 ? rawLbNeeded / args.protein.rawWeightEachLb : withSafety;
-  const recommendedCookUnits = Math.min(args.protein.maxCookUnits, Math.max(args.protein.minCookUnits, Math.ceil(cookUnits)));
+  const grossCookedLbWithSafety = targetCookedLbBeforeLeftover * (1 + args.scenario.safetyFactorPct / 100);
+  const grossRawLbNeeded = args.protein.cookedYieldPercent > 0 ? grossCookedLbWithSafety / (args.protein.cookedYieldPercent / 100) : grossCookedLbWithSafety;
+  const grossCookUnits = args.protein.rawWeightEachLb > 0 ? Math.ceil(grossRawLbNeeded / args.protein.rawWeightEachLb) : Math.ceil(grossCookedLbWithSafety);
+
+  const leftoverUnits = Math.max(0, args.usableLeftoverUnits ?? 0);
+  const unitBasedLeftoverCredit = args.protein.inputUnit === 'EACH' || args.protein.inputUnit === 'RACK';
+  const lbLeftoverCredit = unitBasedLeftoverCredit ? 0 : Math.max(0, args.usableLeftoverLb);
+  const leftoverUnitsAsCookedLb = unitBasedLeftoverCredit
+    ? leftoverUnits * args.protein.rawWeightEachLb * (args.protein.cookedYieldPercent / 100)
+    : 0;
+
+  const netCookedLb = Math.max(0, grossCookedLbWithSafety - lbLeftoverCredit - leftoverUnitsAsCookedLb);
+  const rawLbNeeded = args.protein.cookedYieldPercent > 0 ? netCookedLb / (args.protein.cookedYieldPercent / 100) : netCookedLb;
+  const cookUnitsBeforeClamp = unitBasedLeftoverCredit
+    ? Math.max(0, grossCookUnits - leftoverUnits)
+    : (args.protein.rawWeightEachLb > 0 ? rawLbNeeded / args.protein.rawWeightEachLb : netCookedLb);
+  const recommendedCookUnits = Math.min(args.protein.maxCookUnits, Math.max(args.protein.minCookUnits, Math.ceil(cookUnitsBeforeClamp)));
 
   return {
-    cookedLbNeeded: round1(withSafety),
+    cookedLbNeeded: round1(netCookedLb),
+    grossCookedLbNeeded: round1(grossCookedLbWithSafety),
     rawLbNeeded: round1(rawLbNeeded),
+    forecastCookUnits: grossCookUnits,
     recommendedCookUnits
   };
 }

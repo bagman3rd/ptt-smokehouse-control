@@ -1,48 +1,63 @@
-# PTT Smokehouse Control — Build 1.3.4
+# PTT Smokehouse Control — Build 1.3.6
 
-Build 1.3.4 updates the BBQ production assumptions per Archer's latest planning model.
+Build 1.3.6 adds day-of-week display to date labels and makes next-day load planning clearly subtract usable leftover cook units from the next cook plan.
 
-## Changes in Build 1.3.4
+## Major changes
 
-### Protein yield defaults
+### Date display
 
-These are now normalized automatically on seed/bootstrap so existing Render databases update without manual editing:
+Where dates are displayed in the app, the 3-letter day of week is now shown beside the date.
 
-| Protein | Cooked Yield % |
-|---|---:|
-| Brisket | 50% |
-| Pulled Pork | 55% |
-| Ribs | 90% |
-| Pulled Chicken | 75% |
+Examples:
 
-Pulled Chicken is set to 75% because the launch assumption is skinless boneless breast.
+```text
+2026-07-09 Thu
+2026-07-10 Fri
+```
 
-### Weekly day-of-week sales pattern
+Updated areas include:
 
-Default Tourist is now the default app assumption:
+- Daily Cook Plan latest plan
+- Dashboard latest forecast card
+- End-of-Day latest saved log
+- Reports recent daily logs
+- Cook Plan create form helper text
 
-| Day | % of Weekly Sales | Multiplier |
-|---|---:|---:|
-| Monday | 9% | 0.63 |
-| Tuesday | 8% | 0.56 |
-| Wednesday | 10% | 0.70 |
-| Thursday | 12% | 0.84 |
-| Friday | 17% | 1.19 |
-| Saturday | 25% | 1.75 |
-| Sunday | 19% | 1.33 |
+### Leftover cook-unit credit
 
-### Day Pattern profiles added to Cook Plan
+The End-of-Day page now has a separate field:
 
-The Cook Plan screen now includes a **Day Pattern** dropdown:
+```text
+Usable Leftover Units
+```
 
-| Profile | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Default Tourist | 9% | 8% | 10% | 12% | 17% | 25% | 19% |
-| Summer | 10% | 10% | 12% | 13% | 16% | 22% | 17% |
-| Shoulder Season | 8% | 7% | 9% | 11% | 18% | 28% | 19% |
-| Rod Run / Event | 5% | 5% | 7% | 13% | 24% | 32% | 14% |
+This is the field that subtracts directly from the next day's recommended load.
 
-ROD RUN scenario auto-selects the Rod Run / Event pattern. Other scenarios default to Default Tourist, but the dropdown can be changed manually before generating.
+Example:
+
+```text
+7/9 End of Day: Pulled Chicken usable leftover units = 6
+7/10 Cook Plan forecast need = 28 chicken
+7/10 Load today = 22 chicken
+```
+
+The Cook Plan page now displays three separate numbers for every protein:
+
+| Field | Meaning |
+|---|---|
+| Forecast need | Total units needed before leftover credit |
+| Leftover credit | Usable leftover units from the prior EOD log |
+| Load today | New units to cook/load today after leftover credit |
+
+### Database changes
+
+Added fields:
+
+- `CookPlanItem.forecastCookUnits`
+- `CookPlanItem.usableLeftoverUnits`
+- `EndOfDayProteinLog.usableLeftoverUnits`
+
+Render deploy still uses `prisma db push --accept-data-loss` through the existing `render-build` script, so the deployed database should update automatically.
 
 ## Render deploy settings
 
@@ -75,29 +90,17 @@ NODE_VERSION=20.18.1
 NEXT_PUBLIC_APP_NAME=PTT Smokehouse Control
 ```
 
-Do not use these old variables:
+## Test case for this build
 
-```text
-NEXTAUTH_SECRET
-NEXTAUTH_URL
-PORT
-```
+1. Open End of Day.
+2. Enter service date `2026-07-09`.
+3. For Pulled Chicken, enter `6` in **Usable Leftover Units**.
+4. Save End-of-Day Log.
+5. Open Cook Plan.
+6. Generate a plan for `2026-07-10`.
+7. Pulled Chicken should show:
+   - Forecast need: original needed units
+   - Leftover credit: 6 chicken
+   - Load today: forecast need minus 6
 
-## Deploy with GitHub Desktop
-
-1. Unzip this flat ZIP.
-2. Copy everything from the ZIP root.
-3. Paste into your existing `ptt-smokehouse-control` repo folder.
-4. Replace files.
-5. Commit: `Build 1.3.4 update yields and day patterns`.
-6. Push origin.
-7. Render → Manual Deploy → Clear build cache & deploy.
-
-## Post-deploy test
-
-1. Open Settings and confirm Pulled Chicken yield is 75%, Pulled Pork 55%, and Ribs 90%.
-2. Open Cook Plan.
-3. Generate Base $6M with Default Tourist.
-4. Generate Base $6M with Summer.
-5. Generate Base $6M with Shoulder Season.
-6. Generate ROD RUN and confirm Rod Run / Event is selected and the Saturday number is heavier.
+Same logic applies to pork butts and ribs when entered as usable leftover units.

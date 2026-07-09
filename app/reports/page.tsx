@@ -1,7 +1,7 @@
 import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
+import { fmtDateWithDow } from '@/lib/date';
 
-function fmtDate(d: Date) { return d.toISOString().slice(0,10); }
 function pct(n: number) { return `${Math.round(n * 10) / 10}%`; }
 
 export default async function ReportsPage() {
@@ -28,14 +28,15 @@ export default async function ReportsPage() {
       <div className="border-b border-slate-200 p-5"><h2 className="text-xl font-black">Recent Daily Logs</h2></div>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] text-left text-sm">
-          <thead className="bg-slate-50 text-slate-600"><tr><th className="p-3">Date</th><th className="p-3">Total Sales</th><th className="p-3">BBQ Sales</th><th className="p-3">Sold lb</th><th className="p-3">Leftover lb</th><th className="p-3">Waste lb</th><th className="p-3">86s</th></tr></thead>
+          <thead className="bg-slate-50 text-slate-600"><tr><th className="p-3">Date</th><th className="p-3">Total Sales</th><th className="p-3">BBQ Sales</th><th className="p-3">Sold lb</th><th className="p-3">Leftover Units</th><th className="p-3">Leftover lb</th><th className="p-3">Waste lb</th><th className="p-3">86s</th></tr></thead>
           <tbody>
             {logs.map(l => {
               const sold = l.proteinLogs.reduce((s,x)=>s+x.soldCookedLb,0);
               const leftover = l.proteinLogs.reduce((s,x)=>s+x.usableLeftoverLb,0);
+              const leftoverUnits = l.proteinLogs.reduce((s,x)=>s+(x.usableLeftoverUnits || 0),0);
               const waste = l.proteinLogs.reduce((s,x)=>s+x.wasteLb,0);
               const x86 = l.proteinLogs.filter(x=>x.eightySixed).length;
-              return <tr key={l.id} className="border-t border-slate-100"><td className="p-3 font-bold">{fmtDate(l.serviceDate)}</td><td className="p-3">${Math.round(l.totalSales).toLocaleString()}</td><td className="p-3">${Math.round(l.bbqSales).toLocaleString()}</td><td className="p-3">{sold}</td><td className="p-3">{leftover}</td><td className="p-3">{waste}</td><td className="p-3">{x86}</td></tr>;
+              return <tr key={l.id} className="border-t border-slate-100"><td className="p-3 font-bold">{fmtDateWithDow(l.serviceDate)}</td><td className="p-3">${Math.round(l.totalSales).toLocaleString()}</td><td className="p-3">${Math.round(l.bbqSales).toLocaleString()}</td><td className="p-3">{sold}</td><td className="p-3">{leftoverUnits}</td><td className="p-3">{leftover}</td><td className="p-3">{waste}</td><td className="p-3">{x86}</td></tr>;
             })}
           </tbody>
         </table>

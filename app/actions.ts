@@ -58,11 +58,14 @@ export async function createCookPlan(formData: FormData) {
   const items = proteins.map((protein) => {
     const prior = lastLog?.proteinLogs.find((log) => log.proteinId === protein.id);
     const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
-    const result = forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftoverLb });
+    const usableLeftoverUnits = prior?.usableLeftoverUnits ?? 0;
+    const result = forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
     return {
       proteinId: protein.id,
       cookedLbNeeded: result.cookedLbNeeded,
       usableLeftoverLb,
+      usableLeftoverUnits,
+      forecastCookUnits: result.forecastCookUnits,
       safetyFactorPct: scenario.safetyFactorPct,
       rawLbNeeded: result.rawLbNeeded,
       recommendedCookUnits: result.recommendedCookUnits,
@@ -126,6 +129,7 @@ export async function saveEndOfDayLog(formData: FormData) {
           cookedUnits: numberField(formData, `cookedUnits-${protein.id}`),
           soldCookedLb: numberField(formData, `soldCookedLb-${protein.id}`),
           usableLeftoverLb: numberField(formData, `usableLeftoverLb-${protein.id}`),
+          usableLeftoverUnits: numberField(formData, `usableLeftoverUnits-${protein.id}`),
           wasteLb: numberField(formData, `wasteLb-${protein.id}`),
           eightySixed: formData.get(`eightySixed-${protein.id}`) === 'on',
           wasteReason: String(formData.get(`wasteReason-${protein.id}`) || '')
@@ -143,6 +147,7 @@ export async function saveEndOfDayLog(formData: FormData) {
           cookedUnits: numberField(formData, `cookedUnits-${protein.id}`),
           soldCookedLb: numberField(formData, `soldCookedLb-${protein.id}`),
           usableLeftoverLb: numberField(formData, `usableLeftoverLb-${protein.id}`),
+          usableLeftoverUnits: numberField(formData, `usableLeftoverUnits-${protein.id}`),
           wasteLb: numberField(formData, `wasteLb-${protein.id}`),
           eightySixed: formData.get(`eightySixed-${protein.id}`) === 'on',
           wasteReason: String(formData.get(`wasteReason-${protein.id}`) || '')

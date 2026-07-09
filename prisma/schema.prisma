@@ -120,6 +120,8 @@ model CookPlanItem {
   protein               Protein @relation(fields: [proteinId], references: [id])
   cookedLbNeeded        Float
   usableLeftoverLb      Float    @default(0)
+  usableLeftoverUnits   Float    @default(0)
+  forecastCookUnits     Float    @default(0)
   safetyFactorPct       Float
   rawLbNeeded           Float
   recommendedCookUnits  Float
@@ -148,6 +150,7 @@ model EndOfDayProteinLog {
   cookedUnits     Float    @default(0)
   soldCookedLb    Float    @default(0)
   usableLeftoverLb Float   @default(0)
+  usableLeftoverUnits Float @default(0)
   wasteLb         Float    @default(0)
   eightySixed     Boolean  @default(false)
   wasteReason     String?

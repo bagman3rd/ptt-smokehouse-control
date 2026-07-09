@@ -2,9 +2,17 @@ import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { saveEndOfDayLog } from '@/app/actions';
+import { fmtDateWithDow } from '@/lib/date';
 
 function today() { return new Date().toISOString().slice(0,10); }
-function fmtDate(d: Date) { return d.toISOString().slice(0,10); }
+function displayUnit(proteinName: string, inputUnit: string) {
+  const lower = proteinName.toLowerCase();
+  if (lower.includes('pork')) return 'butts';
+  if (lower.includes('rib')) return 'racks';
+  if (lower.includes('chicken')) return 'chicken';
+  if (lower.includes('brisket')) return 'briskets';
+  return inputUnit.toLowerCase().replace('_', ' ');
+}
 
 export default async function EndOfDayPage() {
   await ensureDefaultData(prisma);
@@ -32,12 +40,14 @@ export default async function EndOfDayPage() {
 
       <section className="card p-5">
         <h2 className="text-xl font-black">Protein Results</h2>
+        <p className="mt-1 text-sm text-slate-600">Enter usable leftovers in cook units for tomorrow's load credit. Example: 6 leftover chicken entered here subtracts 6 from tomorrow's recommended chicken load.</p>
         <div className="mt-4 space-y-4">
           {proteins.map(p => <div key={p.id} className="rounded-2xl border border-slate-200 p-4">
             <div className="mb-3 text-lg font-black">{p.name}</div>
-            <div className="grid gap-3 md:grid-cols-6">
+            <div className="grid gap-3 md:grid-cols-7">
               <div><label className="label">Cooked Units</label><input className="field mt-1" name={`cookedUnits-${p.id}`} type="number" step="0.1" /></div>
               <div><label className="label">Sold Cooked lb</label><input className="field mt-1" name={`soldCookedLb-${p.id}`} type="number" step="0.1" /></div>
+              <div><label className="label">Usable Leftover Units</label><input className="field mt-1" name={`usableLeftoverUnits-${p.id}`} type="number" step="0.1" placeholder={displayUnit(p.name, p.inputUnit)} /></div>
               <div><label className="label">Usable Leftover lb</label><input className="field mt-1" name={`usableLeftoverLb-${p.id}`} type="number" step="0.1" /></div>
               <div><label className="label">Waste lb</label><input className="field mt-1" name={`wasteLb-${p.id}`} type="number" step="0.1" /></div>
               <div><label className="label">Waste Reason</label><select className="field mt-1" name={`wasteReason-${p.id}`}><option value="">None</option><option>Overproduced</option><option>Dried out</option><option>Quality reject</option><option>Dropped/spoiled</option><option>Other</option></select></div>
@@ -51,9 +61,9 @@ export default async function EndOfDayPage() {
 
     {latestLog ? <section className="card mt-6 p-5">
       <h2 className="text-xl font-black">Latest Saved Log</h2>
-      <p className="mt-1 text-slate-600">{fmtDate(latestLog.serviceDate)} · Total sales ${latestLog.totalSales.toLocaleString()} · BBQ sales ${latestLog.bbqSales.toLocaleString()}</p>
+      <p className="mt-1 text-slate-600">{fmtDateWithDow(latestLog.serviceDate)} · Total sales ${latestLog.totalSales.toLocaleString()} · BBQ sales ${latestLog.bbqSales.toLocaleString()}</p>
       <div className="mt-4 grid gap-3 md:grid-cols-2">
-        {latestLog.proteinLogs.map(log => <div key={log.id} className="rounded-xl border border-slate-200 p-3 text-sm"><strong>{log.protein.name}</strong>: sold {log.soldCookedLb} lb · leftover {log.usableLeftoverLb} lb · waste {log.wasteLb} lb {log.eightySixed ? '· 86' : ''}</div>)}
+        {latestLog.proteinLogs.map(log => <div key={log.id} className="rounded-xl border border-slate-200 p-3 text-sm"><strong>{log.protein.name}</strong>: sold {log.soldCookedLb} lb · leftover {log.usableLeftoverUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} / {log.usableLeftoverLb} lb · waste {log.wasteLb} lb {log.eightySixed ? '· 86' : ''}</div>)}
       </div>
     </section> : null}
   </Shell>;

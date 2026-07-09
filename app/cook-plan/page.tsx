@@ -4,13 +4,21 @@ import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { approveCookPlan } from '@/app/actions';
 import { CreateCookPlanForm } from '@/app/cook-plan/CreateCookPlanForm';
+import { fmtDateWithDow } from '@/lib/date';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 function money(n: number) { return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }); }
-function fmtDate(d: Date) { return d.toISOString().slice(0,10); }
 function unitLabel(value: string) { return value.toLowerCase().replace('_', ' '); }
+function displayUnit(proteinName: string, inputUnit: string) {
+  const lower = proteinName.toLowerCase();
+  if (lower.includes('pork')) return 'butts';
+  if (lower.includes('rib')) return 'racks';
+  if (lower.includes('chicken')) return 'chicken';
+  if (lower.includes('brisket')) return 'briskets';
+  return unitLabel(inputUnit);
+}
 
 export default async function CookPlanPage({ searchParams }: { searchParams?: { planId?: string; generatedAt?: string } }) {
   noStore();
@@ -37,7 +45,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-black">Latest Plan</h2>
-          {plan ? <p className="text-slate-600">{fmtDate(plan.serviceDate)} · {plan.scenario.name} · {money(plan.forecastSales)} total forecast · {money(plan.forecastBbqSales)} BBQ forecast · {plan.confidence} confidence</p> : null}
+          {plan ? <p className="text-slate-600">{fmtDateWithDow(plan.serviceDate)} · {plan.scenario.name} · {money(plan.forecastSales)} total forecast · {money(plan.forecastBbqSales)} BBQ forecast · {plan.confidence} confidence</p> : null}
           {plan?.notes ? <p className="mt-1 text-sm font-bold text-slate-500">{plan.notes} · Created {plan.createdAt.toLocaleString('en-US', { timeZone: 'America/New_York' })}</p> : null}
           {searchParams?.generatedAt ? <p className="mt-1 text-sm font-black text-emerald-700">Showing newly generated plan.</p> : null}
         </div>
@@ -50,8 +58,12 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
               <div className="text-lg font-black">{item.protein.name}</div>
-              <div className="mt-1 text-sm text-slate-600">Recommended: <strong className="text-xl text-slate-950">{item.recommendedCookUnits}</strong> {unitLabel(item.protein.inputUnit)} · cooked need {item.cookedLbNeeded} lb · raw need {item.rawLbNeeded} lb</div>
-              <div className="text-sm text-slate-600">Leftover credit: {item.usableLeftoverLb} lb · safety factor {item.safetyFactorPct}%</div>
+              <div className="mt-1 grid gap-2 text-sm text-slate-600 md:grid-cols-3">
+                <div className="rounded-xl bg-slate-50 p-3"><span className="block text-xs font-black uppercase text-slate-500">Forecast need</span><strong className="text-xl text-slate-950">{item.forecastCookUnits || item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
+                <div className="rounded-xl bg-amber-50 p-3"><span className="block text-xs font-black uppercase text-amber-700">Leftover credit</span><strong className="text-xl text-amber-900">{item.usableLeftoverUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)} <span className="text-xs">/ {item.usableLeftoverLb} lb</span></div>
+                <div className="rounded-xl bg-emerald-50 p-3"><span className="block text-xs font-black uppercase text-emerald-700">Load today</span><strong className="text-xl text-emerald-900">{item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
+              </div>
+              <div className="mt-2 text-sm text-slate-600">Net cooked production need {item.cookedLbNeeded} lb · net raw need {item.rawLbNeeded} lb · safety factor {item.safetyFactorPct}%</div>
             </div>
             <div className="grid gap-2 md:w-72">
               <label className="label">Approved Cook Units</label>

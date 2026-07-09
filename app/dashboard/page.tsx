@@ -3,9 +3,17 @@ import { Shell } from '@/components/Shell';
 import { StatCard } from '@/components/StatCard';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
+import { fmtDateWithDow } from '@/lib/date';
 
 function money(n: number) { return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }); }
-function fmtDate(d: Date) { return d.toISOString().slice(0,10); }
+function displayUnit(proteinName: string, inputUnit: string) {
+  const lower = proteinName.toLowerCase();
+  if (lower.includes('pork')) return 'butts';
+  if (lower.includes('rib')) return 'racks';
+  if (lower.includes('chicken')) return 'chicken';
+  if (lower.includes('brisket')) return 'briskets';
+  return inputUnit.toLowerCase().replace('_', ' ');
+}
 
 export default async function DashboardPage() {
   await ensureDefaultData(prisma);
@@ -17,6 +25,7 @@ export default async function DashboardPage() {
   ]);
   const wasteLb7 = logs.flatMap(l => l.proteinLogs).reduce((sum, l) => sum + l.wasteLb, 0);
   const leftoverLb = latestLog?.proteinLogs.reduce((sum, l) => sum + l.usableLeftoverLb, 0) ?? 0;
+  const leftoverUnits = latestLog?.proteinLogs.reduce((sum, l) => sum + (l.usableLeftoverUnits || 0), 0) ?? 0;
   const sellouts7 = logs.flatMap(l => l.proteinLogs).filter(l => l.eightySixed).length;
 
   return <Shell>
@@ -29,9 +38,9 @@ export default async function DashboardPage() {
     </div>
 
     <div className="grid gap-4 md:grid-cols-4">
-      <StatCard label="Latest Forecast" value={latestPlan ? money(latestPlan.forecastSales) : 'No plan'} note={latestPlan ? `${fmtDate(latestPlan.serviceDate)} · ${latestPlan.scenario.name}` : 'Create first cook plan'} />
+      <StatCard label="Latest Forecast" value={latestPlan ? money(latestPlan.forecastSales) : 'No plan'} note={latestPlan ? `${fmtDateWithDow(latestPlan.serviceDate)} · ${latestPlan.scenario.name}` : 'Create first cook plan'} />
       <StatCard label="BBQ Forecast" value={latestPlan ? money(latestPlan.forecastBbqSales) : '—'} note={latestPlan ? `Confidence: ${latestPlan.confidence}` : undefined} />
-      <StatCard label="Usable Leftover" value={`${Math.round(leftoverLb)} lb`} note="From latest end-of-day log" />
+      <StatCard label="Usable Leftover" value={`${Math.round(leftoverUnits)} units`} note={`${Math.round(leftoverLb)} lb from latest EOD log`} />
       <StatCard label="7-Day Sellouts" value={`${sellouts7}`} note={`7-day waste: ${Math.round(wasteLb7)} lb`} />
     </div>
 
@@ -44,7 +53,7 @@ export default async function DashboardPage() {
               <div className="font-bold">{item.protein.name}</div>
               <div className="text-2xl font-black">{item.approvedCookUnits ?? item.recommendedCookUnits}</div>
             </div>
-            <div className="mt-1 text-sm text-slate-600">Cooked need {item.cookedLbNeeded} lb · Raw need {item.rawLbNeeded} lb · Leftover credit {item.usableLeftoverLb} lb</div>
+            <div className="mt-1 text-sm text-slate-600">Forecast {item.forecastCookUnits || item.recommendedCookUnits} {displayUnit(item.protein.name, item.protein.inputUnit)} · Leftover {item.usableLeftoverUnits} {displayUnit(item.protein.name, item.protein.inputUnit)} / {item.usableLeftoverLb} lb · Load {(item.approvedCookUnits ?? item.recommendedCookUnits)} {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
           </div>)}
         </div>}
       </div>
