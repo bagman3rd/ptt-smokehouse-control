@@ -3,7 +3,7 @@ services:
     name: ptt-smokehouse-control
     env: node
     plan: starter
-    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false && pnpm run render-build
+    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
     startCommand: npm run start
     envVars:
       - key: NODE_VERSION

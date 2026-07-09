@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,9 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "prisma:seed": "tsx prisma/seed.ts",
-    "render-build": "prisma generate && prisma migrate deploy && next build"
+    "render-build": "prisma generate && prisma db push --accept-data-loss && tsx prisma/seed.ts && next build",
+    "db:push": "prisma db push --accept-data-loss",
+    "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",
