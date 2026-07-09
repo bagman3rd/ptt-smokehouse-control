@@ -1,6 +1,6 @@
-# PTT Smokehouse Control — Build 1.2.7
+# PTT Smokehouse Control — Build 1.2.8
 
-Build 1.2.7 is a deployment recovery build. It avoids Prisma migration-state failures on Render by using Prisma `db push` for this MVP database instead of `migrate deploy` during the Render build.
+Build 1.2.8 is a deployment recovery build. It avoids Prisma migration-state failures on Render by using Prisma `db push` for this MVP database instead of `migrate deploy` during the Render build.
 
 ## Render Build Command
 
@@ -40,18 +40,18 @@ PORT
 
 ## Important database note
 
-This is still an MVP/test database. If Render shows a failed Prisma migration from earlier deploy attempts, the cleanest fix is to delete/recreate the Render Postgres database or continue using this Build 1.2.7 path, which uses `prisma db push` instead of migration deploy.
+This is still an MVP/test database. If Render shows a failed Prisma migration from earlier deploy attempts, the cleanest fix is to delete/recreate the Render Postgres database or continue using this Build 1.2.8 path, which uses `prisma db push` instead of migration deploy.
 
-## What changed in Build 1.2.7
+## What changed in Build 1.2.8
 
-- App badge updated to Build 1.2.7.
+- App badge updated to Build 1.2.8.
 - `render-build` changed to:
 
 ```bash
 prisma generate && prisma db push --accept-data-loss && tsx prisma/seed.ts && next build
 ```
 
-- Keeps Build 1.2.6 pnpm/Corepack deployment approach.
+- Keeps Build 1.2.8 pnpm/Corepack deployment approach.
 - Keeps seed-data self-healing behavior for empty scenario/protein dropdowns.
 - Keeps flat ZIP packaging with project files at ZIP root.
 
@@ -61,7 +61,7 @@ prisma generate && prisma db push --accept-data-loss && tsx prisma/seed.ts && ne
 2. Copy all files and folders from the ZIP root.
 3. Paste into your existing `ptt-smokehouse-control` repo folder.
 4. Replace files in destination.
-5. In GitHub Desktop, commit: `Build 1.2.7 Render db push recovery`.
+5. In GitHub Desktop, commit: `Build 1.2.8 Render db push recovery`.
 6. Push origin.
 7. In Render, use the Build Command above.
 8. Manual Deploy -> Clear build cache & deploy.

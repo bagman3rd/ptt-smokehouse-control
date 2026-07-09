@@ -1,4 +1,4 @@
-# PTT Smokehouse Control — Build 1.2.7 Deployment Recovery Report
+# PTT Smokehouse Control — Build 1.2.8 Deployment Recovery Report
 
 ## Problem observed
 
@@ -13,7 +13,7 @@ New migrations will not be applied
 
 Earlier failed deploy attempts repeatedly ran `prisma migrate deploy` against the same Render Postgres database. Prisma recorded a failed migration in `_prisma_migrations`, which blocked later migration deploys.
 
-## Build 1.2.7 fix
+## Build 1.2.8 fix
 
 For this MVP/test database, the deployment path now uses:
 
@@ -25,8 +25,8 @@ This bypasses migration-history state and aligns the database directly to `schem
 
 ## Validation performed
 
-- Confirmed package version updated to 1.2.7.
-- Confirmed nav badge updated to Build 1.2.7.
+- Confirmed package version updated to 1.2.8.
+- Confirmed nav badge updated to Build 1.2.8.
 - Confirmed Render build script no longer runs `prisma migrate deploy`.
 - Confirmed seed script remains idempotent via `upsert` calls.
 - Confirmed flat ZIP packaging.
