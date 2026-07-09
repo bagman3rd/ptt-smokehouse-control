@@ -62,9 +62,9 @@ export async function ensureDefaultData(prisma: PrismaClient) {
     for (const [dayOfWeek, label, multiplier] of days) await prisma.dayMultiplier.upsert({ where: { dayOfWeek }, update: { label, multiplier }, create: { dayOfWeek, label, multiplier } });
   }
 
-  if (monthCount === 0) {
+  {
     const months = [
-      [1, 'January', 0.68], [2, 'February', 0.72], [3, 'March', 0.92], [4, 'April', 1.08], [5, 'May', 1.05], [6, 'June', 1.22], [7, 'July', 1.28], [8, 'August', 1.14], [9, 'September', 1.05], [10, 'October', 1.18], [11, 'November', 0.95], [12, 'December', 0.92]
+      [1, 'January', 0.584], [2, 'February', 0.555], [3, 'March', 0.808], [4, 'April', 0.935], [5, 'May', 0.954], [6, 'June', 1.320], [7, 'July', 1.506], [8, 'August', 1.163], [9, 'September', 0.890], [10, 'October', 1.232], [11, 'November', 0.821], [12, 'December', 1.232]
     ] as const;
     for (const [month, label, multiplier] of months) await prisma.monthMultiplier.upsert({ where: { month }, update: { label, multiplier }, create: { month, label, multiplier } });
   }
