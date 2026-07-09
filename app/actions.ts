@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
-import { ensureDefaultData } from '@/lib/bootstrap';
+import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid service date');
@@ -31,7 +31,7 @@ export async function createCookPlan(formData: FormData) {
     : null;
 
   if (!scenario) {
-    scenario = await prisma.forecastScenario.findFirst({ orderBy: { annualSales: 'asc' } });
+    scenario = await prisma.forecastScenario.findFirst({ where: activeScenarioWhere(), orderBy: { annualSales: 'asc' } });
     if (!scenario) throw new Error('No forecast scenarios exist. Open Settings or run seed data.');
     scenarioId = scenario.id;
   }

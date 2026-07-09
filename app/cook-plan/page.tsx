@@ -1,7 +1,7 @@
 import { unstable_noStore as noStore } from 'next/cache';
 import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
-import { ensureDefaultData } from '@/lib/bootstrap';
+import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { approveCookPlan } from '@/app/actions';
 import { CreateCookPlanForm } from '@/app/cook-plan/CreateCookPlanForm';
 
@@ -16,7 +16,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
   noStore();
   await ensureDefaultData(prisma);
   const [scenarios, selectedPlan, latestPlan] = await Promise.all([
-    prisma.forecastScenario.findMany({ orderBy: { annualSales: 'asc' } }),
+    prisma.forecastScenario.findMany({ where: activeScenarioWhere(), orderBy: { annualSales: 'asc' } }),
     searchParams?.planId ? prisma.cookPlan.findUnique({ where: { id: searchParams.planId }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } }) : Promise.resolve(null),
     prisma.cookPlan.findFirst({ orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
   ]);
