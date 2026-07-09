@@ -1,6 +1,6 @@
-# PTT Smokehouse Control — Build 1.3.6
+# PTT Smokehouse Control — Build 1.3.7
 
-Build 1.3.6 adds day-of-week display to date labels and makes next-day load planning clearly subtract usable leftover cook units from the next cook plan.
+Build 1.3.7 adds day-of-week display to date labels and makes next-day load planning clearly subtract usable leftover cook units from the next cook plan.
 
 ## Major changes
 

@@ -1,10 +1,13 @@
+import { unstable_noStore as noStore } from 'next/cache';
 import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
-import { saveEndOfDayLog } from '@/app/actions';
 import { fmtDateWithDow } from '@/lib/date';
+import { EndOfDayForm } from '@/app/end-of-day/EndOfDayForm';
 
-function today() { return new Date().toISOString().slice(0,10); }
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 function displayUnit(proteinName: string, inputUnit: string) {
   const lower = proteinName.toLowerCase();
   if (lower.includes('pork')) return 'butts';
@@ -14,50 +17,24 @@ function displayUnit(proteinName: string, inputUnit: string) {
   return inputUnit.toLowerCase().replace('_', ' ');
 }
 
-export default async function EndOfDayPage() {
+export default async function EndOfDayPage({ searchParams }: { searchParams?: { savedAt?: string } }) {
+  noStore();
   await ensureDefaultData(prisma);
   const [proteins, latestLog] = await Promise.all([
     prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
-    prisma.endOfDayLog.findFirst({ orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true } } } })
+    prisma.endOfDayLog.findFirst({ orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
   ]);
+
+  const proteinProps = proteins.map((protein) => ({ id: protein.id, name: protein.name, inputUnit: protein.inputUnit }));
 
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">End-of-Day Log</h1>
       <p className="mt-2 text-slate-600">KM enters actual sales, cooked units, usable leftovers, waste, and 86 events.</p>
+      {searchParams?.savedAt ? <p className="mt-2 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-black text-emerald-800">End-of-day log saved. Latest saved values are shown below.</p> : null}
     </div>
 
-    <form action={saveEndOfDayLog} className="space-y-6">
-      <section className="card p-5">
-        <h2 className="text-xl font-black">Service Summary</h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-4">
-          <div><label className="label">Service Date</label><input className="field mt-1" type="date" name="serviceDate" defaultValue={today()} required /></div>
-          <div><label className="label">Total Sales</label><input className="field mt-1" type="number" step="1" name="totalSales" placeholder="0" /></div>
-          <div><label className="label">BBQ Sales</label><input className="field mt-1" type="number" step="1" name="bbqSales" placeholder="0" /></div>
-          <div><label className="label">Notes</label><input className="field mt-1" name="notes" placeholder="Weather, events, service issues" /></div>
-        </div>
-      </section>
-
-      <section className="card p-5">
-        <h2 className="text-xl font-black">Protein Results</h2>
-        <p className="mt-1 text-sm text-slate-600">Enter usable leftovers in cook units for tomorrow's load credit. Example: 6 leftover chicken entered here subtracts 6 from tomorrow's recommended chicken load.</p>
-        <div className="mt-4 space-y-4">
-          {proteins.map(p => <div key={p.id} className="rounded-2xl border border-slate-200 p-4">
-            <div className="mb-3 text-lg font-black">{p.name}</div>
-            <div className="grid gap-3 md:grid-cols-7">
-              <div><label className="label">Cooked Units</label><input className="field mt-1" name={`cookedUnits-${p.id}`} type="number" step="0.1" /></div>
-              <div><label className="label">Sold Cooked lb</label><input className="field mt-1" name={`soldCookedLb-${p.id}`} type="number" step="0.1" /></div>
-              <div><label className="label">Usable Leftover Units</label><input className="field mt-1" name={`usableLeftoverUnits-${p.id}`} type="number" step="0.1" placeholder={displayUnit(p.name, p.inputUnit)} /></div>
-              <div><label className="label">Usable Leftover lb</label><input className="field mt-1" name={`usableLeftoverLb-${p.id}`} type="number" step="0.1" /></div>
-              <div><label className="label">Waste lb</label><input className="field mt-1" name={`wasteLb-${p.id}`} type="number" step="0.1" /></div>
-              <div><label className="label">Waste Reason</label><select className="field mt-1" name={`wasteReason-${p.id}`}><option value="">None</option><option>Overproduced</option><option>Dried out</option><option>Quality reject</option><option>Dropped/spoiled</option><option>Other</option></select></div>
-              <label className="flex items-center gap-2 pt-7 text-sm font-bold"><input name={`eightySixed-${p.id}`} type="checkbox" className="h-5 w-5" /> 86?</label>
-            </div>
-          </div>)}
-        </div>
-        <button className="btn-primary mt-5 w-full md:w-auto">Save End-of-Day Log</button>
-      </section>
-    </form>
+    <EndOfDayForm proteins={proteinProps} />
 
     {latestLog ? <section className="card mt-6 p-5">
       <h2 className="text-xl font-black">Latest Saved Log</h2>
