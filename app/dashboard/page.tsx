@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Shell } from '@/components/Shell';
-import { requireAuth } from '@/lib/auth';
+import { requireRole, hasRole } from '@/lib/auth';
 import { StatCard } from '@/components/StatCard';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
@@ -18,8 +18,8 @@ function displayUnit(proteinName: string, inputUnit: string) {
 }
 
 export default async function DashboardPage() {
-    requireAuth();
-await ensureDefaultData(prisma);
+  const user = await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
+  await ensureDefaultData(prisma);
   const todayUtc = new Date();
   todayUtc.setUTCHours(0, 0, 0, 0);
   const operationalStartDate = addUtcDays(todayUtc, -1);
@@ -58,7 +58,7 @@ await ensureDefaultData(prisma);
         <h1 className="text-3xl font-black tracking-tight">Consultant Dashboard</h1>
         <p className="mt-2 text-slate-600">Private view for protein-load planning before KM/pitmaster rollout.</p>
       </div>
-      <Link href="/cook-plan" className="btn-primary">Create / Review Cook Plan</Link>
+      {hasRole(user, ['ADMIN', 'OWNER', 'KITCHEN_MANAGER']) ? <Link href="/cook-plan" className="btn-primary">Create / Review Cook Plan</Link> : <Link href="/end-of-day" className="btn-primary">Enter End-of-Day Log</Link>}
     </div>
 
     <div className="grid gap-4 md:grid-cols-4">
@@ -79,9 +79,9 @@ await ensureDefaultData(prisma);
           <h2 className="text-lg font-black">Operational Alerts</h2>
           <p className="text-sm text-slate-600">Quick exceptions before anyone loads the pit.</p>
         </div>
-        <form action={deleteFutureCookPlans}>
+        {hasRole(user, ['ADMIN', 'OWNER']) ? <form action={deleteFutureCookPlans}>
           <button className="btn-secondary" type="submit">Delete future test plans beyond 14 days</button>
-        </form>
+        </form> : null}
       </div>
       {operationalAlerts.length === 0 ? <div className="mt-3 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800">No current alerts.</div> : <ul className="mt-3 list-disc space-y-1 pl-5 text-sm font-bold text-amber-900">
         {operationalAlerts.map((alert) => <li key={alert}>{alert}</li>)}

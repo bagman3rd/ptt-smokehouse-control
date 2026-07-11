@@ -1,6 +1,6 @@
 import { unstable_noStore as noStore } from 'next/cache';
 import { Shell } from '@/components/Shell';
-import { requireAuth } from '@/lib/auth';
+import { requireRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { approveCookPlan } from '@/app/actions';
@@ -31,7 +31,7 @@ function timingCategory(proteinName: string) {
 }
 
 export default async function CookPlanPage({ searchParams }: { searchParams?: { planId?: string; generatedAt?: string } }) {
-  requireAuth();
+  await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   noStore();
   await ensureDefaultData(prisma);
   const [scenarios, selectedPlan, latestPlan] = await Promise.all([

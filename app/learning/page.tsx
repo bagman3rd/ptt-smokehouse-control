@@ -1,6 +1,6 @@
 import { unstable_noStore as noStore } from 'next/cache';
 import { Shell } from '@/components/Shell';
-import { requireAuth } from '@/lib/auth';
+import { requireRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
@@ -69,7 +69,7 @@ function recommendationText(args: {
 }
 
 export default async function LearningPage() {
-    requireAuth();
+    await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
 noStore();
   await ensureDefaultData(prisma);
 

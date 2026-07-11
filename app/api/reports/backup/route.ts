@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { apiAuthError } from '@/lib/auth';
+import { requireApiRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 export async function GET() {
-  const authError = apiAuthError();
+  const authError = await requireApiRole(['ADMIN', 'OWNER']);
   if (authError) return NextResponse.json(authError, { status: 401 });
 
   const [proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns] = await Promise.all([
@@ -20,7 +20,7 @@ export async function GET() {
   const exportedAt = new Date().toISOString();
   const body = JSON.stringify({
     app: 'PTT Smokehouse Control',
-    build: '2.6.0',
+    build: '2.7.0',
     exportedAt,
     counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length },
     proteins,

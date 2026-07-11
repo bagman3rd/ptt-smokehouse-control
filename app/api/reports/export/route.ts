@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { apiAuthError } from '@/lib/auth';
+import { requireApiRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { dateBounds, getReportData, parseReportParams, toCsv } from '@/lib/reporting';
 import { fmtDateWithDow } from '@/lib/date';
@@ -23,7 +23,7 @@ function responseCsv(filename: string, body: string) {
 }
 
 export async function GET(req: NextRequest) {
-  const authError = apiAuthError();
+  const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   if (authError) return NextResponse.json(authError, { status: 401 });
 
   const url = req.nextUrl;

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { apiAuthError } from '@/lib/auth';
+import { requireApiRole } from '@/lib/auth';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 
@@ -11,7 +11,7 @@ function toDateOnly(value: string) {
 
 export async function GET(request: Request) {
   try {
-    const authError = apiAuthError();
+    const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
     if (authError) return NextResponse.json(authError, { status: 401 });
     await ensureDefaultData(prisma);
     const url = new URL(request.url);

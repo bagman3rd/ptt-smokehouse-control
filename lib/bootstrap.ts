@@ -1,4 +1,6 @@
 import { PrismaClient, ProteinUnit, ScenarioType, Role } from '@prisma/client';
+import { hashPassword } from '@/lib/password';
+import { initialAdminPassword } from '@/lib/auth';
 
 const activeScenarioNames = ['Base $6M', 'Aggressive $8M'];
 
@@ -38,7 +40,15 @@ export async function ensureDefaultData(prisma: PrismaClient) {
     await prisma.monthMultiplier.upsert({ where: { month }, update: {}, create: { month, label, multiplier, updatedBy: 'System Seed' } });
   }
 
-  await prisma.user.upsert({ where: { email: 'archer@example.com' }, update: {}, create: { name: 'Archer', email: 'archer@example.com', role: Role.CONSULTANT } });
+  const adminPassword = initialAdminPassword();
+  if (adminPassword) {
+    const passwordHash = hashPassword(adminPassword);
+    await prisma.user.upsert({
+      where: { email: 'admin@smokehouse.local' },
+      update: { username: 'admin', name: 'Admin', role: Role.ADMIN, active: true, passwordHash },
+      create: { name: 'Admin', username: 'admin', email: 'admin@smokehouse.local', passwordHash, role: Role.ADMIN, active: true, createdBy: 'System Seed' }
+    });
+  }
 }
 
 export function activeScenarioWhere() {

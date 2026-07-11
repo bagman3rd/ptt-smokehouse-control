@@ -1,8 +1,17 @@
 import { PrismaClient, ProteinUnit, ScenarioType, Role } from '@prisma/client';
+import { hashPassword } from '../lib/password';
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.user.upsert({ where: { email: 'archer@example.com' }, update: {}, create: { name: 'Archer', email: 'archer@example.com', role: Role.CONSULTANT } });
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (adminPassword && adminPassword.trim().length >= 12) {
+    const passwordHash = hashPassword(adminPassword);
+    await prisma.user.upsert({
+      where: { email: 'admin@smokehouse.local' },
+      update: { username: 'admin', name: 'Admin', role: Role.ADMIN, active: true, passwordHash },
+      create: { name: 'Admin', username: 'admin', email: 'admin@smokehouse.local', passwordHash, role: Role.ADMIN, active: true, createdBy: 'System Seed' }
+    });
+  }
 
   const proteins = [
     { name: 'Brisket', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 13, cookedWeightEachLb: 6.5, cookedYieldPercent: 50, avgSalesPerCookedLb: 40, purchaseCostEach: 0, salesPriceEach: 0, sandwichOz: 5, plateOz: 7, minCookUnits: 1, maxCookUnits: 88, reusableLeftover: true, maxReuseHours: 24, updatedBy: 'System Seed' },

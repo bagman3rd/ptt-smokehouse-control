@@ -8,8 +8,11 @@ datasource db {
 }
 
 enum Role {
-  CONSULTANT
+  ADMIN
   OWNER
+  KITCHEN_MANAGER
+  KITCHEN_CREW
+  CONSULTANT
   KM
   PITMASTER
   VIEWER
@@ -30,12 +33,16 @@ enum ProteinUnit {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  role      Role     @default(VIEWER)
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  name         String
+  username     String?  @unique
+  email        String   @unique
+  passwordHash String?
+  role         Role     @default(KITCHEN_CREW)
+  active       Boolean  @default(true)
+  createdBy    String   @default("System")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
 }
 
 model Protein {
