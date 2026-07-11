@@ -66,13 +66,6 @@ export function setCurrentRestaurantCookie(restaurantId: string) {
   });
 }
 
-export function tenantWhere(restaurantId: string) {
-  return { restaurantId };
-}
-
-export function tenantOrLegacyWhere(restaurantId: string) {
-  return { OR: [{ restaurantId }, { restaurantId: null }] };
-}
 
 export async function auditLog(args: {
   restaurantId?: string | null;

@@ -6,11 +6,11 @@ function read(path) {
 }
 
 const pkg = JSON.parse(read('package.json'));
-assert.equal(pkg.version, '3.4.0', 'package version must be 3.4.0');
-assert.equal(pkg.scripts['build:eval'], 'node scripts/build-3-4-evaluation.mjs', 'build:eval should run Build 3.4.0 evaluation');
+assert.equal(pkg.version, '3.5.0', 'package version must be 3.5.0');
+assert.equal(pkg.scripts['build:eval'], 'node scripts/build-3-4-evaluation.mjs', 'build:eval should run Build 3.5.0 evaluation');
 
 const nav = read('components/Nav.tsx');
-assert.ok(nav.includes('Build 3.4.0'), 'nav badge must show Build 3.4.0');
+assert.ok(nav.includes('Build 3.5.0'), 'nav badge must show Build 3.5.0');
 assert.ok(!nav.includes('{user.name} ·'), 'nav must not display user badge text such as Admin · Admin');
 assert.ok(!nav.includes('bg-slate-100 px-3 py-2 text-sm font-bold text-slate-700">{currentRestaurant.name}'), 'single-restaurant name pill must be removed from nav');
 
@@ -35,4 +35,4 @@ assert.ok(settings.includes('PTT default 40% = 80% food × 50% smoked-meat share
 const api = read('app/api/cook-plan/route.ts');
 assert.ok(api.includes('liquor/bar ${LIQUOR_SALES_PERCENT}% excluded'), 'cook-plan notes must include liquor exclusion');
 
-console.log('Build 3.4.0 evaluation checks completed.');
+console.log('Build 3.5.0 evaluation checks completed.');

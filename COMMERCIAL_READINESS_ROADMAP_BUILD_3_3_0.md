@@ -16,7 +16,7 @@
 
 ## Next major commercial build
 
-Build 3.4.0 should focus on:
+Build 3.5.0 should focus on:
 
 1. Email verification and password reset.
 2. Restore-drill utility and backup verification screen.

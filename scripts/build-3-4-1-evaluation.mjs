@@ -6,11 +6,11 @@ function read(path) {
 }
 
 const pkg = JSON.parse(read('package.json'));
-assert.equal(pkg.version, '3.4.1', 'package version must be 3.4.0');
-assert.equal(pkg.scripts['build:eval'], 'node scripts/build-3-4-1-evaluation.mjs', 'build:eval should run Build 3.4.1 evaluation');
+assert.equal(pkg.version, '3.5.0', 'package version must be 3.5.0');
+assert.equal(pkg.scripts['build:eval'], 'node scripts/build-3-4-1-evaluation.mjs', 'build:eval should run Build 3.5.0 evaluation');
 
 const nav = read('components/Nav.tsx');
-assert.ok(nav.includes('Build 3.4.1'), 'nav badge must show Build 3.4.1');
+assert.ok(nav.includes('Build 3.5.0'), 'nav badge must show Build 3.5.0');
 assert.ok(!nav.includes('{user.name} ·'), 'nav must not display user badge text such as Admin · Admin');
 assert.ok(!nav.includes('bg-slate-100 px-3 py-2 text-sm font-bold text-slate-700">{currentRestaurant.name}'), 'single-restaurant name pill must be removed from nav');
 
@@ -38,4 +38,4 @@ assert.ok(api.includes('liquor/bar ${LIQUOR_SALES_PERCENT}% excluded'), 'cook-pl
 assert.ok(pkg.scripts['render-build'].includes('prisma db push'), 'render-build must use db push deploy recovery path');
 assert.ok(!pkg.scripts['render-build'].includes('prisma migrate deploy'), 'render-build must not use migrate deploy until failed migration is resolved');
 assert.ok(!pkg.scripts['render-build'].includes('--accept-data-loss'), 'render-build must not use accept-data-loss');
-console.log('Build 3.4.1 evaluation checks completed.');
+console.log('Build 3.5.0 evaluation checks completed.');

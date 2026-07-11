@@ -1,16 +1,16 @@
-# Test Report — Build 3.4.0
+# Test Report — Build 3.5.0
 
 ## Scope
 
-Build 3.4.0 addresses two requested changes:
+Build 3.5.0 addresses two requested changes:
 
 1. Remove the top navigation identity pills that displayed text such as `Admin · Admin` and `Pigeon Toed Tavern`.
 2. Make the sales model obvious: total restaurant sales include 20% liquor/bar sales, which are excluded before smoked-meat production demand is calculated.
 
 ## Checks Performed
 
-- Confirmed package version is `3.4.0`.
-- Confirmed nav badge displays Build 3.4.0.
+- Confirmed package version is `3.5.0`.
+- Confirmed nav badge displays Build 3.5.0.
 - Confirmed the single-restaurant nav pill is no longer rendered.
 - Confirmed the user/role nav pill is no longer rendered.
 - Confirmed multi-restaurant switcher still appears only when the user has multiple restaurant memberships.
@@ -31,7 +31,7 @@ For the PTT Base $6M scenario:
 - Smoked-meat sales at 40% of total: $2,400,000
 - Smoked-meat share of food: 50%
 
-So yes: the 20% liquor assumption was already mathematically reflected by the 40% smoked-meat setting, but Build 3.4.0 now makes it visible and explicit in the UI.
+So yes: the 20% liquor assumption was already mathematically reflected by the 40% smoked-meat setting, but Build 3.5.0 now makes it visible and explicit in the UI.
 
 ## Result
 
