@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { authConfigErrors } from '@/lib/auth';
 
 export default function LoginPage({ searchParams }: { searchParams?: { error?: string; config?: string } }) {
@@ -7,7 +8,7 @@ export default function LoginPage({ searchParams }: { searchParams?: { error?: s
     <main className="flex min-h-screen items-center justify-center px-4 py-10">
       <div className="card w-full max-w-md p-6">
         <div className="mb-6">
-          <div className="text-sm font-bold uppercase tracking-widest text-slate-500">Pigeon Toed Tavern</div>
+          <div className="text-sm font-bold uppercase tracking-widest text-slate-500">Smokehouse Control</div>
           <h1 className="mt-2 text-3xl font-black">Smokehouse Control</h1>
           <p className="mt-2 text-slate-600">Role-based BBQ production planning and end-of-day logging.</p>
         </div>
@@ -24,6 +25,7 @@ export default function LoginPage({ searchParams }: { searchParams?: { error?: s
           </div>
           <button className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50" type="submit" disabled={hasConfigError}>Login</button>
         </form>
+        <div className="mt-4 flex flex-wrap gap-2"><Link href="/signup" className="btn-secondary">Create Account</Link><Link href="/demo" className="btn-secondary">Try Demo</Link></div>
         <p className="mt-4 text-xs text-slate-500">Initial admin user: <strong>admin</strong>. Password: your Render ADMIN_PASSWORD value.</p>
       </div>
     </main>

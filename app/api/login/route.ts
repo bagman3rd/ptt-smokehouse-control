@@ -3,6 +3,8 @@ import { authConfigErrors, setSessionCookie } from '@/lib/auth';
 import { verifyPassword } from '@/lib/password';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
+import { enforceRateLimit } from '@/lib/rateLimit';
+import { loginSchema } from '@/lib/validators';
 
 function getBaseUrl(request: Request) {
   const proto = request.headers.get('x-forwarded-proto') || 'https';
@@ -12,6 +14,8 @@ function getBaseUrl(request: Request) {
 
 export async function POST(request: Request) {
   const baseUrl = getBaseUrl(request);
+  const limited = enforceRateLimit(request, 'login', 8, 15 * 60_000);
+  if (limited) return limited;
   const configErrors = authConfigErrors();
   if (configErrors.length > 0) {
     return NextResponse.redirect(`${baseUrl}/login?config=1`, 303);
@@ -19,8 +23,10 @@ export async function POST(request: Request) {
 
   await ensureDefaultData(prisma);
   const form = await request.formData();
-  const identifier = String(form.get('username') || '').trim().toLowerCase();
-  const password = String(form.get('password') || '');
+  const parsed = loginSchema.safeParse(Object.fromEntries(form.entries()));
+  if (!parsed.success) return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
+  const identifier = parsed.data.username;
+  const password = parsed.data.password;
 
   const usernameMatch = await prisma.user.findFirst({ where: { active: true, username: identifier } });
   const emailMatches = usernameMatch ? [] : await prisma.user.findMany({ where: { active: true, email: identifier }, take: 2 });

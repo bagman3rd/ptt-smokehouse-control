@@ -4,14 +4,11 @@ import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { requireRole } from '@/lib/auth';
 import { currentRestaurantForUser, auditLog, setCurrentRestaurantCookie } from '@/lib/tenant';
+import { createDefaultRestaurantData, slugifyRestaurant } from '@/lib/starterData';
 import { ProteinUnit, ScenarioType, Role } from '@prisma/client';
 
 function clean(value: FormDataEntryValue | null) {
   return String(value || '').trim();
-}
-
-function slugify(value: string) {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || `restaurant-${Date.now()}`;
 }
 
 async function createStarterData(restaurantId: string) {
@@ -45,8 +42,8 @@ export async function createRestaurant(formData: FormData) {
   const timezone = clean(formData.get('timezone')) || 'America/New_York';
   const role = String(formData.get('role') || 'OWNER') === 'ADMIN' ? Role.ADMIN : Role.OWNER;
   if (!name) throw new Error('Restaurant name is required.');
-  const restaurant = await prisma.restaurant.create({ data: { name, slug: slugify(name), city, state, timezone, active: true } });
-  await createStarterData(restaurant.id);
+  const restaurant = await prisma.restaurant.create({ data: { name, slug: slugifyRestaurant(name), city, state, timezone, active: true } });
+  await createDefaultRestaurantData(prisma, restaurant.id, 'generic');
   await prisma.restaurantMembership.create({ data: { restaurantId: restaurant.id, userId: current.id, role, active: true } });
   await auditLog({ restaurantId: currentRestaurant.id, actorUserId: current.id, actorName: current.name, action: 'CREATE_RESTAURANT', entity: 'Restaurant', entityId: restaurant.id, afterJson: { name, city, state, role } });
   setCurrentRestaurantCookie(restaurant.id);

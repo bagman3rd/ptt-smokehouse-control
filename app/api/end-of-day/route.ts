@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma';
 import { requireApiRole, currentUser } from '@/lib/auth';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
+import { enforceRateLimit } from '@/lib/rateLimit';
+import { eodSchema } from '@/lib/validators';
 
 const allowedStatuses = new Set(['DRAFT', 'COMPLETE', 'REVIEWED', 'LOCKED']);
 
@@ -23,6 +25,8 @@ function hasBlank(value: unknown) {
 }
 
 export async function POST(request: Request) {
+  const limited = enforceRateLimit(request, 'api:end-of-day', 80, 60_000);
+  if (limited) return limited;
   try {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
     if (authError) return authError;
@@ -31,8 +35,8 @@ export async function POST(request: Request) {
     if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401 });
     const restaurant = await currentRestaurantForUser(user);
     const restaurantId = restaurant.id;
-    const body = await request.json().catch(() => ({}));
-    const serviceDateStr = String(body.serviceDate || '');
+    const body = eodSchema.parse(await request.json().catch(() => ({})));
+    const serviceDateStr = body.serviceDate;
     const serviceDate = toDateOnly(serviceDateStr);
     const totalSales = numberValue(body.totalSales);
     const bbqSales = numberValue(body.bbqSales);

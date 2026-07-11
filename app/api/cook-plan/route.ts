@@ -6,6 +6,8 @@ import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { getDayPatternByKey, getDayPatternMultiplier, inferDayPatternKey } from '@/lib/dayProfiles';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
+import { enforceRateLimit } from '@/lib/rateLimit';
+import { cookPlanSchema } from '@/lib/validators';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid load plan date');
@@ -26,6 +28,8 @@ async function exactEodFor(serviceDate: Date, restaurantId: string) {
 }
 
 export async function POST(request: Request) {
+  const limited = enforceRateLimit(request, 'api:cook-plan', 40, 60_000);
+  if (limited) return limited;
   try {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
     if (authError) return authError;
@@ -35,11 +39,12 @@ export async function POST(request: Request) {
     const restaurant = await currentRestaurantForUser(user);
     const restaurantId = restaurant.id;
 
-    const body = await request.json().catch(() => ({}));
-    const loadDateStr = String(body.serviceDate || '');
-    let scenarioId = String(body.scenarioId || '');
-    const eventMultiplier = numberValue(body.eventMultiplier, 1, 0.5, 5);
-    const requestedDayPatternKey = body.dayPatternKey ? String(body.dayPatternKey) : '';
+    const rawBody = await request.json().catch(() => ({}));
+    const parsedBody = cookPlanSchema.parse(rawBody);
+    const loadDateStr = parsedBody.serviceDate;
+    let scenarioId = parsedBody.scenarioId || '';
+    const eventMultiplier = parsedBody.eventMultiplier;
+    const requestedDayPatternKey = parsedBody.dayPatternKey || '';
     const loadDate = toDateOnly(loadDateStr);
     const nextDayServiceDate = addUtcDays(loadDate, 1);
     const priorEodDate = addUtcDays(loadDate, -1);

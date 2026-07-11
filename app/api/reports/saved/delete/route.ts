@@ -3,8 +3,11 @@ import { revalidatePath } from 'next/cache';
 import { requireApiRole, currentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
+import { enforceRateLimit } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
+  const limited = enforceRateLimit(req, 'api:saved-report-delete', 30, 60_000);
+  if (limited) return limited;
   const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   if (authError) return authError;
   const user = await currentUser();

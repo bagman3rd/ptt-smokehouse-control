@@ -95,3 +95,55 @@ export async function saveSetupCurve(formData: FormData) {
   revalidatePath('/admin/restaurants/setup');
   revalidatePath('/settings');
 }
+
+export async function importSalesHistoryCsv(formData: FormData) {
+  const user = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
+  const csv = clean(formData.get('salesCsv'));
+  if (!csv) throw new Error('Paste CSV rows first. Required columns: date,totalSales,bbqSales optional.');
+  const rows = csv.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const parsed: Array<{ date: Date; totalSales: number; bbqSales: number }> = [];
+  for (const row of rows) {
+    if (/^date\s*,/i.test(row)) continue;
+    const [dateRaw, totalRaw, bbqRaw] = row.split(',').map((x) => x?.trim() || '');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateRaw)) continue;
+    const totalSales = Number(totalRaw);
+    if (!Number.isFinite(totalSales) || totalSales <= 0) continue;
+    const bbqSales = Number.isFinite(Number(bbqRaw)) ? Number(bbqRaw) : Math.round(totalSales * 0.38);
+    parsed.push({ date: new Date(`${dateRaw}T00:00:00.000Z`), totalSales, bbqSales });
+  }
+  if (parsed.length < 7) throw new Error('At least 7 valid sales rows are required to build useful day/month curves.');
+
+  const dayTotals = new Map<number, { total: number; count: number }>();
+  const monthTotals = new Map<number, { total: number; count: number }>();
+  for (const row of parsed) {
+    const dow = row.date.getUTCDay();
+    const month = row.date.getUTCMonth() + 1;
+    const day = dayTotals.get(dow) || { total: 0, count: 0 };
+    day.total += row.totalSales; day.count += 1; dayTotals.set(dow, day);
+    const mon = monthTotals.get(month) || { total: 0, count: 0 };
+    mon.total += row.totalSales; mon.count += 1; monthTotals.set(month, mon);
+    const existing = await prisma.endOfDayLog.findFirst({ where: { restaurantId, serviceDate: row.date } });
+    if (existing) {
+      await prisma.endOfDayLog.update({ where: { id: existing.id }, data: { totalSales: row.totalSales, bbqSales: row.bbqSales, notes: 'Imported sales history only' } });
+    } else {
+      await prisma.endOfDayLog.create({ data: { restaurantId, serviceDate: row.date, totalSales: row.totalSales, bbqSales: row.bbqSales, status: 'DRAFT', enteredBy: user.name, notes: 'Imported sales history only' } });
+    }
+  }
+
+  const overallDayAvg = Array.from(dayTotals.values()).reduce((s, x) => s + x.total / x.count, 0) / Math.max(1, dayTotals.size);
+  for (const [dayOfWeek, value] of dayTotals.entries()) {
+    const multiplier = Math.min(3, Math.max(0.1, (value.total / value.count) / overallDayAvg));
+    await prisma.dayMultiplier.updateMany({ where: { restaurantId, dayOfWeek }, data: { multiplier, updatedBy: `${user.name} sales import` } });
+  }
+  const overallMonthAvg = Array.from(monthTotals.values()).reduce((s, x) => s + x.total / x.count, 0) / Math.max(1, monthTotals.size);
+  for (const [month, value] of monthTotals.entries()) {
+    const multiplier = Math.min(3, Math.max(0.1, (value.total / value.count) / overallMonthAvg));
+    await prisma.monthMultiplier.updateMany({ where: { restaurantId, month }, data: { multiplier, updatedBy: `${user.name} sales import` } });
+  }
+  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'IMPORT_SALES_HISTORY', entity: 'SalesHistory', afterJson: { rows: parsed.length, updatedDayMultipliers: dayTotals.size, updatedMonthMultipliers: monthTotals.size } });
+  revalidatePath('/admin/restaurants/setup');
+  revalidatePath('/admin/restaurants/pos');
+  revalidatePath('/settings');
+}

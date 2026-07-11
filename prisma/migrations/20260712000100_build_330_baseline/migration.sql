@@ -1,0 +1,6 @@
+-- Build 3.3.0 migration baseline.
+-- This migration intentionally contains no destructive DDL.
+-- Existing MVP databases were previously evolved with prisma db push.
+-- Before first external customer, baseline the production database with:
+--   pnpm prisma migrate resolve --applied 20260712000100_build_330_baseline
+-- New production databases should be created from a reviewed full-schema migration in staging.

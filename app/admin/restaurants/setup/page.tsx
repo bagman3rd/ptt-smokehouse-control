@@ -4,7 +4,7 @@ import { requireRole } from '@/lib/auth';
 import { currentRestaurantForUser } from '@/lib/tenant';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { prisma } from '@/lib/prisma';
-import { saveRestaurantProfile, saveSetupCurve, saveSetupForecast, saveSetupProtein } from './actions';
+import { saveRestaurantProfile, saveSetupCurve, saveSetupForecast, saveSetupProtein, importSalesHistoryCsv } from './actions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -35,7 +35,7 @@ export default async function RestaurantSetupWizardPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Restaurant Setup Wizard</h1>
-      <p className="mt-2 text-slate-600">{restaurant.name} · Build 3.2.0 converts onboarding from a checklist into form-by-form setup. Each save writes tenant-scoped settings and audit entries.</p>
+      <p className="mt-2 text-slate-600">{restaurant.name} · Build 3.3.0 adds self-service setup, generic BBQ defaults, sales-history import, and audit-backed onboarding. Each save writes tenant-scoped settings and audit entries.</p>
     </div>
 
     <div className="grid gap-4">
@@ -77,6 +77,17 @@ export default async function RestaurantSetupWizardPage() {
           <div className="md:col-span-4"><button className="btn-primary" type="submit">Save Forecast Model</button></div>
         </form>
       </section> : null}
+
+
+      <section className="card p-5">
+        <div className="text-sm font-black text-slate-400">Step 3B</div>
+        <h2 className="mt-1 text-xl font-black">Import Sales History / POS CSV</h2>
+        <p className="mt-2 text-slate-600">Paste CSV rows from Toast/Square/Clover export or a spreadsheet. Required columns: <strong>date,totalSales</strong>. Optional third column: <strong>bbqSales</strong>. Imported data updates day/month multipliers so new restaurants do not inherit Smoky Mountain seasonality.</p>
+        <form action={importSalesHistoryCsv} className="mt-4 grid gap-3">
+          <textarea className="field min-h-40 font-mono text-xs" name="salesCsv" placeholder={'date,totalSales,bbqSales\n2026-07-01,8750,3325\n2026-07-02,9220,3504'} />
+          <button className="btn-primary" type="submit">Import and Recalculate Curves</button>
+        </form>
+      </section>
 
       <section className="card p-5">
         <div className="text-sm font-black text-slate-400">Step 4</div>

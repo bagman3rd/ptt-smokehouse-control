@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { dateBounds, getReportData, parseReportParams, toCsv } from '@/lib/reporting';
 import { fmtDateWithDow } from '@/lib/date';
 import { currentRestaurantForUser } from '@/lib/tenant';
+import { enforceRateLimit } from '@/lib/rateLimit';
 
 async function logReportRun(restaurantId: string, args: { source: string; metric: string; groupBy: string; protein: string; start: string; end: string; dataset: string; rowCount: number; totalValue?: number }) {
   try {
@@ -24,6 +25,8 @@ function responseCsv(filename: string, body: string) {
 }
 
 export async function GET(req: NextRequest) {
+  const limited = enforceRateLimit(req, 'api:report-export', 40, 60_000);
+  if (limited) return limited;
   const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   if (authError) return authError;
 

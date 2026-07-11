@@ -4,15 +4,12 @@ import { requireApiRole, currentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { parseReportParams } from '@/lib/reporting';
 import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
-
-function cleanName(value: FormDataEntryValue | null) {
-  const name = String(value || '').trim();
-  if (!name) throw new Error('Saved report name is required.');
-  if (name.length > 80) throw new Error('Saved report name must be 80 characters or fewer.');
-  return name;
-}
+import { enforceRateLimit } from '@/lib/rateLimit';
+import { savedReportSchema } from '@/lib/validators';
 
 export async function POST(req: NextRequest) {
+  const limited = enforceRateLimit(req, 'api:saved-reports', 40, 60_000);
+  if (limited) return limited;
   const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   if (authError) return authError;
 
@@ -22,18 +19,11 @@ export async function POST(req: NextRequest) {
     const restaurant = await currentRestaurantForUser(user);
     const restaurantId = restaurant.id;
     const formData = await req.formData();
-    const name = cleanName(formData.get('name'));
-    const description = String(formData.get('description') || '').trim().slice(0, 240) || null;
-    const range = String(formData.get('range') || 'last30');
-    const params = parseReportParams({
-      source: String(formData.get('source') || ''),
-      metric: String(formData.get('metric') || ''),
-      groupBy: String(formData.get('groupBy') || ''),
-      protein: String(formData.get('protein') || 'all'),
-      start: String(formData.get('start') || ''),
-      end: String(formData.get('end') || ''),
-      range
-    });
+    const clean = savedReportSchema.parse(Object.fromEntries(formData.entries()));
+    const name = clean.name;
+    const description = clean.description || null;
+    const range = clean.range;
+    const params = parseReportParams(clean);
 
     await prisma.savedReport.create({
       data: {

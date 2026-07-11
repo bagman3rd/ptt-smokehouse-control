@@ -4,6 +4,8 @@ import { requireApiRole, currentUser } from '@/lib/auth';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { currentRestaurantForUser } from '@/lib/tenant';
+import { enforceRateLimit } from '@/lib/rateLimit';
+import { dateOnlySchema } from '@/lib/validators';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid load date');
@@ -11,6 +13,8 @@ function toDateOnly(value: string) {
 }
 
 export async function GET(request: Request) {
+  const limited = enforceRateLimit(request, 'api:eod-status', 100, 60_000);
+  if (limited) return limited;
   try {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
     if (authError) return authError;
@@ -20,7 +24,7 @@ export async function GET(request: Request) {
     const restaurant = await currentRestaurantForUser(user);
     const restaurantId = restaurant.id;
     const url = new URL(request.url);
-    const loadDateValue = String(url.searchParams.get('loadDate') || '');
+    const loadDateValue = dateOnlySchema.parse(String(url.searchParams.get('loadDate') || ''));
     const loadDate = toDateOnly(loadDateValue);
     const priorEodDate = addUtcDays(loadDate, -1);
 
