@@ -66,7 +66,8 @@ export default async function SettingsPage() {
             <label className="flex items-center gap-2 pt-7 text-sm font-bold"><input name="reusableLeftover" type="checkbox" className="h-5 w-5" defaultChecked={p.reusableLeftover} /> Reusable leftover</label>
           </div>
           <button className="btn-secondary mt-4">Save Protein</button>
-        </form>)}
+        </form>;
+        })}
       </div>
     </section>
 
