@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
+import { apiAuthError } from '@/lib/auth';
 import { ensureDefaultData } from '@/lib/bootstrap';
 
 const allowedStatuses = new Set(['DRAFT', 'COMPLETE', 'REVIEWED', 'LOCKED']);
@@ -22,6 +23,8 @@ function hasBlank(value: unknown) {
 
 export async function POST(request: Request) {
   try {
+    const authError = apiAuthError();
+    if (authError) return NextResponse.json(authError, { status: 401 });
     await ensureDefaultData(prisma);
     const body = await request.json().catch(() => ({}));
     const serviceDateStr = String(body.serviceDate || '');

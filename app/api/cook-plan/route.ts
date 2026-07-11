@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { apiAuthError } from '@/lib/auth';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { getDayPatternByKey, getDayPatternMultiplier, inferDayPatternKey } from '@/lib/dayProfiles';
@@ -25,6 +26,8 @@ async function exactEodFor(serviceDate: Date) {
 
 export async function POST(request: Request) {
   try {
+    const authError = apiAuthError();
+    if (authError) return NextResponse.json(authError, { status: 401 });
     await ensureDefaultData(prisma);
 
     const body = await request.json().catch(() => ({}));

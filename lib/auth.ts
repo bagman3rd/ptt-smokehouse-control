@@ -25,3 +25,9 @@ export function setSessionCookie() {
 export function clearSessionCookie() {
   cookies().delete(COOKIE_NAME);
 }
+
+
+export function apiAuthError() {
+  if (isAuthenticated()) return null;
+  return { ok: false, message: 'Unauthorized. Please log in again.' };
+}

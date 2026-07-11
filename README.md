@@ -1,65 +1,16 @@
-# PTT Smokehouse Control — Build 2.2.0
+# PTT Smokehouse Control — Build 2.3.0
 
-Private consultant dashboard for Pigeon Toed Tavern smoked-meat production planning.
+Private BBQ production-control app for Pigeon Toed Tavern. Build 2.3.0 adds the first learning/recommendation layer so the app can compare cook-plan forecasts against completed End-of-Day logs and recommend future forecast adjustments.
 
-## Current operating model
+## Current purpose
 
-- Total restaurant sales include bar sales.
-- Default bar sales assumption: 20% of total sales.
-- Food sales assumption: 80% of total sales.
-- Smoked meats: 50% of food sales.
-- Therefore active scenarios default to smoked meats = 40% of total restaurant sales.
+The app helps answer:
 
-## Active forecast scenarios
-
-- Base $6M
-- Aggressive $8M
-
-Rod Run and other event spikes are modeled with the Event Multiplier field, not a separate forecast scenario.
-
-## Protein load units
-
-- Brisket: briskets
-- Pulled Pork: butts
-- Ribs: racks
-- Pulled Chicken: boneless skinless chicken breasts
-
-## Timing logic
-
-The Cook Plan date is the load/production date.
-
-- Brisket uses the next day's service forecast and is cooked 9 AM–9 PM, then held overnight.
-- Pulled Pork uses the next day's service forecast and is loaded at 5 PM for next-day service.
-- Ribs use the same-day service forecast.
-- Pulled Chicken uses the same-day service forecast.
-
-## Leftover-credit logic
-
-Cook Plan leftover credits come from the exact prior calendar day's End-of-Day log only.
-
-Examples:
-
-- Load plan 2026-07-12 uses EOD 2026-07-11 only.
-- Load plan 2026-08-15 uses EOD 2026-08-14 only.
-
-If the exact prior EOD log is missing, the cook-plan credit cell shows:
-
-`no data, check hot box`
-
-## Build 2.2.0 changes
-
-Build 2.2.0 is a stability and data-protection release.
-
-- `ensureDefaultData()` and `prisma/seed.ts` now create missing default data only; they do not overwrite user-edited settings.
-- Legacy `createCookPlan()` and `saveEndOfDayLog()` server actions are disabled. Cook-plan generation and EOD saving now use API routes only.
-- End-of-Day logs now support statuses: Draft, Complete, Manager Reviewed, and Locked.
-- Locked EOD logs cannot be edited from the app.
-- Complete/Reviewed/Locked EOD logs require explicit usable leftover units for any protein with cooked units. Enter 0 if none.
-- The old testing fallback that treated cooked units as leftovers has been removed.
-- The EOD API blocks Complete/Reviewed/Locked logs where all protein values are zero.
-- Prior EOD status checks now treat Draft or all-zero logs as incomplete.
-- Settings now show last updated timestamp and updated-by note for scenarios, proteins, day multipliers, and month multipliers.
-- Render build no longer uses `prisma db push --accept-data-loss`.
+- What should we load/cook today?
+- Which proteins are for same-day service versus next-day service?
+- What usable leftovers from the exact prior EOD log should reduce today’s load?
+- Did we overcook, undercook, waste too much, or 86 items?
+- What forecast settings should we consider adjusting based on accumulated operating data?
 
 ## Render build command
 
@@ -73,26 +24,28 @@ corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --pro
 npm run start
 ```
 
-## Required Render environment variables
+## Required environment variables
 
-- DATABASE_URL
-- ADMIN_PASSWORD
-- APP_SESSION_TOKEN
-- NEXT_PUBLIC_APP_NAME
-- NODE_VERSION
-
-Set `NODE_VERSION` to `20.18.1`.
-
-Remove these if present:
-
-- NEXTAUTH_SECRET
-- NEXTAUTH_URL
-- PORT
-
-## Local evaluation command
-
-```bash
-node scripts/build-2-evaluation.mjs
+```text
+DATABASE_URL
+ADMIN_PASSWORD
+APP_SESSION_TOKEN
+NEXT_PUBLIC_APP_NAME
+NODE_VERSION=20.18.1
 ```
 
-This script does not require database access or external packages. It checks critical source-level behavior and forecast assumptions.
+## Build 2.3.0 changes
+
+- Added **Learning** navigation/page.
+- Added protein-level forecast-vs-actual recommendations.
+- Added day-of-week forecast learning recommendations.
+- Learning logic matches EOD logs back to the correct cook plan by protein timing:
+  - brisket and pork compare against the prior-day load plan
+  - ribs and chicken compare against the same-day load plan
+- Added API-level authentication checks for cook-plan, EOD save, and prior-EOD status endpoints.
+- Added data-quality indicators so the app only recommends adjustments after enough matched data exists.
+- Updated package/app badge to Build 2.3.0.
+
+## What the learning page does not do yet
+
+Build 2.3.0 recommends adjustments but does not automatically change Settings. That is intentional. The next commercial-grade step is an approval workflow where Archer/admin reviews a recommendation, accepts it, and the app writes the change to Settings with an audit log.
