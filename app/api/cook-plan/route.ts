@@ -89,11 +89,15 @@ export async function POST(request: Request) {
       const usableLeftoverUnits = prior?.usableLeftoverUnits ?? 0;
       const missingPriorEod = !leftoverLog;
       const missingProteinData = !!leftoverLog && !prior;
+      const incompletePriorEod = !!leftoverLog && (leftoverLog.status === 'DRAFT' || leftoverLog.proteinLogs.length === 0);
+      const lockedFlag = leftoverLog?.lockedAt || leftoverLog?.status === 'LOCKED' ? ' locked' : '';
       const leftoverSourceNote = missingPriorEod
         ? `Prior EOD leftover credit source: no data, check hot box. Expected EOD log ${fmtDateWithDow(priorEodDate)} only.`
         : missingProteinData
           ? `Prior EOD leftover credit source: no ${protein.name} row in EOD ${fmtDateWithDow(priorEodDate)}; no data, check hot box.`
-          : `Prior EOD leftover credit source: EOD ${fmtDateWithDow(priorEodDate)} only.`;
+          : incompletePriorEod
+            ? `Prior EOD leftover credit source: EOD ${fmtDateWithDow(priorEodDate)} is ${leftoverLog.status}; saved but incomplete — check hot box.`
+            : `Prior EOD leftover credit source: EOD ${fmtDateWithDow(priorEodDate)} (${leftoverLog.status}${lockedFlag}) only.`;
       const result = forecastProteinLoad({ protein, scenario, forecastBbqSales: targetForecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
       const timingNote = lower.includes('brisket')
         ? `${fmtDateWithDow(loadDate)}: cook brisket 9:00 AM–9:00 PM using ${fmtDateWithDow(targetServiceDate)} service forecast, then hold overnight. ${leftoverSourceNote}`
@@ -152,7 +156,8 @@ export async function POST(request: Request) {
       nextDayForecastSales,
       nextDayForecastBbqSales,
       priorEodDate: priorEodDate.toISOString().slice(0, 10),
-      priorEodStatus: priorEodLog ? 'FOUND' : 'MISSING',
+      priorEodStatus: priorEodLog ? (priorEodLog.status === 'DRAFT' ? 'INCOMPLETE' : 'FOUND') : 'MISSING',
+      priorEodLogStatus: priorEodLog?.status ?? null,
       items: plan.items.map((item) => ({
         protein: item.protein.name,
         forecastCookUnits: item.forecastCookUnits,

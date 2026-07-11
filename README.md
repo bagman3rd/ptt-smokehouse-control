@@ -1,4 +1,4 @@
-# PTT Smokehouse Control — Build 2.1.0
+# PTT Smokehouse Control — Build 2.2.0
 
 Private consultant dashboard for Pigeon Toed Tavern smoked-meat production planning.
 
@@ -46,12 +46,20 @@ If the exact prior EOD log is missing, the cook-plan credit cell shows:
 
 `no data, check hot box`
 
-## Build 2.0.0 changes carried forward
+## Build 2.2.0 changes
 
-- Fixed Settings page JSX compile failure by fully rewriting `app/settings/page.tsx`.
-- Added dependency-free evaluation checks.
-- Added test reporting with use cases, test results, and recommended next improvements.
-- Aligned legacy server-action cook-plan generation with exact prior-day EOD lookup.
+Build 2.2.0 is a stability and data-protection release.
+
+- `ensureDefaultData()` and `prisma/seed.ts` now create missing default data only; they do not overwrite user-edited settings.
+- Legacy `createCookPlan()` and `saveEndOfDayLog()` server actions are disabled. Cook-plan generation and EOD saving now use API routes only.
+- End-of-Day logs now support statuses: Draft, Complete, Manager Reviewed, and Locked.
+- Locked EOD logs cannot be edited from the app.
+- Complete/Reviewed/Locked EOD logs require explicit usable leftover units for any protein with cooked units. Enter 0 if none.
+- The old testing fallback that treated cooked units as leftovers has been removed.
+- The EOD API blocks Complete/Reviewed/Locked logs where all protein values are zero.
+- Prior EOD status checks now treat Draft or all-zero logs as incomplete.
+- Settings now show last updated timestamp and updated-by note for scenarios, proteins, day multipliers, and month multipliers.
+- Render build no longer uses `prisma db push --accept-data-loss`.
 
 ## Render build command
 
@@ -87,15 +95,4 @@ Remove these if present:
 node scripts/build-2-evaluation.mjs
 ```
 
-This script does not require database access or external packages. It checks critical source-level behavior and forecast math assumptions.
-
-
-## Build 2.1.0 changes
-
-- Added a prior-day EOD status check directly on the Generate Plan form.
-- Added exact prior-day source visibility before plan generation.
-- Added EOD validation warnings for negative values, likely missing leftovers, and suspicious entries.
-- Added Manual Hot Box Adjustment on the Cook Plan approval form.
-- Added dashboard operational alerts for missing EOD data, low confidence, and capacity max-outs.
-- Added a dashboard utility to delete future test plans beyond the 14-day operational window.
-- Kept all Build 2.0.0 stabilization work.
+This script does not require database access or external packages. It checks critical source-level behavior and forecast assumptions.

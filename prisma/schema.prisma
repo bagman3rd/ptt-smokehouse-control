@@ -55,7 +55,9 @@ model Protein {
   reusableLeftover    Boolean     @default(true)
   maxReuseHours       Int         @default(24)
   active              Boolean     @default(true)
+  updatedBy           String      @default("System")
   createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @default(now()) @updatedAt
   cookPlanItems       CookPlanItem[]
   logs                EndOfDayProteinLog[]
 }
@@ -72,22 +74,28 @@ model ForecastScenario {
   ribsMixPct       Float        @default(15)
   chickenMixPct    Float        @default(15)
   averagePricePerLbCooked Float @default(31)
+  updatedBy        String       @default("System")
   createdAt        DateTime     @default(now())
+  updatedAt           DateTime    @default(now()) @updatedAt
   cookPlans        CookPlan[]
 }
 
 model DayMultiplier {
-  id          String @id @default(cuid())
-  dayOfWeek   Int    @unique
+  id          String   @id @default(cuid())
+  dayOfWeek   Int      @unique
   label       String
-  multiplier  Float  @default(1)
+  multiplier  Float    @default(1)
+  updatedBy   String   @default("System")
+  updatedAt           DateTime    @default(now()) @updatedAt
 }
 
 model MonthMultiplier {
-  id          String @id @default(cuid())
-  month       Int    @unique
+  id          String   @id @default(cuid())
+  month       Int      @unique
   label       String
-  multiplier  Float  @default(1)
+  multiplier  Float    @default(1)
+  updatedBy   String   @default("System")
+  updatedAt           DateTime    @default(now()) @updatedAt
 }
 
 model EventModifier {
@@ -112,7 +120,7 @@ model CookPlan {
   notes           String?
   createdBy       String   @default("Archer")
   createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  updatedAt           DateTime    @default(now()) @updatedAt
   items           CookPlanItem[]
 }
 
@@ -140,8 +148,12 @@ model EndOfDayLog {
   enteredBy       String   @default("KM")
   totalSales      Float    @default(0)
   bbqSales        Float    @default(0)
+  status          String   @default("DRAFT")
   notes           String?
+  reviewedAt      DateTime?
+  lockedAt        DateTime?
   createdAt       DateTime @default(now())
+  updatedAt           DateTime    @default(now()) @updatedAt
   proteinLogs     EndOfDayProteinLog[]
 }
 

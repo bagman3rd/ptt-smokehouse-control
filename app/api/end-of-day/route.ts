@@ -3,6 +3,8 @@ import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 
+const allowedStatuses = new Set(['DRAFT', 'COMPLETE', 'REVIEWED', 'LOCKED']);
+
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid service date');
   return new Date(`${value}T00:00:00.000Z`);
@@ -14,6 +16,10 @@ function numberValue(value: unknown, fallback = 0, min = 0, max = Number.MAX_SAF
   return Math.min(max, Math.max(min, n));
 }
 
+function hasBlank(value: unknown) {
+  return value === null || value === undefined || value === '';
+}
+
 export async function POST(request: Request) {
   try {
     await ensureDefaultData(prisma);
@@ -22,27 +28,40 @@ export async function POST(request: Request) {
     const serviceDate = toDateOnly(serviceDateStr);
     const totalSales = numberValue(body.totalSales);
     const bbqSales = numberValue(body.bbqSales);
+    const requestedStatus = String(body.status || 'DRAFT').toUpperCase();
+    const lockLog = Boolean(body.lockLog);
+    const status = lockLog ? 'LOCKED' : (allowedStatuses.has(requestedStatus) ? requestedStatus : 'DRAFT');
     const notes = String(body.notes || '');
     const entries = Array.isArray(body.proteins) ? body.proteins : [];
+
+    const existing = await prisma.endOfDayLog.findUnique({ where: { serviceDate } });
+    if (existing?.lockedAt || existing?.status === 'LOCKED') {
+      throw new Error('This EOD log is locked and cannot be edited from the app.');
+    }
 
     const proteins = await prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
     if (proteins.length === 0) throw new Error('No active proteins exist. Seed data was not created.');
 
     const byProteinId = new Map(entries.map((entry: any) => [String(entry.proteinId), entry]));
+    const errors: string[] = [];
+    let allProteinValuesZero = true;
     const proteinRows = proteins.map((protein) => {
       const entry: any = byProteinId.get(protein.id) || {};
       const cookedUnits = numberValue(entry.cookedUnits);
       const soldCookedLb = numberValue(entry.soldCookedLb);
       const wasteLb = numberValue(entry.wasteLb);
-      let usableLeftoverUnits = numberValue(entry.usableLeftoverUnits);
+      const usableLeftoverUnits = numberValue(entry.usableLeftoverUnits);
       const usableLeftoverLb = numberValue(entry.usableLeftoverLb);
 
-      // Operational guardrail: during testing and rushed closes, users often enter
-      // leftover pieces in Cooked Units and leave the explicit leftover field blank.
-      // If nothing was sold and nothing was wasted, treat cooked units as usable leftover
-      // so the next cook plan receives the intended credit instead of silently saving 0.
-      if (usableLeftoverUnits === 0 && cookedUnits > 0 && soldCookedLb === 0 && wasteLb === 0) {
-        usableLeftoverUnits = cookedUnits;
+      if ([cookedUnits, soldCookedLb, wasteLb, usableLeftoverUnits, usableLeftoverLb].some((n) => n < 0)) {
+        errors.push(`${protein.name}: negative values are not allowed.`);
+      }
+      if (cookedUnits > 0 || soldCookedLb > 0 || wasteLb > 0 || usableLeftoverUnits > 0 || usableLeftoverLb > 0) allProteinValuesZero = false;
+      if (usableLeftoverUnits > cookedUnits && cookedUnits > 0) {
+        errors.push(`${protein.name}: usable leftover units exceed cooked units.`);
+      }
+      if (['COMPLETE', 'REVIEWED', 'LOCKED'].includes(status) && cookedUnits > 0 && hasBlank(entry.usableLeftoverUnits)) {
+        errors.push(`${protein.name}: usable leftover units are required before marking the EOD log ${status}. Enter 0 if none.`);
       }
 
       return {
@@ -57,16 +76,39 @@ export async function POST(request: Request) {
       };
     });
 
+    if (allProteinValuesZero && ['COMPLETE', 'REVIEWED', 'LOCKED'].includes(status)) {
+      errors.push('Cannot mark EOD Complete/Reviewed/Locked with all protein values at zero. Save as Draft or enter closing data.');
+    }
+    if (errors.length > 0) throw new Error(errors.join(' '));
+
+    const now = new Date();
     const log = await prisma.$transaction(async (tx) => {
-      const existing = await tx.endOfDayLog.findUnique({ where: { serviceDate } });
       const parent = existing
-        ? await tx.endOfDayLog.update({ where: { id: existing.id }, data: { totalSales, bbqSales, notes } })
-        : await tx.endOfDayLog.create({ data: { serviceDate, totalSales, bbqSales, notes } });
+        ? await tx.endOfDayLog.update({
+            where: { id: existing.id },
+            data: {
+              totalSales,
+              bbqSales,
+              status,
+              notes,
+              reviewedAt: ['REVIEWED', 'LOCKED'].includes(status) ? (existing.reviewedAt ?? now) : existing.reviewedAt,
+              lockedAt: status === 'LOCKED' ? now : existing.lockedAt
+            }
+          })
+        : await tx.endOfDayLog.create({
+            data: {
+              serviceDate,
+              totalSales,
+              bbqSales,
+              status,
+              notes,
+              reviewedAt: ['REVIEWED', 'LOCKED'].includes(status) ? now : null,
+              lockedAt: status === 'LOCKED' ? now : null
+            }
+          });
 
       await tx.endOfDayProteinLog.deleteMany({ where: { endOfDayLogId: parent.id } });
-      await tx.endOfDayProteinLog.createMany({
-        data: proteinRows.map((row) => ({ endOfDayLogId: parent.id, ...row }))
-      });
+      await tx.endOfDayProteinLog.createMany({ data: proteinRows.map((row) => ({ endOfDayLogId: parent.id, ...row })) });
 
       return tx.endOfDayLog.findUniqueOrThrow({
         where: { id: parent.id },
@@ -85,6 +127,8 @@ export async function POST(request: Request) {
       serviceDate: serviceDateStr,
       totalSales: log.totalSales,
       bbqSales: log.bbqSales,
+      status: log.status,
+      lockedAt: log.lockedAt,
       proteinLogs: log.proteinLogs.map((proteinLog) => ({
         protein: proteinLog.protein.name,
         cookedUnits: proteinLog.cookedUnits,
@@ -101,6 +145,6 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Save end-of-day log failed:', error);
     const message = error instanceof Error ? error.message : 'Unknown error while saving end-of-day log.';
-    return NextResponse.json({ ok: false, message }, { status: 500 });
+    return NextResponse.json({ ok: false, message }, { status: 400 });
   }
 }

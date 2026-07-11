@@ -43,6 +43,8 @@ export default async function EndOfDayPage({ searchParams }: { searchParams?: { 
     serviceDate: dateInputValue(displayLog.serviceDate),
     totalSales: displayLog.totalSales,
     bbqSales: displayLog.bbqSales,
+    status: displayLog.status,
+    lockedAt: displayLog.lockedAt ? displayLog.lockedAt.toISOString() : null,
     notes: displayLog.notes,
     proteinLogs: displayLog.proteinLogs.map((log) => ({
       proteinId: log.proteinId,
@@ -67,7 +69,7 @@ export default async function EndOfDayPage({ searchParams }: { searchParams?: { 
 
     {displayLog ? <section className="card mt-6 p-5">
       <h2 className="text-xl font-black">Saved Log Displayed</h2>
-      <p className="mt-1 text-slate-600">{fmtDateWithDow(displayLog.serviceDate)} · Total sales ${displayLog.totalSales.toLocaleString()} · smoked meat sales ${displayLog.bbqSales.toLocaleString()}</p>
+      <p className="mt-1 text-slate-600">{fmtDateWithDow(displayLog.serviceDate)} · Status {displayLog.status}{displayLog.lockedAt ? ' · LOCKED' : ''} · Total sales ${displayLog.totalSales.toLocaleString()} · smoked meat sales ${displayLog.bbqSales.toLocaleString()}</p>
       <div className="mt-4 grid gap-3 md:grid-cols-2">
         {displayLog.proteinLogs.map(log => <div key={log.id} className="rounded-xl border border-slate-200 p-3 text-sm"><strong>{log.protein.name}</strong>: cooked {log.cookedUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} · sold {log.soldCookedLb} lb · leftover {log.usableLeftoverUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} / {log.usableLeftoverLb} lb · waste {log.wasteLb} lb {log.eightySixed ? '· 86' : ''}</div>)}
       </div>
@@ -83,7 +85,7 @@ export default async function EndOfDayPage({ searchParams }: { searchParams?: { 
       {recentLogs.length === 0 ? <p className="mt-4 rounded-xl bg-amber-50 px-3 py-2 text-sm font-bold text-amber-900">No end-of-day logs saved yet.</p> : <div className="mt-4 space-y-3">
         {recentLogs.map((log) => <div key={log.id} className="rounded-2xl border border-slate-200 p-4">
           <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
-            <div className="font-black">{fmtDateWithDow(log.serviceDate)}</div>
+            <div className="font-black">{fmtDateWithDow(log.serviceDate)} · {log.status}{log.lockedAt ? ' · LOCKED' : ''}</div>
             <div className="text-sm font-bold text-slate-600">Total sales ${log.totalSales.toLocaleString()} · smoked meat sales ${log.bbqSales.toLocaleString()}</div>
           </div>
           <div className="mt-3 grid gap-2 md:grid-cols-2">

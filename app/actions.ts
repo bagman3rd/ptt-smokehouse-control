@@ -1,17 +1,8 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
-import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
-import { getDayPatternByKey, getDayPatternMultiplier, inferDayPatternKey } from '@/lib/dayProfiles';
 import { addUtcDays } from '@/lib/date';
-
-function toDateOnly(value: string) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid service date');
-  return new Date(`${value}T00:00:00.000Z`);
-}
 
 function numberField(formData: FormData, key: string, fallback = 0, min = 0, max = Number.MAX_SAFE_INTEGER) {
   const raw = formData.get(key);
@@ -27,82 +18,14 @@ function signedNumberField(formData: FormData, key: string, fallback = 0, min = 
   return Math.min(max, Math.max(min, n));
 }
 
-export async function createCookPlan(formData: FormData) {
-  await ensureDefaultData(prisma);
+// Build 2.2.0: cook-plan generation and EOD saving are API-only.
+// These legacy server-action names intentionally fail fast if accidentally wired again.
+export async function createCookPlan() {
+  throw new Error('Legacy createCookPlan server action is disabled. Use POST /api/cook-plan.');
+}
 
-  const serviceDateStr = String(formData.get('serviceDate') || '');
-  let scenarioId = String(formData.get('scenarioId') || '');
-  const eventMultiplier = numberField(formData, 'eventMultiplier', 1, 0.5, 5);
-  const requestedDayPatternKey = String(formData.get('dayPatternKey') || '');
-  const serviceDate = toDateOnly(serviceDateStr);
-
-  let scenario = scenarioId
-    ? await prisma.forecastScenario.findUnique({ where: { id: scenarioId } })
-    : null;
-
-  if (!scenario) {
-    scenario = await prisma.forecastScenario.findFirst({ where: activeScenarioWhere(), orderBy: { annualSales: 'asc' } });
-    if (!scenario) throw new Error('No forecast scenarios exist. Open Settings or run seed data.');
-    scenarioId = scenario.id;
-  }
-
-  const proteins = await prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
-  if (proteins.length === 0) throw new Error('No active proteins exist. Open Settings or run seed data.');
-
-  const month = await prisma.monthMultiplier.findUnique({ where: { month: serviceDate.getUTCMonth() + 1 } });
-  const logsCount = await prisma.endOfDayLog.count();
-  const dayPatternKey = requestedDayPatternKey || inferDayPatternKey(scenario.name);
-  const dayPattern = getDayPatternByKey(dayPatternKey);
-  const dayMultiplier = getDayPatternMultiplier(dayPattern.key, serviceDate.getUTCDay());
-  const forecastSales = dailySalesForecast(scenario.annualSales, dayMultiplier, month?.multiplier ?? 1, eventMultiplier);
-  const forecastBbqSales = Math.round(forecastSales * (scenario.bbqSalesPercent / 100));
-
-  const priorEodDate = addUtcDays(serviceDate, -1);
-  const lastLog = await prisma.endOfDayLog.findUnique({
-    where: { serviceDate: priorEodDate },
-    include: { proteinLogs: true }
-  });
-
-  const items = proteins.map((protein) => {
-    const prior = lastLog?.proteinLogs.find((log) => log.proteinId === protein.id);
-    const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
-    const usableLeftoverUnits = prior?.usableLeftoverUnits ?? 0;
-    const result = forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
-    return {
-      proteinId: protein.id,
-      cookedLbNeeded: result.cookedLbNeeded,
-      usableLeftoverLb,
-      usableLeftoverUnits,
-      forecastCookUnits: result.forecastCookUnits,
-      safetyFactorPct: scenario.safetyFactorPct,
-      rawLbNeeded: result.rawLbNeeded,
-      recommendedCookUnits: result.recommendedCookUnits,
-      approvedCookUnits: null,
-      overrideReason: null
-    };
-  });
-
-  await prisma.$transaction(async (tx) => {
-    // Regeneration should be idempotent. Delete/recreate avoids nested upsert edge cases
-    // and makes repeated Generate Plan clicks reliable for the same service date.
-    await tx.cookPlan.deleteMany({ where: { serviceDate } });
-    await tx.cookPlan.create({
-      data: {
-        serviceDate,
-        scenarioId,
-        forecastSales,
-        forecastBbqSales,
-        confidence: confidenceForHistory(logsCount),
-        status: 'DRAFT',
-        notes: `Generated with ${dayPattern.name} day pattern · event multiplier ${eventMultiplier} · prior EOD lookup is exact prior calendar day only`,
-        items: { create: items }
-      }
-    });
-  });
-
-  revalidatePath('/cook-plan');
-  revalidatePath('/dashboard');
-  redirect('/cook-plan');
+export async function saveEndOfDayLog() {
+  throw new Error('Legacy saveEndOfDayLog server action is disabled. Use POST /api/end-of-day.');
 }
 
 export async function approveCookPlan(formData: FormData) {
@@ -115,61 +38,14 @@ export async function approveCookPlan(formData: FormData) {
     const overrideReasonRaw = String(formData.get(`reason-${itemId}`) || '').trim();
     const adjustmentNote = hotBoxAdjustment !== 0 ? `Manual hot-box adjustment ${hotBoxAdjustment > 0 ? '+' : ''}${hotBoxAdjustment}` : '';
     const overrideReason = [overrideReasonRaw, adjustmentNote].filter(Boolean).join(' · ');
-    await prisma.cookPlanItem.update({ where: { id: itemId }, data: { approvedCookUnits, overrideReason } });
+    await prisma.cookPlanItem.update({
+      where: { id: itemId },
+      data: { approvedCookUnits, overrideReason }
+    });
   }
   await prisma.cookPlan.update({ where: { id: cookPlanId }, data: { status: 'APPROVED' } });
   revalidatePath('/cook-plan');
   revalidatePath('/dashboard');
-}
-
-export async function saveEndOfDayLog(formData: FormData) {
-  const serviceDate = toDateOnly(String(formData.get('serviceDate')));
-  const totalSales = numberField(formData, 'totalSales');
-  const bbqSales = numberField(formData, 'bbqSales');
-  const notes = String(formData.get('notes') || '');
-  const proteins = await prisma.protein.findMany({ where: { active: true } });
-  await prisma.endOfDayLog.upsert({
-    where: { serviceDate },
-    update: {
-      totalSales,
-      bbqSales,
-      notes,
-      proteinLogs: {
-        deleteMany: {},
-        create: proteins.map((protein) => ({
-          proteinId: protein.id,
-          cookedUnits: numberField(formData, `cookedUnits-${protein.id}`),
-          soldCookedLb: numberField(formData, `soldCookedLb-${protein.id}`),
-          usableLeftoverLb: numberField(formData, `usableLeftoverLb-${protein.id}`),
-          usableLeftoverUnits: numberField(formData, `usableLeftoverUnits-${protein.id}`),
-          wasteLb: numberField(formData, `wasteLb-${protein.id}`),
-          eightySixed: formData.get(`eightySixed-${protein.id}`) === 'on',
-          wasteReason: String(formData.get(`wasteReason-${protein.id}`) || '')
-        }))
-      }
-    },
-    create: {
-      serviceDate,
-      totalSales,
-      bbqSales,
-      notes,
-      proteinLogs: {
-        create: proteins.map((protein) => ({
-          proteinId: protein.id,
-          cookedUnits: numberField(formData, `cookedUnits-${protein.id}`),
-          soldCookedLb: numberField(formData, `soldCookedLb-${protein.id}`),
-          usableLeftoverLb: numberField(formData, `usableLeftoverLb-${protein.id}`),
-          usableLeftoverUnits: numberField(formData, `usableLeftoverUnits-${protein.id}`),
-          wasteLb: numberField(formData, `wasteLb-${protein.id}`),
-          eightySixed: formData.get(`eightySixed-${protein.id}`) === 'on',
-          wasteReason: String(formData.get(`wasteReason-${protein.id}`) || '')
-        }))
-      }
-    }
-  });
-  revalidatePath('/end-of-day');
-  revalidatePath('/dashboard');
-  revalidatePath('/reports');
 }
 
 export async function updateScenario(formData: FormData) {
@@ -183,10 +59,12 @@ export async function updateScenario(formData: FormData) {
       brisketMixPct: numberField(formData, 'brisketMixPct', 30, 0, 100),
       porkMixPct: numberField(formData, 'porkMixPct', 40, 0, 100),
       ribsMixPct: numberField(formData, 'ribsMixPct', 15, 0, 100),
-      chickenMixPct: numberField(formData, 'chickenMixPct', 15, 0, 100)
+      chickenMixPct: numberField(formData, 'chickenMixPct', 15, 0, 100),
+      updatedBy: 'Archer'
     }
   });
   revalidatePath('/settings');
+  revalidatePath('/cook-plan');
 }
 
 export async function updateProtein(formData: FormData) {
@@ -205,18 +83,19 @@ export async function updateProtein(formData: FormData) {
       minCookUnits: numberField(formData, 'minCookUnits', 0, 0),
       maxCookUnits: numberField(formData, 'maxCookUnits', 999, 0),
       maxReuseHours: numberField(formData, 'maxReuseHours', 24, 0, 168),
-      reusableLeftover: formData.get('reusableLeftover') === 'on'
+      reusableLeftover: formData.get('reusableLeftover') === 'on',
+      updatedBy: 'Archer'
     }
   });
   revalidatePath('/settings');
+  revalidatePath('/cook-plan');
 }
-
 
 export async function updateDayMultiplier(formData: FormData) {
   const id = String(formData.get('id'));
   await prisma.dayMultiplier.update({
     where: { id },
-    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3) }
+    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3), updatedBy: 'Archer' }
   });
   revalidatePath('/settings');
 }
@@ -225,7 +104,7 @@ export async function updateMonthMultiplier(formData: FormData) {
   const id = String(formData.get('id'));
   await prisma.monthMultiplier.update({
     where: { id },
-    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3) }
+    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3), updatedBy: 'Archer' }
   });
   revalidatePath('/settings');
 }

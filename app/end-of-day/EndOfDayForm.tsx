@@ -2,11 +2,7 @@
 
 import { useMemo, useState } from 'react';
 
-type Protein = {
-  id: string;
-  name: string;
-  inputUnit: string;
-};
+type Protein = { id: string; name: string; inputUnit: string };
 
 type InitialProteinLog = {
   proteinId: string;
@@ -23,13 +19,13 @@ type InitialLog = {
   serviceDate: string;
   totalSales: number;
   bbqSales: number;
+  status: string;
   notes?: string | null;
+  lockedAt?: string | null;
   proteinLogs: InitialProteinLog[];
 } | null;
 
-function today() {
-  return new Date().toISOString().slice(0, 10);
-}
+function today() { return new Date().toISOString().slice(0, 10); }
 
 function formatDateWithDow(dateValue: string) {
   if (!dateValue) return '';
@@ -52,18 +48,26 @@ function numberFromForm(formData: FormData, key: string) {
   return value === null || value === '' ? 0 : Number(value);
 }
 
+function rawFromForm(formData: FormData, key: string) {
+  const value = formData.get(key);
+  return value === null ? '' : String(value);
+}
+
 export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; initialLog?: InitialLog }) {
   const [serviceDate, setServiceDate] = useState(initialLog?.serviceDate || today());
+  const [status, setStatus] = useState(initialLog?.status || 'DRAFT');
+  const [lockLog, setLockLog] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
   const dateLabel = useMemo(() => formatDateWithDow(serviceDate), [serviceDate]);
+  const isLocked = Boolean(initialLog?.lockedAt) || initialLog?.status === 'LOCKED';
   const logByProteinId = useMemo(() => new Map((initialLog?.proteinLogs || []).map((log) => [log.proteinId, log])), [initialLog]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (isSaving) return;
+    if (isSaving || isLocked) return;
 
     setIsSaving(true);
     setMessage(null);
@@ -72,38 +76,56 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
 
     try {
       const formData = new FormData(event.currentTarget);
+      const selectedStatus = lockLog ? 'LOCKED' : String(formData.get('status') || status || 'DRAFT');
       const validationWarnings: string[] = [];
-      let hasBlockingValidationError = false;
+      const blockingErrors: string[] = [];
+      let allProteinValuesZero = true;
+
       for (const protein of proteins) {
         const unit = displayUnit(protein.name, protein.inputUnit);
         const cookedUnits = numberFromForm(formData, `cookedUnits-${protein.id}`);
         const soldCookedLb = numberFromForm(formData, `soldCookedLb-${protein.id}`);
+        const usableLeftoverUnitsRaw = rawFromForm(formData, `usableLeftoverUnits-${protein.id}`);
         const usableLeftoverUnits = numberFromForm(formData, `usableLeftoverUnits-${protein.id}`);
         const usableLeftoverLb = numberFromForm(formData, `usableLeftoverLb-${protein.id}`);
         const wasteLb = numberFromForm(formData, `wasteLb-${protein.id}`);
+
         if ([cookedUnits, soldCookedLb, usableLeftoverUnits, usableLeftoverLb, wasteLb].some((value) => value < 0)) {
-          validationWarnings.push(`${protein.name}: negative values are not allowed.`);
-          hasBlockingValidationError = true;
+          blockingErrors.push(`${protein.name}: negative values are not allowed.`);
         }
-        if (cookedUnits > 0 && soldCookedLb === 0 && wasteLb === 0 && usableLeftoverUnits === 0) {
-          validationWarnings.push(`${protein.name}: cooked ${cookedUnits} ${unit} but no sold/waste/leftover entered. The app will treat cooked units as usable leftovers.`);
+        if (cookedUnits > 0 || soldCookedLb > 0 || usableLeftoverUnits > 0 || usableLeftoverLb > 0 || wasteLb > 0) {
+          allProteinValuesZero = false;
         }
         if (cookedUnits > 0 && usableLeftoverUnits > cookedUnits) {
-          validationWarnings.push(`${protein.name}: usable leftover units exceed cooked units. Check the hot box count.`);
+          validationWarnings.push(`${protein.name}: usable leftover ${unit} exceed cooked ${unit}. Check hot box count.`);
         }
         if (cookedUnits === 0 && soldCookedLb > 0) {
           validationWarnings.push(`${protein.name}: sold cooked pounds entered but cooked units are zero.`);
         }
+        if (['COMPLETE', 'REVIEWED', 'LOCKED'].includes(selectedStatus) && cookedUnits > 0 && usableLeftoverUnitsRaw === '') {
+          blockingErrors.push(`${protein.name}: usable leftover units are required before marking the EOD log ${selectedStatus}. Enter 0 if none.`);
+        }
       }
+
+      if (allProteinValuesZero) {
+        validationWarnings.push('All protein values are zero. Save as Draft only unless this is intentional.');
+        if (['COMPLETE', 'REVIEWED', 'LOCKED'].includes(selectedStatus)) {
+          blockingErrors.push('Cannot mark EOD Complete/Reviewed/Locked with all protein values at zero. Save as Draft or enter closing data.');
+        }
+      }
+      if (lockLog && selectedStatus !== 'LOCKED') {
+        blockingErrors.push('Lock request failed because status did not resolve to LOCKED.');
+      }
+
       setWarnings(validationWarnings);
-      if (hasBlockingValidationError) {
-        throw new Error('Fix negative values before saving the EOD log.');
-      }
+      if (blockingErrors.length > 0) throw new Error(blockingErrors.join(' '));
 
       const payload = {
         serviceDate,
         totalSales: numberFromForm(formData, 'totalSales'),
         bbqSales: numberFromForm(formData, 'bbqSales'),
+        status: selectedStatus,
+        lockLog,
         notes: String(formData.get('notes') || ''),
         proteins: proteins.map((protein) => ({
           proteinId: protein.id,
@@ -124,10 +146,8 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
         body: JSON.stringify(payload)
       });
       const data = await response.json().catch(() => ({}));
-      if (!response.ok || data.ok === false) {
-        throw new Error(data.message || `Save failed with status ${response.status}`);
-      }
-      setMessage(`Saved end-of-day log for ${formatDateWithDow(serviceDate)}. Loading saved values...`);
+      if (!response.ok || data.ok === false) throw new Error(data.message || `Save failed with status ${response.status}`);
+      setMessage(`Saved ${selectedStatus} end-of-day log for ${formatDateWithDow(serviceDate)}. Loading saved values...`);
       window.location.assign(data.redirectUrl || `/end-of-day?serviceDate=${encodeURIComponent(serviceDate)}&savedAt=${Date.now()}`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Save end-of-day log failed.';
@@ -141,21 +161,34 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
     <form onSubmit={handleSubmit} className="space-y-6">
       <section className="card p-5">
         <h2 className="text-xl font-black">Service Summary</h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-4">
+        {isLocked ? <div className="mt-3 rounded-xl bg-slate-100 px-3 py-2 text-sm font-black text-slate-700">This EOD log is locked. Create a corrected log under a different service date or unlock in the database if this was accidental.</div> : null}
+        <div className="mt-4 grid gap-4 md:grid-cols-5">
           <div>
             <label className="label">Service Date</label>
-            <input className="field mt-1" type="date" value={serviceDate} onChange={(event) => setServiceDate(event.target.value)} required />
+            <input className="field mt-1" type="date" value={serviceDate} onChange={(event) => setServiceDate(event.target.value)} required disabled={isLocked} />
             <div className="mt-1 text-xs font-bold text-slate-500">{dateLabel}</div>
           </div>
-          <div><label className="label">Total Sales</label><input className="field mt-1" type="number" step="1" name="totalSales" defaultValue={initialLog?.totalSales ?? ''} placeholder="0" /></div>
-          <div><label className="label">Smoked Meat Sales</label><input className="field mt-1" type="number" step="1" name="bbqSales" defaultValue={initialLog?.bbqSales ?? ''} placeholder="0" /></div>
-          <div><label className="label">Notes</label><input className="field mt-1" name="notes" defaultValue={initialLog?.notes ?? ''} placeholder="Weather, events, service issues" /></div>
+          <div><label className="label">Total Sales</label><input className="field mt-1" type="number" step="1" name="totalSales" defaultValue={initialLog?.totalSales ?? ''} placeholder="0" disabled={isLocked} /></div>
+          <div><label className="label">Smoked Meat Sales</label><input className="field mt-1" type="number" step="1" name="bbqSales" defaultValue={initialLog?.bbqSales ?? ''} placeholder="0" disabled={isLocked} /></div>
+          <div>
+            <label className="label">EOD Status</label>
+            <select className="field mt-1" name="status" value={status} onChange={(event) => setStatus(event.target.value)} disabled={isLocked}>
+              <option value="DRAFT">Draft</option>
+              <option value="COMPLETE">Complete</option>
+              <option value="REVIEWED">Manager Reviewed</option>
+            </select>
+          </div>
+          <div><label className="label">Notes</label><input className="field mt-1" name="notes" defaultValue={initialLog?.notes ?? ''} placeholder="Weather, events, service issues" disabled={isLocked} /></div>
         </div>
+        <label className="mt-4 flex items-center gap-2 text-sm font-black text-slate-700">
+          <input type="checkbox" className="h-5 w-5" checked={lockLog} onChange={(event) => setLockLog(event.target.checked)} disabled={isLocked} />
+          Lock EOD log after saving. Use only after review; locked logs cannot be edited from the app.
+        </label>
       </section>
 
       <section className="card p-5">
         <h2 className="text-xl font-black">Protein Results</h2>
-        <p className="mt-1 text-sm text-slate-600">Enter actual usable leftovers in the <strong>Usable Leftover Units</strong> column. That field is what credits the next cook plan. If cooked units are entered but sold/waste are left at 0, the app will treat those cooked units as usable leftovers as a safety fallback.</p>
+        <p className="mt-1 text-sm text-slate-600">Enter actual usable leftovers in the <strong>Usable Leftover Units</strong> column. Complete/Reviewed/Locked logs require explicit leftover units for any protein with cooked units. Enter 0 if none.</p>
         <div className="mt-4 space-y-4">
           {proteins.map((protein) => {
             const saved = logByProteinId.get(protein.id);
@@ -163,19 +196,19 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
             <div key={protein.id} className="rounded-2xl border border-slate-200 p-4">
               <div className="mb-3 text-lg font-black">{protein.name}</div>
               <div className="grid gap-3 md:grid-cols-7">
-                <div><label className="label">Cooked Units / fallback leftover</label><input className="field mt-1" name={`cookedUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.cookedUnits ?? ''} /></div>
-                <div><label className="label">Sold Cooked lb</label><input className="field mt-1" name={`soldCookedLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.soldCookedLb ?? ''} /></div>
-                <div><label className="label">Usable Leftover Units — credits next plan</label><input className="field mt-1" name={`usableLeftoverUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.usableLeftoverUnits ?? ''} placeholder={displayUnit(protein.name, protein.inputUnit)} /></div>
-                <div><label className="label">Usable Leftover lb</label><input className="field mt-1" name={`usableLeftoverLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.usableLeftoverLb ?? ''} /></div>
-                <div><label className="label">Waste lb</label><input className="field mt-1" name={`wasteLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.wasteLb ?? ''} /></div>
-                <div><label className="label">Waste Reason</label><select className="field mt-1" name={`wasteReason-${protein.id}`} defaultValue={saved?.wasteReason || ''}><option value="">None</option><option>Overproduced</option><option>Dried out</option><option>Quality reject</option><option>Dropped/spoiled</option><option>Other</option></select></div>
-                <label className="flex items-center gap-2 pt-7 text-sm font-bold"><input name={`eightySixed-${protein.id}`} type="checkbox" defaultChecked={saved?.eightySixed ?? false} className="h-5 w-5" /> 86?</label>
+                <div><label className="label">Cooked / Loaded Units</label><input className="field mt-1" name={`cookedUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.cookedUnits ?? ''} disabled={isLocked} /></div>
+                <div><label className="label">Sold Cooked lb</label><input className="field mt-1" name={`soldCookedLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.soldCookedLb ?? ''} disabled={isLocked} /></div>
+                <div><label className="label">Usable Leftover Units — required for Complete</label><input className="field mt-1" name={`usableLeftoverUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.usableLeftoverUnits ?? ''} placeholder={displayUnit(protein.name, protein.inputUnit)} disabled={isLocked} /></div>
+                <div><label className="label">Usable Leftover lb</label><input className="field mt-1" name={`usableLeftoverLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.usableLeftoverLb ?? ''} disabled={isLocked} /></div>
+                <div><label className="label">Waste lb</label><input className="field mt-1" name={`wasteLb-${protein.id}`} type="number" step="0.1" defaultValue={saved?.wasteLb ?? ''} disabled={isLocked} /></div>
+                <div><label className="label">Waste Reason</label><select className="field mt-1" name={`wasteReason-${protein.id}`} defaultValue={saved?.wasteReason || ''} disabled={isLocked}><option value="">None</option><option>Overproduced</option><option>Dried out</option><option>Quality reject</option><option>Dropped/spoiled</option><option>Other</option></select></div>
+                <label className="flex items-center gap-2 pt-7 text-sm font-bold"><input name={`eightySixed-${protein.id}`} type="checkbox" defaultChecked={saved?.eightySixed ?? false} className="h-5 w-5" disabled={isLocked} /> 86?</label>
               </div>
             </div>
           )})}
         </div>
         <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center">
-          <button className="btn-primary w-full md:w-auto" type="submit" disabled={isSaving}>{isSaving ? 'Saving...' : 'Save End-of-Day Log'}</button>
+          <button className="btn-primary w-full md:w-auto" type="submit" disabled={isSaving || isLocked}>{isSaving ? 'Saving...' : isLocked ? 'Locked' : 'Save End-of-Day Log'}</button>
           {message ? <div className="rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800">{message}</div> : null}
           {error ? <div className="rounded-xl bg-red-50 px-3 py-2 text-sm font-bold text-red-800">{error}</div> : null}
           {warnings.length > 0 ? <div className="rounded-xl bg-amber-50 px-3 py-2 text-sm font-bold text-amber-900"><div>Validation warnings:</div><ul className="mt-1 list-disc pl-5">{warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul></div> : null}

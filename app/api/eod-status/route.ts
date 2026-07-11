@@ -39,7 +39,16 @@ export async function GET(request: Request) {
     const missingProteins = proteins.filter((protein) => !proteinIdsWithRows.has(protein.id)).map((protein) => protein.name);
     const totalLeftoverUnits = log.proteinLogs.reduce((sum, row) => sum + row.usableLeftoverUnits, 0);
     const totalWasteLb = log.proteinLogs.reduce((sum, row) => sum + row.wasteLb, 0);
-    const status = missingProteins.length > 0 ? 'INCOMPLETE' : 'FOUND';
+    const hasAllZeros = log.proteinLogs.every((row) => row.cookedUnits === 0 && row.usableLeftoverUnits === 0 && row.usableLeftoverLb === 0 && row.wasteLb === 0 && row.soldCookedLb === 0);
+    const logStatus = log.status || 'DRAFT';
+    const status = missingProteins.length > 0 || logStatus === 'DRAFT' || hasAllZeros ? 'INCOMPLETE' : 'FOUND';
+    const message = missingProteins.length > 0
+      ? `Prior EOD exists for ${fmtDateWithDow(priorEodDate)}, but is missing protein rows: ${missingProteins.join(', ')}.`
+      : logStatus === 'DRAFT'
+        ? `Prior EOD exists for ${fmtDateWithDow(priorEodDate)}, but is still Draft. Check hot box before relying on leftover credit.`
+        : hasAllZeros
+          ? `Prior EOD exists for ${fmtDateWithDow(priorEodDate)}, but all protein values are zero. Check hot box.`
+          : `Prior EOD ${logStatus} for ${fmtDateWithDow(priorEodDate)}.`;
 
     return NextResponse.json({
       ok: true,
@@ -47,9 +56,9 @@ export async function GET(request: Request) {
       priorEodDate: priorEodDate.toISOString().slice(0, 10),
       priorEodDateLabel: fmtDateWithDow(priorEodDate),
       status,
-      message: status === 'FOUND'
-        ? `Prior EOD found for ${fmtDateWithDow(priorEodDate)}.`
-        : `Prior EOD exists for ${fmtDateWithDow(priorEodDate)}, but is missing protein rows: ${missingProteins.join(', ')}.`,
+      logStatus,
+      locked: Boolean(log.lockedAt) || log.status === 'LOCKED',
+      message,
       totalSales: log.totalSales,
       smokedMeatSales: log.bbqSales,
       totalLeftoverUnits,

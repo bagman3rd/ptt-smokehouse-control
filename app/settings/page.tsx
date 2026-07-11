@@ -38,7 +38,8 @@ export default async function SettingsPage() {
           {scenarios.map((scenario) => (
             <form key={scenario.id} action={updateScenario} className="rounded-2xl border border-slate-200 p-4">
               <input type="hidden" name="id" value={scenario.id} />
-              <div className="mb-3 text-lg font-black">{scenario.name}</div>
+              <div className="mb-1 text-lg font-black">{scenario.name}</div>
+              <div className="mb-3 text-xs font-bold text-slate-500">Last updated {scenario.updatedAt.toLocaleString()} by {scenario.updatedBy}</div>
               <div className="grid gap-3 md:grid-cols-4">
                 <div><label className="label">Annual Sales</label><input className="field mt-1" name="annualSales" type="number" defaultValue={scenario.annualSales} /></div>
                 <div><label className="label">Smoked Meat % of Total Sales</label><input className="field mt-1" name="bbqSalesPercent" type="number" step="0.1" defaultValue={scenario.bbqSalesPercent} /></div>
@@ -66,7 +67,8 @@ export default async function SettingsPage() {
             return (
               <form key={protein.id} action={updateProtein} className="rounded-2xl border border-slate-200 p-4">
                 <input type="hidden" name="id" value={protein.id} />
-                <div className="mb-3 text-lg font-black">{protein.name}</div>
+                <div className="mb-1 text-lg font-black">{protein.name}</div>
+                <div className="mb-3 text-xs font-bold text-slate-500">Last updated {protein.updatedAt.toLocaleString()} by {protein.updatedBy}</div>
                 {chickenNote ? <p className="mb-3 text-sm font-bold text-slate-600">{chickenNote}</p> : null}
                 {ribNote ? <p className="mb-3 text-sm font-bold text-slate-600">{ribNote}</p> : null}
                 <div className="grid gap-3 md:grid-cols-4">
@@ -116,7 +118,7 @@ export default async function SettingsPage() {
               {days.map((day) => (
                 <form key={day.id} action={updateDayMultiplier} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3">
                   <input type="hidden" name="id" value={day.id} />
-                  <span className="font-bold">{day.label}</span>
+                  <span className="font-bold">{day.label}<span className="ml-2 text-xs text-slate-500">updated {day.updatedAt.toLocaleDateString()} by {day.updatedBy}</span></span>
                   <div className="flex items-center gap-2"><input className="field w-24" name="multiplier" type="number" min="0.1" max="3" step="0.01" defaultValue={day.multiplier} /><button className="btn-secondary" type="submit">Save</button></div>
                 </form>
               ))}
@@ -130,7 +132,7 @@ export default async function SettingsPage() {
             {months.map((month) => (
               <form key={month.id} action={updateMonthMultiplier} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3">
                 <input type="hidden" name="id" value={month.id} />
-                <span className="font-bold">{month.label}</span>
+                <span className="font-bold">{month.label}<span className="ml-2 text-xs text-slate-500">updated {month.updatedAt.toLocaleDateString()} by {month.updatedBy}</span></span>
                 <div className="flex items-center gap-2"><input className="field w-24" name="multiplier" type="number" min="0.1" max="3" step="0.01" defaultValue={month.multiplier} /><button className="btn-secondary" type="submit">Save</button></div>
               </form>
             ))}
