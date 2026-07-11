@@ -7,6 +7,7 @@ import { approveCookPlan } from '@/app/actions';
 import { CreateCookPlanForm } from '@/app/cook-plan/CreateCookPlanForm';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { currentRestaurantForUser } from '@/lib/tenant';
+import { FOOD_SALES_PERCENT, LIQUOR_SALES_PERCENT } from '@/lib/salesModel';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -50,7 +51,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Daily Load Plan</h1>
-      <p className="mt-2 text-slate-600">{restaurant.name} · Generate, review, and approve the actual smoker load for the selected production date. Brisket and pork use next-day service estimates; ribs and chicken use same-day estimates.</p>
+      <p className="mt-2 text-slate-600">{restaurant.name} · Generate, review, and approve the actual smoker load for the selected production date. Brisket and pork use next-day service estimates; ribs and chicken use same-day estimates. The model treats {LIQUOR_SALES_PERCENT}% of total sales as liquor/bar and excludes that from meat production.</p>
     </div>
 
     {canManagePlan ? <section className="card p-5">
@@ -90,7 +91,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-black">Latest Plan</h2>
-          {plan ? <p className="text-slate-600">Load date {fmtDateWithDow(plan.serviceDate)} · {plan.scenario.name} · same-day ribs/chicken forecast {money(plan.forecastSales)} total / {money(plan.forecastBbqSales)} BBQ · {plan.confidence} confidence</p> : null}
+          {plan ? <p className="text-slate-600">Load date {fmtDateWithDow(plan.serviceDate)} · {plan.scenario.name} · same-day ribs/chicken forecast {money(plan.forecastSales)} total / {money(plan.forecastSales * (LIQUOR_SALES_PERCENT / 100))} liquor excluded / {money(plan.forecastSales * (FOOD_SALES_PERCENT / 100))} food / {money(plan.forecastBbqSales)} smoked meat · {plan.confidence} confidence</p> : null}
           {plan?.notes ? <p className="mt-1 text-sm font-bold text-slate-500">{plan.notes} · Created {plan.createdAt.toLocaleString('en-US', { timeZone: 'America/New_York' })}</p> : null}
           {searchParams?.generatedAt ? <p className="mt-1 text-sm font-black text-emerald-700">Showing newly generated plan.</p> : null}
         </div>

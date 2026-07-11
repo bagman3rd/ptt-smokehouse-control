@@ -5,6 +5,7 @@ import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { updateDayMultiplier, updateMonthMultiplier, updateProtein, updateScenario } from '@/app/actions';
 import { dayPatternRows } from '@/lib/dayProfiles';
 import { currentRestaurantForUser } from '@/lib/tenant';
+import { FOOD_SALES_PERCENT, LIQUOR_SALES_PERCENT, salesBreakdown, salesBreakdownLine } from '@/lib/salesModel';
 
 function unitNameForProtein(name: string) {
   const lower = name.toLowerCase();
@@ -38,16 +39,24 @@ export default async function SettingsPage() {
 
       <section className="card p-5">
         <h2 className="text-xl font-black">Forecast Scenarios</h2>
-        <p className="mt-2 text-sm text-slate-600">Total restaurant sales are reduced to smoked-meat demand using the Smoked Meat % of Total Sales field.</p>
+        <p className="mt-2 text-sm text-slate-600">Total restaurant sales include liquor. The model explicitly removes {LIQUOR_SALES_PERCENT}% liquor/bar sales, leaves {FOOD_SALES_PERCENT}% food sales, then forecasts smoked-meat demand from the Smoked Meat % of Total Sales field.</p>
         <div className="mt-4 grid gap-4">
           {scenarios.map((scenario) => (
             <form key={scenario.id} action={updateScenario} className="rounded-2xl border border-slate-200 p-4">
               <input type="hidden" name="id" value={scenario.id} />
               <div className="mb-1 text-lg font-black">{scenario.name}</div>
               <div className="mb-3 text-xs font-bold text-slate-500">Last updated {scenario.updatedAt.toLocaleString()} by {scenario.updatedBy}</div>
+              {(() => {
+                const breakdown = salesBreakdown(scenario.annualSales, scenario.bbqSalesPercent);
+                return <div className="mb-4 rounded-xl border border-blue-200 bg-blue-50 p-3 text-xs text-blue-950">
+                  <div className="font-black">Liquor / food / smoked-meat model</div>
+                  <div className="mt-1 font-bold">{salesBreakdownLine(scenario.annualSales, scenario.bbqSalesPercent)}</div>
+                  <div className="mt-1">Non-smoked food: {breakdown.nonSmokedFoodSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}. Meat production is not calculated from liquor sales.</div>
+                </div>;
+              })()}
               <div className="grid gap-3 md:grid-cols-4">
                 <div><label className="label">Annual Sales</label><input className="field mt-1" name="annualSales" type="number" defaultValue={scenario.annualSales} /></div>
-                <div><label className="label">Smoked Meat % of Total Sales</label><input className="field mt-1" name="bbqSalesPercent" type="number" step="0.1" defaultValue={scenario.bbqSalesPercent} /></div>
+                <div><label className="label">Smoked Meat % of Total Sales</label><input className="field mt-1" name="bbqSalesPercent" type="number" step="0.1" defaultValue={scenario.bbqSalesPercent} /><div className="mt-1 text-xs font-bold text-slate-500">PTT default 40% = 80% food × 50% smoked-meat share of food.</div></div>
                 <div><label className="label">Safety %</label><input className="field mt-1" name="safetyFactorPct" type="number" step="0.1" defaultValue={scenario.safetyFactorPct} /></div>
                 <div><label className="label">Brisket Mix %</label><input className="field mt-1" name="brisketMixPct" type="number" step="0.1" defaultValue={scenario.brisketMixPct} /></div>
                 <div><label className="label">Pork Mix %</label><input className="field mt-1" name="porkMixPct" type="number" step="0.1" defaultValue={scenario.porkMixPct} /></div>
@@ -132,7 +141,7 @@ export default async function SettingsPage() {
         </div>
         <div className="card p-5">
           <h2 className="text-xl font-black">Month Multipliers</h2>
-          <p className="mt-2 text-sm text-slate-600">Editable Pigeon Forge seasonality placeholders.</p>
+          <p className="mt-2 text-sm text-slate-600">Editable seasonality placeholders. For PTT, these reflect the Pigeon Forge tourist pattern; other restaurants should set their own market curve during onboarding.</p>
           <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">
             {months.map((month) => (
               <form key={month.id} action={updateMonthMultiplier} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3">

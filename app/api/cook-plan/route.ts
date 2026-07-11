@@ -8,6 +8,7 @@ import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
 import { enforceRateLimit } from '@/lib/rateLimit';
 import { cookPlanSchema } from '@/lib/validators';
+import { FOOD_SALES_PERCENT, LIQUOR_SALES_PERCENT } from '@/lib/salesModel';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid load plan date');
@@ -147,7 +148,7 @@ export async function POST(request: Request) {
           forecastBbqSales: sameDayForecastBbqSales,
           confidence: confidenceForHistory(logsCount),
           status: 'DRAFT',
-          notes: `Load plan date ${fmtDateWithDow(loadDate)} · brisket/pork use next-day service forecast ${fmtDateWithDow(nextDayServiceDate)} (${nextDayForecastSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} total / ${nextDayForecastBbqSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} smoked meat) · ribs/chicken use same-day service forecast ${fmtDateWithDow(loadDate)} (${sameDayForecastSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} total / ${sameDayForecastBbqSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} smoked meat) · ${dayPattern.name} day pattern · event multiplier ${eventMultiplier}`,
+          notes: `Load plan date ${fmtDateWithDow(loadDate)} · brisket/pork use next-day service forecast ${fmtDateWithDow(nextDayServiceDate)} (${nextDayForecastSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} total / ${nextDayForecastBbqSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} smoked meat) · ribs/chicken use same-day service forecast ${fmtDateWithDow(loadDate)} (${sameDayForecastSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} total / ${sameDayForecastBbqSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} smoked meat) · liquor/bar ${LIQUOR_SALES_PERCENT}% excluded / food ${FOOD_SALES_PERCENT}% before smoked-meat demand · ${dayPattern.name} day pattern · event multiplier ${eventMultiplier}`,
           items: { create: items }
         },
         include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }

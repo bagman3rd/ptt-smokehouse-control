@@ -7,6 +7,7 @@ import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { deleteFutureCookPlans } from '@/app/actions';
 import { currentRestaurantForUser } from '@/lib/tenant';
+import { FOOD_SALES_PERCENT, LIQUOR_SALES_PERCENT, salesBreakdown, salesBreakdownLine } from '@/lib/salesModel';
 
 function money(n: number) { return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }); }
 function displayUnit(proteinName: string, inputUnit: string) {
@@ -64,12 +65,29 @@ export default async function DashboardPage() {
       {hasRole(user, ['ADMIN', 'OWNER', 'KITCHEN_MANAGER']) ? <Link href="/cook-plan" className="btn-primary">Create / Review Cook Plan</Link> : <Link href="/end-of-day" className="btn-primary">Enter End-of-Day Log</Link>}
     </div>
 
-    <div className="grid gap-4 md:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-5">
       <StatCard label="Latest Forecast" value={latestPlan ? money(latestPlan.forecastSales) : 'No plan'} note={latestPlan ? `${fmtDateWithDow(latestPlan.serviceDate)} · ${latestPlan.scenario.name}` : 'Create first cook plan'} />
-      <StatCard label="Smoked Meat Forecast" value={latestPlan ? money(latestPlan.forecastBbqSales) : '—'} note={latestPlan ? `Confidence: ${latestPlan.confidence}` : undefined} />
+      <StatCard label="Smoked Meat Forecast" value={latestPlan ? money(latestPlan.forecastBbqSales) : '—'} note={latestPlan ? `20% liquor is excluded before meat demand · Confidence: ${latestPlan.confidence}` : undefined} />
+      <StatCard label="Liquor/Food Split" value={`${LIQUOR_SALES_PERCENT}% / ${FOOD_SALES_PERCENT}%`} note={latestPlan ? `${money(latestPlan.forecastSales * 0.2)} liquor · ${money(latestPlan.forecastSales * 0.8)} food` : 'Total sales split before BBQ forecast'} />
       <StatCard label="Usable Leftover" value={`${Math.round(leftoverUnits)} units`} note={`${Math.round(leftoverLb)} lb from latest EOD log`} />
       <StatCard label="7-Day Sellouts" value={`${sellouts7}`} note={`7-day waste: ${Math.round(wasteLb7)} lb`} />
     </div>
+
+
+    <section className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-950">
+      <h2 className="text-lg font-black">Sales Model: liquor is factored out</h2>
+      <p className="mt-1 font-semibold">The forecast starts with total restaurant sales, removes the 20% liquor/bar portion, then uses smoked-meat sales to drive brisket, pork, ribs, and chicken production.</p>
+      <div className="mt-2 grid gap-2 md:grid-cols-2">
+        {scenarios.map((scenario) => {
+          const breakdown = salesBreakdown(scenario.annualSales, scenario.bbqSalesPercent);
+          return <div key={scenario.id} className="rounded-xl bg-white/70 p-3">
+            <div className="font-black">{scenario.name}</div>
+            <div className="text-xs font-bold text-blue-900">{salesBreakdownLine(scenario.annualSales, scenario.bbqSalesPercent)}</div>
+            <div className="mt-1 text-xs text-blue-800">Non-smoked food: {money(breakdown.nonSmokedFoodSales)}. Meat production is based on smoked meat only, not liquor sales.</div>
+          </div>;
+        })}
+      </div>
+    </section>
 
 
     {ignoredFuturePlan ? <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
@@ -111,7 +129,7 @@ export default async function DashboardPage() {
         <div className="mt-4 space-y-3">
           {scenarios.map(s => <div key={s.id} className="rounded-xl border border-slate-200 p-4">
             <div className="flex items-center justify-between"><div className="font-bold">{s.name}</div><div className="font-black">{money(s.annualSales)}</div></div>
-            <div className="mt-1 text-sm text-slate-600">Smoked meat {s.bbqSalesPercent}% · Safety {s.safetyFactorPct}% · Mix B/P/R/C {s.brisketMixPct}/{s.porkMixPct}/{s.ribsMixPct}/{s.chickenMixPct}</div>
+            <div className="mt-1 text-sm text-slate-600">20% liquor removed · smoked meat {s.bbqSalesPercent}% of total ({Math.round(s.bbqSalesPercent / 80 * 100)}% of food) · Safety {s.safetyFactorPct}% · Mix B/P/R/C {s.brisketMixPct}/{s.porkMixPct}/{s.ribsMixPct}/{s.chickenMixPct}</div>
           </div>)}
         </div>
       </div>

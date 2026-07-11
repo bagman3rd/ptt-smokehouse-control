@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { hasRole, normalizeRole, ROLE_LABELS, type AppRole } from '@/lib/auth';
+import { hasRole, type AppRole } from '@/lib/auth';
 import type { User } from '@prisma/client';
 import { listRestaurantsForUser, currentRestaurantForUser } from '@/lib/tenant';
 
@@ -17,16 +17,13 @@ const links: Array<[string, string, AppRole[]]> = [
 ];
 
 export async function Nav({ user }: { user: User }) {
-  const role = normalizeRole(String(user.role));
   const currentRestaurant = await currentRestaurantForUser(user);
   const restaurants = await listRestaurantsForUser(user.id);
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between">
-        <Link href="/dashboard" className="text-xl font-black tracking-tight">PTT Smokehouse Control <span className="ml-2 rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">Build 3.3.0</span></Link>
+        <Link href="/dashboard" className="text-xl font-black tracking-tight">PTT Smokehouse Control <span className="ml-2 rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">Build 3.4.1</span></Link>
         <nav className="flex gap-2 overflow-x-auto pb-1">
-          <span className="whitespace-nowrap rounded-full bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800">{user.name} · {ROLE_LABELS[role]}</span>
-
           {restaurants.length > 1 ? (
             <form action="/api/restaurants/switch" method="POST" className="flex items-center gap-2">
               <select name="restaurantId" defaultValue={currentRestaurant.id} className="rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold">
@@ -34,9 +31,7 @@ export async function Nav({ user }: { user: User }) {
               </select>
               <button className="whitespace-nowrap rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold hover:bg-slate-100" type="submit">Switch</button>
             </form>
-          ) : (
-            <span className="whitespace-nowrap rounded-full bg-slate-100 px-3 py-2 text-sm font-bold text-slate-700">{currentRestaurant.name}</span>
-          )}
+          ) : null}
           {links.filter(([, , roles]) => hasRole(user, roles)).map(([label, href]) => (
             <Link key={href} href={href} className="whitespace-nowrap rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold hover:bg-slate-100">
               {label}
