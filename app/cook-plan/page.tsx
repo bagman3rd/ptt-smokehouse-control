@@ -1,6 +1,6 @@
 import { unstable_noStore as noStore } from 'next/cache';
 import { Shell } from '@/components/Shell';
-import { requireRole } from '@/lib/auth';
+import { requireRole, hasRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { approveCookPlan } from '@/app/actions';
@@ -31,7 +31,8 @@ function timingCategory(proteinName: string) {
 }
 
 export default async function CookPlanPage({ searchParams }: { searchParams?: { planId?: string; generatedAt?: string } }) {
-  await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
+  const user = await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
+  const canManagePlan = hasRole(user, ['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   noStore();
   await ensureDefaultData(prisma);
   const [scenarios, selectedPlan, latestPlan] = await Promise.all([
@@ -49,10 +50,13 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
       <p className="mt-2 text-slate-600">Generate, review, and approve the actual smoker load for the selected production date. Brisket and pork use next-day service estimates; ribs and chicken use same-day estimates.</p>
     </div>
 
-    <section className="card p-5">
+    {canManagePlan ? <section className="card p-5">
       <h2 className="text-xl font-black">Create Forecast</h2>
       <CreateCookPlanForm scenarios={scenarios} />
-    </section>
+    </section> : <section className="card p-5">
+      <h2 className="text-xl font-black">Read-Only Cook Plan</h2>
+      <p className="mt-2 text-slate-600">Kitchen Crew can view the current cook plan and production timing, but cannot generate or approve plans.</p>
+    </section>}
 
     {plan && loadDate && nextDayServiceDate ? <section className="card mt-6 p-5">
       <h2 className="text-xl font-black">Production Timing Summary</h2>
@@ -89,7 +93,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
         </div>
         {plan ? <div className="rounded-full bg-slate-100 px-4 py-2 text-sm font-black">{plan.status}</div> : null}
       </div>
-      {!plan ? <p className="mt-4 text-slate-600">No plan has been created yet.</p> : <form action={approveCookPlan} className="mt-5 space-y-4">
+      {!plan ? <p className="mt-4 text-slate-600">No plan has been created yet.</p> : canManagePlan ? <form action={approveCookPlan} className="mt-5 space-y-4">
         <input type="hidden" name="cookPlanId" value={plan.id} />
         {plan.items.map(item => {
           const timing = timingCategory(item.protein.name);
@@ -121,7 +125,34 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
           </div>
         </div>})}
         <button className="btn-primary w-full md:w-auto" type="submit">Approve Cook Plan</button>
-      </form>}
+      </form> : <div className="mt-5 space-y-4">
+        {plan.items.map(item => {
+          const timing = timingCategory(item.protein.name);
+          const noPriorEodData = (item.notes ?? '').toLowerCase().includes('no data, check hot box');
+          return <div key={item.id} className="rounded-2xl border border-slate-200 p-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="flex flex-wrap items-center gap-2"><span className="text-lg font-black">{item.protein.name}</span><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">{timing.badge}</span></div>
+                <div className="mt-1 text-sm font-bold text-slate-600">{item.notes}</div>
+                <div className="mt-3 grid gap-2 text-sm text-slate-600 md:grid-cols-3">
+                  <div className="rounded-xl bg-slate-50 p-3"><span className="block text-xs font-black uppercase text-slate-500">Gross forecast need</span><strong className="text-xl text-slate-950">{item.forecastCookUnits || item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
+                  <div className={timing.usesCredit ? "rounded-xl bg-amber-50 p-3" : "rounded-xl bg-slate-50 p-3"}>
+                    <span className={timing.usesCredit ? "block text-xs font-black uppercase text-amber-700" : "block text-xs font-black uppercase text-slate-500"}>{timing.usesCredit ? 'Prior EOD leftover credit' : 'Leftover credit not used'}</span>
+                    {noPriorEodData ? <strong className="text-base text-amber-900">no data, check hot box</strong> : <><strong className={timing.usesCredit ? "text-xl text-amber-900" : "text-xl text-slate-500"}>{item.usableLeftoverUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)} <span className="text-xs">/ {item.usableLeftoverLb} lb</span></>}
+                  </div>
+                  <div className="rounded-xl bg-emerald-50 p-3"><span className="block text-xs font-black uppercase text-emerald-700">{timing.label}</span><strong className="text-xl text-emerald-900">{item.approvedCookUnits ?? item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
+                </div>
+                <div className="mt-2 text-sm text-slate-600">Net cooked production need {item.cookedLbNeeded} lb · net raw need {item.rawLbNeeded} lb · safety factor {item.safetyFactorPct}%</div>
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700 md:w-72">
+                <div className="text-xs font-black uppercase text-slate-500">Crew read-only access</div>
+                <div className="mt-1 font-bold">Final load: {item.approvedCookUnits ?? item.recommendedCookUnits} {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
+                {item.overrideReason ? <div className="mt-1 text-xs">Notes: {item.overrideReason}</div> : null}
+              </div>
+            </div>
+          </div>;
+        })}
+      </div>}
     </section>
   </Shell>;
 }

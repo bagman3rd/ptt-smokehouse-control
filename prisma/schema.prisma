@@ -35,7 +35,7 @@ enum ProteinUnit {
 model User {
   id           String   @id @default(cuid())
   name         String
-  username     String?  @unique
+  username     String?
   email        String   @unique
   passwordHash String?
   role         Role     @default(KITCHEN_CREW)

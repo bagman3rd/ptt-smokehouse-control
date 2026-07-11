@@ -27,7 +27,7 @@ async function exactEodFor(serviceDate: Date) {
 export async function POST(request: Request) {
   try {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
-    if (authError) return NextResponse.json(authError, { status: 401 });
+    if (authError) return authError;
     await ensureDefaultData(prisma);
 
     const body = await request.json().catch(() => ({}));

@@ -24,7 +24,7 @@ function responseCsv(filename: string, body: string) {
 
 export async function GET(req: NextRequest) {
   const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
-  if (authError) return NextResponse.json(authError, { status: 401 });
+  if (authError) return authError;
 
   const url = req.nextUrl;
   const params = parseReportParams(Object.fromEntries(url.searchParams.entries()));

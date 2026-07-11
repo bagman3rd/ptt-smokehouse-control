@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
   const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
-  if (authError) return NextResponse.json(authError, { status: 401 });
+  if (authError) return authError;
   const formData = await req.formData();
   const id = String(formData.get('id') || '');
   if (id) await prisma.savedReport.deleteMany({ where: { id } });

@@ -40,7 +40,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Reco
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Reports</h1>
-      <p className="mt-2 text-slate-600">Saved operating history is reportable by date, day of week, protein, and source data. Build 2.7.0 adds named user access, role controls, reports, learning, and backups.</p>
+      <p className="mt-2 text-slate-600">Saved operating history is reportable by date, day of week, protein, and source data. Build 2.7.1 adds named user access, role controls, reports, learning, and backups.</p>
     </div>
 
     {(savedMessage || error) ? <div className={`mb-4 rounded-xl px-4 py-3 text-sm font-black ${error ? 'bg-red-50 text-red-800' : 'bg-emerald-50 text-emerald-800'}`}>{error || savedMessage}</div> : null}

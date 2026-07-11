@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   const authError = await requireApiRole(['ADMIN', 'OWNER']);
-  if (authError) return NextResponse.json(authError, { status: 401 });
+  if (authError) return authError;
 
   const [proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns] = await Promise.all([
     prisma.protein.findMany({ orderBy: { name: 'asc' } }),
@@ -20,7 +20,7 @@ export async function GET() {
   const exportedAt = new Date().toISOString();
   const body = JSON.stringify({
     app: 'PTT Smokehouse Control',
-    build: '2.7.0',
+    build: '2.7.1',
     exportedAt,
     counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length },
     proteins,

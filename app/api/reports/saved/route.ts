@@ -13,7 +13,7 @@ function cleanName(value: FormDataEntryValue | null) {
 
 export async function POST(req: NextRequest) {
   const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
-  if (authError) return NextResponse.json(authError, { status: 401 });
+  if (authError) return authError;
 
   try {
     const formData = await req.formData();

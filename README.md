@@ -1,6 +1,6 @@
-# PTT Smokehouse Control — Build 2.7.0
+# PTT Smokehouse Control — Build 2.7.1
 
-Private BBQ production-control app for Pigeon Toed Tavern. Build 2.7.0 is an authentication-hardening and operational-safety release on top of the reporting, learning, CSV export, and backup features added in Builds 2.3.0–2.5.0.
+Private BBQ production-control app for Pigeon Toed Tavern. Build 2.7.1 is a role-access and deployment-stability patch on top of the reporting, learning, CSV export, and backup features added in Builds 2.3.0–2.5.0.
 
 ## Current purpose
 
@@ -13,7 +13,7 @@ The app helps answer:
 - What forecast settings should we consider adjusting based on accumulated operating data?
 - What happened last week, last month, or during a custom date range by protein/day/date?
 
-## Build 2.7.0 changes
+## Build 2.7.1 changes
 
 ### Authentication and resource-abuse hardening
 
@@ -91,7 +91,7 @@ NODE_VERSION=20.18.1
 
 ## Commercial-readiness notes
 
-Build 2.7.0 closes the worst private-MVP auth gaps, but the app still needs these before selling externally:
+Build 2.7.1 closes the worst private-MVP auth gaps, but the app still needs these before selling externally:
 
 1. Individual user accounts with password hashes, reset flow, invitations, and role-based access.
 2. Multi-restaurant architecture with `restaurantId` on all operational tables.

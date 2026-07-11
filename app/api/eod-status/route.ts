@@ -12,7 +12,7 @@ function toDateOnly(value: string) {
 export async function GET(request: Request) {
   try {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
-    if (authError) return NextResponse.json(authError, { status: 401 });
+    if (authError) return authError;
     await ensureDefaultData(prisma);
     const url = new URL(request.url);
     const loadDateValue = String(url.searchParams.get('loadDate') || '');

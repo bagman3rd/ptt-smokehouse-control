@@ -31,6 +31,8 @@ export async function createUser(formData: FormData) {
   const role = roleFromForm(formData.get('role'));
   if (!name) throw new Error('Name is required.');
   if (password.length < 8) throw new Error('Password must be at least 8 characters.');
+  const existing = await prisma.user.findFirst({ where: { OR: [{ username }, { email }] } });
+  if (existing) throw new Error('That username or email is already in use.');
   await prisma.user.create({
     data: { name, username, email, passwordHash: hashPassword(password), role, active: true, createdBy: current.name || 'Admin' }
   });

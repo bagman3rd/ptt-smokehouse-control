@@ -24,7 +24,7 @@ function hasBlank(value: unknown) {
 export async function POST(request: Request) {
   try {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
-    if (authError) return NextResponse.json(authError, { status: 401 });
+    if (authError) return authError;
     await ensureDefaultData(prisma);
     const body = await request.json().catch(() => ({}));
     const serviceDateStr = String(body.serviceDate || '');
