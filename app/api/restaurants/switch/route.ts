@@ -1,0 +1,15 @@
+import { redirect } from 'next/navigation';
+import { currentUser } from '@/lib/auth';
+import { membershipForUserRestaurant, setCurrentRestaurantCookie } from '@/lib/tenant';
+
+export async function POST(request: Request) {
+  const user = await currentUser();
+  if (!user) redirect('/login');
+  const formData = await request.formData();
+  const restaurantId = String(formData.get('restaurantId') || '');
+  if (restaurantId) {
+    const membership = await membershipForUserRestaurant(user.id, restaurantId);
+    if (membership) setCurrentRestaurantCookie(restaurantId);
+  }
+  redirect('/dashboard');
+}

@@ -62,11 +62,20 @@ export async function ensureDefaultData(prisma: PrismaClient) {
   const adminPassword = initialAdminPassword();
   if (adminPassword) {
     const passwordHash = hashPassword(adminPassword);
-    await prisma.user.upsert({
-      where: { email: 'admin@smokehouse.local' },
-      update: { username: 'admin', name: 'Admin', role: Role.ADMIN, active: true, passwordHash, restaurantId },
-      create: { name: 'Admin', username: 'admin', email: 'admin@smokehouse.local', passwordHash, role: Role.ADMIN, active: true, createdBy: 'System Seed', restaurantId }
-    });
+    const existingAdmin = await prisma.user.findFirst({ where: { email: 'admin@smokehouse.local' } });
+    if (existingAdmin) {
+      await prisma.user.update({ where: { id: existingAdmin.id }, data: { username: 'admin', name: 'Admin', active: true, passwordHash, restaurantId } });
+    } else {
+      await prisma.user.create({ data: { name: 'Admin', username: 'admin', email: 'admin@smokehouse.local', passwordHash, role: Role.ADMIN, active: true, createdBy: 'System Seed', restaurantId } });
+    }
+  }
+
+  const legacyUsers = await prisma.user.findMany({ where: { restaurantId } });
+  for (const legacyUser of legacyUsers) {
+    const existingMembership = await prisma.restaurantMembership.findFirst({ where: { restaurantId, userId: legacyUser.id } });
+    if (!existingMembership) {
+      await prisma.restaurantMembership.create({ data: { restaurantId, userId: legacyUser.id, role: legacyUser.role, active: legacyUser.active } }).catch(() => null);
+    }
   }
 
   const admin = await prisma.user.findFirst({ where: { email: 'admin@smokehouse.local' } });

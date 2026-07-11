@@ -1,8 +1,10 @@
+import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import type { User } from '@prisma/client';
 
 export const DEFAULT_RESTAURANT_NAME = 'Pigeon Toed Tavern';
 export const DEFAULT_RESTAURANT_SLUG = 'pigeon-toed-tavern';
+export const RESTAURANT_COOKIE = 'ptt_restaurant_id';
 
 export async function ensureDefaultRestaurant() {
   const existing = await prisma.restaurant.findFirst({
@@ -20,23 +22,48 @@ export async function ensureDefaultRestaurant() {
   });
 }
 
-export async function currentRestaurantForUser(user: Pick<User, 'id' | 'restaurantId' | 'role'>) {
-  if (user.restaurantId) {
-    const restaurant = await prisma.restaurant.findFirst({ where: { id: user.restaurantId, active: true } });
-    if (restaurant) return restaurant;
+export async function listRestaurantsForUser(userId: string) {
+  return prisma.restaurant.findMany({
+    where: { active: true, memberships: { some: { userId, active: true } } },
+    orderBy: [{ name: 'asc' }]
+  });
+}
+
+export async function membershipForUserRestaurant(userId: string, restaurantId: string) {
+  return prisma.restaurantMembership.findFirst({
+    where: { userId, restaurantId, active: true, restaurant: { active: true } },
+    include: { restaurant: true }
+  });
+}
+
+export async function currentMembershipForUser(user: Pick<User, 'id' | 'restaurantId'>) {
+  const selectedId = cookies().get(RESTAURANT_COOKIE)?.value || user.restaurantId || '';
+  if (selectedId) {
+    const selected = await membershipForUserRestaurant(user.id, selectedId);
+    if (selected) return selected;
   }
 
-  const membership = await prisma.restaurantMembership.findFirst({
+  return prisma.restaurantMembership.findFirst({
     where: { userId: user.id, active: true, restaurant: { active: true } },
     include: { restaurant: true },
     orderBy: { createdAt: 'asc' }
   });
-  if (membership?.restaurant) return membership.restaurant;
+}
 
-  const fallback = await ensureDefaultRestaurant();
-  await prisma.user.updateMany({ where: { id: user.id, restaurantId: null }, data: { restaurantId: fallback.id } });
-  await prisma.restaurantMembership.create({ data: { userId: user.id, restaurantId: fallback.id, role: user.role, active: true } }).catch(() => null);
-  return fallback;
+export async function currentRestaurantForUser(user: Pick<User, 'id' | 'restaurantId'>) {
+  const membership = await currentMembershipForUser(user);
+  if (membership?.restaurant) return membership.restaurant;
+  return ensureDefaultRestaurant();
+}
+
+export function setCurrentRestaurantCookie(restaurantId: string) {
+  cookies().set(RESTAURANT_COOKIE, restaurantId, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 365
+  });
 }
 
 export function tenantWhere(restaurantId: string) {

@@ -89,7 +89,7 @@ model User {
   memberships  RestaurantMembership[]
   name         String
   username     String?
-  email        String   @unique
+  email        String
   passwordHash String?
   role         Role     @default(KITCHEN_CREW)
   active       Boolean  @default(true)

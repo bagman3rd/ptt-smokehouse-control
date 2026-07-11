@@ -19,17 +19,19 @@ export async function POST(request: Request) {
 
   await ensureDefaultData(prisma);
   const form = await request.formData();
-  const username = String(form.get('username') || '').trim().toLowerCase();
+  const identifier = String(form.get('username') || '').trim().toLowerCase();
   const password = String(form.get('password') || '');
 
-  const user = await prisma.user.findFirst({
-    where: {
-      active: true,
-      OR: [{ username }, { email: username }]
-    }
-  });
+  const usernameMatch = await prisma.user.findFirst({ where: { active: true, username: identifier } });
+  const emailMatches = usernameMatch ? [] : await prisma.user.findMany({ where: { active: true, email: identifier }, take: 2 });
+  const user = usernameMatch || (emailMatches.length === 1 ? emailMatches[0] : null);
 
   if (!user || !verifyPassword(password, user.passwordHash)) {
+    return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
+  }
+
+  const activeMembership = await prisma.restaurantMembership.findFirst({ where: { userId: user.id, active: true, restaurant: { active: true } } });
+  if (!activeMembership) {
     return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
   }
 

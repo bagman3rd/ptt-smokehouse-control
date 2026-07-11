@@ -17,12 +17,12 @@ export default async function UsersPage() {
   await ensureDefaultData(prisma);
   const restaurant = await currentRestaurantForUser(current);
   const restaurantId = restaurant.id;
-  const users = await prisma.user.findMany({ where: { restaurantId }, orderBy: [{ active: 'desc' }, { role: 'asc' }, { name: 'asc' }] });
+  const memberships = await prisma.restaurantMembership.findMany({ where: { restaurantId }, include: { user: true }, orderBy: [{ active: 'desc' }, { role: 'asc' }, { user: { name: 'asc' } }] });
 
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">User Access</h1>
-      <p className="mt-2 text-slate-600">{restaurant.name} · Create individual logins and control access by job role. Admin and Owner have full access. Kitchen Manager can run operations but cannot edit admin settings. Kitchen Crew can use the basic dashboard and write End-of-Day logs.</p>
+      <p className="mt-2 text-slate-600">{restaurant.name} · Create individual logins and control access by job role. Admin and Owner have full access. Kitchen Manager can run operations but cannot edit admin settings. Kitchen Crew can use the basic dashboard, read the Cook Plan, and write End-of-Day logs. Roles shown here are membership roles for this restaurant.</p>
     </div>
 
     <section className="card p-5">
@@ -62,16 +62,17 @@ export default async function UsersPage() {
         <table className="min-w-full text-sm">
           <thead><tr className="border-b text-left text-slate-500"><th className="py-2 pr-4">User</th><th className="py-2 pr-4">Role / Status</th><th className="py-2 pr-4">Update Access</th><th className="py-2 pr-4">Reset Password</th></tr></thead>
           <tbody>
-            {users.map((user) => {
-              const role = normalizeRole(String(user.role));
-              return <tr key={user.id} className="border-b align-top">
+            {memberships.map((membership) => {
+              const user = membership.user;
+              const role = normalizeRole(String(membership.role));
+              return <tr key={membership.id} className="border-b align-top">
                 <td className="py-3 pr-4"><div className="font-bold">{user.name}</div><div className="text-slate-500">{user.username || 'no username'} · {user.email}</div><div className="text-xs text-slate-400">Created {fmtDate(user.createdAt)}</div></td>
-                <td className="py-3 pr-4"><span className={`rounded-full px-2 py-1 text-xs font-bold ${user.active ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>{user.active ? 'Active' : 'Inactive'}</span><div className="mt-2 font-bold">{ROLE_LABELS[role]}</div></td>
+                <td className="py-3 pr-4"><span className={`rounded-full px-2 py-1 text-xs font-bold ${membership.active ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>{membership.active ? 'Active' : 'Inactive'}</span><div className="mt-2 font-bold">{ROLE_LABELS[role]}</div></td>
                 <td className="py-3 pr-4">
                   <form action={updateUserAccess} className="flex flex-wrap items-end gap-2">
                     <input type="hidden" name="id" value={user.id} />
                     <select className="field max-w-48" name="role" defaultValue={role}>{APP_ROLES.map((r) => <option key={r} value={r}>{ROLE_LABELS[r]}</option>)}</select>
-                    <label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" name="active" defaultChecked={user.active} /> Active</label>
+                    <label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" name="active" defaultChecked={membership.active} /> Active</label>
                     <button className="btn-secondary" type="submit">Save</button>
                   </form>
                 </td>

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { prisma } from '@/lib/prisma';
+import { currentMembershipForUser } from '@/lib/tenant';
 import type { User } from '@prisma/client';
 
 const COOKIE_NAME = 'ptt_session';
@@ -90,7 +91,11 @@ function parseSessionCookie() {
 export async function currentUser() {
   const userId = parseSessionCookie();
   if (!userId) return null;
-  return prisma.user.findFirst({ where: { id: userId, active: true } });
+  const user = await prisma.user.findFirst({ where: { id: userId, active: true } });
+  if (!user) return null;
+  const membership = await currentMembershipForUser(user).catch(() => null);
+  if (!membership) return null;
+  return { ...user, role: membership.role, restaurantId: membership.restaurantId };
 }
 
 export async function isAuthenticated() {
