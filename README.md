@@ -1,6 +1,6 @@
-# PTT Smokehouse Control — Build 2.3.0
+# PTT Smokehouse Control — Build 2.4.0
 
-Private BBQ production-control app for Pigeon Toed Tavern. Build 2.3.0 adds the first learning/recommendation layer so the app can compare cook-plan forecasts against completed End-of-Day logs and recommend future forecast adjustments.
+Private BBQ production-control app for Pigeon Toed Tavern. Build 2.4.0 adds report-building and CSV export functionality so saved operating data can be queried, exported, and used for management review.
 
 ## Current purpose
 
@@ -11,6 +11,53 @@ The app helps answer:
 - What usable leftovers from the exact prior EOD log should reduce today’s load?
 - Did we overcook, undercook, waste too much, or 86 items?
 - What forecast settings should we consider adjusting based on accumulated operating data?
+- What happened last week, last month, or during a custom date range by protein/day/date?
+
+## Build 2.4.0 changes
+
+- Rebuilt the Reports page as a flexible **Report Builder**.
+- Added reporting by source:
+  - End-of-Day Logs
+  - Cook Plans
+- Added report metrics:
+  - Waste lb
+  - Sold cooked lb
+  - Usable leftover units
+  - Usable leftover lb
+  - 86 events
+  - Smoked meat sales
+  - Total sales
+  - Loaded / approved units
+  - Recommended cook units
+  - Forecast cook units
+- Added grouping by:
+  - Date
+  - Day of week
+  - Protein
+  - Date + protein
+  - Day of week + protein
+- Added date ranges:
+  - Last 30 days
+  - This week
+  - Last week
+  - This month
+  - Last month
+  - Custom start/end dates
+- Added protein filter.
+- Added aggregate CSV export for the current report.
+- Added raw EOD protein-log CSV export.
+- Added raw cook-plan-item CSV export.
+- Added protected `/api/reports/export` endpoint.
+- Updated package/app badge to Build 2.4.0.
+
+## Example reports now supported
+
+- Waste last month by day of week
+- Briskets loaded last week
+- Ribs 86 events by protein
+- Pulled pork leftover units by date
+- Smoked meat sales last month
+- Cook-plan recommended units versus loaded units by date
 
 ## Render build command
 
@@ -34,18 +81,6 @@ NEXT_PUBLIC_APP_NAME
 NODE_VERSION=20.18.1
 ```
 
-## Build 2.3.0 changes
+## Commercial-readiness notes
 
-- Added **Learning** navigation/page.
-- Added protein-level forecast-vs-actual recommendations.
-- Added day-of-week forecast learning recommendations.
-- Learning logic matches EOD logs back to the correct cook plan by protein timing:
-  - brisket and pork compare against the prior-day load plan
-  - ribs and chicken compare against the same-day load plan
-- Added API-level authentication checks for cook-plan, EOD save, and prior-EOD status endpoints.
-- Added data-quality indicators so the app only recommends adjustments after enough matched data exists.
-- Updated package/app badge to Build 2.3.0.
-
-## What the learning page does not do yet
-
-Build 2.3.0 recommends adjustments but does not automatically change Settings. That is intentional. The next commercial-grade step is an approval workflow where Archer/admin reviews a recommendation, accepts it, and the app writes the change to Settings with an audit log.
+Build 2.4.0 improves data retrieval and management reporting, but the app still needs multi-restaurant architecture, real user accounts/roles, audit logs, saved named reports, and POS imports before it should be sold externally.
