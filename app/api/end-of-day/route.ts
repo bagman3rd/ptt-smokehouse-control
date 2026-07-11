@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
-import { requireApiRole } from '@/lib/auth';
+import { requireApiRole, currentUser } from '@/lib/auth';
 import { ensureDefaultData } from '@/lib/bootstrap';
+import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
 
 const allowedStatuses = new Set(['DRAFT', 'COMPLETE', 'REVIEWED', 'LOCKED']);
 
@@ -26,6 +27,10 @@ export async function POST(request: Request) {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
     if (authError) return authError;
     await ensureDefaultData(prisma);
+    const user = await currentUser();
+    if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401 });
+    const restaurant = await currentRestaurantForUser(user);
+    const restaurantId = restaurant.id;
     const body = await request.json().catch(() => ({}));
     const serviceDateStr = String(body.serviceDate || '');
     const serviceDate = toDateOnly(serviceDateStr);
@@ -37,12 +42,12 @@ export async function POST(request: Request) {
     const notes = String(body.notes || '');
     const entries = Array.isArray(body.proteins) ? body.proteins : [];
 
-    const existing = await prisma.endOfDayLog.findUnique({ where: { serviceDate } });
+    const existing = await prisma.endOfDayLog.findFirst({ where: { serviceDate, restaurantId } });
     if (existing?.lockedAt || existing?.status === 'LOCKED') {
       throw new Error('This EOD log is locked and cannot be edited from the app.');
     }
 
-    const proteins = await prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
+    const proteins = await prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } });
     if (proteins.length === 0) throw new Error('No active proteins exist. Seed data was not created.');
 
     const byProteinId = new Map(entries.map((entry: any) => [String(entry.proteinId), entry]));
@@ -100,6 +105,7 @@ export async function POST(request: Request) {
           })
         : await tx.endOfDayLog.create({
             data: {
+              restaurantId,
               serviceDate,
               totalSales,
               bbqSales,
@@ -118,6 +124,8 @@ export async function POST(request: Request) {
         include: { proteinLogs: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }
       });
     });
+
+    await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: status === 'LOCKED' ? 'LOCK' : 'SAVE', entity: 'EndOfDayLog', entityId: log.id, afterJson: { serviceDate: serviceDateStr, status } });
 
     revalidatePath('/end-of-day');
     revalidatePath('/cook-plan');

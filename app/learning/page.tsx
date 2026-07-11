@@ -4,6 +4,7 @@ import { requireRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
+import { currentRestaurantForUser } from '@/lib/tenant';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -69,24 +70,27 @@ function recommendationText(args: {
 }
 
 export default async function LearningPage() {
-    await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
-noStore();
+  const user = await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
+  noStore();
   await ensureDefaultData(prisma);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
 
   const [proteins, plans, logs, scenarios] = await Promise.all([
-    prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
+    prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } }),
     prisma.cookPlan.findMany({
+      where: { restaurantId },
       orderBy: { serviceDate: 'desc' },
       take: 120,
       include: { scenario: true, items: { include: { protein: true } } }
     }),
     prisma.endOfDayLog.findMany({
-      where: { status: { in: ['COMPLETE', 'REVIEWED', 'LOCKED'] } },
+      where: { restaurantId, status: { in: ['COMPLETE', 'REVIEWED', 'LOCKED'] } },
       orderBy: { serviceDate: 'desc' },
       take: 120,
       include: { proteinLogs: { include: { protein: true } } }
     }),
-    prisma.forecastScenario.findMany({ orderBy: { annualSales: 'asc' } })
+    prisma.forecastScenario.findMany({ where: { restaurantId }, orderBy: { annualSales: 'asc' } })
   ]);
 
   const planByDate = new Map(plans.map((plan) => [iso(plan.serviceDate), plan]));

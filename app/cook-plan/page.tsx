@@ -6,6 +6,7 @@ import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { approveCookPlan } from '@/app/actions';
 import { CreateCookPlanForm } from '@/app/cook-plan/CreateCookPlanForm';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
+import { currentRestaurantForUser } from '@/lib/tenant';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -35,10 +36,12 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
   const canManagePlan = hasRole(user, ['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   noStore();
   await ensureDefaultData(prisma);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
   const [scenarios, selectedPlan, latestPlan] = await Promise.all([
-    prisma.forecastScenario.findMany({ where: activeScenarioWhere(), orderBy: { annualSales: 'asc' } }),
-    searchParams?.planId ? prisma.cookPlan.findUnique({ where: { id: searchParams.planId }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } }) : Promise.resolve(null),
-    prisma.cookPlan.findFirst({ orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
+    prisma.forecastScenario.findMany({ where: activeScenarioWhere(restaurantId), orderBy: { annualSales: 'asc' } }),
+    searchParams?.planId ? prisma.cookPlan.findFirst({ where: { id: searchParams.planId, restaurantId }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } }) : Promise.resolve(null),
+    prisma.cookPlan.findFirst({ where: { restaurantId }, orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
   ]);
   const plan = selectedPlan ?? latestPlan;
   const loadDate = plan?.serviceDate ?? null;
@@ -47,7 +50,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Daily Load Plan</h1>
-      <p className="mt-2 text-slate-600">Generate, review, and approve the actual smoker load for the selected production date. Brisket and pork use next-day service estimates; ribs and chicken use same-day estimates.</p>
+      <p className="mt-2 text-slate-600">{restaurant.name} · Generate, review, and approve the actual smoker load for the selected production date. Brisket and pork use next-day service estimates; ribs and chicken use same-day estimates.</p>
     </div>
 
     {canManagePlan ? <section className="card p-5">

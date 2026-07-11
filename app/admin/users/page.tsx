@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { requireRole, ROLE_LABELS, normalizeRole, APP_ROLES } from '@/lib/auth';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { createUser, resetUserPassword, updateUserAccess } from './actions';
+import { currentRestaurantForUser } from '@/lib/tenant';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -12,14 +13,16 @@ function fmtDate(date: Date) {
 }
 
 export default async function UsersPage() {
-  await requireRole(['ADMIN', 'OWNER']);
+  const current = await requireRole(['ADMIN', 'OWNER']);
   await ensureDefaultData(prisma);
-  const users = await prisma.user.findMany({ orderBy: [{ active: 'desc' }, { role: 'asc' }, { name: 'asc' }] });
+  const restaurant = await currentRestaurantForUser(current);
+  const restaurantId = restaurant.id;
+  const users = await prisma.user.findMany({ where: { restaurantId }, orderBy: [{ active: 'desc' }, { role: 'asc' }, { name: 'asc' }] });
 
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">User Access</h1>
-      <p className="mt-2 text-slate-600">Create individual logins and control access by job role. Admin and Owner have full access. Kitchen Manager can run operations but cannot edit admin settings. Kitchen Crew can use the basic dashboard and write End-of-Day logs.</p>
+      <p className="mt-2 text-slate-600">{restaurant.name} · Create individual logins and control access by job role. Admin and Owner have full access. Kitchen Manager can run operations but cannot edit admin settings. Kitchen Crew can use the basic dashboard and write End-of-Day logs.</p>
     </div>
 
     <section className="card p-5">

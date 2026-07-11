@@ -3,6 +3,7 @@ import { Shell } from '@/components/Shell';
 import { requireRole } from '@/lib/auth';
 import { formatMetricValue, getReportData, metricLabel, parseReportParams, sourceLabel } from '@/lib/reporting';
 import { prisma } from '@/lib/prisma';
+import { currentRestaurantForUser } from '@/lib/tenant';
 
 function queryString(params: Record<string, string>) {
   const q = new URLSearchParams(params);
@@ -23,13 +24,15 @@ const rangeOptions = [
 ];
 
 export default async function ReportsPage({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
-  await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
+  const user = await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
   const params = parseReportParams(searchParams);
   const selectedRange = valueOf(searchParams.range) || 'last30';
-  const { rows, total, proteins } = await getReportData(params);
+  const { rows, total, proteins } = await getReportData(params, restaurantId);
   const [savedReports, recentRuns] = await Promise.all([
-    prisma.savedReport.findMany({ orderBy: { updatedAt: 'desc' }, take: 12 }),
-    prisma.reportRun.findMany({ orderBy: { createdAt: 'desc' }, take: 8 })
+    prisma.savedReport.findMany({ where: { restaurantId }, orderBy: { updatedAt: 'desc' }, take: 12 }),
+    prisma.reportRun.findMany({ where: { restaurantId }, orderBy: { createdAt: 'desc' }, take: 8 })
   ]);
   const csvHref = `/api/reports/export?${queryString({ ...params, range: selectedRange, dataset: 'aggregate' })}`;
   const chartRows = [...rows].sort((a, b) => b.value - a.value).slice(0, 12);
@@ -40,7 +43,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Reco
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Reports</h1>
-      <p className="mt-2 text-slate-600">Saved operating history is reportable by date, day of week, protein, and source data. Build 2.7.1 adds named user access, role controls, reports, learning, and backups.</p>
+      <p className="mt-2 text-slate-600">Saved operating history is reportable by date, day of week, protein, and source data. {restaurant.name} · Build 3.0.0 adds multi-tenant data scoping groundwork, tenant-aware reports, and tenant isolation controls.</p>
     </div>
 
     {(savedMessage || error) ? <div className={`mb-4 rounded-xl px-4 py-3 text-sm font-black ${error ? 'bg-red-50 text-red-800' : 'bg-emerald-50 text-emerald-800'}`}>{error || savedMessage}</div> : null}

@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { updateDayMultiplier, updateMonthMultiplier, updateProtein, updateScenario } from '@/app/actions';
 import { dayPatternRows } from '@/lib/dayProfiles';
+import { currentRestaurantForUser } from '@/lib/tenant';
 
 function unitNameForProtein(name: string) {
   const lower = name.toLowerCase();
@@ -15,14 +16,16 @@ function unitNameForProtein(name: string) {
 }
 
 export default async function SettingsPage() {
-  await requireRole(['ADMIN', 'OWNER']);
+  const user = await requireRole(['ADMIN', 'OWNER']);
   await ensureDefaultData(prisma);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
 
   const [proteins, scenarios, days, months] = await Promise.all([
-    prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
-    prisma.forecastScenario.findMany({ where: activeScenarioWhere(), orderBy: { annualSales: 'asc' } }),
-    prisma.dayMultiplier.findMany({ orderBy: { dayOfWeek: 'asc' } }),
-    prisma.monthMultiplier.findMany({ orderBy: { month: 'asc' } })
+    prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } }),
+    prisma.forecastScenario.findMany({ where: activeScenarioWhere(restaurantId), orderBy: { annualSales: 'asc' } }),
+    prisma.dayMultiplier.findMany({ where: { restaurantId }, orderBy: { dayOfWeek: 'asc' } }),
+    prisma.monthMultiplier.findMany({ where: { restaurantId }, orderBy: { month: 'asc' } })
   ]);
   const dayProfiles = dayPatternRows();
 
@@ -30,7 +33,7 @@ export default async function SettingsPage() {
     <Shell>
       <div className="mb-6">
         <h1 className="text-3xl font-black tracking-tight">Settings</h1>
-        <p className="mt-2 text-slate-600">Adjust assumptions as real Pigeon Forge operating data replaces the launch model.</p>
+        <p className="mt-2 text-slate-600">{restaurant.name} · Adjust assumptions as real operating data replaces the launch model.</p>
       </div>
 
       <section className="card p-5">

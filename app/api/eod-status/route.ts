@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { requireApiRole } from '@/lib/auth';
+import { requireApiRole, currentUser } from '@/lib/auth';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
+import { currentRestaurantForUser } from '@/lib/tenant';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid load date');
@@ -14,15 +15,19 @@ export async function GET(request: Request) {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
     if (authError) return authError;
     await ensureDefaultData(prisma);
+    const user = await currentUser();
+    if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401 });
+    const restaurant = await currentRestaurantForUser(user);
+    const restaurantId = restaurant.id;
     const url = new URL(request.url);
     const loadDateValue = String(url.searchParams.get('loadDate') || '');
     const loadDate = toDateOnly(loadDateValue);
     const priorEodDate = addUtcDays(loadDate, -1);
 
     const [proteins, log] = await Promise.all([
-      prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
-      prisma.endOfDayLog.findUnique({
-        where: { serviceDate: priorEodDate },
+      prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } }),
+      prisma.endOfDayLog.findFirst({
+        where: { serviceDate: priorEodDate, restaurantId },
         include: { proteinLogs: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }
       })
     ]);

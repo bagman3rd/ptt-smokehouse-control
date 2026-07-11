@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { requireApiRole } from '@/lib/auth';
+import { requireApiRole, currentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { parseReportParams } from '@/lib/reporting';
+import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
 
 function cleanName(value: FormDataEntryValue | null) {
   const name = String(value || '').trim();
@@ -16,6 +17,10 @@ export async function POST(req: NextRequest) {
   if (authError) return authError;
 
   try {
+    const user = await currentUser();
+    if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401 });
+    const restaurant = await currentRestaurantForUser(user);
+    const restaurantId = restaurant.id;
     const formData = await req.formData();
     const name = cleanName(formData.get('name'));
     const description = String(formData.get('description') || '').trim().slice(0, 240) || null;
@@ -32,6 +37,7 @@ export async function POST(req: NextRequest) {
 
     await prisma.savedReport.create({
       data: {
+        restaurantId,
         name,
         description,
         source: params.source,
@@ -41,9 +47,10 @@ export async function POST(req: NextRequest) {
         range,
         start: params.start,
         end: params.end,
-        createdBy: 'Archer'
+        createdBy: user.name
       }
     });
+    await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'CREATE', entity: 'SavedReport', afterJson: { name, params } });
 
     revalidatePath('/reports');
     const redirectUrl = new URL('/reports', req.url);

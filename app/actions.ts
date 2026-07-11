@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { addUtcDays } from '@/lib/date';
 import { requireRole } from '@/lib/auth';
+import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
 
 function numberField(formData: FormData, key: string, fallback = 0, min = 0, max = Number.MAX_SAFE_INTEGER) {
   const raw = formData.get(key);
@@ -30,9 +31,14 @@ export async function saveEndOfDayLog() {
 }
 
 export async function approveCookPlan(formData: FormData) {
-  await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
+  const user = await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
   const cookPlanId = String(formData.get('cookPlanId'));
-  const itemIds = formData.getAll('itemId').map(String);
+  const plan = await prisma.cookPlan.findFirst({ where: { id: cookPlanId, restaurantId }, include: { items: true } });
+  if (!plan) throw new Error('Cook plan not found for this restaurant.');
+  const allowedItemIds = new Set(plan.items.map((item) => item.id));
+  const itemIds = formData.getAll('itemId').map(String).filter((id) => allowedItemIds.has(id));
   for (const itemId of itemIds) {
     const approvedBaseUnits = numberField(formData, `approved-${itemId}`);
     const hotBoxAdjustment = signedNumberField(formData, `hotBoxAdjustment-${itemId}`, 0, -999, 999);
@@ -45,16 +51,19 @@ export async function approveCookPlan(formData: FormData) {
       data: { approvedCookUnits, overrideReason }
     });
   }
-  await prisma.cookPlan.update({ where: { id: cookPlanId }, data: { status: 'APPROVED' } });
+  await prisma.cookPlan.updateMany({ where: { id: cookPlanId, restaurantId }, data: { status: 'APPROVED' } });
+  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'APPROVE', entity: 'CookPlan', entityId: cookPlanId });
   revalidatePath('/cook-plan');
   revalidatePath('/dashboard');
 }
 
 export async function updateScenario(formData: FormData) {
-  await requireRole(['ADMIN', 'OWNER']);
+  const user = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
   const id = String(formData.get('id'));
-  await prisma.forecastScenario.update({
-    where: { id },
+  await prisma.forecastScenario.updateMany({
+    where: { id, restaurantId },
     data: {
       annualSales: numberField(formData, 'annualSales', 6000000, 1),
       bbqSalesPercent: numberField(formData, 'bbqSalesPercent', 40, 1, 100),
@@ -63,7 +72,7 @@ export async function updateScenario(formData: FormData) {
       porkMixPct: numberField(formData, 'porkMixPct', 40, 0, 100),
       ribsMixPct: numberField(formData, 'ribsMixPct', 15, 0, 100),
       chickenMixPct: numberField(formData, 'chickenMixPct', 15, 0, 100),
-      updatedBy: 'Archer'
+      updatedBy: user.name
     }
   });
   revalidatePath('/settings');
@@ -71,10 +80,12 @@ export async function updateScenario(formData: FormData) {
 }
 
 export async function updateProtein(formData: FormData) {
-  await requireRole(['ADMIN', 'OWNER']);
+  const user = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
   const id = String(formData.get('id'));
-  await prisma.protein.update({
-    where: { id },
+  await prisma.protein.updateMany({
+    where: { id, restaurantId },
     data: {
       rawWeightEachLb: numberField(formData, 'rawWeightEachLb', 1, 0.1),
       cookedWeightEachLb: numberField(formData, 'cookedWeightEachLb', 0, 0),
@@ -88,7 +99,7 @@ export async function updateProtein(formData: FormData) {
       maxCookUnits: numberField(formData, 'maxCookUnits', 999, 0),
       maxReuseHours: numberField(formData, 'maxReuseHours', 24, 0, 168),
       reusableLeftover: formData.get('reusableLeftover') === 'on',
-      updatedBy: 'Archer'
+      updatedBy: user.name
     }
   });
   revalidatePath('/settings');
@@ -96,31 +107,37 @@ export async function updateProtein(formData: FormData) {
 }
 
 export async function updateDayMultiplier(formData: FormData) {
-  await requireRole(['ADMIN', 'OWNER']);
+  const user = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
   const id = String(formData.get('id'));
-  await prisma.dayMultiplier.update({
-    where: { id },
-    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3), updatedBy: 'Archer' }
+  await prisma.dayMultiplier.updateMany({
+    where: { id, restaurantId },
+    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3), updatedBy: user.name }
   });
   revalidatePath('/settings');
 }
 
 export async function updateMonthMultiplier(formData: FormData) {
-  await requireRole(['ADMIN', 'OWNER']);
+  const user = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
   const id = String(formData.get('id'));
-  await prisma.monthMultiplier.update({
-    where: { id },
-    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3), updatedBy: 'Archer' }
+  await prisma.monthMultiplier.updateMany({
+    where: { id, restaurantId },
+    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3), updatedBy: user.name }
   });
   revalidatePath('/settings');
 }
 
 export async function deleteFutureCookPlans() {
-  await requireRole(['ADMIN', 'OWNER']);
+  const user = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
   const todayUtc = new Date();
   todayUtc.setUTCHours(0, 0, 0, 0);
   const cutoff = addUtcDays(todayUtc, 14);
-  await prisma.cookPlan.deleteMany({ where: { serviceDate: { gt: cutoff } } });
+  await prisma.cookPlan.deleteMany({ where: { restaurantId, serviceDate: { gt: cutoff } } });
   revalidatePath('/dashboard');
   revalidatePath('/cook-plan');
 }

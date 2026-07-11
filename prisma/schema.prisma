@@ -32,8 +32,61 @@ enum ProteinUnit {
   LB_COOKED
 }
 
+model Restaurant {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String?
+  city        String?
+  state       String?
+  timezone    String   @default("America/New_York")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  users       User[]
+  memberships RestaurantMembership[]
+  proteins    Protein[]
+  savedReports SavedReport[]
+  reportRuns  ReportRun[]
+  scenarios   ForecastScenario[]
+  dayMultipliers DayMultiplier[]
+  monthMultipliers MonthMultiplier[]
+  eventModifiers EventModifier[]
+  cookPlans   CookPlan[]
+  eodLogs     EndOfDayLog[]
+  auditLogs   AuditLog[]
+}
+
+model RestaurantMembership {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role         Role       @default(KITCHEN_CREW)
+  active       Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  actorUserId  String?
+  actorName    String   @default("System")
+  action       String
+  entity       String
+  entityId     String?
+  beforeJson   String?
+  afterJson    String?
+  createdAt    DateTime @default(now())
+}
+
 model User {
   id           String   @id @default(cuid())
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  memberships  RestaurantMembership[]
   name         String
   username     String?
   email        String   @unique
@@ -47,7 +100,9 @@ model User {
 
 model Protein {
   id                  String      @id @default(cuid())
-  name                String      @unique
+  restaurantId        String?
+  restaurant          Restaurant? @relation(fields: [restaurantId], references: [id])
+  name                String
   inputUnit           ProteinUnit
   rawWeightEachLb     Float       @default(0)
   cookedWeightEachLb  Float       @default(0)
@@ -71,6 +126,8 @@ model Protein {
 
 model SavedReport {
   id          String   @id @default(cuid())
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
   name        String
   description String?
   source      String
@@ -87,6 +144,8 @@ model SavedReport {
 
 model ReportRun {
   id          String   @id @default(cuid())
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
   source      String
   metric      String
   groupBy     String
@@ -102,7 +161,9 @@ model ReportRun {
 
 model ForecastScenario {
   id               String       @id @default(cuid())
-  name             String       @unique
+  restaurantId     String?
+  restaurant       Restaurant? @relation(fields: [restaurantId], references: [id])
+  name             String
   type             ScenarioType
   annualSales      Float
   bbqSalesPercent  Float        @default(40)
@@ -120,7 +181,9 @@ model ForecastScenario {
 
 model DayMultiplier {
   id          String   @id @default(cuid())
-  dayOfWeek   Int      @unique
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  dayOfWeek   Int
   label       String
   multiplier  Float    @default(1)
   updatedBy   String   @default("System")
@@ -129,7 +192,9 @@ model DayMultiplier {
 
 model MonthMultiplier {
   id          String   @id @default(cuid())
-  month       Int      @unique
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  month       Int
   label       String
   multiplier  Float    @default(1)
   updatedBy   String   @default("System")
@@ -138,6 +203,8 @@ model MonthMultiplier {
 
 model EventModifier {
   id          String   @id @default(cuid())
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
   name        String
   startsOn    DateTime
   endsOn      DateTime
@@ -148,7 +215,9 @@ model EventModifier {
 
 model CookPlan {
   id              String   @id @default(cuid())
-  serviceDate     DateTime @unique
+  restaurantId    String?
+  restaurant      Restaurant? @relation(fields: [restaurantId], references: [id])
+  serviceDate     DateTime
   scenarioId      String
   scenario        ForecastScenario @relation(fields: [scenarioId], references: [id])
   forecastSales   Float
@@ -182,7 +251,9 @@ model CookPlanItem {
 
 model EndOfDayLog {
   id             String   @id @default(cuid())
-  serviceDate    DateTime @unique
+  restaurantId   String?
+  restaurant     Restaurant? @relation(fields: [restaurantId], references: [id])
+  serviceDate    DateTime
   enteredBy       String   @default("KM")
   totalSales      Float    @default(0)
   bbqSales        Float    @default(0)

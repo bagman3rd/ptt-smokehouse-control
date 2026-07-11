@@ -89,9 +89,9 @@ export function dateBounds(start: string, end: string) {
   return { startDate, endExclusive };
 }
 
-export async function getReportData(params: ReportParams) {
+export async function getReportData(params: ReportParams, restaurantId: string) {
   const { startDate, endExclusive } = dateBounds(params.start, params.end);
-  const proteins = await prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
+  const proteins = await prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } });
   const rows: Array<{ group: string; date?: string; dayOfWeek?: string; protein?: string; value: number; records: number }> = [];
   const buckets = new Map<string, { group: string; date?: string; dayOfWeek?: string; protein?: string; value: number; records: number }>();
 
@@ -137,7 +137,7 @@ export async function getReportData(params: ReportParams) {
 
   if (params.source === 'eod') {
     const logs = await prisma.endOfDayLog.findMany({
-      where: { serviceDate: { gte: startDate, lt: endExclusive } },
+      where: { restaurantId, serviceDate: { gte: startDate, lt: endExclusive } },
       orderBy: { serviceDate: 'asc' },
       include: { proteinLogs: { include: { protein: true } } }
     });
@@ -154,7 +154,7 @@ export async function getReportData(params: ReportParams) {
     }
   } else {
     const plans = await prisma.cookPlan.findMany({
-      where: { serviceDate: { gte: startDate, lt: endExclusive } },
+      where: { restaurantId, serviceDate: { gte: startDate, lt: endExclusive } },
       orderBy: { serviceDate: 'asc' },
       include: { items: { include: { protein: true } } }
     });

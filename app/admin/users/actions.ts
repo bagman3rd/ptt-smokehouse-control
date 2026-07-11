@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { hashPassword } from '@/lib/password';
 import { requireRole, APP_ROLES, type AppRole } from '@/lib/auth';
 import { Role } from '@prisma/client';
+import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
 
 function clean(value: FormDataEntryValue | null) {
   return String(value || '').trim();
@@ -24,6 +25,8 @@ function usernameFromForm(value: FormDataEntryValue | null) {
 
 export async function createUser(formData: FormData) {
   const current = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(current);
+  const restaurantId = restaurant.id;
   const name = clean(formData.get('name'));
   const username = usernameFromForm(formData.get('username'));
   const email = clean(formData.get('email')).toLowerCase() || `${username}@smokehouse.local`;
@@ -31,28 +34,40 @@ export async function createUser(formData: FormData) {
   const role = roleFromForm(formData.get('role'));
   if (!name) throw new Error('Name is required.');
   if (password.length < 8) throw new Error('Password must be at least 8 characters.');
-  const existing = await prisma.user.findFirst({ where: { OR: [{ username }, { email }] } });
+  const existing = await prisma.user.findFirst({ where: { restaurantId, OR: [{ username }, { email }] } });
   if (existing) throw new Error('That username or email is already in use.');
   await prisma.user.create({
-    data: { name, username, email, passwordHash: hashPassword(password), role, active: true, createdBy: current.name || 'Admin' }
+    data: { name, username, email, passwordHash: hashPassword(password), role, active: true, createdBy: current.name || 'Admin', restaurantId }
   });
+  const created = await prisma.user.findFirst({ where: { restaurantId, username } });
+  if (created) await prisma.restaurantMembership.create({ data: { restaurantId, userId: created.id, role, active: true } }).catch(() => null);
+  await auditLog({ restaurantId, actorUserId: current.id, actorName: current.name, action: 'CREATE', entity: 'User', entityId: created?.id, afterJson: { username, role } });
   revalidatePath('/admin/users');
 }
 
 export async function updateUserAccess(formData: FormData) {
-  await requireRole(['ADMIN', 'OWNER']);
+  const current = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(current);
+  const restaurantId = restaurant.id;
   const id = clean(formData.get('id'));
   const role = roleFromForm(formData.get('role'));
   const active = formData.get('active') === 'on';
-  await prisma.user.update({ where: { id }, data: { role, active } });
+  await prisma.user.updateMany({ where: { id, restaurantId }, data: { role, active } });
+  const membership = await prisma.restaurantMembership.findFirst({ where: { restaurantId, userId: id } });
+  if (membership) await prisma.restaurantMembership.update({ where: { id: membership.id }, data: { role, active } });
+  else await prisma.restaurantMembership.create({ data: { restaurantId, userId: id, role, active } }).catch(() => null);
+  await auditLog({ restaurantId, actorUserId: current.id, actorName: current.name, action: 'UPDATE_ACCESS', entity: 'User', entityId: id, afterJson: { role, active } });
   revalidatePath('/admin/users');
 }
 
 export async function resetUserPassword(formData: FormData) {
-  await requireRole(['ADMIN', 'OWNER']);
+  const current = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(current);
+  const restaurantId = restaurant.id;
   const id = clean(formData.get('id'));
   const password = String(formData.get('password') || '');
   if (password.length < 8) throw new Error('Password must be at least 8 characters.');
-  await prisma.user.update({ where: { id }, data: { passwordHash: hashPassword(password) } });
+  await prisma.user.updateMany({ where: { id, restaurantId }, data: { passwordHash: hashPassword(password) } });
+  await auditLog({ restaurantId, actorUserId: current.id, actorName: current.name, action: 'RESET_PASSWORD', entity: 'User', entityId: id });
   revalidatePath('/admin/users');
 }

@@ -1,26 +1,34 @@
 import { NextResponse } from 'next/server';
-import { requireApiRole } from '@/lib/auth';
+import { requireApiRole, currentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { currentRestaurantForUser } from '@/lib/tenant';
 
 export async function GET() {
   const authError = await requireApiRole(['ADMIN', 'OWNER']);
   if (authError) return authError;
 
-  const [proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns] = await Promise.all([
-    prisma.protein.findMany({ orderBy: { name: 'asc' } }),
-    prisma.forecastScenario.findMany({ orderBy: { annualSales: 'asc' } }),
-    prisma.dayMultiplier.findMany({ orderBy: { dayOfWeek: 'asc' } }),
-    prisma.monthMultiplier.findMany({ orderBy: { month: 'asc' } }),
-    prisma.cookPlan.findMany({ orderBy: { serviceDate: 'asc' }, include: { scenario: true, items: { include: { protein: true } } } }),
-    prisma.endOfDayLog.findMany({ orderBy: { serviceDate: 'asc' }, include: { proteinLogs: { include: { protein: true } } } }),
-    prisma.savedReport.findMany({ orderBy: { createdAt: 'asc' } }),
-    prisma.reportRun.findMany({ orderBy: { createdAt: 'asc' }, take: 1000 })
+  const user = await currentUser();
+  if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401 });
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
+
+  const [proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns, auditLogs] = await Promise.all([
+    prisma.protein.findMany({ where: { restaurantId }, orderBy: { name: 'asc' } }),
+    prisma.forecastScenario.findMany({ where: { restaurantId }, orderBy: { annualSales: 'asc' } }),
+    prisma.dayMultiplier.findMany({ where: { restaurantId }, orderBy: { dayOfWeek: 'asc' } }),
+    prisma.monthMultiplier.findMany({ where: { restaurantId }, orderBy: { month: 'asc' } }),
+    prisma.cookPlan.findMany({ where: { restaurantId }, orderBy: { serviceDate: 'asc' }, include: { scenario: true, items: { include: { protein: true } } } }),
+    prisma.endOfDayLog.findMany({ where: { restaurantId }, orderBy: { serviceDate: 'asc' }, include: { proteinLogs: { include: { protein: true } } } }),
+    prisma.savedReport.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }),
+    prisma.reportRun.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' }, take: 1000 }),
+    prisma.auditLog.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' }, take: 2000 })
   ]);
 
   const exportedAt = new Date().toISOString();
   const body = JSON.stringify({
     app: 'PTT Smokehouse Control',
-    build: '2.7.1',
+    build: '3.0.0',
+    restaurant,
     exportedAt,
     counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length },
     proteins,
@@ -30,7 +38,8 @@ export async function GET() {
     cookPlans,
     endOfDayLogs: eodLogs,
     savedReports,
-    reportRuns
+    reportRuns,
+    auditLogs
   }, null, 2);
 
   return new NextResponse(body, {

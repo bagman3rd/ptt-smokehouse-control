@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { requireApiRole } from '@/lib/auth';
+import { requireApiRole, currentUser } from '@/lib/auth';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { getDayPatternByKey, getDayPatternMultiplier, inferDayPatternKey } from '@/lib/dayProfiles';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
+import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid load plan date');
@@ -17,9 +18,9 @@ function numberValue(value: unknown, fallback = 0, min = 0, max = Number.MAX_SAF
   return Math.min(max, Math.max(min, n));
 }
 
-async function exactEodFor(serviceDate: Date) {
-  return prisma.endOfDayLog.findUnique({
-    where: { serviceDate },
+async function exactEodFor(serviceDate: Date, restaurantId: string) {
+  return prisma.endOfDayLog.findFirst({
+    where: { serviceDate, restaurantId },
     include: { proteinLogs: true }
   });
 }
@@ -29,6 +30,10 @@ export async function POST(request: Request) {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
     if (authError) return authError;
     await ensureDefaultData(prisma);
+    const user = await currentUser();
+    if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401 });
+    const restaurant = await currentRestaurantForUser(user);
+    const restaurantId = restaurant.id;
 
     const body = await request.json().catch(() => ({}));
     const loadDateStr = String(body.serviceDate || '');
@@ -40,23 +45,23 @@ export async function POST(request: Request) {
     const priorEodDate = addUtcDays(loadDate, -1);
 
     let scenario = scenarioId
-      ? await prisma.forecastScenario.findUnique({ where: { id: scenarioId } })
+      ? await prisma.forecastScenario.findFirst({ where: { id: scenarioId, restaurantId } })
       : null;
 
     if (!scenario) {
-      scenario = await prisma.forecastScenario.findFirst({ where: activeScenarioWhere(), orderBy: { annualSales: 'asc' } });
+      scenario = await prisma.forecastScenario.findFirst({ where: activeScenarioWhere(restaurantId), orderBy: { annualSales: 'asc' } });
       if (!scenario) throw new Error('No forecast scenarios exist. Seed data was not created.');
       scenarioId = scenario.id;
     }
 
-    const proteins = await prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
+    const proteins = await prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } });
     if (proteins.length === 0) throw new Error('No active proteins exist. Seed data was not created.');
 
     const [loadDateMonth, nextDayMonth, logsCount, priorEodLog] = await Promise.all([
-      prisma.monthMultiplier.findUnique({ where: { month: loadDate.getUTCMonth() + 1 } }),
-      prisma.monthMultiplier.findUnique({ where: { month: nextDayServiceDate.getUTCMonth() + 1 } }),
-      prisma.endOfDayLog.count(),
-      exactEodFor(priorEodDate)
+      prisma.monthMultiplier.findFirst({ where: { restaurantId, month: loadDate.getUTCMonth() + 1 } }),
+      prisma.monthMultiplier.findFirst({ where: { restaurantId, month: nextDayServiceDate.getUTCMonth() + 1 } }),
+      prisma.endOfDayLog.count({ where: { restaurantId } }),
+      exactEodFor(priorEodDate, restaurantId)
     ]);
 
     const dayPatternKey = requestedDayPatternKey || inferDayPatternKey(scenario.name);
@@ -127,9 +132,10 @@ export async function POST(request: Request) {
     });
 
     const plan = await prisma.$transaction(async (tx) => {
-      await tx.cookPlan.deleteMany({ where: { serviceDate: loadDate } });
+      await tx.cookPlan.deleteMany({ where: { restaurantId, serviceDate: loadDate } });
       return tx.cookPlan.create({
         data: {
+          restaurantId,
           serviceDate: loadDate,
           scenarioId,
           forecastSales: sameDayForecastSales,
@@ -142,6 +148,8 @@ export async function POST(request: Request) {
         include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }
       });
     });
+
+    await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'GENERATE', entity: 'CookPlan', entityId: plan.id, afterJson: { serviceDate: loadDateStr, scenarioId } });
 
     const stamp = Date.now();
     return NextResponse.json({

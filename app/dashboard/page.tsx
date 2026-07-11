@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { deleteFutureCookPlans } from '@/app/actions';
+import { currentRestaurantForUser } from '@/lib/tenant';
 
 function money(n: number) { return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }); }
 function displayUnit(proteinName: string, inputUnit: string) {
@@ -20,6 +21,8 @@ function displayUnit(proteinName: string, inputUnit: string) {
 export default async function DashboardPage() {
   const user = await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
   await ensureDefaultData(prisma);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
   const todayUtc = new Date();
   todayUtc.setUTCHours(0, 0, 0, 0);
   const operationalStartDate = addUtcDays(todayUtc, -1);
@@ -28,14 +31,14 @@ export default async function DashboardPage() {
   const planInclude = { items: { include: { protein: true } }, scenario: true };
   const [latestOperationalPlan, latestAnyPlan, latestLog, scenarios, logs] = await Promise.all([
     prisma.cookPlan.findFirst({
-      where: { serviceDate: { gte: operationalStartDate, lte: operationalHorizonDate } },
+      where: { restaurantId, serviceDate: { gte: operationalStartDate, lte: operationalHorizonDate } },
       orderBy: { createdAt: 'desc' },
       include: planInclude
     }),
-    prisma.cookPlan.findFirst({ orderBy: { createdAt: 'desc' }, include: planInclude }),
-    prisma.endOfDayLog.findFirst({ orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true } } } }),
-    prisma.forecastScenario.findMany({ where: activeScenarioWhere(), orderBy: { annualSales: 'asc' } }),
-    prisma.endOfDayLog.findMany({ orderBy: { serviceDate: 'desc' }, take: 7, include: { proteinLogs: true } })
+    prisma.cookPlan.findFirst({ where: { restaurantId }, orderBy: { createdAt: 'desc' }, include: planInclude }),
+    prisma.endOfDayLog.findFirst({ where: { restaurantId }, orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true } } } }),
+    prisma.forecastScenario.findMany({ where: activeScenarioWhere(restaurantId), orderBy: { annualSales: 'asc' } }),
+    prisma.endOfDayLog.findMany({ where: { restaurantId }, orderBy: { serviceDate: 'desc' }, take: 7, include: { proteinLogs: true } })
   ]);
   const latestPlan = latestOperationalPlan;
   const ignoredFuturePlan = latestAnyPlan && !latestOperationalPlan && latestAnyPlan.serviceDate > operationalHorizonDate ? latestAnyPlan : null;
@@ -56,7 +59,7 @@ export default async function DashboardPage() {
     <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div>
         <h1 className="text-3xl font-black tracking-tight">Consultant Dashboard</h1>
-        <p className="mt-2 text-slate-600">Private view for protein-load planning before KM/pitmaster rollout.</p>
+        <p className="mt-2 text-slate-600">{restaurant.name} · Private view for protein-load planning before KM/pitmaster rollout.</p>
       </div>
       {hasRole(user, ['ADMIN', 'OWNER', 'KITCHEN_MANAGER']) ? <Link href="/cook-plan" className="btn-primary">Create / Review Cook Plan</Link> : <Link href="/end-of-day" className="btn-primary">Enter End-of-Day Log</Link>}
     </div>

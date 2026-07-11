@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireApiRole } from '@/lib/auth';
+import { requireApiRole, currentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { dateBounds, getReportData, parseReportParams, toCsv } from '@/lib/reporting';
 import { fmtDateWithDow } from '@/lib/date';
+import { currentRestaurantForUser } from '@/lib/tenant';
 
-async function logReportRun(args: { source: string; metric: string; groupBy: string; protein: string; start: string; end: string; dataset: string; rowCount: number; totalValue?: number }) {
+async function logReportRun(restaurantId: string, args: { source: string; metric: string; groupBy: string; protein: string; start: string; end: string; dataset: string; rowCount: number; totalValue?: number }) {
   try {
-    await prisma.reportRun.create({ data: { ...args, totalValue: args.totalValue ?? 0, createdBy: 'Archer' } });
+    await prisma.reportRun.create({ data: { ...args, restaurantId, totalValue: args.totalValue ?? 0, createdBy: 'User' } });
   } catch (error) {
     console.error('Report run logging failed:', error);
   }
@@ -26,6 +27,11 @@ export async function GET(req: NextRequest) {
   const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   if (authError) return authError;
 
+  const user = await currentUser();
+  if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401 });
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
+
   const url = req.nextUrl;
   const params = parseReportParams(Object.fromEntries(url.searchParams.entries()));
   const dataset = url.searchParams.get('dataset') || 'aggregate';
@@ -33,29 +39,29 @@ export async function GET(req: NextRequest) {
 
   if (dataset === 'eodRaw') {
     const logs = await prisma.endOfDayLog.findMany({
-      where: { serviceDate: { gte: startDate, lt: endExclusive } },
+      where: { restaurantId, serviceDate: { gte: startDate, lt: endExclusive } },
       orderBy: { serviceDate: 'asc' },
       include: { proteinLogs: { include: { protein: true } } }
     });
     const rows: unknown[][] = [['Service Date', 'Status', 'Entered By', 'Total Sales', 'BBQ Sales', 'Protein', 'Cooked Units', 'Sold Cooked Lb', 'Usable Leftover Units', 'Usable Leftover Lb', 'Waste Lb', '86', 'Waste Reason', 'Notes']];
     for (const log of logs) for (const p of log.proteinLogs) rows.push([fmtDateWithDow(log.serviceDate), log.status, log.enteredBy, log.totalSales, log.bbqSales, p.protein.name, p.cookedUnits, p.soldCookedLb, p.usableLeftoverUnits, p.usableLeftoverLb, p.wasteLb, p.eightySixed ? 'YES' : 'NO', p.wasteReason || '', log.notes || '']);
-    await logReportRun({ ...params, dataset, rowCount: rows.length - 1 });
+    await logReportRun(restaurantId, { ...params, dataset, rowCount: rows.length - 1 });
     return responseCsv(`eod-protein-logs-${params.start}-to-${params.end}.csv`, csv(rows));
   }
 
   if (dataset === 'cookPlanRaw') {
     const plans = await prisma.cookPlan.findMany({
-      where: { serviceDate: { gte: startDate, lt: endExclusive } },
+      where: { restaurantId, serviceDate: { gte: startDate, lt: endExclusive } },
       orderBy: { serviceDate: 'asc' },
       include: { scenario: true, items: { include: { protein: true } } }
     });
     const rows: unknown[][] = [['Load Date', 'Scenario', 'Forecast Sales', 'Forecast BBQ Sales', 'Confidence', 'Status', 'Protein', 'Cooked Lb Needed', 'Usable Leftover Units', 'Forecast Cook Units', 'Recommended Cook Units', 'Approved Cook Units', 'Raw Lb Needed', 'Safety Factor %', 'Override Reason', 'Notes']];
     for (const plan of plans) for (const item of plan.items) rows.push([fmtDateWithDow(plan.serviceDate), plan.scenario.name, plan.forecastSales, plan.forecastBbqSales, plan.confidence, plan.status, item.protein.name, item.cookedLbNeeded, item.usableLeftoverUnits, item.forecastCookUnits, item.recommendedCookUnits, item.approvedCookUnits ?? '', item.rawLbNeeded, item.safetyFactorPct, item.overrideReason || '', item.notes || '']);
-    await logReportRun({ ...params, dataset, rowCount: rows.length - 1 });
+    await logReportRun(restaurantId, { ...params, dataset, rowCount: rows.length - 1 });
     return responseCsv(`cook-plan-items-${params.start}-to-${params.end}.csv`, csv(rows));
   }
 
-  const { rows, total } = await getReportData(params);
-  await logReportRun({ ...params, dataset, rowCount: rows.length, totalValue: total });
+  const { rows, total } = await getReportData(params, restaurantId);
+  await logReportRun(restaurantId, { ...params, dataset, rowCount: rows.length, totalValue: total });
   return responseCsv(`report-${params.source}-${params.metric}-${params.start}-to-${params.end}.csv`, toCsv(rows, params));
 }
