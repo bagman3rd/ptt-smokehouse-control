@@ -14,7 +14,8 @@ export default async function SettingsPage() {
     prisma.monthMultiplier.findMany({ orderBy: { month: 'asc' } })
   ]);
 
-  return <Shell>
+  return (
+    <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Settings</h1>
       <p className="mt-2 text-slate-600">Adjust assumptions as real Pigeon Forge operating data replaces the launch model.</p>
@@ -96,5 +97,6 @@ export default async function SettingsPage() {
         <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">{months.map(m => <form key={m.id} action={updateMonthMultiplier} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3"><input type="hidden" name="id" value={m.id} /><span className="font-bold">{m.label}</span><div className="flex items-center gap-2"><input className="field w-24" name="multiplier" type="number" min="0.1" max="3" step="0.01" defaultValue={m.multiplier} /><button className="btn-secondary">Save</button></div></form>)}</div>
       </div>
     </section>
-  </Shell>;
+    </Shell>
+  );
 }

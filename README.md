@@ -191,3 +191,7 @@ Build 1.5.0 converts ribs to rack-based forecasting instead of cooked-pound fore
 ## Build 1.5.1
 
 Build 1.5.1 changes Pulled Chicken to a breast-based load model. Default assumptions: 1 boneless skinless chicken breast = 2.5 raw lb, 75% cooked yield, and 1.875 cooked lb per breast. Cook Plan, Dashboard, and End-of-Day now display Pulled Chicken units as breasts, and Settings exposes raw/cooked weight per breast so the assumption can be changed without code changes.
+
+## Build 1.5.2
+
+Build 1.5.2 fixes the Settings page build failure caused by the JSX return in `app/settings/page.tsx`. No database or forecast logic changes from Build 1.5.1.
