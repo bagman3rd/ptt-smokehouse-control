@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Shell } from '@/components/Shell';
+import { requireAuth } from '@/lib/auth';
 import { StatCard } from '@/components/StatCard';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
@@ -17,7 +18,8 @@ function displayUnit(proteinName: string, inputUnit: string) {
 }
 
 export default async function DashboardPage() {
-  await ensureDefaultData(prisma);
+    requireAuth();
+await ensureDefaultData(prisma);
   const todayUtc = new Date();
   todayUtc.setUTCHours(0, 0, 0, 0);
   const operationalStartDate = addUtcDays(todayUtc, -1);

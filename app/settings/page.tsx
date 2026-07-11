@@ -1,4 +1,5 @@
 import { Shell } from '@/components/Shell';
+import { requireAuth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { updateDayMultiplier, updateMonthMultiplier, updateProtein, updateScenario } from '@/app/actions';
@@ -14,7 +15,8 @@ function unitNameForProtein(name: string) {
 }
 
 export default async function SettingsPage() {
-  await ensureDefaultData(prisma);
+    requireAuth();
+await ensureDefaultData(prisma);
 
   const [proteins, scenarios, days, months] = await Promise.all([
     prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),

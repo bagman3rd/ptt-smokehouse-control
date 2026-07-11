@@ -1,5 +1,6 @@
 import { unstable_noStore as noStore } from 'next/cache';
 import { Shell } from '@/components/Shell';
+import { requireAuth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { fmtDateWithDow } from '@/lib/date';
@@ -27,6 +28,7 @@ function dateInputValue(date: Date) {
 }
 
 export default async function EndOfDayPage({ searchParams }: { searchParams?: { savedAt?: string; serviceDate?: string } }) {
+  requireAuth();
   noStore();
   await ensureDefaultData(prisma);
   const selectedDate = toDateOnlyOrNull(searchParams?.serviceDate);

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { addUtcDays } from '@/lib/date';
+import { requireAuth } from '@/lib/auth';
 
 function numberField(formData: FormData, key: string, fallback = 0, min = 0, max = Number.MAX_SAFE_INTEGER) {
   const raw = formData.get(key);
@@ -29,6 +30,7 @@ export async function saveEndOfDayLog() {
 }
 
 export async function approveCookPlan(formData: FormData) {
+  requireAuth();
   const cookPlanId = String(formData.get('cookPlanId'));
   const itemIds = formData.getAll('itemId').map(String);
   for (const itemId of itemIds) {
@@ -49,6 +51,7 @@ export async function approveCookPlan(formData: FormData) {
 }
 
 export async function updateScenario(formData: FormData) {
+  requireAuth();
   const id = String(formData.get('id'));
   await prisma.forecastScenario.update({
     where: { id },
@@ -68,6 +71,7 @@ export async function updateScenario(formData: FormData) {
 }
 
 export async function updateProtein(formData: FormData) {
+  requireAuth();
   const id = String(formData.get('id'));
   await prisma.protein.update({
     where: { id },
@@ -92,6 +96,7 @@ export async function updateProtein(formData: FormData) {
 }
 
 export async function updateDayMultiplier(formData: FormData) {
+  requireAuth();
   const id = String(formData.get('id'));
   await prisma.dayMultiplier.update({
     where: { id },
@@ -101,6 +106,7 @@ export async function updateDayMultiplier(formData: FormData) {
 }
 
 export async function updateMonthMultiplier(formData: FormData) {
+  requireAuth();
   const id = String(formData.get('id'));
   await prisma.monthMultiplier.update({
     where: { id },
@@ -110,6 +116,7 @@ export async function updateMonthMultiplier(formData: FormData) {
 }
 
 export async function deleteFutureCookPlans() {
+  requireAuth();
   const todayUtc = new Date();
   todayUtc.setUTCHours(0, 0, 0, 0);
   const cutoff = addUtcDays(todayUtc, 14);

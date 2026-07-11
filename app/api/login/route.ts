@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { setSessionCookie } from '@/lib/auth';
+import { authConfigErrors, setSessionCookie, validatePassword } from '@/lib/auth';
 
 function getBaseUrl(request: Request) {
   const proto = request.headers.get('x-forwarded-proto') || 'https';
@@ -8,12 +8,16 @@ function getBaseUrl(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const baseUrl = getBaseUrl(request);
+  const configErrors = authConfigErrors();
+  if (configErrors.length > 0) {
+    return NextResponse.redirect(`${baseUrl}/login?config=1`, 303);
+  }
+
   const form = await request.formData();
   const password = String(form.get('password') || '');
-  const expected = process.env.ADMIN_PASSWORD || 'admin';
-  const baseUrl = getBaseUrl(request);
 
-  if (password !== expected) {
+  if (!validatePassword(password)) {
     return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
   }
 
