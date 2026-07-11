@@ -15,7 +15,7 @@ function displayUnit(proteinName: string, inputUnit: string) {
   const lower = proteinName.toLowerCase();
   if (lower.includes('pork')) return 'butts';
   if (lower.includes('rib')) return 'racks';
-  if (lower.includes('chicken')) return 'chicken';
+  if (lower.includes('chicken')) return 'breasts';
   if (lower.includes('brisket')) return 'briskets';
   return unitLabel(inputUnit);
 }
@@ -70,8 +70,8 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
           <div className="mt-1 text-lg font-black">{fmtDateWithDow(loadDate)}</div>
           <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-emerald-950">
             <li>Ribs: cook/load same day using today’s demand.</li>
-            <li>Pulled chicken: cook/load same day using today’s demand.</li>
-            <li>Usable leftover ribs and chicken are credited before calculating same-day load.</li>
+            <li>Pulled chicken: cook/load same day using today’s demand, shown as number of 2.5 lb raw boneless skinless breasts.</li>
+            <li>Usable leftover ribs and chicken breasts are credited before calculating same-day load.</li>
           </ul>
         </div>
       </div>

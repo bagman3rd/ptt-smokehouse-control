@@ -102,7 +102,7 @@ export async function POST(request: Request) {
           : lower.includes('rib')
             ? `${fmtDateWithDow(loadDate)}: cook/load ribs same day using ${fmtDateWithDow(targetServiceDate)} service forecast. ${leftoverSourceNote}`
             : lower.includes('chicken')
-              ? `${fmtDateWithDow(loadDate)}: cook/load pulled chicken same day using ${fmtDateWithDow(targetServiceDate)} service forecast. ${leftoverSourceNote}`
+              ? `${fmtDateWithDow(loadDate)}: cook/load pulled chicken breasts same day using ${fmtDateWithDow(targetServiceDate)} service forecast. Default assumption is 1 breast ≈ 2.5 raw lb and 1.875 cooked lb. ${leftoverSourceNote}`
               : `${fmtDateWithDow(loadDate)}: cook/load using ${fmtDateWithDow(targetServiceDate)} service forecast. ${leftoverSourceNote}`;
       return {
         proteinId: protein.id,

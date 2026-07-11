@@ -10,7 +10,7 @@ function displayUnit(proteinName: string, inputUnit: string) {
   const lower = proteinName.toLowerCase();
   if (lower.includes('pork')) return 'butts';
   if (lower.includes('rib')) return 'racks';
-  if (lower.includes('chicken')) return 'chicken';
+  if (lower.includes('chicken')) return 'breasts';
   if (lower.includes('brisket')) return 'briskets';
   return inputUnit.toLowerCase().replace('_', ' ');
 }

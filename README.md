@@ -175,6 +175,19 @@ Build 1.4.8 adds a Last 10 End-of-Day Logs section beneath Saved Log Displayed o
 
 Build 1.4.9 moves Avg $/Cooked lb from the forecast-scenario level to the protein level. Defaults: Brisket $40/lb, Pulled Pork $22/lb, Pulled Chicken $22/lb, Ribs $12/lb. These values are editable on Settings under Protein Assumptions and are used directly in the cook-plan forecast math.
 
-## Build 1.5.0
+## Build 1.5.1
 
 Build 1.5.0 converts ribs to rack-based forecasting instead of cooked-pound forecasting. Rib defaults are now: $10 purchase cost per rack, 3.3 lb raw per rack, 3.0 lb cooked per rack, 90.9% cooked yield, and $33 sales price per rack. The cook/load plan calculates rib rack demand as rib sales dollars divided by sales price per rack, then subtracts prior-day usable leftover racks. Settings now expose cooked weight each, purchase cost each, and sales price each so rib assumptions can be edited without code changes.
+
+
+## Build 1.5.1
+
+- Changed Pulled Chicken defaults to a breast-based load model.
+- Default chicken breast assumption: 2.5 lb raw, 75% yield, 1.875 lb cooked.
+- Cook Plan now displays Pulled Chicken load units as breasts.
+- Settings labels now clarify per-breast values for chicken.
+
+
+## Build 1.5.1
+
+Build 1.5.1 changes Pulled Chicken to a breast-based load model. Default assumptions: 1 boneless skinless chicken breast = 2.5 raw lb, 75% cooked yield, and 1.875 cooked lb per breast. Cook Plan, Dashboard, and End-of-Day now display Pulled Chicken units as breasts, and Settings exposes raw/cooked weight per breast so the assumption can be changed without code changes.
