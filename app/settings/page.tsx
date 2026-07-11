@@ -24,7 +24,8 @@ export default async function SettingsPage() {
     <section className="card p-5">
       <h2 className="text-xl font-black">Forecast Scenarios</h2>
       <div className="mt-4 grid gap-4">
-        {scenarios.map(s => <form key={s.id} action={updateScenario} className="rounded-2xl border border-slate-200 p-4">
+        {scenarios.map(s => (
+        <form key={s.id} action={updateScenario} className="rounded-2xl border border-slate-200 p-4">
           <input type="hidden" name="id" value={s.id} />
           <div className="mb-3 text-lg font-black">{s.name}</div>
           <div className="grid gap-3 md:grid-cols-4">
@@ -37,7 +38,8 @@ export default async function SettingsPage() {
             <div><label className="label">Chicken Mix %</label><input className="field mt-1" name="chickenMixPct" type="number" step="0.1" defaultValue={s.chickenMixPct} /></div>
           </div>
           <button className="btn-secondary mt-4">Save Scenario</button>
-        </form>})}
+        </form>
+        ))}
       </div>
     </section>
 
@@ -47,7 +49,8 @@ export default async function SettingsPage() {
         {proteins.map(p => {
           const lower = p.name.toLowerCase();
           const unitName = lower.includes('chicken') ? 'breast' : lower.includes('rib') ? 'rack' : lower.includes('pork') ? 'butt' : lower.includes('brisket') ? 'brisket' : 'unit';
-          return <form key={p.id} action={updateProtein} className="rounded-2xl border border-slate-200 p-4">
+          return (
+          <form key={p.id} action={updateProtein} className="rounded-2xl border border-slate-200 p-4">
           <input type="hidden" name="id" value={p.id} />
           <div className="mb-3 text-lg font-black">{p.name}</div>
           {lower.includes('chicken') ? <p className="mb-3 text-sm font-bold text-slate-600">Chicken is now forecast as a clean number of breasts to load. Default: 1 breast ≈ 2.5 raw lb × 75% yield = 1.875 cooked lb.</p> : null}
@@ -66,7 +69,8 @@ export default async function SettingsPage() {
             <label className="flex items-center gap-2 pt-7 text-sm font-bold"><input name="reusableLeftover" type="checkbox" className="h-5 w-5" defaultChecked={p.reusableLeftover} /> Reusable leftover</label>
           </div>
           <button className="btn-secondary mt-4">Save Protein</button>
-        </form>;
+        </form>
+          );
         })}
       </div>
     </section>
@@ -76,7 +80,8 @@ export default async function SettingsPage() {
         <h2 className="text-xl font-black">Day Pattern Profiles</h2>
         <p className="mt-2 text-sm text-slate-600">Cook Plan now uses selectable weekly sales patterns. Default Tourist is the global starting assumption.</p>
         <div className="mt-4 space-y-4">
-          {dayProfiles.map(profile => <div key={profile.key} className="rounded-2xl border border-slate-200 p-4">
+          {dayProfiles.map(profile => (
+            <div key={profile.key} className="rounded-2xl border border-slate-200 p-4">
             <div className="text-lg font-black">{profile.name}</div>
             <div className="mt-3 grid grid-cols-7 gap-2 text-center text-xs md:text-sm">
               {profile.days.map(day => <div key={day.dayOfWeek} className="rounded-xl bg-slate-50 p-2">
@@ -85,7 +90,8 @@ export default async function SettingsPage() {
                 <div className="text-slate-500">×{day.multiplier.toFixed(2)}</div>
               </div>)}
             </div>
-          </div>)}
+          </div>
+          ))}
         </div>
         <details className="mt-4">
           <summary className="cursor-pointer text-sm font-black text-slate-600">Legacy editable default multipliers</summary>

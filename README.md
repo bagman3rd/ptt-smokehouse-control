@@ -195,3 +195,8 @@ Build 1.5.1 changes Pulled Chicken to a breast-based load model. Default assumpt
 ## Build 1.5.3
 
 Build 1.5.3 fixes the Settings page build failure caused by the JSX return in `app/settings/page.tsx`. No database or forecast logic changes from Build 1.5.1.
+
+
+## Build 1.5.4
+
+Build 1.5.4 fixes the Settings page JSX compilation failure introduced around Build 1.5.3. No math or schema changes.
