@@ -147,16 +147,25 @@ Build 1.4.4 fixes EOD-to-Cook-Plan leftover credit visibility and fallback behav
 Build 1.4.4 removes ROD RUN as an active forecast scenario. Active forecast scenarios are now only Base $6M and Aggressive $8M. Rod Run and other surge days should be modeled with the Event Multiplier input. Existing deployed databases are self-cleaned: ROD RUN, Event Day, and Conservative $6M are renamed to legacy scenarios and excluded from active dropdowns and settings.
 
 
-## Build 1.4.6
+## Build 1.4.8
 
-Build 1.4.6 fixes dashboard date selection. The dashboard no longer sorts plans by farthest future service date, which could make an accidental 2027 test plan look current. It now shows only operational plans in the rolling current window from yesterday through the next 14 days, ordered by creation time. If an out-of-window future plan exists, the dashboard displays a warning instead of treating it as the current cook recommendation.
+Build 1.4.8 fixes dashboard date selection. The dashboard no longer sorts plans by farthest future service date, which could make an accidental 2027 test plan look current. It now shows only operational plans in the rolling current window from yesterday through the next 14 days, ordered by creation time. If an out-of-window future plan exists, the dashboard displays a warning instead of treating it as the current cook recommendation.
 
-## Build 1.4.6
+## Build 1.4.8
 
-Build 1.4.6 updates the forecast model to prevent smoked-meat loads from being overstated. Total restaurant sales now include bar sales. The default model assumes 20% bar sales, leaving 80% food sales, and smoked meats represent 50% of food sales. Therefore, active forecast scenarios now use 40% of total restaurant sales as smoked-meat sales.
+Build 1.4.8 updates the forecast model to prevent smoked-meat loads from being overstated. Total restaurant sales now include bar sales. The default model assumes 20% bar sales, leaving 80% food sales, and smoked meats represent 50% of food sales. Therefore, active forecast scenarios now use 40% of total restaurant sales as smoked-meat sales.
 
 - Base $6M smoked-meat share changed from 55% to 40%.
 - Aggressive $8M smoked-meat share changed from 58% to 40%.
 - Forecast labels were clarified from BBQ Forecast/BBQ Sales to Smoked Meat Forecast/Smoked Meat Sales where appropriate.
 - Settings now labels the scenario field as Smoked Meat % of Total Sales.
 - Existing deployed databases self-update through seed/bootstrap on deployment.
+
+
+## Build 1.4.8
+
+Build 1.4.8 fixes prior EOD leftover-credit date matching. A generated load plan now pulls leftover credits only from the exact prior calendar day's EOD log. For example, a 2026-07-12 load plan uses only the 2026-07-11 EOD log; a 2026-08-15 load plan uses only the 2026-08-14 EOD log. If that exact prior EOD log or protein row is missing, the Cook Plan and Dashboard display `no data, check hot box` instead of silently using zero or an older log.
+
+## Build 1.4.8
+
+Build 1.4.8 adds a Last 10 End-of-Day Logs section beneath Saved Log Displayed on the End-of-Day page. This makes it easier to confirm which recent EOD logs exist and whether the exact prior-day leftover credit source is available before generating a cook plan.

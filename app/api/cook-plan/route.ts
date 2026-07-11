@@ -16,10 +16,9 @@ function numberValue(value: unknown, fallback = 0, min = 0, max = Number.MAX_SAF
   return Math.min(max, Math.max(min, n));
 }
 
-async function latestEodBefore(targetDate: Date) {
-  return prisma.endOfDayLog.findFirst({
-    where: { serviceDate: { lt: targetDate } },
-    orderBy: { serviceDate: 'desc' },
+async function exactEodFor(serviceDate: Date) {
+  return prisma.endOfDayLog.findUnique({
+    where: { serviceDate },
     include: { proteinLogs: true }
   });
 }
@@ -35,6 +34,7 @@ export async function POST(request: Request) {
     const requestedDayPatternKey = body.dayPatternKey ? String(body.dayPatternKey) : '';
     const loadDate = toDateOnly(loadDateStr);
     const nextDayServiceDate = addUtcDays(loadDate, 1);
+    const priorEodDate = addUtcDays(loadDate, -1);
 
     let scenario = scenarioId
       ? await prisma.forecastScenario.findUnique({ where: { id: scenarioId } })
@@ -49,12 +49,11 @@ export async function POST(request: Request) {
     const proteins = await prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
     if (proteins.length === 0) throw new Error('No active proteins exist. Seed data was not created.');
 
-    const [loadDateMonth, nextDayMonth, logsCount, sameDayLeftoverLog, nextDayLeftoverLog] = await Promise.all([
+    const [loadDateMonth, nextDayMonth, logsCount, priorEodLog] = await Promise.all([
       prisma.monthMultiplier.findUnique({ where: { month: loadDate.getUTCMonth() + 1 } }),
       prisma.monthMultiplier.findUnique({ where: { month: nextDayServiceDate.getUTCMonth() + 1 } }),
       prisma.endOfDayLog.count(),
-      latestEodBefore(loadDate),
-      latestEodBefore(nextDayServiceDate)
+      exactEodFor(priorEodDate)
     ]);
 
     const dayPatternKey = requestedDayPatternKey || inferDayPatternKey(scenario.name);
@@ -84,13 +83,17 @@ export async function POST(request: Request) {
       const isPriorDayProtein = lower.includes('brisket') || lower.includes('pork');
       const targetServiceDate = isPriorDayProtein ? nextDayServiceDate : loadDate;
       const targetForecastBbqSales = isPriorDayProtein ? nextDayForecastBbqSales : sameDayForecastBbqSales;
-      const leftoverLog = isPriorDayProtein ? nextDayLeftoverLog : sameDayLeftoverLog;
+      const leftoverLog = priorEodLog;
       const prior = leftoverLog?.proteinLogs.find((log) => log.proteinId === protein.id);
       const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
       const usableLeftoverUnits = prior?.usableLeftoverUnits ?? 0;
-      const leftoverSourceNote = leftoverLog
-        ? `Leftover credit source: EOD ${fmtDateWithDow(leftoverLog.serviceDate)}.`
-        : `Leftover credit source: no prior EOD log found before ${fmtDateWithDow(targetServiceDate)}.`;
+      const missingPriorEod = !leftoverLog;
+      const missingProteinData = !!leftoverLog && !prior;
+      const leftoverSourceNote = missingPriorEod
+        ? `Prior EOD leftover credit source: no data, check hot box. Expected EOD log ${fmtDateWithDow(priorEodDate)} only.`
+        : missingProteinData
+          ? `Prior EOD leftover credit source: no ${protein.name} row in EOD ${fmtDateWithDow(priorEodDate)}; no data, check hot box.`
+          : `Prior EOD leftover credit source: EOD ${fmtDateWithDow(priorEodDate)} only.`;
       const result = forecastProteinLoad({ protein, scenario, forecastBbqSales: targetForecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
       const timingNote = lower.includes('brisket')
         ? `${fmtDateWithDow(loadDate)}: cook brisket 9:00 AM–9:00 PM using ${fmtDateWithDow(targetServiceDate)} service forecast, then hold overnight. ${leftoverSourceNote}`
@@ -148,6 +151,8 @@ export async function POST(request: Request) {
       forecastBbqSales: sameDayForecastBbqSales,
       nextDayForecastSales,
       nextDayForecastBbqSales,
+      priorEodDate: priorEodDate.toISOString().slice(0, 10),
+      priorEodStatus: priorEodLog ? 'FOUND' : 'MISSING',
       items: plan.items.map((item) => ({
         protein: item.protein.name,
         forecastCookUnits: item.forecastCookUnits,

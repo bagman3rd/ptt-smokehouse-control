@@ -30,10 +30,11 @@ export default async function EndOfDayPage({ searchParams }: { searchParams?: { 
   noStore();
   await ensureDefaultData(prisma);
   const selectedDate = toDateOnlyOrNull(searchParams?.serviceDate);
-  const [proteins, selectedLog, latestLog] = await Promise.all([
+  const [proteins, selectedLog, latestLog, recentLogs] = await Promise.all([
     prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
     selectedDate ? prisma.endOfDayLog.findUnique({ where: { serviceDate: selectedDate }, include: { proteinLogs: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } }) : Promise.resolve(null),
-    prisma.endOfDayLog.findFirst({ orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
+    prisma.endOfDayLog.findFirst({ orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } }),
+    prisma.endOfDayLog.findMany({ take: 10, orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
   ]);
 
   const displayLog = selectedLog ?? latestLog;
@@ -71,5 +72,27 @@ export default async function EndOfDayPage({ searchParams }: { searchParams?: { 
         {displayLog.proteinLogs.map(log => <div key={log.id} className="rounded-xl border border-slate-200 p-3 text-sm"><strong>{log.protein.name}</strong>: cooked {log.cookedUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} · sold {log.soldCookedLb} lb · leftover {log.usableLeftoverUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} / {log.usableLeftoverLb} lb · waste {log.wasteLb} lb {log.eightySixed ? '· 86' : ''}</div>)}
       </div>
     </section> : null}
+
+    <section className="card mt-6 p-5">
+      <div className="flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
+        <div>
+          <h2 className="text-xl font-black">Last 10 End-of-Day Logs</h2>
+          <p className="mt-1 text-sm text-slate-600">Most recent saved EOD logs, newest first. Use this to verify the prior-day leftover credit source before generating the next cook plan.</p>
+        </div>
+      </div>
+      {recentLogs.length === 0 ? <p className="mt-4 rounded-xl bg-amber-50 px-3 py-2 text-sm font-bold text-amber-900">No end-of-day logs saved yet.</p> : <div className="mt-4 space-y-3">
+        {recentLogs.map((log) => <div key={log.id} className="rounded-2xl border border-slate-200 p-4">
+          <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+            <div className="font-black">{fmtDateWithDow(log.serviceDate)}</div>
+            <div className="text-sm font-bold text-slate-600">Total sales ${log.totalSales.toLocaleString()} · smoked meat sales ${log.bbqSales.toLocaleString()}</div>
+          </div>
+          <div className="mt-3 grid gap-2 md:grid-cols-2">
+            {log.proteinLogs.map((proteinLog) => <div key={proteinLog.id} className="rounded-xl bg-slate-50 p-3 text-sm">
+              <strong>{proteinLog.protein.name}</strong>: cooked {proteinLog.cookedUnits} {displayUnit(proteinLog.protein.name, proteinLog.protein.inputUnit)} · sold {proteinLog.soldCookedLb} lb · leftover credit {proteinLog.usableLeftoverUnits} {displayUnit(proteinLog.protein.name, proteinLog.protein.inputUnit)} / {proteinLog.usableLeftoverLb} lb · waste {proteinLog.wasteLb} lb {proteinLog.eightySixed ? '· 86' : ''}
+            </div>)}
+          </div>
+        </div>)}
+      </div>}
+    </section>
   </Shell>;
 }

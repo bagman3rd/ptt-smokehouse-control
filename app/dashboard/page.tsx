@@ -66,13 +66,15 @@ export default async function DashboardPage() {
       <div className="card p-5">
         <h2 className="text-xl font-black">Current Operational Cook Recommendation</h2>
         {!latestPlan ? <p className="mt-3 text-slate-600">No operational cook plan in the current 14-day window.</p> : <div className="mt-4 space-y-3">
-          {latestPlan.items.map(item => <div key={item.id} className="rounded-xl border border-slate-200 p-4">
+          {latestPlan.items.map(item => {
+            const noPriorEodData = (item.notes ?? '').toLowerCase().includes('no data, check hot box');
+            return <div key={item.id} className="rounded-xl border border-slate-200 p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="font-bold">{item.protein.name}</div>
               <div className="text-2xl font-black">{item.approvedCookUnits ?? item.recommendedCookUnits}</div>
             </div>
-            <div className="mt-1 text-sm text-slate-600">Forecast {item.forecastCookUnits || item.recommendedCookUnits} {displayUnit(item.protein.name, item.protein.inputUnit)} · Leftover {item.usableLeftoverUnits} {displayUnit(item.protein.name, item.protein.inputUnit)} / {item.usableLeftoverLb} lb · Load {(item.approvedCookUnits ?? item.recommendedCookUnits)} {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
-          </div>)}
+            <div className="mt-1 text-sm text-slate-600">Forecast {item.forecastCookUnits || item.recommendedCookUnits} {displayUnit(item.protein.name, item.protein.inputUnit)} · Leftover {noPriorEodData ? 'no data, check hot box' : `${item.usableLeftoverUnits} ${displayUnit(item.protein.name, item.protein.inputUnit)} / ${item.usableLeftoverLb} lb`} · Load {(item.approvedCookUnits ?? item.recommendedCookUnits)} {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
+          </div>})}
         </div>}
       </div>
       <div className="card p-5">
