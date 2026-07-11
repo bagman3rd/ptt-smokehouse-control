@@ -38,7 +38,10 @@ function forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftov
 
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 assert('package version', pkg.version === '2.0.0', pkg.version);
-assert('nav badge', fs.readFileSync('components/Nav.tsx', 'utf8').includes('Build 2.0.0'));
+assert('nav badge', fs.readFileSync('components/Nav.tsx', 'utf8').includes('Build 2.1.0'));
+assert('prior EOD status route exists', fs.existsSync('app/api/eod-status/route.ts'));
+assert('manual hot box adjustment exists', fs.readFileSync('app/cook-plan/page.tsx', 'utf8').includes('Manual Hot Box Adjustment'));
+assert('dashboard operational alerts exist', fs.readFileSync('app/dashboard/page.tsx', 'utf8').includes('Operational Alerts'));
 const settings = fs.readFileSync('app/settings/page.tsx', 'utf8');
 assert('settings page shell wrapper', settings.includes('<Shell>') && settings.includes('</Shell>'));
 assert('settings page protein-level pricing fields', settings.includes('Avg Sales $ / Cooked lb') && settings.includes('Sales Price Each'));
@@ -60,4 +63,4 @@ assert('ribs use rack units and subtract leftovers', ribs.forecastCookUnits > ri
 const chicken = forecastProteinLoad({ protein: { name: 'Pulled Chicken', inputUnit: 'EACH', rawWeightEachLb: 2.5, cookedWeightEachLb: 1.875, cookedYieldPercent: 75, avgSalesPerCookedLb: 22, minCookUnits: 8, maxCookUnits: 220 }, scenario, forecastBbqSales: smokedMeatSales, usableLeftoverUnits: 6 });
 assert('chicken uses breast units and subtracts leftovers', chicken.forecastCookUnits > chicken.recommendedCookUnits && chicken.forecastCookUnits - chicken.recommendedCookUnits === 6, JSON.stringify(chicken));
 
-console.log('Build 2.0.0 evaluation checks completed.');
+console.log('Build 2.1.0 evaluation checks completed.');

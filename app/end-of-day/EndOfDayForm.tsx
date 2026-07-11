@@ -57,6 +57,7 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [warnings, setWarnings] = useState<string[]>([]);
   const dateLabel = useMemo(() => formatDateWithDow(serviceDate), [serviceDate]);
   const logByProteinId = useMemo(() => new Map((initialLog?.proteinLogs || []).map((log) => [log.proteinId, log])), [initialLog]);
 
@@ -67,9 +68,38 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
     setIsSaving(true);
     setMessage(null);
     setError(null);
+    setWarnings([]);
 
     try {
       const formData = new FormData(event.currentTarget);
+      const validationWarnings: string[] = [];
+      let hasBlockingValidationError = false;
+      for (const protein of proteins) {
+        const unit = displayUnit(protein.name, protein.inputUnit);
+        const cookedUnits = numberFromForm(formData, `cookedUnits-${protein.id}`);
+        const soldCookedLb = numberFromForm(formData, `soldCookedLb-${protein.id}`);
+        const usableLeftoverUnits = numberFromForm(formData, `usableLeftoverUnits-${protein.id}`);
+        const usableLeftoverLb = numberFromForm(formData, `usableLeftoverLb-${protein.id}`);
+        const wasteLb = numberFromForm(formData, `wasteLb-${protein.id}`);
+        if ([cookedUnits, soldCookedLb, usableLeftoverUnits, usableLeftoverLb, wasteLb].some((value) => value < 0)) {
+          validationWarnings.push(`${protein.name}: negative values are not allowed.`);
+          hasBlockingValidationError = true;
+        }
+        if (cookedUnits > 0 && soldCookedLb === 0 && wasteLb === 0 && usableLeftoverUnits === 0) {
+          validationWarnings.push(`${protein.name}: cooked ${cookedUnits} ${unit} but no sold/waste/leftover entered. The app will treat cooked units as usable leftovers.`);
+        }
+        if (cookedUnits > 0 && usableLeftoverUnits > cookedUnits) {
+          validationWarnings.push(`${protein.name}: usable leftover units exceed cooked units. Check the hot box count.`);
+        }
+        if (cookedUnits === 0 && soldCookedLb > 0) {
+          validationWarnings.push(`${protein.name}: sold cooked pounds entered but cooked units are zero.`);
+        }
+      }
+      setWarnings(validationWarnings);
+      if (hasBlockingValidationError) {
+        throw new Error('Fix negative values before saving the EOD log.');
+      }
+
       const payload = {
         serviceDate,
         totalSales: numberFromForm(formData, 'totalSales'),
@@ -148,6 +178,7 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
           <button className="btn-primary w-full md:w-auto" type="submit" disabled={isSaving}>{isSaving ? 'Saving...' : 'Save End-of-Day Log'}</button>
           {message ? <div className="rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800">{message}</div> : null}
           {error ? <div className="rounded-xl bg-red-50 px-3 py-2 text-sm font-bold text-red-800">{error}</div> : null}
+          {warnings.length > 0 ? <div className="rounded-xl bg-amber-50 px-3 py-2 text-sm font-bold text-amber-900"><div>Validation warnings:</div><ul className="mt-1 list-disc pl-5">{warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul></div> : null}
         </div>
       </section>
     </form>

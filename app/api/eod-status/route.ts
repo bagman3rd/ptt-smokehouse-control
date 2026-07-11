@@ -1,0 +1,70 @@
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { ensureDefaultData } from '@/lib/bootstrap';
+import { addUtcDays, fmtDateWithDow } from '@/lib/date';
+
+function toDateOnly(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid load date');
+  return new Date(`${value}T00:00:00.000Z`);
+}
+
+export async function GET(request: Request) {
+  try {
+    await ensureDefaultData(prisma);
+    const url = new URL(request.url);
+    const loadDateValue = String(url.searchParams.get('loadDate') || '');
+    const loadDate = toDateOnly(loadDateValue);
+    const priorEodDate = addUtcDays(loadDate, -1);
+
+    const [proteins, log] = await Promise.all([
+      prisma.protein.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
+      prisma.endOfDayLog.findUnique({
+        where: { serviceDate: priorEodDate },
+        include: { proteinLogs: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }
+      })
+    ]);
+
+    if (!log) {
+      return NextResponse.json({
+        ok: true,
+        loadDate: loadDateValue,
+        priorEodDate: priorEodDate.toISOString().slice(0, 10),
+        priorEodDateLabel: fmtDateWithDow(priorEodDate),
+        status: 'MISSING',
+        message: `Prior EOD missing for ${fmtDateWithDow(priorEodDate)}. Generate can continue, but the cook plan will show no data, check hot box.`
+      });
+    }
+
+    const proteinIdsWithRows = new Set(log.proteinLogs.map((row) => row.proteinId));
+    const missingProteins = proteins.filter((protein) => !proteinIdsWithRows.has(protein.id)).map((protein) => protein.name);
+    const totalLeftoverUnits = log.proteinLogs.reduce((sum, row) => sum + row.usableLeftoverUnits, 0);
+    const totalWasteLb = log.proteinLogs.reduce((sum, row) => sum + row.wasteLb, 0);
+    const status = missingProteins.length > 0 ? 'INCOMPLETE' : 'FOUND';
+
+    return NextResponse.json({
+      ok: true,
+      loadDate: loadDateValue,
+      priorEodDate: priorEodDate.toISOString().slice(0, 10),
+      priorEodDateLabel: fmtDateWithDow(priorEodDate),
+      status,
+      message: status === 'FOUND'
+        ? `Prior EOD found for ${fmtDateWithDow(priorEodDate)}.`
+        : `Prior EOD exists for ${fmtDateWithDow(priorEodDate)}, but is missing protein rows: ${missingProteins.join(', ')}.`,
+      totalSales: log.totalSales,
+      smokedMeatSales: log.bbqSales,
+      totalLeftoverUnits,
+      totalWasteLb,
+      proteinLogs: log.proteinLogs.map((row) => ({
+        protein: row.protein.name,
+        cookedUnits: row.cookedUnits,
+        usableLeftoverUnits: row.usableLeftoverUnits,
+        usableLeftoverLb: row.usableLeftoverLb,
+        wasteLb: row.wasteLb,
+        eightySixed: row.eightySixed
+      }))
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown EOD status error.';
+    return NextResponse.json({ ok: false, message }, { status: 400 });
+  }
+}

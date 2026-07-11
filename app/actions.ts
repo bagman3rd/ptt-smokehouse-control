@@ -20,6 +20,13 @@ function numberField(formData: FormData, key: string, fallback = 0, min = 0, max
   return Math.min(max, Math.max(min, n));
 }
 
+function signedNumberField(formData: FormData, key: string, fallback = 0, min = -999, max = 999) {
+  const raw = formData.get(key);
+  const n = raw === null || raw === '' ? fallback : Number(raw);
+  if (!Number.isFinite(n)) return fallback;
+  return Math.min(max, Math.max(min, n));
+}
+
 export async function createCookPlan(formData: FormData) {
   await ensureDefaultData(prisma);
 
@@ -102,8 +109,12 @@ export async function approveCookPlan(formData: FormData) {
   const cookPlanId = String(formData.get('cookPlanId'));
   const itemIds = formData.getAll('itemId').map(String);
   for (const itemId of itemIds) {
-    const approvedCookUnits = numberField(formData, `approved-${itemId}`);
-    const overrideReason = String(formData.get(`reason-${itemId}`) || '');
+    const approvedBaseUnits = numberField(formData, `approved-${itemId}`);
+    const hotBoxAdjustment = signedNumberField(formData, `hotBoxAdjustment-${itemId}`, 0, -999, 999);
+    const approvedCookUnits = Math.max(0, approvedBaseUnits + hotBoxAdjustment);
+    const overrideReasonRaw = String(formData.get(`reason-${itemId}`) || '').trim();
+    const adjustmentNote = hotBoxAdjustment !== 0 ? `Manual hot-box adjustment ${hotBoxAdjustment > 0 ? '+' : ''}${hotBoxAdjustment}` : '';
+    const overrideReason = [overrideReasonRaw, adjustmentNote].filter(Boolean).join(' · ');
     await prisma.cookPlanItem.update({ where: { id: itemId }, data: { approvedCookUnits, overrideReason } });
   }
   await prisma.cookPlan.update({ where: { id: cookPlanId }, data: { status: 'APPROVED' } });
@@ -217,4 +228,13 @@ export async function updateMonthMultiplier(formData: FormData) {
     data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3) }
   });
   revalidatePath('/settings');
+}
+
+export async function deleteFutureCookPlans() {
+  const todayUtc = new Date();
+  todayUtc.setUTCHours(0, 0, 0, 0);
+  const cutoff = addUtcDays(todayUtc, 14);
+  await prisma.cookPlan.deleteMany({ where: { serviceDate: { gt: cutoff } } });
+  revalidatePath('/dashboard');
+  revalidatePath('/cook-plan');
 }

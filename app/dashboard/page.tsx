@@ -4,6 +4,7 @@ import { StatCard } from '@/components/StatCard';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
+import { deleteFutureCookPlans } from '@/app/actions';
 
 function money(n: number) { return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }); }
 function displayUnit(proteinName: string, inputUnit: string) {
@@ -36,6 +37,14 @@ export default async function DashboardPage() {
   ]);
   const latestPlan = latestOperationalPlan;
   const ignoredFuturePlan = latestAnyPlan && !latestOperationalPlan && latestAnyPlan.serviceDate > operationalHorizonDate ? latestAnyPlan : null;
+  const operationalAlerts: string[] = [];
+  if (!latestPlan) operationalAlerts.push('No current operational cook plan exists in the active 14-day window.');
+  if (latestPlan?.confidence === 'LOW') operationalAlerts.push('Forecast confidence is LOW because operating history is still thin.');
+  latestPlan?.items.forEach((item) => {
+    const unit = displayUnit(item.protein.name, item.protein.inputUnit);
+    if ((item.notes ?? '').toLowerCase().includes('no data, check hot box')) operationalAlerts.push(`${item.protein.name}: exact prior-day EOD credit is missing or incomplete. Check hot box manually.`);
+    if ((item.approvedCookUnits ?? item.recommendedCookUnits) >= item.protein.maxCookUnits) operationalAlerts.push(`${item.protein.name}: recommended load is at/above max setting (${item.protein.maxCookUnits} ${unit}). Check smoker capacity.`);
+  });
   const wasteLb7 = logs.flatMap(l => l.proteinLogs).reduce((sum, l) => sum + l.wasteLb, 0);
   const leftoverLb = latestLog?.proteinLogs.reduce((sum, l) => sum + l.usableLeftoverLb, 0) ?? 0;
   const leftoverUnits = latestLog?.proteinLogs.reduce((sum, l) => sum + (l.usableLeftoverUnits || 0), 0) ?? 0;
@@ -61,6 +70,21 @@ export default async function DashboardPage() {
     {ignoredFuturePlan ? <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
       <strong>Future test plan ignored:</strong> A plan exists for {fmtDateWithDow(ignoredFuturePlan.serviceDate)}, but the dashboard now only treats plans from {fmtDateWithDow(operationalStartDate)} through {fmtDateWithDow(operationalHorizonDate)} as current operational plans. Open Cook Plan and generate a current date to replace the dashboard view.
     </div> : null}
+
+    <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 className="text-lg font-black">Operational Alerts</h2>
+          <p className="text-sm text-slate-600">Quick exceptions before anyone loads the pit.</p>
+        </div>
+        <form action={deleteFutureCookPlans}>
+          <button className="btn-secondary" type="submit">Delete future test plans beyond 14 days</button>
+        </form>
+      </div>
+      {operationalAlerts.length === 0 ? <div className="mt-3 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800">No current alerts.</div> : <ul className="mt-3 list-disc space-y-1 pl-5 text-sm font-bold text-amber-900">
+        {operationalAlerts.map((alert) => <li key={alert}>{alert}</li>)}
+      </ul>}
+    </section>
 
     <section className="mt-6 grid gap-4 lg:grid-cols-2">
       <div className="card p-5">

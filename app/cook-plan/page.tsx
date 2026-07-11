@@ -111,6 +111,9 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
             <div className="grid gap-2 md:w-72">
               <label className="label">Approved Cook Units</label>
               <input className="field" name={`approved-${item.id}`} type="number" step="1" defaultValue={item.approvedCookUnits ?? item.recommendedCookUnits} />
+              <label className="label">Manual Hot Box Adjustment</label>
+              <input className="field" name={`hotBoxAdjustment-${item.id}`} type="number" step="1" defaultValue={0} placeholder="-1, 0, +2" />
+              <p className="text-xs font-bold text-slate-500">Adjustment applies on approve. Use this after visually checking the hot box.</p>
               <input className="field" name={`reason-${item.id}`} placeholder="Override reason, if any" defaultValue={item.overrideReason ?? ''} />
             </div>
           </div>

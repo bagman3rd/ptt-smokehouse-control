@@ -1,4 +1,4 @@
-# PTT Smokehouse Control — Build 2.0.0
+# PTT Smokehouse Control — Build 2.1.0
 
 Private consultant dashboard for Pigeon Toed Tavern smoked-meat production planning.
 
@@ -46,12 +46,11 @@ If the exact prior EOD log is missing, the cook-plan credit cell shows:
 
 `no data, check hot box`
 
-## Build 2.0.0 changes
+## Build 2.0.0 changes carried forward
 
 - Fixed Settings page JSX compile failure by fully rewriting `app/settings/page.tsx`.
-- Updated app version and navigation badge to Build 2.0.0.
-- Added `scripts/build-2-evaluation.mjs` for dependency-free evaluation checks.
-- Added `TEST_REPORT_BUILD_2_0_0.md` with use cases, test results, and recommended next improvements.
+- Added dependency-free evaluation checks.
+- Added test reporting with use cases, test results, and recommended next improvements.
 - Aligned legacy server-action cook-plan generation with exact prior-day EOD lookup.
 
 ## Render build command
@@ -89,3 +88,14 @@ node scripts/build-2-evaluation.mjs
 ```
 
 This script does not require database access or external packages. It checks critical source-level behavior and forecast math assumptions.
+
+
+## Build 2.1.0 changes
+
+- Added a prior-day EOD status check directly on the Generate Plan form.
+- Added exact prior-day source visibility before plan generation.
+- Added EOD validation warnings for negative values, likely missing leftovers, and suspicious entries.
+- Added Manual Hot Box Adjustment on the Cook Plan approval form.
+- Added dashboard operational alerts for missing EOD data, low confidence, and capacity max-outs.
+- Added a dashboard utility to delete future test plans beyond the 14-day operational window.
+- Kept all Build 2.0.0 stabilization work.

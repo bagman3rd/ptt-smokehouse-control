@@ -35,6 +35,8 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [lastResult, setLastResult] = useState<any>(null);
+  const [eodStatus, setEodStatus] = useState<any>(null);
+  const [eodStatusLoading, setEodStatusLoading] = useState(false);
 
   const selectedScenario = useMemo(() => scenarios.find((scenario) => scenario.id === scenarioId), [scenarios, scenarioId]);
   const selectedDayPattern = useMemo(() => dayPatternProfiles.find((profile) => profile.key === dayPatternKey) ?? dayPatternProfiles[0], [dayPatternKey]);
@@ -43,6 +45,25 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
     if (!selectedScenario) return;
     setDayPatternKey(inferDayPatternKey(selectedScenario.name));
   }, [selectedScenario?.id]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadStatus() {
+      if (!serviceDate) return;
+      setEodStatusLoading(true);
+      try {
+        const response = await fetch(`/api/eod-status?loadDate=${encodeURIComponent(serviceDate)}`, { cache: 'no-store' });
+        const data = await response.json().catch(() => ({}));
+        if (!cancelled) setEodStatus(data);
+      } catch (err) {
+        if (!cancelled) setEodStatus({ ok: false, message: 'Could not check prior EOD status.' });
+      } finally {
+        if (!cancelled) setEodStatusLoading(false);
+      }
+    }
+    loadStatus();
+    return () => { cancelled = true; };
+  }, [serviceDate]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -103,8 +124,19 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
         <label className="label">Event Multiplier</label>
         <input className="field mt-1" value={eventMultiplier} onChange={(event) => setEventMultiplier(event.target.value)} type="number" step="0.05" min="0.5" required />
       </div>
-      <div className="flex flex-col justify-end gap-2">
-        <button className="btn-primary w-full" type="submit" disabled={isGenerating || scenarios.length === 0}>
+      <div className="md:col-span-5">
+        <div className={eodStatus?.status === 'FOUND' ? 'rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900' : 'rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950'}>
+          <div className="font-black">Prior EOD status before Generate Plan</div>
+          <div className="mt-1">
+            {eodStatusLoading ? 'Checking exact prior-day EOD log...' : eodStatus?.message || 'Prior EOD status unavailable.'}
+          </div>
+          {eodStatus?.status === 'FOUND' ? <div className="mt-1 text-xs font-bold">Leftover units: {Math.round(eodStatus.totalLeftoverUnits || 0)} · Waste: {Math.round(eodStatus.totalWasteLb || 0)} lb · Source: {eodStatus.priorEodDateLabel}</div> : null}
+          {eodStatus?.status !== 'FOUND' ? <div className="mt-1 text-xs font-bold">Generate can continue, but the Cook Plan will require a manual hot-box check and will show missing prior EOD credit.</div> : null}
+        </div>
+      </div>
+
+      <div className="flex flex-col justify-end gap-2 md:col-span-5">
+        <button className="btn-primary w-full md:w-auto" type="submit" disabled={isGenerating || scenarios.length === 0}>
           {isGenerating ? 'Generating...' : 'Generate Plan'}
         </button>
         {message ? <div className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800">{message}</div> : null}
