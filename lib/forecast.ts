@@ -5,6 +5,7 @@ export type ProteinForecastInput = {
   minCookUnits: number;
   maxCookUnits: number;
   inputUnit?: string;
+  avgSalesPerCookedLb?: number;
 };
 
 export type ScenarioInput = {
@@ -15,7 +16,6 @@ export type ScenarioInput = {
   porkMixPct: number;
   ribsMixPct: number;
   chickenMixPct: number;
-  averagePricePerLbCooked: number;
 };
 
 export function confidenceForHistory(daysWithLogs: number) {
@@ -46,7 +46,8 @@ export function forecastProteinLoad(args: {
   usableLeftoverUnits?: number;
 }) {
   const mixPct = proteinMixPercent(args.protein.name, args.scenario) / 100;
-  const targetCookedLbBeforeLeftover = (args.forecastBbqSales * mixPct) / args.scenario.averagePricePerLbCooked;
+  const proteinSalesPerCookedLb = Math.max(1, args.protein.avgSalesPerCookedLb ?? 22);
+  const targetCookedLbBeforeLeftover = (args.forecastBbqSales * mixPct) / proteinSalesPerCookedLb;
   const grossCookedLbWithSafety = targetCookedLbBeforeLeftover * (1 + args.scenario.safetyFactorPct / 100);
   const grossRawLbNeeded = args.protein.cookedYieldPercent > 0 ? grossCookedLbWithSafety / (args.protein.cookedYieldPercent / 100) : grossCookedLbWithSafety;
   const grossCookUnits = args.protein.rawWeightEachLb > 0 ? Math.ceil(grossRawLbNeeded / args.protein.rawWeightEachLb) : Math.ceil(grossCookedLbWithSafety);

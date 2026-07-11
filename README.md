@@ -169,3 +169,8 @@ Build 1.4.8 fixes prior EOD leftover-credit date matching. A generated load plan
 ## Build 1.4.8
 
 Build 1.4.8 adds a Last 10 End-of-Day Logs section beneath Saved Log Displayed on the End-of-Day page. This makes it easier to confirm which recent EOD logs exist and whether the exact prior-day leftover credit source is available before generating a cook plan.
+
+
+## Build 1.4.9
+
+Build 1.4.9 moves Avg $/Cooked lb from the forecast-scenario level to the protein level. Defaults: Brisket $40/lb, Pulled Pork $22/lb, Pulled Chicken $22/lb, Ribs $12/lb. These values are editable on Settings under Protein Assumptions and are used directly in the cook-plan forecast math.

@@ -30,7 +30,6 @@ export default async function SettingsPage() {
             <div><label className="label">Annual Sales</label><input className="field mt-1" name="annualSales" type="number" defaultValue={s.annualSales} /></div>
             <div><label className="label">Smoked Meat % of Total Sales</label><input className="field mt-1" name="bbqSalesPercent" type="number" step="0.1" defaultValue={s.bbqSalesPercent} /></div>
             <div><label className="label">Safety %</label><input className="field mt-1" name="safetyFactorPct" type="number" step="0.1" defaultValue={s.safetyFactorPct} /></div>
-            <div><label className="label">Avg $/Cooked lb</label><input className="field mt-1" name="averagePricePerLbCooked" type="number" step="0.1" defaultValue={s.averagePricePerLbCooked} /></div>
             <div><label className="label">Brisket Mix %</label><input className="field mt-1" name="brisketMixPct" type="number" step="0.1" defaultValue={s.brisketMixPct} /></div>
             <div><label className="label">Pork Mix %</label><input className="field mt-1" name="porkMixPct" type="number" step="0.1" defaultValue={s.porkMixPct} /></div>
             <div><label className="label">Ribs Mix %</label><input className="field mt-1" name="ribsMixPct" type="number" step="0.1" defaultValue={s.ribsMixPct} /></div>
@@ -50,6 +49,7 @@ export default async function SettingsPage() {
           <div className="grid gap-3 md:grid-cols-4">
             <div><label className="label">Raw Weight Each lb</label><input className="field mt-1" name="rawWeightEachLb" type="number" step="0.1" defaultValue={p.rawWeightEachLb} /></div>
             <div><label className="label">Cooked Yield %</label><input className="field mt-1" name="cookedYieldPercent" type="number" step="0.1" defaultValue={p.cookedYieldPercent} /></div>
+            <div><label className="label">Avg Sales $ / Cooked lb</label><input className="field mt-1" name="avgSalesPerCookedLb" type="number" step="0.1" defaultValue={p.avgSalesPerCookedLb} /></div>
             <div><label className="label">Sandwich oz</label><input className="field mt-1" name="sandwichOz" type="number" step="0.1" defaultValue={p.sandwichOz} /></div>
             <div><label className="label">Plate oz</label><input className="field mt-1" name="plateOz" type="number" step="0.1" defaultValue={p.plateOz} /></div>
             <div><label className="label">Min Cook Units</label><input className="field mt-1" name="minCookUnits" type="number" step="1" defaultValue={p.minCookUnits} /></div>

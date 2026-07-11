@@ -44,6 +44,7 @@ model Protein {
   inputUnit           ProteinUnit
   rawWeightEachLb     Float       @default(0)
   cookedYieldPercent  Float       @default(50)
+  avgSalesPerCookedLb Float       @default(22)
   sandwichOz          Float       @default(5)
   plateOz             Float       @default(7)
   minCookUnits        Float       @default(0)

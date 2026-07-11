@@ -171,8 +171,7 @@ export async function updateScenario(formData: FormData) {
       brisketMixPct: numberField(formData, 'brisketMixPct', 30, 0, 100),
       porkMixPct: numberField(formData, 'porkMixPct', 40, 0, 100),
       ribsMixPct: numberField(formData, 'ribsMixPct', 15, 0, 100),
-      chickenMixPct: numberField(formData, 'chickenMixPct', 15, 0, 100),
-      averagePricePerLbCooked: numberField(formData, 'averagePricePerLbCooked', 31, 1)
+      chickenMixPct: numberField(formData, 'chickenMixPct', 15, 0, 100)
     }
   });
   revalidatePath('/settings');
@@ -185,6 +184,7 @@ export async function updateProtein(formData: FormData) {
     data: {
       rawWeightEachLb: numberField(formData, 'rawWeightEachLb', 1, 0.1),
       cookedYieldPercent: numberField(formData, 'cookedYieldPercent', 50, 1, 100),
+      avgSalesPerCookedLb: numberField(formData, 'avgSalesPerCookedLb', 22, 1),
       sandwichOz: numberField(formData, 'sandwichOz', 5, 0),
       plateOz: numberField(formData, 'plateOz', 7, 0),
       minCookUnits: numberField(formData, 'minCookUnits', 0, 0),

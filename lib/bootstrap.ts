@@ -11,10 +11,10 @@ export async function ensureDefaultData(prisma: PrismaClient) {
 
   {
     const proteins = [
-      { name: 'Brisket', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 13, cookedYieldPercent: 50, sandwichOz: 5, plateOz: 7, minCookUnits: 1, maxCookUnits: 88, reusableLeftover: true, maxReuseHours: 24 },
-      { name: 'Pulled Pork', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 9, cookedYieldPercent: 55, sandwichOz: 5, plateOz: 7, minCookUnits: 2, maxCookUnits: 84, reusableLeftover: true, maxReuseHours: 36 },
-      { name: 'Ribs', inputUnit: ProteinUnit.RACK, rawWeightEachLb: 3.2, cookedYieldPercent: 90, sandwichOz: 0, plateOz: 0, minCookUnits: 6, maxCookUnits: 240, reusableLeftover: true, maxReuseHours: 24 },
-      { name: 'Pulled Chicken', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 2.75, cookedYieldPercent: 75, sandwichOz: 5, plateOz: 7, minCookUnits: 8, maxCookUnits: 220, reusableLeftover: true, maxReuseHours: 36 }
+      { name: 'Brisket', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 13, cookedYieldPercent: 50, avgSalesPerCookedLb: 40, sandwichOz: 5, plateOz: 7, minCookUnits: 1, maxCookUnits: 88, reusableLeftover: true, maxReuseHours: 24 },
+      { name: 'Pulled Pork', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 9, cookedYieldPercent: 55, avgSalesPerCookedLb: 22, sandwichOz: 5, plateOz: 7, minCookUnits: 2, maxCookUnits: 84, reusableLeftover: true, maxReuseHours: 36 },
+      { name: 'Ribs', inputUnit: ProteinUnit.RACK, rawWeightEachLb: 3.2, cookedYieldPercent: 90, avgSalesPerCookedLb: 12, sandwichOz: 0, plateOz: 0, minCookUnits: 6, maxCookUnits: 240, reusableLeftover: true, maxReuseHours: 24 },
+      { name: 'Pulled Chicken', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 2.75, cookedYieldPercent: 75, avgSalesPerCookedLb: 22, sandwichOz: 5, plateOz: 7, minCookUnits: 8, maxCookUnits: 220, reusableLeftover: true, maxReuseHours: 36 }
     ];
     for (const p of proteins) await prisma.protein.upsert({ where: { name: p.name }, update: p, create: p });
   }
@@ -30,8 +30,8 @@ export async function ensureDefaultData(prisma: PrismaClient) {
   }
 
   const scenarios = [
-    { name: 'Base $6M', type: ScenarioType.BASE, annualSales: 6000000, bbqSalesPercent: 40, safetyFactorPct: 8, brisketMixPct: 30, porkMixPct: 40, ribsMixPct: 15, chickenMixPct: 15, averagePricePerLbCooked: 31 },
-    { name: 'Aggressive $8M', type: ScenarioType.AGGRESSIVE, annualSales: 8000000, bbqSalesPercent: 40, safetyFactorPct: 10, brisketMixPct: 30, porkMixPct: 40, ribsMixPct: 15, chickenMixPct: 15, averagePricePerLbCooked: 31 }
+    { name: 'Base $6M', type: ScenarioType.BASE, annualSales: 6000000, bbqSalesPercent: 40, safetyFactorPct: 8, brisketMixPct: 30, porkMixPct: 40, ribsMixPct: 15, chickenMixPct: 15 },
+    { name: 'Aggressive $8M', type: ScenarioType.AGGRESSIVE, annualSales: 8000000, bbqSalesPercent: 40, safetyFactorPct: 10, brisketMixPct: 30, porkMixPct: 40, ribsMixPct: 15, chickenMixPct: 15 }
   ];
   for (const s of scenarios) await prisma.forecastScenario.upsert({ where: { name: s.name }, update: s, create: s });
 
