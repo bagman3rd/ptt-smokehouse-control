@@ -4,6 +4,14 @@ import { prisma } from '@/lib/prisma';
 import { dateBounds, getReportData, parseReportParams, toCsv } from '@/lib/reporting';
 import { fmtDateWithDow } from '@/lib/date';
 
+async function logReportRun(args: { source: string; metric: string; groupBy: string; protein: string; start: string; end: string; dataset: string; rowCount: number; totalValue?: number }) {
+  try {
+    await prisma.reportRun.create({ data: { ...args, totalValue: args.totalValue ?? 0, createdBy: 'Archer' } });
+  } catch (error) {
+    console.error('Report run logging failed:', error);
+  }
+}
+
 function cell(value: unknown) {
   const text = value === null || value === undefined ? '' : String(value);
   const escaped = text.replace(/"/g, '""');
@@ -31,6 +39,7 @@ export async function GET(req: NextRequest) {
     });
     const rows: unknown[][] = [['Service Date', 'Status', 'Entered By', 'Total Sales', 'BBQ Sales', 'Protein', 'Cooked Units', 'Sold Cooked Lb', 'Usable Leftover Units', 'Usable Leftover Lb', 'Waste Lb', '86', 'Waste Reason', 'Notes']];
     for (const log of logs) for (const p of log.proteinLogs) rows.push([fmtDateWithDow(log.serviceDate), log.status, log.enteredBy, log.totalSales, log.bbqSales, p.protein.name, p.cookedUnits, p.soldCookedLb, p.usableLeftoverUnits, p.usableLeftoverLb, p.wasteLb, p.eightySixed ? 'YES' : 'NO', p.wasteReason || '', log.notes || '']);
+    await logReportRun({ ...params, dataset, rowCount: rows.length - 1 });
     return responseCsv(`eod-protein-logs-${params.start}-to-${params.end}.csv`, csv(rows));
   }
 
@@ -42,9 +51,11 @@ export async function GET(req: NextRequest) {
     });
     const rows: unknown[][] = [['Load Date', 'Scenario', 'Forecast Sales', 'Forecast BBQ Sales', 'Confidence', 'Status', 'Protein', 'Cooked Lb Needed', 'Usable Leftover Units', 'Forecast Cook Units', 'Recommended Cook Units', 'Approved Cook Units', 'Raw Lb Needed', 'Safety Factor %', 'Override Reason', 'Notes']];
     for (const plan of plans) for (const item of plan.items) rows.push([fmtDateWithDow(plan.serviceDate), plan.scenario.name, plan.forecastSales, plan.forecastBbqSales, plan.confidence, plan.status, item.protein.name, item.cookedLbNeeded, item.usableLeftoverUnits, item.forecastCookUnits, item.recommendedCookUnits, item.approvedCookUnits ?? '', item.rawLbNeeded, item.safetyFactorPct, item.overrideReason || '', item.notes || '']);
+    await logReportRun({ ...params, dataset, rowCount: rows.length - 1 });
     return responseCsv(`cook-plan-items-${params.start}-to-${params.end}.csv`, csv(rows));
   }
 
-  const { rows } = await getReportData(params);
+  const { rows, total } = await getReportData(params);
+  await logReportRun({ ...params, dataset, rowCount: rows.length, totalValue: total });
   return responseCsv(`report-${params.source}-${params.metric}-${params.start}-to-${params.end}.csv`, toCsv(rows, params));
 }

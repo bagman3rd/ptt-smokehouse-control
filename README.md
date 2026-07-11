@@ -1,6 +1,6 @@
-# PTT Smokehouse Control — Build 2.4.0
+# PTT Smokehouse Control — Build 2.5.0
 
-Private BBQ production-control app for Pigeon Toed Tavern. Build 2.4.0 adds report-building and CSV export functionality so saved operating data can be queried, exported, and used for management review.
+Private BBQ production-control app for Pigeon Toed Tavern. Build 2.5.0 adds report-building and CSV export functionality so saved operating data can be queried, exported, and used for management review.
 
 ## Current purpose
 
@@ -13,7 +13,7 @@ The app helps answer:
 - What forecast settings should we consider adjusting based on accumulated operating data?
 - What happened last week, last month, or during a custom date range by protein/day/date?
 
-## Build 2.4.0 changes
+## Build 2.5.0 changes
 
 - Rebuilt the Reports page as a flexible **Report Builder**.
 - Added reporting by source:
@@ -48,7 +48,7 @@ The app helps answer:
 - Added raw EOD protein-log CSV export.
 - Added raw cook-plan-item CSV export.
 - Added protected `/api/reports/export` endpoint.
-- Updated package/app badge to Build 2.4.0.
+- Updated package/app badge to Build 2.5.0.
 
 ## Example reports now supported
 
@@ -83,4 +83,4 @@ NODE_VERSION=20.18.1
 
 ## Commercial-readiness notes
 
-Build 2.4.0 improves data retrieval and management reporting, but the app still needs multi-restaurant architecture, real user accounts/roles, audit logs, saved named reports, and POS imports before it should be sold externally.
+Build 2.5.0 improves data retrieval and management reporting, but the app still needs multi-restaurant architecture, real user accounts/roles, audit logs, saved named reports, and POS imports before it should be sold externally.

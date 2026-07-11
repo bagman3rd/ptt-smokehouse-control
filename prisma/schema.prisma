@@ -62,6 +62,37 @@ model Protein {
   logs                EndOfDayProteinLog[]
 }
 
+model SavedReport {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  source      String
+  metric      String
+  groupBy     String
+  protein     String   @default("all")
+  range       String   @default("last30")
+  start       String
+  end         String
+  createdBy   String   @default("Archer")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+}
+
+model ReportRun {
+  id          String   @id @default(cuid())
+  source      String
+  metric      String
+  groupBy     String
+  protein     String   @default("all")
+  start       String
+  end         String
+  dataset     String   @default("aggregate")
+  rowCount    Int      @default(0)
+  totalValue  Float    @default(0)
+  createdBy   String   @default("Archer")
+  createdAt   DateTime @default(now())
+}
+
 model ForecastScenario {
   id               String       @id @default(cuid())
   name             String       @unique

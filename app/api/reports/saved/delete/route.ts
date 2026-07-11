@@ -1,0 +1,14 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
+import { apiAuthError } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+
+export async function POST(req: NextRequest) {
+  const authError = apiAuthError();
+  if (authError) return NextResponse.json(authError, { status: 401 });
+  const formData = await req.formData();
+  const id = String(formData.get('id') || '');
+  if (id) await prisma.savedReport.deleteMany({ where: { id } });
+  revalidatePath('/reports');
+  return NextResponse.redirect(new URL('/reports?deleted=1', req.url), { status: 303 });
+}
