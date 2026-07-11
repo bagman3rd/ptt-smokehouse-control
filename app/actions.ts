@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { getDayPatternByKey, getDayPatternMultiplier, inferDayPatternKey } from '@/lib/dayProfiles';
+import { addUtcDays } from '@/lib/date';
 
 function toDateOnly(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid service date');
@@ -49,9 +50,9 @@ export async function createCookPlan(formData: FormData) {
   const forecastSales = dailySalesForecast(scenario.annualSales, dayMultiplier, month?.multiplier ?? 1, eventMultiplier);
   const forecastBbqSales = Math.round(forecastSales * (scenario.bbqSalesPercent / 100));
 
-  const lastLog = await prisma.endOfDayLog.findFirst({
-    where: { serviceDate: { lt: serviceDate } },
-    orderBy: { serviceDate: 'desc' },
+  const priorEodDate = addUtcDays(serviceDate, -1);
+  const lastLog = await prisma.endOfDayLog.findUnique({
+    where: { serviceDate: priorEodDate },
     include: { proteinLogs: true }
   });
 
@@ -86,7 +87,7 @@ export async function createCookPlan(formData: FormData) {
         forecastBbqSales,
         confidence: confidenceForHistory(logsCount),
         status: 'DRAFT',
-        notes: `Generated with ${dayPattern.name} day pattern · event multiplier ${eventMultiplier}`,
+        notes: `Generated with ${dayPattern.name} day pattern · event multiplier ${eventMultiplier} · prior EOD lookup is exact prior calendar day only`,
         items: { create: items }
       }
     });
