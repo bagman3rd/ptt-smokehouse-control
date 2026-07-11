@@ -48,8 +48,11 @@ export default async function SettingsPage() {
           <div className="mb-3 text-lg font-black">{p.name}</div>
           <div className="grid gap-3 md:grid-cols-4">
             <div><label className="label">Raw Weight Each lb</label><input className="field mt-1" name="rawWeightEachLb" type="number" step="0.1" defaultValue={p.rawWeightEachLb} /></div>
+            <div><label className="label">Cooked Weight Each lb</label><input className="field mt-1" name="cookedWeightEachLb" type="number" step="0.1" defaultValue={p.cookedWeightEachLb} /></div>
             <div><label className="label">Cooked Yield %</label><input className="field mt-1" name="cookedYieldPercent" type="number" step="0.1" defaultValue={p.cookedYieldPercent} /></div>
             <div><label className="label">Avg Sales $ / Cooked lb</label><input className="field mt-1" name="avgSalesPerCookedLb" type="number" step="0.1" defaultValue={p.avgSalesPerCookedLb} /></div>
+            <div><label className="label">Purchase Cost Each</label><input className="field mt-1" name="purchaseCostEach" type="number" step="0.01" defaultValue={p.purchaseCostEach} /></div>
+            <div><label className="label">Sales Price Each</label><input className="field mt-1" name="salesPriceEach" type="number" step="0.01" defaultValue={p.salesPriceEach} /></div>
             <div><label className="label">Sandwich oz</label><input className="field mt-1" name="sandwichOz" type="number" step="0.1" defaultValue={p.sandwichOz} /></div>
             <div><label className="label">Plate oz</label><input className="field mt-1" name="plateOz" type="number" step="0.1" defaultValue={p.plateOz} /></div>
             <div><label className="label">Min Cook Units</label><input className="field mt-1" name="minCookUnits" type="number" step="1" defaultValue={p.minCookUnits} /></div>

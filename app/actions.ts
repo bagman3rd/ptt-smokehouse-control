@@ -183,8 +183,11 @@ export async function updateProtein(formData: FormData) {
     where: { id },
     data: {
       rawWeightEachLb: numberField(formData, 'rawWeightEachLb', 1, 0.1),
+      cookedWeightEachLb: numberField(formData, 'cookedWeightEachLb', 0, 0),
       cookedYieldPercent: numberField(formData, 'cookedYieldPercent', 50, 1, 100),
       avgSalesPerCookedLb: numberField(formData, 'avgSalesPerCookedLb', 22, 1),
+      purchaseCostEach: numberField(formData, 'purchaseCostEach', 0, 0),
+      salesPriceEach: numberField(formData, 'salesPriceEach', 0, 0),
       sandwichOz: numberField(formData, 'sandwichOz', 5, 0),
       plateOz: numberField(formData, 'plateOz', 7, 0),
       minCookUnits: numberField(formData, 'minCookUnits', 0, 0),
