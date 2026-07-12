@@ -3,7 +3,7 @@ import { requireAuth, ROLE_LABELS, normalizeRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { currentRestaurantForUser } from '@/lib/tenant';
 import { otpauthUrl } from '@/lib/totp';
-import { changeOwnPassword, createTwoFactorSecret, disableTwoFactor, enableTwoFactor, revokeOtherSessions } from './actions';
+import { changeOwnPassword, createTwoFactorSecret, disableTwoFactor, enableTwoFactor, revokeOtherSessions, revokeSession } from './actions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -11,7 +11,8 @@ export const revalidate = 0;
 export default async function AccountSecurityPage() {
   const current = await requireAuth();
   const restaurant = await currentRestaurantForUser(current);
-  const user = await prisma.user.findFirst({ where: { id: current.id, restaurantId: restaurant.id } });
+  const user = await prisma.user.findUnique({ where: { id: current.id } });
+  const sessions = await prisma.userSession.findMany({ where: { userId: current.id, revokedAt: null, expiresAt: { gt: new Date() } }, orderBy: { lastSeenAt: 'desc' } });
   const role = normalizeRole(String(current.role));
   const secret = (user as any)?.twoFactorSecret || '';
   const twoFactorEnabled = Boolean((user as any)?.twoFactorEnabled);
@@ -21,7 +22,7 @@ export default async function AccountSecurityPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Account Security</h1>
-      <p className="mt-2 text-slate-600">Manage your password, session revocation, and optional authenticator-code protection.</p>
+      <p className="mt-2 text-slate-600">Manage your password, active devices, and authenticator-code protection. Two-factor authentication is mandatory for Admin and Owner accounts.</p>
     </div>
 
     <div className="grid gap-6 lg:grid-cols-2">
@@ -50,7 +51,7 @@ export default async function AccountSecurityPage() {
 
       <section className="card p-5 lg:col-span-2">
         <h2 className="text-xl font-black">Two-Factor Authentication</h2>
-        <p className="mt-2 text-sm text-slate-600">Recommended for Admin and Owner accounts. Use Google Authenticator, 1Password, Microsoft Authenticator, or another TOTP app.</p>
+        <p className="mt-2 text-sm text-slate-600">Required for Admin and Owner accounts. Use Google Authenticator, 1Password, Microsoft Authenticator, or another TOTP app.</p>
         <div className={`mt-3 inline-flex rounded-full px-3 py-1 text-sm font-bold ${twoFactorEnabled ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>{twoFactorEnabled ? 'Enabled' : 'Not enabled'}</div>
         {!secret ? <form action={createTwoFactorSecret} className="mt-4"><button className="btn-primary" type="submit">Generate Setup Secret</button></form> : null}
         {secret && !twoFactorEnabled ? <div className="mt-4 rounded-2xl border border-slate-200 p-4">
@@ -63,10 +64,25 @@ export default async function AccountSecurityPage() {
             <button className="btn-primary" type="submit">Confirm and Enable</button>
           </form>
         </div> : null}
-        {twoFactorEnabled ? <form action={disableTwoFactor} className="mt-4 flex flex-wrap items-end gap-3">
+        {twoFactorEnabled && role !== 'ADMIN' && role !== 'OWNER' ? <form action={disableTwoFactor} className="mt-4 flex flex-wrap items-end gap-3">
           <div><label className="label">Password to Disable</label><input className="field mt-1 max-w-72" type="password" name="password" required /></div>
           <button className="btn-secondary" type="submit">Disable 2FA</button>
         </form> : null}
+      </section>
+
+      <section className="card p-5 lg:col-span-2">
+        <h2 className="text-xl font-black">Active Sessions and Devices</h2>
+        <p className="mt-2 text-sm text-slate-600">Review where this account is signed in. Revoke any session you do not recognize.</p>
+        <div className="mt-4 space-y-3">
+          {sessions.map((session) => <div key={session.id} className="flex flex-col gap-3 rounded-2xl border border-slate-200 p-4 md:flex-row md:items-center md:justify-between">
+            <div className="min-w-0 text-sm">
+              <div className="font-black">{session.id === (current as any).sessionId ? 'Current session' : 'Active session'}</div>
+              <div className="mt-1 truncate text-slate-600">{session.userAgent || 'Unknown device'}</div>
+              <div className="text-xs text-slate-500">IP {session.ipAddress || 'unknown'} · Last seen {session.lastSeenAt.toISOString().replace('T', ' ').slice(0, 16)} UTC</div>
+            </div>
+            {session.id !== (current as any).sessionId ? <form action={revokeSession}><input type="hidden" name="sessionId" value={session.id} /><button className="btn-secondary" type="submit">Revoke</button></form> : null}
+          </div>)}
+        </div>
       </section>
     </div>
   </Shell>;

@@ -103,7 +103,7 @@ export async function POST(request: Request) {
   }
 
   const sessionVersion = user.sessionVersion || 1;
-  setSessionCookie(user.id, sessionVersion);
+  await setSessionCookie(user.id, sessionVersion, request);
   await prisma.user.update({ where: { id: user.id }, data: { failedLoginCount: 0, lockedUntil: null, lastFailedLoginAt: null } }).catch(() => null);
   await auditLog({ restaurantId: activeMembership.restaurantId, actorUserId: user.id, actorName: user.name, action: 'LOGIN_SUCCESS', entity: 'Auth', afterJson: { username: user.username, email: user.email, ...requestMeta(request) } });
   return NextResponse.redirect(`${baseUrl}/dashboard`, 303);

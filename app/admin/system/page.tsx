@@ -110,7 +110,10 @@ export default async function SystemPage() {
           ['STAGING_RESTORE_DRILL', 'Staging restore drill', 'Restore backup into staging and verify app boots and counts match'],
           ['PRODUCTION_MIGRATION_STATUS', 'Production migration status', 'Production npx prisma migrate status reports up to date'],
           ['WEEKLY_BACKUP_EXPORT', 'Weekly backup export', 'Render Cron calls /api/admin/backups/weekly with CRON_SECRET'],
-          ['SECURITY_REVIEW', 'Security review', 'Review auth, rate limits, roles, tenant scoping, and session revocation']
+          ['SECURITY_REVIEW', 'External security review', 'Record reviewer, scope, findings, remediation owner, and retest date'],
+          ['REAL_DEVICE_KITCHEN_TEST', 'Physical kitchen device test', 'Record device model, browser, Wi-Fi conditions, duplicate taps, wet/greasy-hand use, and shift handoff'],
+          ['LIVE_PILOT_DATA_REVIEW', 'Live PTT forecast evidence', 'Record at least four weeks of forecast error, waste, sellouts, and manager overrides'],
+          ['OPERATOR_RESTORE_REHEARSAL', 'Operator-led restore rehearsal', 'Restore a recent production backup without developer assistance and record recovery time']
         ].map(([type, label, hint]) => (
           <form key={type} action={recordSystemCheck} className="rounded-2xl border border-slate-200 p-4">
             <input type="hidden" name="type" value={type} />

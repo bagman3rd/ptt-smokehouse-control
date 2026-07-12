@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
-import { requireAuth } from '@/lib/auth';
+import { requireAuth, normalizeRole } from '@/lib/auth';
 import { auditLog, currentRestaurantForUser } from '@/lib/tenant';
 import { generateTotpSecret, verifyTotp } from '@/lib/totp';
 import { hashPassword, verifyPassword } from '@/lib/password';
@@ -40,6 +40,8 @@ export async function disableTwoFactor(formData: FormData) {
   const password = String(formData.get('password') || '');
   const user = await prisma.user.findFirst({ where: { id: current.id, restaurantId: restaurant.id } });
   if (!user || !verifyPassword(password, user.passwordHash)) throw new Error('Password is required to disable two-factor authentication.');
+  const role = normalizeRole(String(current.role));
+  if (role === 'ADMIN' || role === 'OWNER') throw new Error('Two-factor authentication is mandatory for Admin and Owner accounts.');
   await prisma.user.update({ where: { id: current.id }, data: { twoFactorEnabled: false, twoFactorSecret: null, sessionVersion: { increment: 1 } } as any });
   await auditLog({ restaurantId: restaurant.id, actorUserId: current.id, actorName: current.name, action: 'TWO_FACTOR_DISABLED_REVOKE_SESSIONS', entity: 'User', entityId: current.id, afterJson: { sessionRevoked: true } });
   revalidatePath('/account/security');
@@ -61,7 +63,17 @@ export async function changeOwnPassword(formData: FormData) {
 export async function revokeOtherSessions() {
   const current = await requireAuth();
   const restaurant = await currentRestaurantForUser(current);
-  await prisma.user.update({ where: { id: current.id }, data: { sessionVersion: { increment: 1 } } });
+  await prisma.userSession.updateMany({ where: { userId: current.id, id: { not: (current as any).sessionId }, revokedAt: null }, data: { revokedAt: new Date() } });
   await auditLog({ restaurantId: restaurant.id, actorUserId: current.id, actorName: current.name, action: 'REVOKE_OWN_SESSIONS', entity: 'User', entityId: current.id, afterJson: { sessionRevoked: true } });
+  revalidatePath('/account/security');
+}
+
+export async function revokeSession(formData: FormData) {
+  const current = await requireAuth();
+  const restaurant = await currentRestaurantForUser(current);
+  const sessionId = clean(formData.get('sessionId'));
+  if (!sessionId) return;
+  await prisma.userSession.updateMany({ where: { id: sessionId, userId: current.id }, data: { revokedAt: new Date() } });
+  await auditLog({ restaurantId: restaurant.id, actorUserId: current.id, actorName: current.name, action: 'SESSION_REVOKED', entity: 'UserSession', entityId: sessionId });
   revalidatePath('/account/security');
 }

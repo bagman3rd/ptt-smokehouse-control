@@ -11,6 +11,6 @@ function getBaseUrl(request: Request) {
 export async function POST(request: Request) {
   const limited = await enforceRateLimit(request, 'api:logout', 80, 60_000);
   if (limited) return limited;
-  clearSessionCookie();
+  await clearSessionCookie();
   return NextResponse.redirect(`${getBaseUrl(request)}/login`, 303);
 }
