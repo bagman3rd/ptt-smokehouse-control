@@ -1,4 +1,4 @@
-name: Production health monitor
+name: Build 6.4.0 production monitor
 
 on:
   schedule:
@@ -11,17 +11,16 @@ permissions:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9.15.0
-          run_install: false
       - uses: actions/setup-node@v4
         with:
           node-version: 20.18.1
-      - name: Check application and database health
+      - name: Verify deployed build and authenticated transaction
         env:
           PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'https://ptt-smokehouse-control.onrender.com' }}
+          EXPECTED_BUILD: '6.4.0'
+          PRODUCTION_SMOKE_USERNAME: ${{ secrets.PRODUCTION_SMOKE_USERNAME }}
+          PRODUCTION_SMOKE_PASSWORD: ${{ secrets.PRODUCTION_SMOKE_PASSWORD }}
         run: node scripts/production-smoke-check.mjs

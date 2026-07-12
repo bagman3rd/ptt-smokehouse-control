@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const read = p => fs.readFileSync(p, 'utf8');
+const pkg = JSON.parse(read('package.json'));
+assert.equal(pkg.version, '6.4.0');
+assert(fs.statSync('pnpm-lock.yaml').size > 1000, 'real pnpm lockfile is required');
+assert(!fs.existsSync('.github/workflows/lockfile-bootstrap.yml'));
+const ci = read('.github/workflows/ci.yml');
+assert(ci.includes('Require committed pnpm lockfile'));
+assert(!ci.includes('steps.lockfile.outputs.present'));
+assert(read('app/api/health/db/route.ts').includes("database: 'unreachable', build: '6.4.0'"));
+assert(!read('app/api/health/db/route.ts').includes('error.message'));
+const monitor = read('scripts/production-smoke-check.mjs');
+assert(monitor.includes('EXPECTED_BUILD'));
+assert(monitor.includes('PRODUCTION_SMOKE_USERNAME'));
+assert(read('e2e/core-workflow.spec.ts').includes("response?.status()).toBe(404)"));
+console.log('Build 6.4.0 evaluation completed.');

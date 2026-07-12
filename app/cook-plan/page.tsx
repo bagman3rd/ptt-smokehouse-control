@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Shell } from '@/components/Shell';
 import { requireRole, hasRole } from '@/lib/auth';
@@ -46,6 +47,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
     prisma.cookPlan.findFirst({ where: { restaurantId }, orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
   ]);
   const plan = selectedPlan ?? latestPlan;
+  if (searchParams?.planId && !selectedPlan) notFound();
   const [dataQuality, previousPlan] = await Promise.all([
     computeDataQuality(prisma, restaurantId),
     plan ? prisma.cookPlan.findFirst({

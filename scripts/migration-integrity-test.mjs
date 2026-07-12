@@ -46,7 +46,7 @@ for (const name of migrations) {
   prefixes.set(prefix, [...(prefixes.get(prefix) || []), name]);
 }
 const duplicated = [...prefixes.entries()].filter(([, names]) => names.length > 1);
-const historyDoc = read('docs/archive/MIGRATION_HISTORY_LOCK_BUILD_5_9_0.md');
+const historyDoc = read('docs/MIGRATION_HISTORY.md');
 for (const [prefix, names] of duplicated) {
   assert(historyDoc.includes(prefix), `duplicate timestamp prefix ${prefix} must be explicitly documented if preserved for production history`);
   for (const name of names) assert(historyDoc.includes(name), `migration history lock missing ${name}`);
@@ -60,5 +60,5 @@ for (const name of migrations.filter((migrationName) => migrationName !== '20260
   assert(!hasConstraint || guardedConstraint, `${name} has an unguarded ADD CONSTRAINT statement that can fail on a fresh full-baseline rebuild`);
 }
 
-console.log('Build 6.3.4 migration integrity checks completed.');
+console.log('Build 6.4.0 migration integrity checks completed.');
 

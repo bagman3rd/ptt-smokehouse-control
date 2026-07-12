@@ -1,29 +1,12 @@
-# Smokehouse Control — Build 6.3.4
+# Smokehouse Control — Build 6.4.0
 
-Build 6.3.4 is a reliability release focused on safer migrations, explicit smoker configuration, production-mode browser testing, mobile CI coverage, and a complete kitchen workflow regression test.
+Build 6.4.0 is a release-engineering reliability update. It commits the dependency lockfile, requires frozen installs, removes the temporary lockfile bootstrap workflow, hardens tenant-boundary browser assertions, sanitizes public health failures, verifies the deployed build, and performs an authenticated production smoke transaction.
 
-## Fixes
+## Deployment
 
-- Top navigation dropdowns now behave like normal menus.
-- Only one dropdown can be open at a time.
-- Clicking anywhere outside the navigation closes the open dropdown.
-- Pressing Escape closes the open dropdown.
-- Selecting a link closes the menu.
-- Smoker Capacity add form now uses visible labels, not placeholder-only fields.
-- Smoker capacity numbers now remain readable after values are loaded from a catalog model.
+Render and GitHub Actions must use `pnpm install --frozen-lockfile`. Configure these GitHub Actions secrets for the hourly production monitor:
 
-## Deploy
+- `PRODUCTION_SMOKE_USERNAME`
+- `PRODUCTION_SMOKE_PASSWORD`
 
-Commit message:
-
-```text
-Build 6.3.4 navigation dropdown and smoker form labels
-```
-
-Normal path:
-
-```text
-ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Actions → Render Manual Deploy
-```
-
-Render build remains migration-safe and uses `prisma migrate deploy`.
+The account should be a dedicated low-privilege active user with access only to the production restaurant used for monitoring.

@@ -99,9 +99,11 @@ test('authenticated user cannot read another restaurant cook plan', async ({ bro
   const context = await browser.newContext();
   const page = await context.newPage();
   await login(page, 'tenantb', tenantBPassword);
-  await page.goto(`/cook-plan?planId=${tenantAPlan.id}`);
-  await expect(page.getByText('CI Tenant B')).toBeVisible();
+  const response = await page.goto(`/cook-plan?planId=${tenantAPlan.id}`);
+  expect(response?.status()).toBe(404);
+  await expect(page.getByText(/This page could not be found|404/i)).toBeVisible();
   await expect(page.getByText('CI manager verification override')).toHaveCount(0);
+  expect((await page.content())).not.toContain(tenantAPlan.id);
   const leaked = await prisma.restaurantMembership.count({ where: { userId: 'ci-tenant-b-user', restaurantId: tenantA.id, active: true } });
   expect(leaked).toBe(0);
   await context.close();

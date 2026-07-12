@@ -4,8 +4,9 @@ import { prisma } from '@/lib/prisma';
 export async function GET() {
   try {
     await prisma.$queryRaw`SELECT 1`;
-    return NextResponse.json({ ok: true, database: 'reachable', build: '6.3.4', timestamp: new Date().toISOString() });
+    return NextResponse.json({ ok: true, database: 'reachable', build: '6.4.0', timestamp: new Date().toISOString() });
   } catch (error) {
-    return NextResponse.json({ ok: false, database: 'unreachable', message: error instanceof Error ? error.message : 'Unknown database error' }, { status: 503 });
+    console.error('Database health check failed', error);
+    return NextResponse.json({ ok: false, database: 'unreachable', build: '6.4.0' }, { status: 503 });
   }
 }
