@@ -1,95 +1,102 @@
-name: Build 5.9.3 CI
+name: Build 6.0.1 CI
 
 on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ptt-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   quality-and-tests:
+    name: Build 6.0.1 CI / quality-and-tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     services:
       postgres:
-        image: postgres:16
+        image: postgres:16-alpine
         env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres
+          POSTGRES_USER: ptt_ci
+          POSTGRES_PASSWORD: ptt_ci_password
           POSTGRES_DB: ptt_ci
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd="pg_isready -U ptt_ci -d ptt_ci"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ptt_ci?schema=public
-      APP_SESSION_TOKEN: ci-session-token-12345
-      ADMIN_PASSWORD: ci-admin-password-12345
-      CRON_SECRET: ci-cron-secret-12345
-      NEXT_PUBLIC_APP_NAME: Smokehouse Control
-      NODE_ENV: test
+      DATABASE_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_ci?schema=public
+      DIRECT_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_ci?schema=public
+      ADMIN_PASSWORD: ci-admin-password-6-0-1
+      APP_SESSION_TOKEN: ci-session-token-6-0-1-long-value
+      CRON_SECRET: ci-cron-secret-6-0-1-long-value
+      NEXT_PUBLIC_APP_NAME: Smokehouse Control CI
+      NEXT_PUBLIC_SUPPORT_EMAIL: support@smokehousecontrol.com
+      CI: true
+
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-
-      - name: Enable pnpm
-        run: corepack enable && corepack prepare pnpm@9.15.0 --activate
+          node-version: 20.18.1
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile=false
+        run: npm install --no-audit --no-fund
 
-      - name: Prisma generate
-        run: pnpm run prisma:generate
+      - name: Generate Prisma client
+        run: npm run prisma:generate
 
-      - name: Preflight build checks
-        run: pnpm run preflight
+      - name: Apply migrations to fresh PostgreSQL
+        run: npm run prisma:migrate # prisma migrate deploy
 
-      - name: Type-check
-        run: pnpm run typecheck
+      - name: Run preflight checks
+        run: npm run preflight
 
-      - name: Lint
-        run: pnpm run lint
+      - name: Run migration integrity checks
+        run: npm run test:migration-integrity
 
-      - name: Forecast engine tests
-        run: pnpm run test:forecast
+      - name: Check migration status
+        run: npm run ci:migration-status
 
-      - name: Permission-boundary tests
-        run: pnpm run test:permissions
+      - name: Check schema drift
+        run: npm run ci:schema-drift
 
-      - name: Account-security tests
-        run: pnpm run test:account-security
+      - name: Run typecheck
+        run: npm run typecheck
 
-      - name: Dead-code check
-        run: pnpm run test:dead-code
+      - name: Run lint
+        run: npm run lint
 
-      - name: Apply migrations to fresh Postgres schema
-        run: pnpm run prisma:migrate
+      - name: Run application regression suite
+        run: >-
+          npm run test:forecast &&
+          npm run test:generate-plan &&
+          npm run test:permissions &&
+          npm run test:account-security &&
+          npm run test:dead-code &&
+          npm run test:tenant &&
+          npm run test:cross-tenant &&
+          npm run test:tenant-guard &&
+          npm run test:orphan-records &&
+          npm run staging:verify &&
+          npm run test:pos-import &&
+          npm run test:demo-docs &&
+          npm run test:smoker-catalog &&
+          npm run build:eval
 
-      - name: Verify migration status
-        run: pnpm run ci:migration-status
-
-      - name: Migration integrity tests
-        run: pnpm run test:migration-integrity
-
-      - name: Tenant isolation integration test
-        run: pnpm run test:tenant
-
-      - name: Cross-tenant regression test
-        run: pnpm run test:cross-tenant
-
-      - name: Tenant guard coverage test
-        run: pnpm run test:tenant-guard
-
-      - name: Orphan record check
-        run: pnpm run test:orphan-records
-
-      - name: POS import mapping tests
-        run: pnpm run test:pos-import
-
-      - name: Prisma schema drift check
-        run: pnpm run ci:schema-drift
+      - name: Build production application
+        run: npm run build

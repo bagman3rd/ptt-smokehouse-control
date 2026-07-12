@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,7 +16,7 @@
     "test:tenant": "tsx scripts/tenant-integration-test.mjs",
     "test:forecast": "tsx scripts/forecast-engine-test.ts",
     "test:backup": "node scripts/backup-restore-drill-check.mjs",
-    "build:eval": "node scripts/build-6-0-0-evaluation.mjs",
+    "build:eval": "node scripts/build-6-0-1-evaluation.mjs",
     "migration:baseline:check": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
     "render-build:migrate-ready": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build",
     "backup:weekly": "node scripts/run-weekly-backup-cron.mjs",
@@ -24,7 +24,7 @@
     "test:permissions": "node scripts/permission-boundary-test.mjs",
     "ci:schema-drift": "prisma migrate diff --from-url \"$DATABASE_URL\" --to-schema-datamodel prisma/schema.prisma --exit-code",
     "ci:migration-status": "prisma migrate status",
-    "ci:test": "pnpm run preflight && pnpm run typecheck && pnpm run lint && pnpm run test:migration-integrity && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:tenant-guard && pnpm run test:orphan-records && pnpm run staging:verify && pnpm run test:pos-import && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run ci:migration-status && pnpm run ci:schema-drift",
+    "ci:test": "npm run preflight && npm run typecheck && npm run lint && npm run test:migration-integrity && npm run test:forecast && npm run test:generate-plan && npm run test:permissions && npm run test:account-security && npm run test:dead-code && npm run test:tenant && npm run test:cross-tenant && npm run test:tenant-guard && npm run test:orphan-records && npm run staging:verify && npm run test:pos-import && npm run test:demo-docs && npm run test:smoker-catalog && npm run ci:migration-status && npm run ci:schema-drift",
     "test:dead-code": "node scripts/dead-code-check.mjs",
     "test:cross-tenant": "tsx scripts/cross-tenant-regression-test.mjs",
     "test:account-security": "node scripts/account-security-test.mjs",
