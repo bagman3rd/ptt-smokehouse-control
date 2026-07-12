@@ -30,7 +30,7 @@ export default async function DashboardPage() {
   const operationalHorizonDate = addUtcDays(todayUtc, 14);
 
   const planInclude = { items: { include: { protein: true } }, scenario: true };
-  const [latestOperationalPlan, latestAnyPlan, latestLog, scenarios, logs] = await Promise.all([
+  const [latestOperationalPlan, latestAnyPlan, latestLog, scenarios, logs, smokers] = await Promise.all([
     prisma.cookPlan.findFirst({
       where: { restaurantId, serviceDate: { gte: operationalStartDate, lte: operationalHorizonDate } },
       orderBy: { createdAt: 'desc' },
@@ -39,10 +39,12 @@ export default async function DashboardPage() {
     prisma.cookPlan.findFirst({ where: { restaurantId }, orderBy: { createdAt: 'desc' }, include: planInclude }),
     prisma.endOfDayLog.findFirst({ where: { restaurantId }, orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true } } } }),
     prisma.forecastScenario.findMany({ where: activeScenarioWhere(restaurantId), orderBy: { annualSales: 'asc' } }),
-    prisma.endOfDayLog.findMany({ where: { restaurantId }, orderBy: { serviceDate: 'desc' }, take: 7, include: { proteinLogs: true } })
+    prisma.endOfDayLog.findMany({ where: { restaurantId }, orderBy: { serviceDate: 'desc' }, take: 7, include: { proteinLogs: true } }),
+    prisma.smoker.findMany({ where: { restaurantId, active: true } })
   ]);
   const latestPlan = latestOperationalPlan;
   const ignoredFuturePlan = latestAnyPlan && !latestOperationalPlan && latestAnyPlan.serviceDate > operationalHorizonDate ? latestAnyPlan : null;
+  const smokerCapacity = smokers.reduce((sum, smoker) => ({ brisket: sum.brisket + smoker.brisketCapacity, pork: sum.pork + smoker.porkCapacity, ribs: sum.ribs + smoker.ribCapacity, chicken: sum.chicken + smoker.chickenCapacity }), { brisket: 0, pork: 0, ribs: 0, chicken: 0 });
   const operationalAlerts: string[] = [];
   if (!latestPlan) operationalAlerts.push('No current operational cook plan exists in the active 14-day window.');
   if (latestPlan?.confidence === 'LOW') operationalAlerts.push('Forecast confidence is LOW because operating history is still thin.');
@@ -50,6 +52,11 @@ export default async function DashboardPage() {
     const unit = displayUnit(item.protein.name, item.protein.inputUnit);
     if ((item.notes ?? '').toLowerCase().includes('no data, check hot box')) operationalAlerts.push(`${item.protein.name}: exact prior-day EOD credit is missing or incomplete. Check hot box manually.`);
     if ((item.approvedCookUnits ?? item.recommendedCookUnits) >= item.protein.maxCookUnits) operationalAlerts.push(`${item.protein.name}: recommended load is at/above max setting (${item.protein.maxCookUnits} ${unit}). Check smoker capacity.`);
+    const approvedOrRecommended = item.approvedCookUnits ?? item.recommendedCookUnits;
+    const lower = item.protein.name.toLowerCase();
+    const capacity = lower.includes('brisket') ? smokerCapacity.brisket : lower.includes('pork') ? smokerCapacity.pork : lower.includes('rib') ? smokerCapacity.ribs : lower.includes('chicken') ? smokerCapacity.chicken : 0;
+    if (capacity > 0 && approvedOrRecommended > capacity) operationalAlerts.push(`${item.protein.name}: load ${approvedOrRecommended} ${unit} exceeds active smoker capacity of ${capacity} ${unit}.`);
+    if (capacity === 0) operationalAlerts.push(`${item.protein.name}: no smoker capacity has been entered yet. Add smokers in Admin → Smokers.`);
   });
   const wasteLb7 = logs.flatMap(l => l.proteinLogs).reduce((sum, l) => sum + l.wasteLb, 0);
   const leftoverLb = latestLog?.proteinLogs.reduce((sum, l) => sum + l.usableLeftoverLb, 0) ?? 0;

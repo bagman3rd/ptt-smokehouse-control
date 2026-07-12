@@ -80,14 +80,8 @@ export async function ensureDefaultData(prisma: PrismaClient) {
 
   const admin = await prisma.user.findFirst({ where: { email: 'admin@smokehouse.local' } });
   if (admin) {
-    await prisma.restaurantMembership.upsert({
-      where: { id: `${restaurantId}:${admin.id}` },
-      update: {},
-      create: { id: `${restaurantId}:${admin.id}`, restaurantId, userId: admin.id, role: Role.ADMIN, active: true }
-    }).catch(async () => {
-      const existing = await prisma.restaurantMembership.findFirst({ where: { restaurantId, userId: admin.id } });
-      if (!existing) await prisma.restaurantMembership.create({ data: { restaurantId, userId: admin.id, role: Role.ADMIN, active: true } });
-    });
+    const existing = await prisma.restaurantMembership.findFirst({ where: { restaurantId, userId: admin.id } });
+    if (!existing) await prisma.restaurantMembership.create({ data: { restaurantId, userId: admin.id, role: Role.ADMIN, active: true } });
   }
 }
 

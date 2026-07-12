@@ -5,6 +5,8 @@ import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { currentRestaurantForUser } from '@/lib/tenant';
+import { decideLearningRecommendation, saveLearningRecommendation } from './actions';
+import { hasRole } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -162,7 +164,14 @@ export default async function LearningPage() {
   });
 
   const matchedSampleCount = proteinSummaries.reduce((sum, row) => sum + row.sampleCount, 0);
-  const actionableCount = proteinSummaries.filter((row) => row.sampleCount >= 3 && (Math.abs(row.avgErrorPct) > 15 || row.wastePct > 10 || row.selloutCount >= 2)).length;
+  const actionableProteinRows = proteinSummaries.filter((row) => row.sampleCount >= 3 && (Math.abs(row.avgErrorPct) > 15 || row.wastePct > 10 || row.selloutCount >= 2));
+  const actionableCount = actionableProteinRows.length;
+  const pendingRecommendations = await prisma.learningRecommendation.findMany({
+    where: { restaurantId, status: 'PENDING' },
+    orderBy: { createdAt: 'desc' },
+    take: 25
+  });
+  const canDecideRecommendations = hasRole(user, ['ADMIN', 'OWNER']);
   const dataQuality = matchedSampleCount >= 80 ? 'HIGH' : matchedSampleCount >= 24 ? 'MEDIUM' : 'LOW';
 
   return <Shell>
@@ -221,6 +230,49 @@ export default async function LearningPage() {
       </div>
     </section>
 
+
+    <section className="card mt-6 p-5">
+      <h2 className="text-xl font-black">Recommendation Approval Queue</h2>
+      <p className="mt-1 text-sm text-slate-600">Build 3.6.0 adds a review queue. Recommendations are saved first, then Admin/Owner can accept or reject them. Accepted items are audit-logged; automatic setting changes should come after more live data.</p>
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-slate-200 p-4">
+          <div className="font-black">Save current adjustment candidates</div>
+          <div className="mt-3 space-y-3">
+            {actionableProteinRows.length === 0 ? <p className="text-sm text-slate-500">No actionable protein candidates yet. Keep collecting complete EOD logs.</p> : actionableProteinRows.map((row) => (
+              <form key={row.protein.id} action={saveLearningRecommendation} className="rounded-xl bg-slate-50 p-3">
+                <input type="hidden" name="type" value="PROTEIN_FORECAST" />
+                <input type="hidden" name="title" value={`${row.protein.name} forecast adjustment candidate`} />
+                <input type="hidden" name="recommendation" value={row.action} />
+                <input type="hidden" name="targetEntity" value="Protein" />
+                <input type="hidden" name="targetId" value={row.protein.id} />
+                <input type="hidden" name="beforeJson" value={JSON.stringify({ avgErrorPct: row.avgErrorPct, wastePct: row.wastePct, selloutCount: row.selloutCount })} />
+                <div className="text-sm font-black">{row.protein.name}</div>
+                <div className="mt-1 text-sm text-slate-700">{row.action}</div>
+                <button className="btn-secondary mt-3" type="submit">Save to review queue</button>
+              </form>
+            ))}
+          </div>
+        </div>
+        <div className="rounded-2xl border border-slate-200 p-4">
+          <div className="font-black">Pending decisions</div>
+          <div className="mt-3 space-y-3">
+            {pendingRecommendations.length === 0 ? <p className="text-sm text-slate-500">No pending recommendations.</p> : pendingRecommendations.map((item) => (
+              <div key={item.id} className="rounded-xl bg-slate-50 p-3">
+                <div className="text-sm font-black">{item.title}</div>
+                <div className="mt-1 text-sm text-slate-700">{item.recommendation}</div>
+                <div className="mt-1 text-xs text-slate-500">Created {item.createdAt.toLocaleDateString()} by {item.createdBy}</div>
+                {canDecideRecommendations ? <div className="mt-3 flex gap-2">
+                  <form action={decideLearningRecommendation}><input type="hidden" name="id" value={item.id} /><input type="hidden" name="decision" value="ACCEPTED" /><button className="btn-primary" type="submit">Accept</button></form>
+                  <form action={decideLearningRecommendation}><input type="hidden" name="id" value={item.id} /><input type="hidden" name="decision" value="REJECTED" /><button className="btn-secondary" type="submit">Reject</button></form>
+                </div> : <div className="mt-2 text-xs font-bold text-slate-500">Admin/Owner approval required.</div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+
     <section className="card mt-6 p-5">
       <h2 className="text-xl font-black">How the app learns</h2>
       <div className="mt-3 grid gap-3 md:grid-cols-2">
@@ -236,7 +288,7 @@ export default async function LearningPage() {
         </div>
         <div className="rounded-2xl border border-slate-200 p-4">
           <div className="font-black">Next commercial step</div>
-          <p className="mt-2 text-sm text-slate-700">The next step is an approval workflow: review a recommendation, accept it, then write the suggested change into Settings with an audit log. For now, this page recommends adjustments but does not automatically change assumptions.</p>
+          <p className="mt-2 text-sm text-slate-700">Build 3.6.0 adds the approval workflow foundation: save a recommendation, accept or reject it, and audit the decision. Automatic settings updates should wait until the app has more matched live-service samples.</p>
           <p className="mt-2 text-sm text-slate-700">Active scenarios: {scenarios.map((s) => s.name).join(', ') || 'none'}</p>
         </div>
       </div>

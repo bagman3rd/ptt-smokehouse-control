@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
 
-  const [proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns, auditLogs] = await Promise.all([
+  const [proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations] = await Promise.all([
     prisma.protein.findMany({ where: { restaurantId }, orderBy: { name: 'asc' } }),
     prisma.forecastScenario.findMany({ where: { restaurantId }, orderBy: { annualSales: 'asc' } }),
     prisma.dayMultiplier.findMany({ where: { restaurantId }, orderBy: { dayOfWeek: 'asc' } }),
@@ -24,16 +24,18 @@ export async function GET(request: Request) {
     prisma.endOfDayLog.findMany({ where: { restaurantId }, orderBy: { serviceDate: 'asc' }, include: { proteinLogs: { include: { protein: true } } } }),
     prisma.savedReport.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }),
     prisma.reportRun.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' }, take: 1000 }),
-    prisma.auditLog.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' }, take: 2000 })
+    prisma.auditLog.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' }, take: 2000 }),
+    prisma.smoker.findMany({ where: { restaurantId }, orderBy: { name: 'asc' } }),
+    prisma.learningRecommendation.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } })
   ]);
 
   const exportedAt = new Date().toISOString();
   const body = JSON.stringify({
     app: 'PTT Smokehouse Control',
-    build: '3.5.0',
+    build: '3.6.0',
     restaurant,
     exportedAt,
-    counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length },
+    counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length },
     proteins,
     scenarios,
     dayMultipliers: days,
@@ -42,7 +44,9 @@ export async function GET(request: Request) {
     endOfDayLogs: eodLogs,
     savedReports,
     reportRuns,
-    auditLogs
+    auditLogs,
+    smokers,
+    learningRecommendations
   }, null, 2);
 
   return new NextResponse(body, {

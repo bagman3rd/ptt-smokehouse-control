@@ -62,9 +62,8 @@ export async function updateScenario(formData: FormData) {
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
   const id = String(formData.get('id'));
-  await prisma.forecastScenario.updateMany({
-    where: { id, restaurantId },
-    data: {
+  const before = await prisma.forecastScenario.findFirst({ where: { id, restaurantId } });
+  const data = {
       annualSales: numberField(formData, 'annualSales', 6000000, 1),
       bbqSalesPercent: numberField(formData, 'bbqSalesPercent', 40, 1, 100),
       safetyFactorPct: numberField(formData, 'safetyFactorPct', 8, 0, 50),
@@ -73,8 +72,12 @@ export async function updateScenario(formData: FormData) {
       ribsMixPct: numberField(formData, 'ribsMixPct', 15, 0, 100),
       chickenMixPct: numberField(formData, 'chickenMixPct', 15, 0, 100),
       updatedBy: user.name
-    }
+    };
+  await prisma.forecastScenario.updateMany({
+    where: { id, restaurantId },
+    data
   });
+  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'UPDATE', entity: 'ForecastScenario', entityId: id, beforeJson: before, afterJson: data });
   revalidatePath('/settings');
   revalidatePath('/cook-plan');
 }
@@ -84,10 +87,9 @@ export async function updateProtein(formData: FormData) {
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
   const id = String(formData.get('id'));
-  await prisma.protein.updateMany({
-    where: { id, restaurantId },
-    data: {
-      rawWeightEachLb: numberField(formData, 'rawWeightEachLb', 1, 0.1),
+  const before = await prisma.protein.findFirst({ where: { id, restaurantId } });
+  const data = {
+    rawWeightEachLb: numberField(formData, 'rawWeightEachLb', 1, 0.1),
       cookedWeightEachLb: numberField(formData, 'cookedWeightEachLb', 0, 0),
       cookedYieldPercent: numberField(formData, 'cookedYieldPercent', 50, 1, 100),
       avgSalesPerCookedLb: numberField(formData, 'avgSalesPerCookedLb', 22, 1),
@@ -100,8 +102,12 @@ export async function updateProtein(formData: FormData) {
       maxReuseHours: numberField(formData, 'maxReuseHours', 24, 0, 168),
       reusableLeftover: formData.get('reusableLeftover') === 'on',
       updatedBy: user.name
-    }
+    };
+  await prisma.protein.updateMany({
+    where: { id, restaurantId },
+    data
   });
+  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'UPDATE', entity: 'Protein', entityId: id, beforeJson: before, afterJson: data });
   revalidatePath('/settings');
   revalidatePath('/cook-plan');
 }
@@ -111,10 +117,10 @@ export async function updateDayMultiplier(formData: FormData) {
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
   const id = String(formData.get('id'));
-  await prisma.dayMultiplier.updateMany({
-    where: { id, restaurantId },
-    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3), updatedBy: user.name }
-  });
+  const before = await prisma.dayMultiplier.findFirst({ where: { id, restaurantId } });
+  const data = { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3), updatedBy: user.name };
+  await prisma.dayMultiplier.updateMany({ where: { id, restaurantId }, data });
+  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'UPDATE', entity: 'DayMultiplier', entityId: id, beforeJson: before, afterJson: data });
   revalidatePath('/settings');
 }
 
@@ -123,10 +129,10 @@ export async function updateMonthMultiplier(formData: FormData) {
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
   const id = String(formData.get('id'));
-  await prisma.monthMultiplier.updateMany({
-    where: { id, restaurantId },
-    data: { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3), updatedBy: user.name }
-  });
+  const before = await prisma.monthMultiplier.findFirst({ where: { id, restaurantId } });
+  const data = { multiplier: numberField(formData, 'multiplier', 1, 0.1, 3), updatedBy: user.name };
+  await prisma.monthMultiplier.updateMany({ where: { id, restaurantId }, data });
+  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'UPDATE', entity: 'MonthMultiplier', entityId: id, beforeJson: before, afterJson: data });
   revalidatePath('/settings');
 }
 
