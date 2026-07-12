@@ -35,10 +35,13 @@ export const eodProteinEntrySchema = z.object({
   usableLeftoverUnits: z.coerce.number().min(0).default(0),
   wasteLb: z.coerce.number().min(0).default(0),
   eightySixed: z.boolean().optional().default(false),
-  wasteReason: z.string().max(240).optional().default('')
+  wasteReason: z.string().max(240).optional().default(''),
+  sealedUnopenedUnits: z.coerce.number().min(0).optional(),
+  openedMeatLb: z.coerce.number().min(0).optional()
 });
 
 export const eodSchema = z.object({
+  mode: z.enum(['FULL', 'QUICK']).optional().default('FULL'),
   serviceDate: dateOnlySchema,
   totalSales: z.coerce.number().min(0).default(0),
   bbqSales: z.coerce.number().min(0).default(0),

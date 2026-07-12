@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { fmtDateWithDow } from '@/lib/date';
 import { EndOfDayForm } from '@/app/end-of-day/EndOfDayForm';
+import { QuickEndOfDayForm } from '@/app/end-of-day/QuickEndOfDayForm';
 import { currentRestaurantForUser } from '@/lib/tenant';
 
 export const dynamic = 'force-dynamic';
@@ -43,7 +44,17 @@ export default async function EndOfDayPage({ searchParams }: { searchParams?: { 
   ]);
 
   const displayLog = selectedLog ?? latestLog;
-  const proteinProps = proteins.map((protein) => ({ id: protein.id, name: protein.name, inputUnit: protein.inputUnit }));
+  const proteinProps = proteins.map((protein) => ({ id: protein.id, name: protein.name, code: protein.code, inputUnit: protein.inputUnit }));
+  const quickInitialLog = selectedLog ? {
+    serviceDate: dateInputValue(selectedLog.serviceDate),
+    lockedAt: selectedLog.lockedAt ? selectedLog.lockedAt.toISOString() : null,
+    proteinLogs: selectedLog.proteinLogs.map((log) => ({
+      proteinId: log.proteinId,
+      sealedUnopenedUnits: log.sealedUnopenedUnits,
+      openedMeatLb: log.openedMeatLb
+    }))
+  } : null;
+
   const initialLog = displayLog ? {
     serviceDate: dateInputValue(displayLog.serviceDate),
     totalSales: displayLog.totalSales,
@@ -59,7 +70,9 @@ export default async function EndOfDayPage({ searchParams }: { searchParams?: { 
       usableLeftoverLb: log.usableLeftoverLb,
       wasteLb: log.wasteLb,
       wasteReason: log.wasteReason,
-      eightySixed: log.eightySixed
+      eightySixed: log.eightySixed,
+      sealedUnopenedUnits: log.sealedUnopenedUnits,
+      openedMeatLb: log.openedMeatLb
     }))
   } : null;
 
@@ -70,13 +83,15 @@ export default async function EndOfDayPage({ searchParams }: { searchParams?: { 
       {searchParams?.savedAt ? <p className="mt-2 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-black text-emerald-800">End-of-day log saved. Saved values for that service date are loaded into the form and shown below.</p> : null}
     </div>
 
+    <QuickEndOfDayForm proteins={proteinProps} initialLog={quickInitialLog} />
+
     <EndOfDayForm proteins={proteinProps} initialLog={initialLog} />
 
     {displayLog ? <section className="card mt-6 p-5">
       <h2 className="text-xl font-black">Saved Log Displayed</h2>
       <p className="mt-1 text-slate-600">{fmtDateWithDow(displayLog.serviceDate)} · Status {displayLog.status}{displayLog.lockedAt ? ' · LOCKED' : ''} · Total sales ${displayLog.totalSales.toLocaleString()} · smoked meat sales ${displayLog.bbqSales.toLocaleString()}</p>
       <div className="mt-4 grid gap-3 md:grid-cols-2">
-        {displayLog.proteinLogs.map(log => <div key={log.id} className="rounded-xl border border-slate-200 p-3 text-sm"><strong>{log.protein.name}</strong>: cooked {log.cookedUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} · sold {log.soldCookedLb} lb · leftover {log.usableLeftoverUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} / {log.usableLeftoverLb} lb · waste {log.wasteLb} lb {log.eightySixed ? '· 86' : ''}</div>)}
+        {displayLog.proteinLogs.map(log => <div key={log.id} className="rounded-xl border border-slate-200 p-3 text-sm"><strong>{log.protein.name}</strong>: cooked {log.cookedUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} · sold {log.soldCookedLb} lb · leftover {log.usableLeftoverUnits} {displayUnit(log.protein.name, log.protein.inputUnit)} / {log.usableLeftoverLb} lb · sealed unopened {log.sealedUnopenedUnits} · opened meat {log.openedMeatLb} lb · waste {log.wasteLb} lb {log.eightySixed ? '· 86' : ''}</div>)}
       </div>
     </section> : null}
 
@@ -95,7 +110,7 @@ export default async function EndOfDayPage({ searchParams }: { searchParams?: { 
           </div>
           <div className="mt-3 grid gap-2 md:grid-cols-2">
             {log.proteinLogs.map((proteinLog) => <div key={proteinLog.id} className="rounded-xl bg-slate-50 p-3 text-sm">
-              <strong>{proteinLog.protein.name}</strong>: cooked {proteinLog.cookedUnits} {displayUnit(proteinLog.protein.name, proteinLog.protein.inputUnit)} · sold {proteinLog.soldCookedLb} lb · leftover credit {proteinLog.usableLeftoverUnits} {displayUnit(proteinLog.protein.name, proteinLog.protein.inputUnit)} / {proteinLog.usableLeftoverLb} lb · waste {proteinLog.wasteLb} lb {proteinLog.eightySixed ? '· 86' : ''}
+              <strong>{proteinLog.protein.name}</strong>: cooked {proteinLog.cookedUnits} {displayUnit(proteinLog.protein.name, proteinLog.protein.inputUnit)} · sold {proteinLog.soldCookedLb} lb · leftover credit {proteinLog.usableLeftoverUnits} {displayUnit(proteinLog.protein.name, proteinLog.protein.inputUnit)} / {proteinLog.usableLeftoverLb} lb · sealed unopened {proteinLog.sealedUnopenedUnits} · opened meat {proteinLog.openedMeatLb} lb · waste {proteinLog.wasteLb} lb {proteinLog.eightySixed ? '· 86' : ''}
             </div>)}
           </div>
         </div>)}

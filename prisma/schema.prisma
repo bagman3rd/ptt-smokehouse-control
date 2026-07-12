@@ -326,6 +326,8 @@ model EndOfDayProteinLog {
   soldCookedLb    Float    @default(0)
   usableLeftoverLb Float   @default(0)
   usableLeftoverUnits Float @default(0)
+  sealedUnopenedUnits Float @default(0)
+  openedMeatLb     Float    @default(0)
   wasteLb         Float    @default(0)
   eightySixed     Boolean  @default(false)
   wasteReason     String?

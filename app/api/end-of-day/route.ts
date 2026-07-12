@@ -36,6 +36,7 @@ export async function POST(request: Request) {
     const restaurant = await currentRestaurantForUser(user);
     const restaurantId = restaurant.id;
     const body = eodSchema.parse(await request.json().catch(() => ({})));
+    const isQuickMode = body.mode === 'QUICK';
     const serviceDateStr = body.serviceDate;
     const serviceDate = toDateOnly(serviceDateStr);
     const totalSales = numberValue(body.totalSales);
@@ -46,7 +47,10 @@ export async function POST(request: Request) {
     const notes = String(body.notes || '');
     const entries = Array.isArray(body.proteins) ? body.proteins : [];
 
-    const existing = await prisma.endOfDayLog.findFirst({ where: { serviceDate, restaurantId } });
+    const existing = await prisma.endOfDayLog.findFirst({
+      where: { serviceDate, restaurantId },
+      include: { proteinLogs: true }
+    });
     if (existing?.lockedAt || existing?.status === 'LOCKED') {
       throw new Error('This EOD log is locked and cannot be edited from the app.');
     }
@@ -55,15 +59,22 @@ export async function POST(request: Request) {
     if (proteins.length === 0) throw new Error('No active proteins exist. Seed data was not created.');
 
     const byProteinId = new Map(entries.map((entry: any) => [String(entry.proteinId), entry]));
+    const existingByProteinId = new Map((existing?.proteinLogs || []).map((entry) => [entry.proteinId, entry]));
     const errors: string[] = [];
     let allProteinValuesZero = true;
     const proteinRows = proteins.map((protein) => {
       const entry: any = byProteinId.get(protein.id) || {};
-      const cookedUnits = numberValue(entry.cookedUnits);
-      const soldCookedLb = numberValue(entry.soldCookedLb);
-      const wasteLb = numberValue(entry.wasteLb);
-      const usableLeftoverUnits = numberValue(entry.usableLeftoverUnits);
-      const usableLeftoverLb = numberValue(entry.usableLeftoverLb);
+      const previous = existingByProteinId.get(protein.id);
+      const proteinCode = String(protein.code || '').toUpperCase();
+      const sealedUnopenedUnits = numberValue(entry.sealedUnopenedUnits, previous?.sealedUnopenedUnits ?? 0);
+      const openedMeatLb = numberValue(entry.openedMeatLb, previous?.openedMeatLb ?? 0);
+      const cookedUnits = isQuickMode ? (previous?.cookedUnits ?? 0) : numberValue(entry.cookedUnits);
+      const soldCookedLb = isQuickMode ? (previous?.soldCookedLb ?? 0) : numberValue(entry.soldCookedLb);
+      const wasteLb = isQuickMode ? (previous?.wasteLb ?? 0) : numberValue(entry.wasteLb);
+      const usableLeftoverUnits = isQuickMode
+        ? (proteinCode === 'PORK' || proteinCode === 'CHICKEN' || proteinCode === 'RIBS' ? sealedUnopenedUnits : 0)
+        : numberValue(entry.usableLeftoverUnits);
+      const usableLeftoverLb = isQuickMode ? 0 : numberValue(entry.usableLeftoverLb);
 
       if ([cookedUnits, soldCookedLb, wasteLb, usableLeftoverUnits, usableLeftoverLb].some((n) => n < 0)) {
         errors.push(`${protein.name}: negative values are not allowed.`);
@@ -72,7 +83,7 @@ export async function POST(request: Request) {
       if (usableLeftoverUnits > cookedUnits && cookedUnits > 0) {
         errors.push(`${protein.name}: usable leftover units exceed cooked units.`);
       }
-      if (['COMPLETE', 'REVIEWED', 'LOCKED'].includes(status) && cookedUnits > 0 && hasBlank(entry.usableLeftoverUnits)) {
+      if (!isQuickMode && ['COMPLETE', 'REVIEWED', 'LOCKED'].includes(status) && cookedUnits > 0 && hasBlank(entry.usableLeftoverUnits)) {
         errors.push(`${protein.name}: usable leftover units are required before marking the EOD log ${status}. Enter 0 if none.`);
       }
 
@@ -84,11 +95,13 @@ export async function POST(request: Request) {
         usableLeftoverUnits,
         wasteLb,
         eightySixed: Boolean(entry.eightySixed),
-        wasteReason: String(entry.wasteReason || '')
+        wasteReason: isQuickMode ? String(previous?.wasteReason || '') : String(entry.wasteReason || ''),
+        sealedUnopenedUnits,
+        openedMeatLb
       };
     });
 
-    if (allProteinValuesZero && ['COMPLETE', 'REVIEWED', 'LOCKED'].includes(status)) {
+    if (!isQuickMode && allProteinValuesZero && ['COMPLETE', 'REVIEWED', 'LOCKED'].includes(status)) {
       errors.push('Cannot mark EOD Complete/Reviewed/Locked with all protein values at zero. Save as Draft or enter closing data.');
     }
     if (errors.length > 0) throw new Error(errors.join(' '));
@@ -152,10 +165,12 @@ export async function POST(request: Request) {
         usableLeftoverLb: proteinLog.usableLeftoverLb,
         wasteLb: proteinLog.wasteLb,
         eightySixed: proteinLog.eightySixed,
-        wasteReason: proteinLog.wasteReason
+        wasteReason: proteinLog.wasteReason,
+        sealedUnopenedUnits: proteinLog.sealedUnopenedUnits,
+        openedMeatLb: proteinLog.openedMeatLb
       })),
       redirectUrl: `/end-of-day?serviceDate=${encodeURIComponent(serviceDateStr)}&savedAt=${Date.now()}`,
-      message: 'End-of-day log saved.'
+      message: isQuickMode ? 'Quick EOD report submitted.' : 'End-of-day log saved.'
     });
   } catch (error) {
     console.error('Save end-of-day log failed:', error);
