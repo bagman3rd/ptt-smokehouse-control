@@ -1,4 +1,3 @@
-import type { PrismaClient } from '@prisma/client';
 import { addUtcDays } from '@/lib/date';
 
 export type DataQualityResult = {
@@ -14,7 +13,7 @@ function startOfUtcDay(date = new Date()) {
   return d;
 }
 
-export async function computeDataQuality(prisma: PrismaClient, restaurantId: string): Promise<DataQualityResult> {
+export async function computeDataQuality(prisma: any, restaurantId: string): Promise<DataQualityResult> {
   const today = startOfUtcDay();
   const since = addUtcDays(today, -14);
   const [eodLogs, lockedLogs, cookPlans, approvedPlans, smokerCount, backupChecks, restoreChecks, reports] = await Promise.all([

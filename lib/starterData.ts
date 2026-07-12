@@ -1,4 +1,4 @@
-import { PrismaClient, ProteinUnit, ScenarioType, Role } from '@prisma/client';
+import { ProteinUnit, ScenarioType } from '@prisma/client';
 
 export type StarterProfile = 'generic' | 'tourist' | 'demo';
 
@@ -6,7 +6,7 @@ export function slugifyRestaurant(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || `restaurant-${Date.now()}`;
 }
 
-export async function createDefaultRestaurantData(prisma: PrismaClient, restaurantId: string, profile: StarterProfile = 'generic') {
+export async function createDefaultRestaurantData(prisma: any, restaurantId: string, profile: StarterProfile = 'generic') {
   const proteins = [
     { name: 'Brisket', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 13, cookedWeightEachLb: 6.5, cookedYieldPercent: 50, avgSalesPerCookedLb: 38, purchaseCostEach: 0, salesPriceEach: 0, sandwichOz: 5, plateOz: 7, minCookUnits: 1, maxCookUnits: 80, reusableLeftover: true, maxReuseHours: 24, updatedBy: 'Self-Service Setup' },
     { name: 'Pulled Pork', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 9, cookedWeightEachLb: 4.95, cookedYieldPercent: 55, avgSalesPerCookedLb: 21, purchaseCostEach: 0, salesPriceEach: 0, sandwichOz: 5, plateOz: 7, minCookUnits: 2, maxCookUnits: 84, reusableLeftover: true, maxReuseHours: 36, updatedBy: 'Self-Service Setup' },
@@ -44,7 +44,7 @@ export async function createDefaultRestaurantData(prisma: PrismaClient, restaura
   }
 }
 
-export async function createDemoHistory(prisma: PrismaClient, restaurantId: string) {
+export async function createDemoHistory(prisma: any, restaurantId: string) {
   const proteins = await prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } });
   const scenario = await prisma.forecastScenario.findFirst({ where: { restaurantId }, orderBy: { annualSales: 'asc' } });
   if (!scenario || proteins.length === 0) return;

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* Static checks for Build 4.3.0 account lockout and session revocation. */
+/* Static checks for Build 4.3.1 account lockout and session revocation. */
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
@@ -31,4 +31,4 @@ const rate = read('lib/rateLimit.ts');
 assert.ok(rate.includes('rateLimitBucket'), 'Rate limiter must use the RateLimitBucket table.');
 assert.ok(rate.includes('upsert'), 'Rate limiter should use durable upsert semantics.');
 
-console.log('Build 4.3.0 account-security checks completed. Durable rate limiting, lockout, and session revocation are present.');
+console.log('Build 4.3.1 account-security checks completed. Durable rate limiting, lockout, and session revocation are present.');

@@ -1,11 +1,11 @@
-import { PrismaClient, ProteinUnit, ScenarioType, Role } from '@prisma/client';
+import { ProteinUnit, ScenarioType, Role } from '@prisma/client';
 import { hashPassword } from '@/lib/password';
 import { initialAdminPassword } from '@/lib/auth';
 import { ensureDefaultRestaurant } from '@/lib/tenant';
 
 const activeScenarioNames = ['Base $6M', 'Aggressive $8M', 'Base Forecast', 'Busy Forecast'];
 
-export async function ensureDefaultData(prisma: PrismaClient) {
+export async function ensureDefaultData(prisma: any) {
   const restaurant = await ensureDefaultRestaurant();
   const restaurantId = restaurant.id;
 
