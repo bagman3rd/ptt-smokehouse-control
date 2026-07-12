@@ -1,8 +1,8 @@
-# Test Report — Build 4.1.0
+# Test Report — Build 4.2.0
 
 ## Scope
 
-Build 4.1.0 implements the data-integrity and DevOps hardening path:
+Build 4.2.0 implements the data-integrity and DevOps hardening path:
 
 - Active Render build path uses `prisma migrate deploy`.
 - The db-push deployment path is removed from package scripts.
@@ -16,18 +16,18 @@ Build 4.1.0 implements the data-integrity and DevOps hardening path:
 Command run:
 
 ```bash
-node scripts/build-4-1-0-evaluation.mjs
+node scripts/build-4-2-0-evaluation.mjs
 ```
 
 Result:
 
 ```text
-Build 4.1.0 evaluation checks completed.
+Build 4.2.0 evaluation checks completed.
 ```
 
 ## Verified
 
-- `package.json` version is `4.1.0`.
+- `package.json` version is `4.2.0`.
 - `render-build` uses `prisma migrate deploy`.
 - `render-build` does not use `prisma db push`.
 - `render-build` does not use `--accept-data-loss`.
@@ -35,7 +35,7 @@ Build 4.1.0 evaluation checks completed.
 - Weekly backup cron runner exists.
 - Optional Render cron job is present in `render.yaml`.
 - Weekly backup route requires `CRON_SECRET` and supports `BACKUP_POST_URL`.
-- Backup/export payloads identify Build 4.1.0.
+- Backup/export payloads identify Build 4.2.0.
 - System page shows migration repair gate and data quality positioning.
 
 ## Not run in this sandbox
@@ -50,4 +50,4 @@ pnpm run test:forecast
 
 ## Deployment warning
 
-Build 4.1.0 should not be deployed to the existing production database until the failed migration state has been repaired or baselined on staging and then repaired on production during a low-traffic window.
+Build 4.2.0 should not be deployed to the existing production database until the failed migration state has been repaired or baselined on staging and then repaired on production during a low-traffic window.

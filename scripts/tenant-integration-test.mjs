@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Build 3.2.0 Postgres tenant isolation integration test.
+  Build 4.2.0 Postgres tenant isolation integration test.
 
   Usage:
     DATABASE_URL="postgresql://..." pnpm exec tsx scripts/tenant-integration-test.mjs
@@ -68,7 +68,7 @@ async function main() {
   const crossMembership = await prisma.restaurantMembership.findFirst({ where: { userId: userA.id, restaurantId: restaurantB.id, active: true } });
   assert(!crossMembership, 'User A unexpectedly has Tenant B membership.');
 
-  console.log('Build 3.2.0 tenant integration test passed.');
+  console.log('Build 4.2.0 tenant integration test passed.');
 }
 
 main().finally(async () => {

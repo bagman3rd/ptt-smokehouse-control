@@ -1,30 +1,30 @@
-# TEST REPORT — Build 4.1.0
+# TEST REPORT — Build 4.2.0
 
 ## Scope
 
-Build 4.1.0 addresses the remaining concentrated pilot risk: migration recovery, backup discipline, and operational trust before live PTT data accumulates.
+Build 4.2.0 addresses the remaining concentrated pilot risk: migration recovery, backup discipline, and operational trust before live PTT data accumulates.
 
 ## Static checks performed
 
 Executed:
 
 ```bash
-node scripts/build-4-1-0-evaluation.mjs
+node scripts/build-4-2-0-evaluation.mjs
 ```
 
 Result:
 
 ```text
-Build 4.1.0 evaluation checks completed.
+Build 4.2.0 evaluation checks completed.
 ```
 
 ## Verified
 
-- package.json version is `4.1.0`.
-- Nav badge displays `Build 4.1.0`.
+- package.json version is `4.2.0`.
+- Nav badge displays `Build 4.2.0`.
 - Render deploy remains in db-push recovery mode.
 - Render deploy does not use `--accept-data-loss`.
-- Manual backup export identifies Build 4.1.0.
+- Manual backup export identifies Build 4.2.0.
 - Migration repair runbook exists.
 - Pilot readiness notes exist.
 - `/admin/system` surfaces migration repair requirements.

@@ -1,0 +1,71 @@
+name: Build 4.2 CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality-and-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: ptt_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ptt_ci?schema=public
+      APP_SESSION_TOKEN: ci-session-token-12345
+      ADMIN_PASSWORD: ci-admin-password-12345
+      CRON_SECRET: ci-cron-secret-12345
+      NEXT_PUBLIC_APP_NAME: PTT Smokehouse Control
+      NODE_ENV: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable pnpm
+        run: corepack enable && corepack prepare pnpm@9.15.0 --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Prisma generate
+        run: pnpm run prisma:generate
+
+      - name: Type-check
+        run: pnpm run typecheck
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Forecast engine tests
+        run: pnpm run test:forecast
+
+      - name: Permission-boundary tests
+        run: pnpm run test:permissions
+
+      - name: Dead-code check
+        run: pnpm run test:dead-code
+
+      - name: Prepare throwaway Postgres schema
+        run: pnpm exec prisma db push --skip-generate
+
+      - name: Tenant isolation integration test
+        run: pnpm run test:tenant
+
+      - name: Prisma schema drift check
+        run: pnpm run ci:schema-drift

@@ -1,6 +1,6 @@
-# Build 4.1.0 Pilot Readiness Notes
+# Build 4.2.0 Pilot Readiness Notes
 
-Build 4.1.0 concentrates remaining pilot risk into a visible operating plan:
+Build 4.2.0 concentrates remaining pilot risk into a visible operating plan:
 
 - Migration repair runbook added.
 - System page now surfaces migration-repair requirements.

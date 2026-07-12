@@ -20,16 +20,6 @@ function signedNumberField(formData: FormData, key: string, fallback = 0, min = 
   return Math.min(max, Math.max(min, n));
 }
 
-// Build 2.2.0: cook-plan generation and EOD saving are API-only.
-// These legacy server-action names intentionally fail fast if accidentally wired again.
-export async function createCookPlan() {
-  throw new Error('Legacy createCookPlan server action is disabled. Use POST /api/cook-plan.');
-}
-
-export async function saveEndOfDayLog() {
-  throw new Error('Legacy saveEndOfDayLog server action is disabled. Use POST /api/end-of-day.');
-}
-
 export async function approveCookPlan(formData: FormData) {
   const user = await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   const restaurant = await currentRestaurantForUser(user);

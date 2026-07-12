@@ -161,7 +161,7 @@ export default async function LearningPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Learning & Adjustment Recommendations</h1>
-      <p className="mt-2 text-slate-600">Build 4.1.0 applies accepted recommendations safely: preview before/after, enforce sample-size rules, audit the setting change, and keep rollback available.</p>
+      <p className="mt-2 text-slate-600">Build 4.2.0 applies accepted recommendations safely: preview before/after, enforce sample-size rules, audit the setting change, and keep rollback available.</p>
     </div>
 
     <div className="grid gap-4 md:grid-cols-4">
