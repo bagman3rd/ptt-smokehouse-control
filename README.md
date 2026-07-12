@@ -1,6 +1,6 @@
-# Smokehouse Control — Build 6.2.0
+# Smokehouse Control — Build 6.2.1
 
-Build 6.2.0 is a reliability release focused on safer migrations, explicit smoker configuration, production-mode browser testing, mobile CI coverage, and a complete kitchen workflow regression test.
+Build 6.2.1 is a reliability release focused on safer migrations, explicit smoker configuration, production-mode browser testing, mobile CI coverage, and a complete kitchen workflow regression test.
 
 ## Fixes
 
@@ -17,7 +17,7 @@ Build 6.2.0 is a reliability release focused on safer migrations, explicit smoke
 Commit message:
 
 ```text
-Build 6.2.0 navigation dropdown and smoker form labels
+Build 6.2.1 navigation dropdown and smoker form labels
 ```
 
 Normal path:
