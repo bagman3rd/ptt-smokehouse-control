@@ -11,3 +11,25 @@ input, select, textarea { font-size: 16px; }
 .btn-secondary { @apply btn bg-white text-slate-900 border-slate-300 hover:bg-slate-50; }
 .field { @apply w-full rounded-xl border border-slate-300 bg-white px-3 py-3 outline-none focus:ring-2 focus:ring-slate-400; }
 .label { @apply text-sm font-semibold text-slate-700; }
+
+/* Build 4.4.0 kitchen mobile + print polish */
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .card { border-radius: 1rem; }
+  .field { min-height: 48px; font-size: 16px; }
+  .label { font-size: 12px; letter-spacing: .02em; }
+  table { font-size: 13px; }
+  h1 { line-height: 1.05; }
+  header nav a, header nav button, header nav select { min-height: 42px; }
+}
+
+@media print {
+  header, nav, .no-print, button, form[action="/api/logout"] { display: none !important; }
+  body { background: white !important; color: #000 !important; font-size: 16px; }
+  .card { box-shadow: none !important; border: 2px solid #111 !important; break-inside: avoid; }
+  table { page-break-inside: avoid; border-collapse: collapse !important; }
+  th, td { border: 1px solid #111 !important; padding: 8px !important; }
+  h1 { font-size: 28px !important; }
+  h2 { font-size: 20px !important; }
+  @page { size: letter; margin: .4in; }
+}

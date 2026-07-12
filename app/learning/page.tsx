@@ -105,11 +105,15 @@ export default async function LearningPage() {
       const actualDemandUnits = actualSoldUnits + (proteinLog.eightySixed ? Math.max(1, item.recommendedCookUnits * 0.08) : 0);
       const forecastUnits = item.forecastCookUnits || item.recommendedCookUnits || 0;
       const errorPct = forecastUnits > 0 ? ((actualDemandUnits - forecastUnits) / forecastUnits) * 100 : 0;
-      return [{ serviceDate: log.serviceDate, planDate: matchingPlanDate, forecastUnits, actualDemandUnits, errorPct, leftoverUnits: proteinLog.usableLeftoverUnits, wasteLb: proteinLog.wasteLb, soldLb: proteinLog.soldCookedLb, eightySixed: proteinLog.eightySixed }];
+      const daysOld = Math.floor((Date.now() - log.serviceDate.getTime()) / 86400000);
+      return [{ serviceDate: log.serviceDate, planDate: matchingPlanDate, forecastUnits, actualDemandUnits, errorPct, daysOld, leftoverUnits: proteinLog.usableLeftoverUnits, wasteLb: proteinLog.wasteLb, soldLb: proteinLog.soldCookedLb, eightySixed: proteinLog.eightySixed }];
     });
     const sampleCount = matchedRows.length;
     const minimum = 7;
     const avgErrorPct = sampleCount ? matchedRows.reduce((sum, row) => sum + row.errorPct, 0) / sampleCount : 0;
+    const trailing30Rows = matchedRows.filter((row) => row.daysOld <= 30);
+    const trailing30Mape = trailing30Rows.length ? trailing30Rows.reduce((sum, row) => sum + Math.abs(row.errorPct), 0) / trailing30Rows.length : 0;
+    const trailing30Accuracy = trailing30Rows.length ? clamp(100 - trailing30Mape, 0, 100) : 0;
     const avgForecastUnits = sampleCount ? matchedRows.reduce((sum, row) => sum + row.forecastUnits, 0) / sampleCount : 0;
     const avgActualDemandUnits = sampleCount ? matchedRows.reduce((sum, row) => sum + row.actualDemandUnits, 0) / sampleCount : 0;
     const avgLeftoverUnits = sampleCount ? matchedRows.reduce((sum, row) => sum + row.leftoverUnits, 0) / sampleCount : 0;
@@ -125,7 +129,7 @@ export default async function LearningPage() {
     const safetyAfter = primaryScenario ? proposedSafetyUpdate(primaryScenario, wastePct, selloutCount, avgErrorPct) : null;
     const afterScenario = beforeScenario ? { id: primaryScenario.id, ...(Math.abs(avgErrorPct) > 15 ? mixAfter : {}), ...(wastePct > 10 || selloutCount >= 2 ? safetyAfter : {}) } : null;
     const actionable = sampleCount >= minimum && primaryScenario && (Math.abs(avgErrorPct) > 15 || wastePct > 10 || selloutCount >= 2) && afterScenario;
-    return { protein, unit, sampleCount, minimum, avgErrorPct, avgForecastUnits, avgActualDemandUnits, avgLeftoverUnits, wastePct, selloutCount, action, confidence: conf, matchedRows, mixKey, beforeScenario, afterScenario, actionable };
+    return { protein, unit, sampleCount, minimum, avgErrorPct, trailing30Rows, trailing30Mape, trailing30Accuracy, avgForecastUnits, avgActualDemandUnits, avgLeftoverUnits, wastePct, selloutCount, action, confidence: conf, matchedRows, mixKey, beforeScenario, afterScenario, actionable };
   });
 
   const dayRows = Array.from({ length: 7 }, (_, day) => {
@@ -161,7 +165,7 @@ export default async function LearningPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Learning & Adjustment Recommendations</h1>
-      <p className="mt-2 text-slate-600">Build 4.3.3 applies accepted recommendations safely: preview before/after, enforce sample-size rules, audit the setting change, and keep rollback available.</p>
+      <p className="mt-2 text-slate-600">Build 4.4.0 adds visible trailing-30-day forecast accuracy proof points while keeping accepted learning changes controlled: preview before/after, enforce sample-size rules, audit the setting change, and keep rollback available.</p>
     </div>
 
     <div className="grid gap-4 md:grid-cols-4">
@@ -176,10 +180,9 @@ export default async function LearningPage() {
       <p className="mt-1 text-sm text-slate-600">Accuracy uses matched cook-plan vs EOD demand. Positive error means actual demand exceeded forecast; negative error means the forecast was high.</p>
       <div className="mt-4 overflow-x-auto">
         <table className="w-full min-w-[760px] text-left text-sm">
-          <thead className="bg-slate-50 text-slate-600"><tr><th className="p-3">Protein</th><th className="p-3">Samples</th><th className="p-3">Accuracy</th><th className="p-3">Bias</th><th className="p-3">Confidence</th><th className="p-3">Minimum</th></tr></thead>
+          <thead className="bg-slate-50 text-slate-600"><tr><th className="p-3">Protein</th><th className="p-3">Samples</th><th className="p-3">Trailing 30-Day MAPE</th><th className="p-3">Trailing 30-Day Accuracy</th><th className="p-3">Bias</th><th className="p-3">Confidence</th><th className="p-3">Minimum</th></tr></thead>
           <tbody>{proteinSummaries.map((row) => {
-            const accuracy = row.sampleCount ? Math.max(0, 100 - Math.abs(row.avgErrorPct)) : 0;
-            return <tr key={row.protein.id} className="border-t border-slate-100"><td className="p-3 font-black">{row.protein.name}</td><td className="p-3">{row.sampleCount}</td><td className="p-3 font-black">{row.sampleCount ? pct(accuracy) : '—'}</td><td className="p-3">{row.sampleCount ? accuracyLabel(row.avgErrorPct) : 'No data'}</td><td className="p-3 font-black">{row.confidence}</td><td className="p-3">{row.minimum} complete matches</td></tr>;
+            return <tr key={row.protein.id} className="border-t border-slate-100"><td className="p-3 font-black">{row.protein.name}</td><td className="p-3">{row.sampleCount}</td><td className="p-3 font-black">{row.trailing30Rows.length ? pct(row.trailing30Mape) : 'Need data'}</td><td className="p-3 font-black">{row.trailing30Rows.length ? pct(row.trailing30Accuracy) : 'Need data'}</td><td className="p-3">{row.sampleCount ? accuracyLabel(row.avgErrorPct) : 'No data'}</td><td className="p-3 font-black">{row.confidence}</td><td className="p-3">{row.minimum} complete matches</td></tr>;
           })}</tbody>
         </table>
       </div>

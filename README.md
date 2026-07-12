@@ -1,8 +1,15 @@
-# Smokehouse Control — Build 4.3.3
+# Smokehouse Control — Build 4.4.0
 
-Build 4.3.3 is the tenant-isolation and account-security hardening build. It adds Postgres-backed rate limiting, account lockout, session revocation, a Prisma tenant-guard extension, cross-tenant regression tests, and CI coverage for security boundaries.
+Build 4.4.0 is the operational-fit and commercial-readiness pass. It keeps the Build 4.3.x tenant/security hardening, adds visible trailing-30-day forecast accuracy metrics, EOD local draft recovery, kitchen/mobile/print polish, and starter legal/support/billing surfaces for a first paying-customer path.
 
-## What changed in 4.3.3
+## What changed in 4.4.0
+
+- Added trailing 30-day MAPE and accuracy by protein on Learning.
+- Added localStorage EOD draft recovery for bad Wi-Fi/failed submits.
+- Added mobile-width CSS pass and pit-friendly print CSS.
+- Added starter Terms, Privacy, Help, and Billing pages.
+- Added Stripe hosted-checkout handoff using `STRIPE_PAYMENT_LINK` or `STRIPE_CHECKOUT_URL`.
+- Added uptime monitoring and commercial readiness docs.
 
 - Added GitHub Actions CI: `.github/workflows/ci.yml`.
 - CI now runs type-check, lint, forecast tests, permission-boundary tests, dead-code checks, tenant isolation against a Postgres service container, and a Prisma schema drift check.
@@ -24,7 +31,7 @@ prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build
 
 ## Critical deployment warning
 
-Do not deploy Build 4.3.3 to the existing production Render service until the failed Prisma migration state has been repaired or baselined on a staging copy first.
+Do not deploy Build 4.4.0 to the existing production Render service until the failed Prisma migration state has been repaired or baselined on a staging copy first.
 
 The prior live database had a failed migration record. `prisma migrate deploy` will fail against that database until repaired. The correct sequence is:
 
@@ -45,7 +52,7 @@ pnpm run test:backup
 8. Record passing checks in `/admin/system`.
 9. Take a fresh production backup.
 10. Repair production during a low-traffic window.
-11. Deploy Build 4.3.3 to production.
+11. Deploy Build 4.4.0 to production.
 
 ## Required Render environment variables
 
@@ -79,7 +86,7 @@ Keep the external Render build command as:
 corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
 ```
 
-In Build 4.3.3, `pnpm run render-build` runs `prisma migrate deploy`.
+In Build 4.4.0, `pnpm run render-build` runs `prisma migrate deploy`.
 
 ## Test commands
 
@@ -96,7 +103,7 @@ pnpm run test:backup
 pnpm run backup:weekly
 ```
 
-`pnpm run build:eval` is a static project check and was run for Build 4.3.3.
+`pnpm run build:eval` is a static project check and was run for Build 4.4.0.
 
 `test:tenant`, `ci:schema-drift`, and `test:backup` require a live PostgreSQL `DATABASE_URL`. GitHub Actions supplies a throwaway Postgres service container for CI; staging still needs to be run separately before production.
 
@@ -117,4 +124,18 @@ pnpm run backup:weekly
 
 ## Remaining pre-pilot requirement
 
-Build 4.3.3 is intended to make the migration repair mandatory. The app is pilot-ready only after staging migration repair, tenant tests, backup tests, and a restore drill are completed and recorded.
+Build 4.4.0 is intended to make the migration repair mandatory. The app is pilot-ready only after staging migration repair, tenant tests, backup tests, and a restore drill are completed and recorded.
+
+## Build 4.4.0 Notes
+
+Build 4.4.0 focuses on operational fit and pre-commercial readiness:
+
+- Trailing 30-day forecast accuracy/MAPE by protein on Learning.
+- EOD local browser draft recovery for weak Wi-Fi/failed submits.
+- Mobile CSS pass for Today and EOD kitchen use.
+- Print CSS polish for pit-friendly Cook Plan print view.
+- Starter Terms, Privacy, Help, and Billing pages.
+- Stripe hosted-checkout handoff through `STRIPE_PAYMENT_LINK` or `STRIPE_CHECKOUT_URL`.
+- Uptime monitoring and support-channel docs.
+
+Before the first paying stranger: attorney-review Terms/Privacy, configure Stripe, set `NEXT_PUBLIC_SUPPORT_EMAIL`, enable uptime monitoring, and complete a restore drill.

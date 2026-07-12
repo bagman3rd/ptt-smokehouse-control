@@ -12,7 +12,7 @@ export default async function PosImportPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">POS / Sales Import</h1>
-      <p className="mt-2 text-slate-600">{restaurant.name} · Build 4.3.3 adds a first POS-ready CSV path. Toast API should come later; this closes the first onboarding friction point without locking us to one POS vendor.</p>
+      <p className="mt-2 text-slate-600">{restaurant.name} · Build 4.4.0 adds a first POS-ready CSV path. Toast API should come later; this closes the first onboarding friction point without locking us to one POS vendor.</p>
     </div>
     <section className="card p-5">
       <h2 className="text-xl font-black">Sales History CSV</h2>

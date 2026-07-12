@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 type Protein = { id: string; name: string; inputUnit: string };
 
@@ -54,6 +54,7 @@ function rawFromForm(formData: FormData, key: string) {
 }
 
 export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; initialLog?: InitialLog }) {
+  const formRef = useRef<HTMLFormElement | null>(null);
   const [serviceDate, setServiceDate] = useState(initialLog?.serviceDate || today());
   const [status, setStatus] = useState(initialLog?.status || 'DRAFT');
   const [lockLog, setLockLog] = useState(false);
@@ -61,9 +62,43 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
+  const draftKey = useMemo(() => `ptt-eod-draft-${serviceDate || today()}`, [serviceDate]);
   const dateLabel = useMemo(() => formatDateWithDow(serviceDate), [serviceDate]);
   const isLocked = Boolean(initialLog?.lockedAt) || initialLog?.status === 'LOCKED';
   const logByProteinId = useMemo(() => new Map((initialLog?.proteinLogs || []).map((log) => [log.proteinId, log])), [initialLog]);
+
+
+
+  function persistDraft(form: HTMLFormElement) {
+    if (typeof window === 'undefined' || isLocked) return;
+    const formData = new FormData(form);
+    const draft: Record<string, string | boolean> = { serviceDate, status, lockLog };
+    formData.forEach((value, key) => { draft[key] = String(value); });
+    for (const input of Array.from(form.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[]) {
+      if (input.name) draft[input.name] = input.checked;
+    }
+    window.localStorage.setItem(draftKey, JSON.stringify(draft));
+  }
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || isLocked || initialLog) return;
+    const raw = window.localStorage.getItem(draftKey);
+    if (!raw || !formRef.current) return;
+    try {
+      const draft = JSON.parse(raw) as Record<string, string | boolean>;
+      for (const [key, value] of Object.entries(draft)) {
+        if (key === 'serviceDate' && typeof value === 'string') setServiceDate(value);
+        if (key === 'status' && typeof value === 'string') setStatus(value);
+        const field = formRef.current.elements.namedItem(key);
+        if (!field) continue;
+        if (field instanceof HTMLInputElement && field.type === 'checkbox') field.checked = Boolean(value);
+        else if (field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement) field.value = String(value);
+      }
+      setMessage('Recovered an unsaved local draft from this device. Review values before saving.');
+    } catch {
+      window.localStorage.removeItem(draftKey);
+    }
+  }, [draftKey, initialLog, isLocked]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -147,6 +182,7 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || data.ok === false) throw new Error(data.message || `Save failed with status ${response.status}`);
+      if (typeof window !== 'undefined') window.localStorage.removeItem(draftKey);
       setMessage(`Saved ${selectedStatus} end-of-day log for ${formatDateWithDow(serviceDate)}. Loading saved values...`);
       window.location.assign(data.redirectUrl || `/end-of-day?serviceDate=${encodeURIComponent(serviceDate)}&savedAt=${Date.now()}`);
     } catch (err) {
@@ -158,7 +194,7 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form ref={formRef} onSubmit={handleSubmit} onChange={(event) => persistDraft(event.currentTarget)} className="space-y-6">
       <section className="card p-5">
         <h2 className="text-xl font-black">Guided Closeout Workflow</h2>
         <div className="mt-4 grid gap-3 md:grid-cols-5">
@@ -175,14 +211,14 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
         <div className="mt-4 grid gap-4 md:grid-cols-5">
           <div>
             <label className="label">Service Date</label>
-            <input className="field mt-1" type="date" value={serviceDate} onChange={(event) => setServiceDate(event.target.value)} required disabled={isLocked} />
+            <input className="field mt-1" type="date" value={serviceDate} onChange={(event) => { setServiceDate(event.target.value); if (formRef.current) persistDraft(formRef.current); }} required disabled={isLocked} />
             <div className="mt-1 text-xs font-bold text-slate-500">{dateLabel}</div>
           </div>
           <div><label className="label">Total Sales</label><input className="field mt-1" type="number" step="1" name="totalSales" defaultValue={initialLog?.totalSales ?? ''} placeholder="0" disabled={isLocked} /></div>
           <div><label className="label">Smoked Meat Sales</label><input className="field mt-1" type="number" step="1" name="bbqSales" defaultValue={initialLog?.bbqSales ?? ''} placeholder="0" disabled={isLocked} /></div>
           <div>
             <label className="label">EOD Status</label>
-            <select className="field mt-1" name="status" value={status} onChange={(event) => setStatus(event.target.value)} disabled={isLocked}>
+            <select className="field mt-1" name="status" value={status} onChange={(event) => { setStatus(event.target.value); if (formRef.current) persistDraft(formRef.current); }} disabled={isLocked}>
               <option value="DRAFT">Draft</option>
               <option value="COMPLETE">Complete</option>
               <option value="REVIEWED">Manager Reviewed</option>
@@ -191,7 +227,7 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
           <div><label className="label">Notes</label><input className="field mt-1" name="notes" defaultValue={initialLog?.notes ?? ''} placeholder="Weather, events, service issues" disabled={isLocked} /></div>
         </div>
         <label className="mt-4 flex items-center gap-2 text-sm font-black text-slate-700">
-          <input type="checkbox" className="h-5 w-5" checked={lockLog} onChange={(event) => setLockLog(event.target.checked)} disabled={isLocked} />
+          <input type="checkbox" className="h-5 w-5" checked={lockLog} onChange={(event) => { setLockLog(event.target.checked); if (formRef.current) persistDraft(formRef.current); }} disabled={isLocked} />
           Lock EOD log after saving. Use only after review; locked logs cannot be edited from the app.
         </label>
       </section>

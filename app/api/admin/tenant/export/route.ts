@@ -31,6 +31,6 @@ export async function GET(request: Request) {
   ]);
   await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'EXPORT_TENANT_DATA', entity: 'Restaurant', entityId: restaurantId, afterJson: { counts: { users: users.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length, systemChecks: systemChecks.length } } });
   const exportedAt = new Date().toISOString();
-  const body = JSON.stringify({ app: 'Smokehouse Control', build: '4.3.3', exportedAt, restaurant, memberships, users, proteins, scenarios, dayMultipliers: days, monthMultipliers: months, cookPlans, endOfDayLogs: eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks }, null, 2);
+  const body = JSON.stringify({ app: 'Smokehouse Control', build: '4.4.0', exportedAt, restaurant, memberships, users, proteins, scenarios, dayMultipliers: days, monthMultipliers: months, cookPlans, endOfDayLogs: eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks }, null, 2);
   return new NextResponse(body, { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Content-Disposition': `attachment; filename="tenant-export-${restaurant.slug || restaurant.id}-${exportedAt.slice(0,10)}.json"` } });
 }

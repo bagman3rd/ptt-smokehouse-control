@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 
   const body = JSON.stringify({
     app: 'PTT Smokehouse Control',
-    build: '4.3.3',
+    build: '4.4.0',
     restaurant,
     exportedAt,
     counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length, systemChecks: systemChecks.length },
