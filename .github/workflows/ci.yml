@@ -1,4 +1,4 @@
-name: Build 6.3.2 CI
+name: Build 6.3.3 CI
 
 on:
   push:
@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 6.3.2 CI / quality-and-tests
+    name: Build 6.3.3 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
     services:

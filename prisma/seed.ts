@@ -7,12 +7,9 @@ async function main() {
   await ensureSmokerCatalog(prisma);
   const restaurant = await prisma.restaurant.findFirst({ where: { slug: 'pigeon-toed-tavern' } }) || await prisma.restaurant.create({ data: { name: 'Pigeon Toed Tavern', slug: 'pigeon-toed-tavern', city: 'Pigeon Forge', state: 'TN', timezone: 'America/New_York' } });
   const restaurantId = restaurant.id;
-  await prisma.protein.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   await prisma.forecastScenario.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   await prisma.dayMultiplier.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   await prisma.monthMultiplier.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
-  await prisma.cookPlan.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
-  await prisma.endOfDayLog.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   await prisma.user.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   await prisma.eventModifier.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   const adminPassword = process.env.ADMIN_PASSWORD;

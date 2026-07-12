@@ -11,13 +11,11 @@ export async function ensureDefaultData(prisma: any) {
   const restaurant = await ensureDefaultRestaurant();
   const restaurantId = restaurant.id;
 
-  // Attach legacy single-tenant records to the default restaurant so the app is tenant-scoped after upgrade.
-  await prisma.protein.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
+  // Backfill only models that still permit legacy null tenant ownership.
+  // Core operating models were made non-null by the Build 6.3.0 migration.
   await prisma.forecastScenario.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   await prisma.dayMultiplier.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   await prisma.monthMultiplier.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
-  await prisma.cookPlan.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
-  await prisma.endOfDayLog.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   await prisma.savedReport.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   await prisma.reportRun.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
   await prisma.eventModifier.updateMany({ where: { restaurantId: null }, data: { restaurantId } });

@@ -1,33 +1,26 @@
 #!/usr/bin/env node
 /*
-  Fails if tenant-scoped operating records exist without restaurantId.
-  Run against staging/CI before adding external customers.
+  Fails if tenant-scoped records exist without restaurantId.
+  Uses SQL so the check remains valid after Prisma marks core tenant fields non-null.
 */
 import assert from 'node:assert/strict';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function countOrphans(modelName, delegate) {
-  const count = await delegate.count({ where: { restaurantId: null } });
-  assert.equal(count, 0, `${modelName} has ${count} orphan records with restaurantId=null`);
-}
+const tables = [
+  'Protein', 'ForecastScenario', 'DayMultiplier', 'MonthMultiplier',
+  'CookPlan', 'CookPlanItem', 'EndOfDayLog', 'EndOfDayProteinLog',
+  'SavedReport', 'ReportRun', 'Smoker', 'LearningRecommendation', 'SystemCheck', 'AuditLog'
+];
 
 async function main() {
-  await countOrphans('Protein', prisma.protein);
-  await countOrphans('ForecastScenario', prisma.forecastScenario);
-  await countOrphans('DayMultiplier', prisma.dayMultiplier);
-  await countOrphans('MonthMultiplier', prisma.monthMultiplier);
-  await countOrphans('CookPlan', prisma.cookPlan);
-  await countOrphans('CookPlanItem', prisma.cookPlanItem);
-  await countOrphans('EndOfDayLog', prisma.endOfDayLog);
-  await countOrphans('EndOfDayProteinLog', prisma.endOfDayProteinLog);
-  await countOrphans('SavedReport', prisma.savedReport);
-  await countOrphans('ReportRun', prisma.reportRun);
-  await countOrphans('Smoker', prisma.smoker);
-  await countOrphans('LearningRecommendation', prisma.learningRecommendation);
-  await countOrphans('SystemCheck', prisma.systemCheck);
-  console.log('Build 4.7.0 orphan record check completed. No tenant-scoped orphan records found.');
+  for (const table of tables) {
+    const rows = await prisma.$queryRawUnsafe(`SELECT COUNT(*)::int AS count FROM "${table}" WHERE "restaurantId" IS NULL`);
+    const count = Number(rows[0]?.count ?? 0);
+    assert.equal(count, 0, `${table} has ${count} orphan records with restaurantId=null`);
+  }
+  console.log('Build 6.3.3 orphan record check completed. No tenant-scoped orphan records found.');
 }
 
 main().finally(() => prisma.$disconnect()).catch(async (error) => {
