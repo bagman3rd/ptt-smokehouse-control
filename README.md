@@ -1,10 +1,10 @@
-# Smokehouse Control — Build 3.6.0
+# Smokehouse Control — Build 3.7.0
 
-Build 3.6.0 is a cleanup and operational-hardening build after the 3.4.1 deploy-recovery release.
+Build 3.7.0 is a cleanup and operational-hardening build after the 3.4.1 deploy-recovery release.
 
-## What changed in 3.6.0
+## What changed in 3.7.0
 
-- Fixed the README/package.json mismatch. The package version, README, nav badge, backup export metadata, and evaluation script now all agree on Build 3.6.0.
+- Fixed the README/package.json mismatch. The package version, README, nav badge, backup export metadata, and evaluation script now all agree on Build 3.7.0.
 - Kept the Render deploy-recovery path using `prisma db push` because the active Render database has a failed migration record. Do not switch production back to `prisma migrate deploy` until the database is repaired/baselined on staging.
 - Removed the unused tenant helper functions `tenantWhere()` and `tenantOrLegacyWhere()` from `lib/tenant.ts`. The app now has one clear tenant-scoping pattern: explicit `restaurantId` filtering tied to the active restaurant context.
 - Added an operational note for the in-memory rate limiter. It is acceptable for one Render instance, but a Redis-backed limiter should replace it before horizontal scaling.
@@ -79,7 +79,7 @@ pnpm run test:tenant
 pnpm run test:backup
 ```
 
-`pnpm run build:eval` is a static project check and was run for Build 3.6.0.
+`pnpm run build:eval` is a static project check and was run for Build 3.7.0.
 
 `pnpm run test:tenant` and `pnpm run test:backup` require a live staging PostgreSQL `DATABASE_URL`. Run both before adding a real second customer.
 
@@ -91,7 +91,7 @@ pnpm run test:backup
 - Keep billing/Stripe deferred until there is a real paying prospect ready to onboard.
 
 
-## Build 3.6.0
+## Build 3.7.0
 
 Pilot Control Center release:
 
@@ -101,3 +101,14 @@ Pilot Control Center release:
 - Added Learning recommendation review queue with accept/reject decisions.
 - Expanded audit logging for settings changes and learning decisions.
 - Kept Render on `prisma db push` recovery mode; do not switch back to `migrate deploy` until staging migration baseline is complete.
+
+
+## Build 3.7.0 Notes
+
+Build 3.7.0 adds controlled learning updates:
+
+- Accepted learning recommendations can update settings after Admin/Owner confirmation.
+- The Learning page now shows before/after previews, confidence levels, minimum sample-size thresholds, forecast accuracy, and rollback controls.
+- Applied recommendation decisions are audit logged with before/after values.
+- Cook Plan creation now shows smoker-capacity warnings before the plan is generated.
+- The build remains in db-push recovery mode until migration baselining is repaired on staging.

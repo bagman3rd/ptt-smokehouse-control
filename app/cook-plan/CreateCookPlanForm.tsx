@@ -38,6 +38,8 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
   const [lastResult, setLastResult] = useState<any>(null);
   const [eodStatus, setEodStatus] = useState<any>(null);
   const [eodStatusLoading, setEodStatusLoading] = useState(false);
+  const [capacityPreview, setCapacityPreview] = useState<any>(null);
+  const [capacityLoading, setCapacityLoading] = useState(false);
 
   const selectedScenario = useMemo(() => scenarios.find((scenario) => scenario.id === scenarioId), [scenarios, scenarioId]);
   const selectedDayPattern = useMemo(() => dayPatternProfiles.find((profile) => profile.key === dayPatternKey) ?? dayPatternProfiles[0], [dayPatternKey]);
@@ -65,6 +67,26 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
     loadStatus();
     return () => { cancelled = true; };
   }, [serviceDate]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadCapacityPreview() {
+      if (!serviceDate || !scenarioId) return;
+      setCapacityLoading(true);
+      try {
+        const params = new URLSearchParams({ loadDate: serviceDate, scenarioId, eventMultiplier, dayPatternKey });
+        const response = await fetch(`/api/cook-plan/capacity-preview?${params.toString()}`, { cache: 'no-store' });
+        const data = await response.json().catch(() => ({}));
+        if (!cancelled) setCapacityPreview(data);
+      } catch (err) {
+        if (!cancelled) setCapacityPreview({ ok: false, message: 'Could not check smoker capacity preview.' });
+      } finally {
+        if (!cancelled) setCapacityLoading(false);
+      }
+    }
+    loadCapacityPreview();
+    return () => { cancelled = true; };
+  }, [serviceDate, scenarioId, eventMultiplier, dayPatternKey]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -133,6 +155,15 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
           </div>
           {eodStatus?.status === 'FOUND' ? <div className="mt-1 text-xs font-bold">Leftover units: {Math.round(eodStatus.totalLeftoverUnits || 0)} · Waste: {Math.round(eodStatus.totalWasteLb || 0)} lb · Source: {eodStatus.priorEodDateLabel}</div> : null}
           {eodStatus?.status !== 'FOUND' ? <div className="mt-1 text-xs font-bold">Generate can continue, but the Cook Plan will require a manual hot-box check and will show missing prior EOD credit.</div> : null}
+        </div>
+      </div>
+
+      <div className="md:col-span-5">
+        <div className={capacityPreview?.warnings?.length ? 'rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-950' : 'rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700'}>
+          <div className="font-black">Smoker capacity preview before Generate Plan</div>
+          <div className="mt-1">{capacityLoading ? 'Checking active smoker capacity...' : capacityPreview?.warnings?.length ? 'Capacity warnings found. Review before generating.' : 'No capacity conflicts found from active smoker records.'}</div>
+          {capacityPreview?.warnings?.length ? <ul className="mt-2 list-disc pl-5 font-bold">{capacityPreview.warnings.map((warning: string) => <li key={warning}>{warning}</li>)}</ul> : null}
+          {capacityPreview?.items?.length ? <div className="mt-2 grid gap-1 text-xs md:grid-cols-2">{capacityPreview.items.map((item: any) => <div key={item.protein}>{item.protein}: projected {item.projectedUnits} / capacity {item.activeCapacity || 'not set'}</div>)}</div> : null}
         </div>
       </div>
 
