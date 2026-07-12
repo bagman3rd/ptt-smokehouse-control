@@ -5,7 +5,7 @@ export default async function BillingPage() {
   await requireRole(['ADMIN', 'OWNER']);
   const configured = Boolean(process.env.STRIPE_PAYMENT_LINK || process.env.STRIPE_CHECKOUT_URL);
   return <Shell>
-    <div className="mb-6"><h1 className="text-3xl font-black tracking-tight">Billing</h1><p className="mt-2 text-slate-600">Build 4.5.0 adds a lightweight Stripe-payment-link path for trial/subscription onboarding. Use Stripe-hosted checkout until full API billing is needed.</p></div>
+    <div className="mb-6"><h1 className="text-3xl font-black tracking-tight">Billing</h1><p className="mt-2 text-slate-600">Build 4.6.0 adds a lightweight Stripe-payment-link path for trial/subscription onboarding. Use Stripe-hosted checkout until full API billing is needed.</p></div>
     <section className="card p-5">
       <h2 className="text-xl font-black">Subscription status</h2>
       <p className="mt-2 text-sm text-slate-600">Stripe configured: <strong>{configured ? 'Yes' : 'No'}</strong></p>

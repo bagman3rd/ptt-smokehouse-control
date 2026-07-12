@@ -1,14 +1,14 @@
-# TEST REPORT — Build 4.5.0
+# TEST REPORT — Build 4.6.0
 
 ## Scope
 
-Build 4.5.0 focuses on deploy stability, TypeScript cleanup discipline, preflight checks, and CI enforcement.
+Build 4.6.0 focuses on deploy stability, TypeScript cleanup discipline, preflight checks, and CI enforcement.
 
 ## Static checks performed in this environment
 
-- Verified package version is `4.5.0`.
-- Verified nav badge shows `Build 4.5.0`.
-- Verified README references Build 4.5.0.
+- Verified package version is `4.6.0`.
+- Verified nav badge shows `Build 4.6.0`.
+- Verified README references Build 4.6.0.
 - Added `scripts/preflight-build-check.mjs`.
 - Added `pnpm run preflight`.
 - Updated GitHub Actions to run preflight before typecheck/lint/tests.
@@ -32,7 +32,7 @@ pnpm run ci:schema-drift
 
 ## Expected CI behavior
 
-After pushing Build 4.5.0 to GitHub, the Actions tab should run:
+After pushing Build 4.6.0 to GitHub, the Actions tab should run:
 
 - preflight
 - typecheck

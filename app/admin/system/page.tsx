@@ -43,19 +43,19 @@ export default async function SystemPage() {
 
     <div className="rounded-2xl border border-amber-300 bg-amber-50 p-5 text-amber-900">
       <div className="text-lg font-black">Pilot Mode Warning</div>
-      <p className="mt-1 text-sm">This deployment is configured for <strong>{migrationMode}</strong>. Deploy Build 4.5.0 to production only after the failed migration state is repaired/baselined on staging and the staging checks pass.</p>
+      <p className="mt-1 text-sm">This deployment is configured for <strong>{migrationMode}</strong>. Build 4.6.0 is the staging-verification build: record proof that tenant, cross-tenant, forecast, backup, restore, and migration checks passed against a real staging database before relying on outside-customer data.</p>
     </div>
 
 
     <section className="mt-6 grid gap-4 lg:grid-cols-3">
       <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-900">
         <div className="text-lg font-black">Migration Repair Gate</div>
-        <p className="mt-2 text-sm">The previous live database had a failed Prisma migration record. Build 4.5.0 makes migrate deploy the active path; use the runbook on staging before production deployment.</p>
-        <div className="mt-3 rounded-xl bg-white/70 p-3 font-mono text-xs">MIGRATION_REPAIR_RUNBOOK_BUILD_4_3_1.md</div>
+        <p className="mt-2 text-sm">The production migration baseline has been repaired. Build 4.6.0 keeps migrate deploy active and requires proof checks against staging so future schema changes are tested before production.</p>
+        <div className="mt-3 rounded-xl bg-white/70 p-3 font-mono text-xs">STAGING_VERIFICATION_BUILD_4_6_0.md</div>
       </div>
       <div className="rounded-2xl border border-slate-200 bg-white p-5">
         <div className="text-lg font-black">Scheduled Backup Readiness</div>
-        <p className="mt-2 text-sm text-slate-600">Build 4.5.0 includes a weekly backup endpoint plus a cron runner script. Configure CRON_SECRET and BACKUP_APP_URL for scheduled backups.</p>
+        <p className="mt-2 text-sm text-slate-600">Build 4.6.0 keeps weekly backup support and adds explicit staging verification tracking. Configure CRON_SECRET and BACKUP_APP_URL for scheduled backups, then run restore drills against staging.</p>
         <div className={cronReady ? 'mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800' : 'mt-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm font-bold text-amber-800'}>
           CRON_SECRET: {cronReady ? 'configured' : 'missing or too short'}
         </div>
@@ -101,15 +101,16 @@ export default async function SystemPage() {
       <p className="mt-2 text-sm text-slate-600">Record staging checks here after running them against a real staging database. This is intentionally separate from the local static build evaluation.</p>
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         {[
-          ['TENANT_ISOLATION_TEST', 'Tenant isolation test', 'DATABASE_URL=... pnpm run test:tenant'],
-          ['BACKUP_EXPORT_TEST', 'Backup export test', 'DATABASE_URL=... pnpm run test:backup'],
-          ['FORECAST_ENGINE_TEST', 'Forecast engine test', 'pnpm run test:forecast'],
-          ['RESTORE_DRILL', 'Backup restore drill', 'Restore backup into staging and verify counts'],
-          ['MIGRATION_BASELINE_REVIEW', 'Migration baseline review', 'Confirm failed migration state is repaired/baselined on staging'],
-          ['SECURITY_REVIEW', 'Security review', 'Review auth, rate limits, roles, and tenant scoping'],
+          ['STAGING_MIGRATION_STATUS', 'Staging migration status', 'DATABASE_URL=staging npx prisma migrate status'],
+          ['STAGING_TENANT_TEST', 'Staging tenant isolation test', 'DATABASE_URL=staging pnpm run test:tenant'],
+          ['STAGING_CROSS_TENANT_TEST', 'Staging cross-tenant test', 'DATABASE_URL=staging pnpm run test:cross-tenant'],
+          ['STAGING_FORECAST_TEST', 'Staging forecast test', 'pnpm run test:forecast'],
+          ['STAGING_BACKUP_TEST', 'Staging backup export test', 'DATABASE_URL=staging pnpm run test:backup'],
+          ['STAGING_CLICK_TEST', 'Staging app click-through', '/today, /dashboard, /cook-plan, /end-of-day, /reports, /learning, /admin/system'],
+          ['STAGING_RESTORE_DRILL', 'Staging restore drill', 'Restore backup into staging and verify app boots and counts match'],
+          ['PRODUCTION_MIGRATION_STATUS', 'Production migration status', 'Production npx prisma migrate status reports up to date'],
           ['WEEKLY_BACKUP_EXPORT', 'Weekly backup export', 'Render Cron calls /api/admin/backups/weekly with CRON_SECRET'],
-          ['PRODUCTION_MIGRATION_REPAIR', 'Production migration repair', 'Run the same passing staging repair path on production after a fresh backup'],
-          ['MIGRATION_REPAIR_RUNBOOK', 'Migration repair runbook rehearsal', 'Run Build 4.5.0 migration repair runbook against staging']
+          ['SECURITY_REVIEW', 'Security review', 'Review auth, rate limits, roles, tenant scoping, and session revocation']
         ].map(([type, label, hint]) => (
           <form key={type} action={recordSystemCheck} className="rounded-2xl border border-slate-200 p-4">
             <input type="hidden" name="type" value={type} />
@@ -148,7 +149,7 @@ export default async function SystemPage() {
         <div>DATABASE_URL=&quot;postgres://...staging...&quot; pnpm run test:backup</div>
         <div>pnpm run test:forecast</div>
       </div>
-      <p className="mt-3 text-sm text-slate-600">The scripts exist in the repo. This page intentionally does not claim they passed until they are run against a real staging PostgreSQL database.</p>
+      <p className="mt-3 text-sm text-slate-600">The scripts exist in the repo. This page intentionally does not claim they passed until they are run against a real staging PostgreSQL database and recorded as SystemChecks.</p>
     </section>
 
 
@@ -170,12 +171,12 @@ export default async function SystemPage() {
         <li>Export production tenant JSON and create a Render database backup.</li>
         <li>Restore/copy production data into staging.</li>
         <li>Run <code>pnpm prisma migrate status</code> against staging.</li>
-        <li>Resolve or baseline the failed migration on staging only.</li>
-        <li>Run tenant, backup, and forecast tests against staging.</li>
-        <li>Deploy staging with <code>prisma migrate deploy</code>.</li>
-        <li>Only then schedule production migration repair.</li>
+        <li>Run <code>npx prisma migrate status</code> against staging.</li>
+        <li>Run tenant, cross-tenant, backup, permissions, and forecast tests against staging.</li>
+        <li>Click-test the app against staging data.</li>
+        <li>Record each passing result as a SystemCheck.</li>
       </ol>
-      <p className="mt-3 text-sm font-bold text-red-700">Do not deploy Build 4.5.0 to production until the staging rehearsal passes and is recorded above.</p>
+      <p className="mt-3 text-sm font-bold text-red-700">Do not onboard outside customers until staging tenant, backup, restore, forecast, and migration checks are recorded as passing.</p>
     </section>
 
     <section className="card mt-6 p-5">

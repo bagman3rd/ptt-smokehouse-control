@@ -1,85 +1,69 @@
-# Smokehouse Control — Build 4.5.0
+# Smokehouse Control — Build 4.6.0
 
-Build 4.5.0 is the deploy-stability and TypeScript-cleanup build. Its purpose is to stop surprise Render compile failures by making type-check, lint, preflight, CI, and version consistency mandatory before shipping a ZIP.
+Build 4.6.0 is the staging verification and database-integrity build.
 
-## What changed in 4.5.0
+The main purpose is to close the gap between:
 
-- Added `scripts/preflight-build-check.mjs`.
-- Added `pnpm run preflight` package script.
-- Updated GitHub Actions to run preflight before type-check/lint/tests.
-- Confirmed `render-build` uses `prisma migrate deploy`, not `prisma db push`.
-- Confirmed package scripts do not use `--accept-data-loss`.
-- Updated package version, nav badge, docs, and build evaluation to Build 4.5.0.
-- Preserved prior operational-fit functionality: mobile/kitchen pass, local EOD draft save, print polish, billing/legal/help pages, forecast proof metrics, and commercial-readiness scaffolding.
-- Preserved Build 4.3.x hardening: tenant guard, cross-tenant tests, Postgres-backed rate limiting, account lockout, and session revocation.
-
-## Required deploy flow
-
-Normal build/deploy path:
-
-1. Download ZIP from ChatGPT.
-2. Extract ZIP.
-3. Copy all files from the ZIP root.
-4. Paste into the local `ptt-smokehouse-control` repo folder.
-5. Replace files.
-6. Open GitHub Desktop.
-7. Commit to `main`.
-8. Push origin.
-9. Confirm GitHub Actions starts.
-10. Confirm CI passes or send the red-X error back for repair.
-11. Render → Manual Deploy → Clear build cache & deploy.
-
-Do not use Render Shell for normal builds. Shell is only for emergency database commands or migration repair.
-
-## Build checks
-
-Package scripts include:
-
-```bash
-pnpm run preflight
-pnpm run typecheck
-pnpm run lint
-pnpm run build
-pnpm run test:forecast
-pnpm run test:permissions
-pnpm run test:account-security
-pnpm run test:tenant
-pnpm run test:cross-tenant
-pnpm run ci:schema-drift
+```text
+The test exists.
 ```
 
-GitHub Actions runs the important checks on every push / pull request using a Postgres service container.
+and:
 
-## Render build command
-
-Use the same Render build command:
-
-```bash
-corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
+```text
+The test passed against a real staging PostgreSQL database and was recorded.
 ```
 
-`pnpm run render-build` runs:
+## What changed in 4.6.0
+
+- Added `STAGING_VERIFICATION_BUILD_4_6_0.md`.
+- Added `DATABASE_INTEGRITY_RUNBOOK_BUILD_4_6_0.md`.
+- Added `scripts/staging-verification-check.mjs`.
+- Added package script `pnpm run staging:verify`.
+- Updated `/admin/system` with staging proof checks:
+  - Staging migration status
+  - Staging tenant isolation test
+  - Staging cross-tenant regression test
+  - Staging forecast test
+  - Staging backup export test
+  - Staging app click-through
+  - Staging restore drill
+  - Production migration status
+- Kept Render on the correct long-term build path:
 
 ```bash
 prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build
 ```
 
-It does not use `prisma db push` and does not use `--accept-data-loss`.
+- Confirmed the app must not use:
 
-## Important production database note
+```bash
+prisma db push
+--accept-data-loss
+```
 
-The production database migration baseline was manually repaired after the failed legacy Prisma migration record. Before relying on this for live pilot operations, verify in Render Shell:
+## Standard deploy command on Render
+
+```bash
+corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
+```
+
+## Required staging commands before outside customers
+
+Run these against a real staging database:
 
 ```bash
 npx prisma migrate status
+pnpm run test:tenant
+pnpm run test:cross-tenant
+pnpm run test:forecast
+pnpm run test:backup
+pnpm run test:permissions
+pnpm run staging:verify
 ```
 
-Expected result:
+Then record the results in `/admin/system`.
 
-```text
-Database schema is up to date!
-```
+## Important note
 
-## Build 4.5.0 notes
-
-This build is about discipline, not new BBQ features. The BBQ logic, reporting, learning, EOD workflow, smoker capacity, and commercial-readiness pages are preserved from earlier builds. The improvement is that future builds should fail earlier in CI/preflight instead of surprising you during Render deployment.
+Build 4.6.0 does not claim staging has passed. It gives you the controls and documentation to run and record those checks.

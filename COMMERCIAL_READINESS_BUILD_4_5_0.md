@@ -1,4 +1,4 @@
-# Build 4.5.0 Commercial Readiness Notes
+# Build 4.6.0 Commercial Readiness Notes
 
 ## Domain proof requirement
 The forecast engine is now in "hold and prove" mode. The app exposes trailing 30-day MAPE by protein, but true domain validation requires 60-90 days of live PTT data.

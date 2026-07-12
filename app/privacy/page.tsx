@@ -1,7 +1,7 @@
 export default function PrivacyPage() {
   return <main className="mx-auto max-w-4xl px-4 py-10">
     <h1 className="text-3xl font-black tracking-tight">Privacy Policy</h1>
-    <p className="mt-3 text-slate-600">Build 4.5.0 starter privacy policy for pilot/commercial review. Have local counsel review before selling to unrelated restaurants.</p>
+    <p className="mt-3 text-slate-600">Build 4.6.0 starter privacy policy for pilot/commercial review. Have local counsel review before selling to unrelated restaurants.</p>
     <section className="card mt-6 p-6 space-y-4 text-sm leading-6 text-slate-700">
       <p><strong>Data collected.</strong> The app stores restaurant profile data, user accounts, cook plans, end-of-day logs, waste data, reports, audit events, support/admin metadata, and optional imported sales-history data.</p>
       <p><strong>Use of data.</strong> Data is used to operate the service, generate forecasts/reports, provide support, improve recommendations, and maintain security/audit history.</p>

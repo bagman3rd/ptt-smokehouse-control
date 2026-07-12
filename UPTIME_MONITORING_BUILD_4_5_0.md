@@ -1,4 +1,4 @@
-# Uptime Monitoring - Build 4.5.0
+# Uptime Monitoring - Build 4.6.0
 
 Use UptimeRobot, Better Stack, or Render alerts before the first paying customer.
 
