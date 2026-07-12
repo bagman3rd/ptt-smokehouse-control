@@ -25,13 +25,13 @@ export default async function SmokerCatalogPage() {
   const brands = Array.from(new Set(catalog.map((item) => item.brand))).sort();
   const official = catalog.filter((item) => item.sourceConfidence === 'OFFICIAL').length;
   const researched = catalog.filter((item) => item.sourceConfidence === 'RESEARCHED').length;
-  const estimated = catalog.filter((item) => item.sourceConfidence === 'ESTIMATED').length;
+  const estimated = catalog.filter((item) => item.sourceConfidence === 'OFFICIAL_PARTIAL').length;
 
   return <Shell>
     <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div>
         <h1 className="text-3xl font-black tracking-tight">Commercial Smoker Catalog</h1>
-        <p className="mt-2 text-slate-600">Build 5.5.0 preload table for Ole Hickory, Southern Pride, J&amp;R Manufacturing, Cookshack, and M&amp;M BBQ Company. Use this as a planning baseline, then verify exact rack package and model-year spec before purchase.</p>
+        <p className="mt-2 text-slate-600">Build 5.7.0 preload table for Ole Hickory, Southern Pride, J&amp;R Manufacturing, Cookshack, and M&amp;M BBQ Company. Use this as a planning baseline, then verify exact rack package and model-year spec before purchase.</p>
       </div>
       <Link href="/admin/smokers" className="rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white">Add Smoker</Link>
     </div>
@@ -41,7 +41,7 @@ export default async function SmokerCatalogPage() {
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">Brands</div><div className="mt-2 text-3xl font-black">{brands.length}</div></div>
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">Official</div><div className="mt-2 text-3xl font-black">{official}</div></div>
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">Researched</div><div className="mt-2 text-3xl font-black">{researched}</div></div>
-      <div className="card p-5"><div className="text-sm font-bold text-slate-500">Estimated</div><div className="mt-2 text-3xl font-black">{estimated}</div></div>
+      <div className="card p-5"><div className="text-sm font-bold text-slate-500">Official partial</div><div className="mt-2 text-3xl font-black">{estimated}</div></div>
     </section>
 
     {brands.map((brand) => <section key={brand} className="card mt-6 p-5">

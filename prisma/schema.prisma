@@ -364,14 +364,14 @@ model SmokerCatalog {
   series          String?
   smokerType      String
   fuelType        String
-  rackCount       Int      @default(0)
+  rackCount       Int?
   rackWidthIn     Float?
   rackDepthIn     Float?
   cookingAreaSqIn Float?
-  brisketCapacity Float    @default(0)
-  porkCapacity    Float    @default(0)
-  ribCapacity     Float    @default(0)
-  chickenCapacity Float    @default(0)
+  brisketCapacity Float?
+  porkCapacity    Float?
+  ribCapacity     Float?
+  chickenCapacity Float?
   cookWindow      String?
   notes           String?
   sourceUrl       String?
