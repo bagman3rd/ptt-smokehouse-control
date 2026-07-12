@@ -1,5 +1,19 @@
 import { addUtcDays } from '@/lib/date';
 
+type EodProteinLogForQuality = {
+  cookedUnits: number;
+  soldCookedLb: number;
+  usableLeftoverUnits: number;
+  usableLeftoverLb: number;
+  wasteLb: number;
+  eightySixed: boolean;
+};
+
+type EodLogForQuality = {
+  status: string;
+  proteinLogs: EodProteinLogForQuality[];
+};
+
 export type DataQualityResult = {
   score: number;
   label: 'LOW' | 'MEDIUM' | 'HIGH';
@@ -27,9 +41,10 @@ export async function computeDataQuality(prisma: any, restaurantId: string): Pro
     prisma.reportRun.count({ where: { restaurantId } }).catch(() => 0)
   ]);
 
-  const completeEod = eodLogs.filter((log) => ['COMPLETE', 'REVIEWED', 'LOCKED'].includes(log.status)).length;
-  const allZeroLogs = eodLogs.filter((log) => log.proteinLogs.every((p) => p.cookedUnits === 0 && p.soldCookedLb === 0 && p.usableLeftoverUnits === 0 && p.wasteLb === 0)).length;
-  const missingLeftover = eodLogs.filter((log) => log.proteinLogs.some((p) => p.cookedUnits > 0 && p.usableLeftoverUnits === 0 && p.usableLeftoverLb === 0 && !p.eightySixed)).length;
+  const typedEodLogs = eodLogs as EodLogForQuality[];
+  const completeEod = typedEodLogs.filter((log: EodLogForQuality) => ['COMPLETE', 'REVIEWED', 'LOCKED'].includes(log.status)).length;
+  const allZeroLogs = typedEodLogs.filter((log: EodLogForQuality) => log.proteinLogs.every((p: EodProteinLogForQuality) => p.cookedUnits === 0 && p.soldCookedLb === 0 && p.usableLeftoverUnits === 0 && p.wasteLb === 0)).length;
+  const missingLeftover = typedEodLogs.filter((log: EodLogForQuality) => log.proteinLogs.some((p: EodProteinLogForQuality) => p.cookedUnits > 0 && p.usableLeftoverUnits === 0 && p.usableLeftoverLb === 0 && !p.eightySixed)).length;
 
   const checks = [
     { key: 'eod-complete', label: 'At least 7 completed EOD logs in recent history', complete: completeEod >= 7, points: Math.min(20, completeEod * 3), max: 20, detail: `${completeEod} complete/reviewed/locked EOD logs` },
@@ -42,7 +57,7 @@ export async function computeDataQuality(prisma: any, restaurantId: string): Pro
     { key: 'reports', label: 'Reports/export history exists', complete: reports > 0, points: reports > 0 ? 5 : 0, max: 5, detail: `${reports} report/export records` }
   ];
 
-  const score = Math.max(0, Math.min(100, Math.round(checks.reduce((sum, check) => sum + check.points, 0))));
+  const score = Math.max(0, Math.min(100, Math.round(checks.reduce((sum: number, check) => sum + check.points, 0))));
   const label = score >= 80 ? 'HIGH' : score >= 55 ? 'MEDIUM' : 'LOW';
   const warnings = checks.filter((check) => !check.complete).map((check) => check.label);
   return { score, label, checks, warnings };

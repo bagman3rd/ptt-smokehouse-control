@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Build 4.3.1 cross-tenant regression test.
+  Build 4.3.2 cross-tenant regression test.
   Creates two tenants and verifies tenant A cannot read/write tenant B data through
   the same guarded query patterns used by server actions and API routes.
 */
@@ -36,7 +36,7 @@ async function main() {
   const directBStillExists = await prisma.cookPlan.findFirst({ where: { id: planB.id, restaurantId: restaurantB.id } });
   assert.ok(directBStillExists, 'Tenant B record unexpectedly disappeared.');
 
-  console.log('Build 4.3.1 cross-tenant regression test passed. Tenant-scoped read/write paths do not cross restaurants.');
+  console.log('Build 4.3.2 cross-tenant regression test passed. Tenant-scoped read/write paths do not cross restaurants.');
 }
 
 main().finally(async () => {

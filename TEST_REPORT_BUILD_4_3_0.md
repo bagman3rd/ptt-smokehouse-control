@@ -1,8 +1,8 @@
-# Test Report — Build 4.3.1
+# Test Report — Build 4.3.2
 
 ## Static checks performed in this build
 
-- Build version updated to `4.3.1`.
+- Build version updated to `4.3.2`.
 - `render-build` remains on `prisma migrate deploy` and does not use `prisma db push` or `--accept-data-loss`.
 - Postgres-backed `RateLimitBucket` model added.
 - User lockout/session revocation fields added.
@@ -26,8 +26,8 @@ pnpm run ci:schema-drift
 ## Local static verification completed
 
 ```text
-Build 4.3.1 account-security checks completed.
-Build 4.3.1 evaluation checks completed.
+Build 4.3.2 account-security checks completed.
+Build 4.3.2 evaluation checks completed.
 ```
 
 ## External staging verification still required
