@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "5.8.1",
+  "version": "5.9.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,13 +10,13 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "prisma:seed": "tsx prisma/seed.ts",
-    "render-build": "prisma generate && (prisma migrate resolve --rolled-back 20260712000300_build_470_tenant_constraints || true) && prisma migrate deploy && tsx prisma/seed.ts && next build",
+    "render-build": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build",
     "db:seed": "tsx prisma/seed.ts",
     "migration:status": "prisma migrate status",
     "test:tenant": "tsx scripts/tenant-integration-test.mjs",
     "test:forecast": "tsx scripts/forecast-engine-test.ts",
     "test:backup": "node scripts/backup-restore-drill-check.mjs",
-    "build:eval": "node scripts/build-5-8-1-evaluation.mjs",
+    "build:eval": "node scripts/build-5-9-0-evaluation.mjs",
     "migration:baseline:check": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
     "render-build:migrate-ready": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build",
     "backup:weekly": "node scripts/run-weekly-backup-cron.mjs",
@@ -24,7 +24,7 @@
     "test:permissions": "node scripts/permission-boundary-test.mjs",
     "ci:schema-drift": "prisma migrate diff --from-url \"$DATABASE_URL\" --to-schema-datamodel prisma/schema.prisma --exit-code",
     "ci:migration-status": "prisma migrate status",
-    "ci:test": "pnpm run preflight && pnpm run typecheck && pnpm run lint && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:tenant-guard && pnpm run test:orphan-records && pnpm run staging:verify && pnpm run test:pos-import && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run ci:schema-drift",
+    "ci:test": "pnpm run preflight && pnpm run typecheck && pnpm run lint && pnpm run test:migration-integrity && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:tenant-guard && pnpm run test:orphan-records && pnpm run staging:verify && pnpm run test:pos-import && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run ci:migration-status && pnpm run ci:schema-drift",
     "test:dead-code": "node scripts/dead-code-check.mjs",
     "test:cross-tenant": "tsx scripts/cross-tenant-regression-test.mjs",
     "test:account-security": "node scripts/account-security-test.mjs",
@@ -36,7 +36,8 @@
     "test:pos-import": "node scripts/pos-import-mapping-test.mjs",
     "test:demo-docs": "node scripts/demo-docs-test.mjs",
     "test:smoker-catalog": "node scripts/smoker-catalog-test.mjs",
-    "test:generate-plan": "node scripts/generate-plan-regression-test.mjs"
+    "test:generate-plan": "node scripts/generate-plan-regression-test.mjs",
+    "test:migration-integrity": "node scripts/migration-integrity-test.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

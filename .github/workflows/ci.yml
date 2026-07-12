@@ -1,4 +1,4 @@
-name: Build 5.3 CI
+name: Build 5.9 CI
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
       APP_SESSION_TOKEN: ci-session-token-12345
       ADMIN_PASSWORD: ci-admin-password-12345
       CRON_SECRET: ci-cron-secret-12345
-      NEXT_PUBLIC_APP_NAME: PTT Smokehouse Control
+      NEXT_PUBLIC_APP_NAME: Smokehouse Control
       NODE_ENV: test
     steps:
       - name: Checkout
@@ -67,8 +67,14 @@ jobs:
       - name: Dead-code check
         run: pnpm run test:dead-code
 
-      - name: Prepare throwaway Postgres schema
-        run: pnpm exec prisma db push --skip-generate
+      - name: Apply migrations to fresh Postgres schema
+        run: pnpm run prisma:migrate
+
+      - name: Verify migration status
+        run: pnpm run ci:migration-status
+
+      - name: Migration integrity tests
+        run: pnpm run test:migration-integrity
 
       - name: Tenant isolation integration test
         run: pnpm run test:tenant

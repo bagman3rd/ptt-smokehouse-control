@@ -12,7 +12,7 @@ const pkg = JSON.parse(read('package.json'));
 const version = pkg.version;
 const buildLabel = `Build ${version}`;
 
-assert(version === '5.8.1', 'package.json version must be 5.8.1 for this build');
+assert(version === '5.9.0', 'package.json version must be 5.9.0 for this build');
 assert(read('README.md').includes(buildLabel), 'README must mention the current build label');
 assert(read('components/Nav.tsx').includes(buildLabel), 'Nav badge must show the current build label');
 assert(pkg.scripts.typecheck === 'tsc --noEmit', 'typecheck script must run tsc --noEmit');
@@ -26,6 +26,15 @@ assert(readdirSync('prisma/migrations').some((name) => name.includes('build_330_
 assert(existsSync('.github/workflows/ci.yml'), 'GitHub Actions CI workflow must exist');
 assert(read('.github/workflows/ci.yml').includes('pnpm run preflight'), 'CI must run preflight before typecheck/lint/tests');
 
+
+const baseline = read('prisma/migrations/20260712000100_build_330_baseline/migration.sql');
+assert(baseline.includes('CREATE TABLE "Restaurant"'), 'baseline migration must create Restaurant on a fresh database');
+assert(baseline.includes('CREATE TABLE "PosImportRow"'), 'baseline migration must include latest tables');
+assert(!baseline.includes('intentionally contains no destructive DDL'), 'empty placeholder baseline must not return');
+assert(pkg.scripts['test:migration-integrity'] === 'node scripts/migration-integrity-test.mjs', 'migration integrity test must be registered');
+assert(!read('.github/workflows/ci.yml').includes('prisma db push'), 'CI must not use prisma db push');
+assert(read('.github/workflows/ci.yml').includes('pnpm run prisma:migrate'), 'CI must use prisma migrate deploy against fresh Postgres');
+
 const projectText = ['README.md', 'package.json', 'components/Nav.tsx', '.github/workflows/ci.yml'].map((file) => read(file)).join('\n');
 for (const token of ['Build 4.4.0', 'build-4-4-0-evaluation', 'prisma db push &&', 'db push --accept-data-loss']) {
   assert(!projectText.includes(token), `obsolete token still present: ${token}`);
@@ -33,4 +42,4 @@ for (const token of ['Build 4.4.0', 'build-4-4-0-evaluation', 'prisma db push &&
 assert(!read('lib/tenantGuard.ts').includes('tenantOrLegacyWhere'), 'retired tenantOrLegacyWhere helper must not return');
 assert(!read('lib/tenantGuard.ts').includes('tenantWhere('), 'retired tenantWhere helper must not return');
 
-console.log('Build 5.8.1 preflight checks completed.');
+console.log('Build 5.9.0 preflight checks completed.');
