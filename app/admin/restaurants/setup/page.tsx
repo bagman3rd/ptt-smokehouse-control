@@ -56,7 +56,7 @@ export default async function RestaurantSetupWizardPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Restaurant Setup Wizard</h1>
-      <p className="mt-2 text-slate-600">{restaurant.name} · Build 4.0.0 adds self-service setup, generic BBQ defaults, sales-history import, and audit-backed onboarding. Each save writes tenant-scoped settings and audit entries.</p>
+      <p className="mt-2 text-slate-600">{restaurant.name} · Build 4.1.0 adds self-service setup, generic BBQ defaults, sales-history import, and audit-backed onboarding. Each save writes tenant-scoped settings and audit entries.</p>
     </div>
 
 

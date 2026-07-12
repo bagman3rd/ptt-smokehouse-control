@@ -18,6 +18,29 @@ services:
         sync: false
       - key: NEXT_PUBLIC_APP_NAME
         value: PTT Smokehouse Control
+      - key: CRON_SECRET
+        sync: false
+      - key: BACKUP_POST_URL
+        sync: false
+      - key: BACKUP_APP_URL
+        sync: false
+
+  # Optional Render Cron job. Enable after BACKUP_APP_URL and CRON_SECRET are set.
+  - type: cron
+    name: ptt-smokehouse-control-weekly-backup
+    env: node
+    schedule: "0 8 * * 0"
+    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false
+    startCommand: pnpm run backup:weekly
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.1
+      - key: CRON_SECRET
+        sync: false
+      - key: BACKUP_APP_URL
+        sync: false
+      - key: BACKUP_POST_URL
+        sync: false
 
 databases:
   - name: ptt-smokehouse-control-db

@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,16 +10,16 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "prisma:seed": "tsx prisma/seed.ts",
-    "render-build": "prisma generate && prisma db push && tsx prisma/seed.ts && next build",
-    "db:push": "prisma db push",
+    "render-build": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build",
     "db:seed": "tsx prisma/seed.ts",
     "migration:status": "prisma migrate status",
     "test:tenant": "tsx scripts/tenant-integration-test.mjs",
     "test:forecast": "tsx scripts/forecast-engine-test.ts",
     "test:backup": "node scripts/backup-restore-drill-check.mjs",
-    "build:eval": "node scripts/build-4-0-0-evaluation.mjs",
+    "build:eval": "node scripts/build-4-1-0-evaluation.mjs",
     "migration:baseline:check": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
-    "render-build:migrate-ready": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build"
+    "render-build:migrate-ready": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build",
+    "backup:weekly": "node scripts/run-weekly-backup-cron.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

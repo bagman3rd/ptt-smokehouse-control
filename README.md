@@ -1,69 +1,47 @@
-# Smokehouse Control — Build 4.0.0
+# Smokehouse Control — Build 4.1.0
 
-Build 4.0.0 is the **migration-repair and pilot-safety build**. It keeps production in safe db-push recovery mode, but gives you the runbook, admin visibility, and scheduled-backup structure needed before the PTT pilot creates data you cannot afford to lose.
+Build 4.1.0 is the data-integrity and DevOps hardening build. It moves the application out of db-push recovery mode and makes `prisma migrate deploy` the active Render build path. This build should be deployed only after the staging migration-repair rehearsal has passed and a fresh production backup has been taken.
 
-## What changed in 4.0.0
+## What changed in 4.1.0
 
-- Added `MIGRATION_REPAIR_RUNBOOK_BUILD_4_0_0.md`.
-- Added `PILOT_READINESS_BUILD_4_0_0.md`.
-- Added `/api/admin/backups/weekly` for scheduled tenant backup exports.
-- Added `CRON_SECRET` protection for scheduled backup calls.
-- Added optional `BACKUP_POST_URL` support for sending scheduled backup JSON to an external storage receiver.
-- Expanded `/admin/system` with:
-  - Migration repair warning.
-  - Scheduled backup readiness.
-  - Migration repair runbook summary.
-  - Weekly backup export status recording.
-  - Data Quality Score positioning as a product/demo feature.
-- Updated app/version references to Build 4.0.0.
-- Kept Render in db-push recovery mode and avoided `--accept-data-loss`.
-
-## Current production posture
-
-The active Render database has a failed Prisma migration record. Production intentionally remains on:
+- Switched `pnpm run render-build` to the migration-ready path:
 
 ```bash
-prisma generate && prisma db push && tsx prisma/seed.ts && next build
+prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build
 ```
 
-Do **not** switch production back to:
+- Removed the `db:push` package script so normal deploys cannot silently regress to schema drift.
+- Added a production/staging migration repair runbook: `MIGRATION_REPAIR_RUNBOOK_BUILD_4_1_0.md`.
+- Added backup automation notes and weekly backup runner support.
+- Added `scripts/run-weekly-backup-cron.mjs` for Render Cron or another scheduler.
+- Added `BACKUP_RESTORE_DRILL_BUILD_4_1_0.md`.
+- Updated `/admin/system` to show migration-ready status and critical checks for staging repair, production repair, weekly backups, and restore drills.
+- Kept Data Quality Score visible as an operational and sales/demo differentiator.
+
+## Critical deployment warning
+
+Do not deploy Build 4.1.0 to the existing production Render service until the failed Prisma migration state has been repaired or baselined on a staging copy first.
+
+The prior live database had a failed migration record. `prisma migrate deploy` will fail against that database until repaired. The correct sequence is:
+
+1. Take a fresh production backup.
+2. Restore the backup to a staging PostgreSQL database.
+3. Point a staging web service at that staging database.
+4. Run `pnpm run migration:status` against staging.
+5. Resolve the failed migration on staging using the runbook.
+6. Run:
 
 ```bash
-prisma migrate deploy
+pnpm run test:tenant
+pnpm run test:forecast
+pnpm run test:backup
 ```
 
-until the staging repair runbook passes.
-
-## Current Render build command
-
-Keep the external Render build command as:
-
-```bash
-corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
-```
-
-## Scheduled backup endpoint
-
-Build 4.0.0 adds:
-
-```text
-GET /api/admin/backups/weekly
-Authorization: Bearer $CRON_SECRET
-```
-
-Required env var:
-
-```text
-CRON_SECRET=<12+ character secret>
-```
-
-Optional env var:
-
-```text
-BACKUP_POST_URL=<external endpoint that accepts JSON POSTs>
-```
-
-If `BACKUP_POST_URL` is set, the endpoint posts full tenant backup JSON to that destination. If not set, it records backup counts and returns them in the response. This does not replace Render PostgreSQL backups or restore drills.
+7. Click through the app against staging data.
+8. Record passing checks in `/admin/system`.
+9. Take a fresh production backup.
+10. Repair production during a low-traffic window.
+11. Deploy Build 4.1.0 to production.
 
 ## Required Render environment variables
 
@@ -73,63 +51,61 @@ ADMIN_PASSWORD
 APP_SESSION_TOKEN
 NEXT_PUBLIC_APP_NAME
 NODE_VERSION=20.18.1
-```
-
-For scheduled backups add:
-
-```text
 CRON_SECRET
-BACKUP_POST_URL optional
 ```
 
-`ADMIN_PASSWORD`, `APP_SESSION_TOKEN`, and `CRON_SECRET` must be at least 12 characters.
-
-## Initial admin login
+Optional for automated backup posting:
 
 ```text
-username: admin
-password: Render ADMIN_PASSWORD value
+BACKUP_POST_URL
+BACKUP_APP_URL
 ```
 
-## Migration repair sequence
-
-Use the full runbook in:
+`BACKUP_APP_URL` should be the app base URL used by `scripts/run-weekly-backup-cron.mjs`, for example:
 
 ```text
-MIGRATION_REPAIR_RUNBOOK_BUILD_4_0_0.md
+https://ptt-smokehouse-control.onrender.com
 ```
 
-Short version:
+## Current Render build command
 
-1. Create a staging Render PostgreSQL database.
-2. Export production tenant JSON and create a Render DB backup.
-3. Restore/copy production data into staging.
-4. Run `pnpm prisma migrate status` against staging.
-5. Resolve or baseline the failed migration on staging only.
-6. Run tenant, backup, and forecast tests against staging.
-7. Deploy staging with `prisma migrate deploy`.
-8. Record all results in `/admin/system`.
-9. Only then schedule production migration repair.
+Keep the external Render build command as:
+
+```bash
+corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
+```
+
+In Build 4.1.0, `pnpm run render-build` runs `prisma migrate deploy`.
 
 ## Test commands
 
 ```bash
 pnpm run build:eval
 pnpm run test:forecast
-DATABASE_URL="postgres://...staging..." pnpm run test:tenant
-DATABASE_URL="postgres://...staging..." pnpm run test:backup
+pnpm run test:tenant
+pnpm run test:backup
+pnpm run backup:weekly
 ```
 
-`pnpm run build:eval` was run for Build 4.0.0.
+`pnpm run build:eval` is a static project check and was run for Build 4.1.0.
 
-The tenant and backup tests require a live staging database and are not considered passed until run against that database.
+`test:tenant` and `test:backup` require a live staging PostgreSQL `DATABASE_URL`.
 
-## Commercial-readiness note
+## Existing commercial-readiness features
 
-The Data Quality Score is not just an internal admin metric. It is a product differentiator: the app tells the restaurant when its own logging discipline is weakening forecast reliability.
+- Daily Operations Command Center: `/today`
+- Data Quality Score
+- Guided EOD closeout
+- Forecast learning with approval and rollback
+- Role-based access
+- Multi-tenant restaurant model
+- Self-service signup: `/signup`
+- Prospect demo mode: `/demo`
+- POS/sales CSV import with preview: `/admin/restaurants/pos`
+- Per-tenant JSON export
+- Scheduled backup endpoint: `/api/admin/backups/weekly`
+- Admin system readiness tracking: `/admin/system`
 
-## Known deferred items
+## Remaining pre-pilot requirement
 
-- Replace in-memory rate limiting with Redis/Upstash/Postgres-backed limits before scaling beyond one Render instance.
-- Switch production to `prisma migrate deploy` only after staging migration repair passes.
-- Keep Stripe/billing deferred until there is a real paying prospect ready to onboard.
+Build 4.1.0 is intended to make the migration repair mandatory. The app is pilot-ready only after staging migration repair, tenant tests, backup tests, and a restore drill are completed and recorded.
