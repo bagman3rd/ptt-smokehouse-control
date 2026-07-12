@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { currentRestaurantForUser } from '@/lib/tenant';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { PrintButton } from './PrintButton';
+import { buildSmokerLoadSchedule } from '@/lib/smokerSchedule';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -33,6 +34,8 @@ export default async function CookPlanPrintPage({ searchParams }: { searchParams
     : await prisma.cookPlan.findFirst({ where: { restaurantId: restaurant.id }, orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } });
 
   if (!plan) return <main className="p-8"><h1>No cook plan found.</h1></main>;
+  const smokers = await prisma.smoker.findMany({ where: { restaurantId: restaurant.id, active: true }, orderBy: { name: 'asc' } });
+  const scheduleRows = buildSmokerLoadSchedule(smokers, plan);
   const nextDay = addUtcDays(plan.serviceDate, 1);
 
   return (
@@ -60,6 +63,14 @@ export default async function CookPlanPrintPage({ searchParams }: { searchParams
         <thead><tr className="border-b-2 border-slate-900 text-left"><th className="p-2">Protein</th><th className="p-2">Load</th><th className="p-2">Prior EOD Credit</th><th className="p-2">Cook / Hold Instruction</th><th className="p-2">Manager Notes</th></tr></thead>
         <tbody>{plan.items.map((item) => <tr key={item.id} className="border-b border-slate-300 align-top"><td className="p-2 font-black">{item.protein.name}</td><td className="p-2 text-xl font-black">{item.approvedCookUnits ?? item.recommendedCookUnits} {displayUnit(item.protein.name, item.protein.inputUnit)}</td><td className="p-2">{item.usableLeftoverUnits} {displayUnit(item.protein.name, item.protein.inputUnit)} / {item.usableLeftoverLb} lb</td><td className="p-2 font-bold">{timing(item.protein.name)}</td><td className="p-2">{item.overrideReason || item.notes || '—'}</td></tr>)}</tbody>
       </table>
+
+      <section className="mt-6 rounded-xl border-2 border-slate-900 p-4">
+        <h2 className="text-xl font-black">Smoker Schedule</h2>
+        <table className="mt-3 w-full border-collapse text-sm">
+          <thead><tr className="border-b-2 border-slate-900 text-left"><th className="p-2">Time</th><th className="p-2">Load</th><th className="p-2">Smoker</th><th className="p-2">Capacity / Warning</th></tr></thead>
+          <tbody>{scheduleRows.map((row) => <tr key={`${row.proteinName}-${row.startTime}`} className="border-b border-slate-300 align-top"><td className="p-2 font-black">{row.startTime}<div className="text-xs">to {row.endTime}</div></td><td className="p-2 font-black">{row.units} {row.unitLabel} {row.proteinName}</td><td className="p-2">{row.smokerName}<div className="text-xs">{row.smokerModel} · {row.smokerLocation}</div></td><td className="p-2 font-bold">{row.capacity || 'Not set'}{row.warning ? <div className="mt-1 text-xs font-black">WARNING: {row.warning}</div> : null}</td></tr>)}</tbody>
+        </table>
+      </section>
 
       <section className="print-signoff mt-8 rounded-xl border-2 border-slate-900 p-4">
         <div className="font-black">Manager Signoff / Hot Box Verified / Load Count Confirmed</div>

@@ -1,57 +1,57 @@
-# Smokehouse Control — Build 5.0.0
+# Smokehouse Control — Build 5.1.0
 
-Build 5.0.0 is the **Kitchen Field Usability** build.
+Build 5.1.0 is the **Smoker Scheduling + Production Constraints** build.
 
 ## Purpose
 
-This release focuses on the two places the app will actually be used during live service:
+This release moves the app from simple capacity warnings toward operational production scheduling. It helps the KM answer:
 
-- `/today` — daily command center for KM/pit crew
-- `/end-of-day` — closing log used with imperfect kitchen Wi-Fi
-- `/cook-plan/print` — pit-friendly printed load plan
+```text
+Can we physically cook this load with the smokers we have today?
+```
 
 ## Major changes
 
-### Kitchen Mode on Today
+### Smoker Schedule page
 
-`/today` now includes a Kitchen Mode toggle:
+New page:
 
-- Larger text
-- Larger touch targets
-- Higher contrast emphasis
-- Execution-first layout
+```text
+/admin/smokers/schedule
+```
 
-### EOD bad-Wi-Fi protection
+It shows:
 
-The End-of-Day form now:
+- Latest cook plan date
+- Active smoker count
+- Protein load by smoker
+- Cook/start windows
+- Capacity warnings
+- Suggested fixes when the plan exceeds smoker capacity
+- Active smoker capacity matrix
 
-- Autosaves a local browser draft every 5 seconds
-- Shows the last local draft save time
-- Provides Save Draft Now / Restore Draft / Clear Draft controls
-- Warns before leaving the page with an unsaved local draft
-- Preserves the last submit payload if the save fails
-- Keeps the full protein log available on the device after a network failure
+### Today page schedule upgrade
 
-### EOD quality checks
+`/today` now uses the smoker scheduling engine instead of the old static smoker notes. It shows planned load timing and smoker assignment for each protein.
 
-Build 5.0.0 strengthens closeout checks:
+### Printable cook-plan schedule
 
-- Negative values blocked
-- Complete/Reviewed/Locked logs require explicit leftover units
-- All-zero completed logs blocked
-- 86 events require a reason before closeout
-- Leftover units greater than cooked units trigger a hot-box warning
+`/cook-plan/print` now includes a smoker schedule table with:
 
-### Print polish
+- Time
+- Protein load
+- Assigned smoker
+- Capacity / warning
 
-`/cook-plan/print` now has:
+### Shared smoker scheduling library
 
-- Bigger type
-- Higher contrast
-- Pit-friendly manager signoff
-- Hot-box verification wording
-- EOD closeout reminder
-- Better print CSS for letter-size output
+Added:
+
+```text
+lib/smokerSchedule.ts
+```
+
+This centralizes smoker-capacity and schedule logic so `/today`, `/admin/smokers/schedule`, and `/cook-plan/print` use the same rules.
 
 ## Deploy
 
@@ -64,7 +64,7 @@ ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Act
 Commit message:
 
 ```text
-Build 5.0.0 kitchen field usability
+Build 5.1.0 smoker scheduling and production constraints
 ```
 
 Render build command remains:
@@ -74,7 +74,3 @@ corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --pro
 ```
 
 `render-build` uses `prisma migrate deploy`, does not use `prisma db push`, and does not use `--accept-data-loss`.
-
-## Build 5.0.0 Forecast Proof
-
-Build 5.0.0 adds `/learning/proof`, a forecast proof page showing trailing 7/30/90-day MAPE, accuracy, bias, and matched forecast-vs-actual rows by protein. This is the structure needed to prove the forecasting engine during the PTT pilot. Full domain validation still requires 60–90 days of completed EOD logs and matching cook plans.
