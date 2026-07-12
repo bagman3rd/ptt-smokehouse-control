@@ -77,9 +77,14 @@ export async function auditLog(args: {
   beforeJson?: unknown;
   afterJson?: unknown;
 }) {
+  // AuditLog is tenant-owned and restaurantId is non-null beginning in Build 6.3.0.
+  // Authentication attempts that cannot be tied to a restaurant are intentionally
+  // not written to this tenant-scoped table.
+  if (!args.restaurantId) return;
+
   await prisma.auditLog.create({
     data: {
-      restaurantId: args.restaurantId || null,
+      restaurantId: args.restaurantId,
       actorUserId: args.actorUserId || null,
       actorName: args.actorName || 'System',
       action: args.action,
