@@ -26,7 +26,7 @@ export default async function SmokersPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Smoker Capacity</h1>
-      <p className="mt-2 text-slate-600">Build the physical production model. Build 5.1.0 adds a smoker schedule view that compares planned loads against cook-window and capacity constraints.</p>
+      <p className="mt-2 text-slate-600">Build the physical production model. Build 5.2.0 adds a smoker schedule view that compares planned loads against cook-window and capacity constraints.</p>
     </div>
     <div className="mb-6 flex gap-2"><a href="/admin/smokers/schedule" className="rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white">Open Smoker Schedule</a><a href="/today" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">Today</a></div>
 

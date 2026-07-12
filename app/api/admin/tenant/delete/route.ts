@@ -23,6 +23,7 @@ export async function POST(request: Request) {
   if (confirm !== restaurant.name) return NextResponse.redirect(`${baseUrl(request)}/admin/restaurants?deleteError=confirm`, 303);
 
   // Soft-delete for safety. Physical deletion should happen only after backup/export confirmation and retention review.
+  await prisma.customerDataRequest.create({ data: { restaurantId: restaurant.id, type: 'DEACTIVATE', status: 'COMPLETED', requestedBy: user.name, notes: 'Tenant soft-deactivated through admin flow.', completedAt: new Date() } }).catch(() => null);
   await prisma.restaurant.update({ where: { id: restaurant.id }, data: { active: false } });
   await prisma.restaurantMembership.updateMany({ where: { restaurantId: restaurant.id }, data: { active: false } });
   await auditLog({ restaurantId: restaurant.id, actorUserId: user.id, actorName: user.name, action: 'SOFT_DELETE_TENANT', entity: 'Restaurant', entityId: restaurant.id, beforeJson: { active: true }, afterJson: { active: false } });

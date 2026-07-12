@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
 
-  const [proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks] = await Promise.all([
+  const [proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks, subscriptions, supportTickets, dataRequests] = await Promise.all([
     prisma.protein.findMany({ where: { restaurantId }, orderBy: { name: 'asc' } }),
     prisma.forecastScenario.findMany({ where: { restaurantId }, orderBy: { annualSales: 'asc' } }),
     prisma.dayMultiplier.findMany({ where: { restaurantId }, orderBy: { dayOfWeek: 'asc' } }),
@@ -27,19 +27,22 @@ export async function GET(request: Request) {
     prisma.auditLog.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' }, take: 2000 }),
     prisma.smoker.findMany({ where: { restaurantId }, orderBy: { name: 'asc' } }),
     prisma.learningRecommendation.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }),
-    prisma.systemCheck.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }).catch(() => [])
+    prisma.systemCheck.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }).catch(() => []),
+    prisma.subscription.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }).catch(() => []),
+    prisma.supportTicket.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }).catch(() => []),
+    prisma.customerDataRequest.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }).catch(() => [])
   ]);
 
   const exportedAt = new Date().toISOString();
   await prisma.reportRun.create({ data: { restaurantId, source: 'backup', metric: 'tenantJson', groupBy: 'dataset', protein: 'all', start: exportedAt.slice(0, 10), end: exportedAt.slice(0, 10), dataset: 'backup-json', rowCount: proteins.length + scenarios.length + cookPlans.length + eodLogs.length + savedReports.length + reportRuns.length + smokers.length + learningRecommendations.length, createdBy: user.name } }).catch(() => null);
-  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'BACKUP_EXPORTED', entity: 'TenantBackup', afterJson: { exportedAt, counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length, systemChecks: systemChecks.length } } });
+  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'BACKUP_EXPORTED', entity: 'TenantBackup', afterJson: { exportedAt, counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length, systemChecks: systemChecks.length, subscriptions: subscriptions.length, supportTickets: supportTickets.length, dataRequests: dataRequests.length } } });
 
   const body = JSON.stringify({
     app: 'PTT Smokehouse Control',
-    build: '4.7.0',
+    build: '5.2.0',
     restaurant,
     exportedAt,
-    counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length, systemChecks: systemChecks.length },
+    counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length, systemChecks: systemChecks.length, subscriptions: subscriptions.length, supportTickets: supportTickets.length, dataRequests: dataRequests.length },
     proteins,
     scenarios,
     dayMultipliers: days,
@@ -51,7 +54,10 @@ export async function GET(request: Request) {
     auditLogs,
     smokers,
     learningRecommendations,
-    systemChecks
+    systemChecks,
+    subscriptions,
+    supportTickets,
+    dataRequests
   }, null, 2);
 
   return new NextResponse(body, {

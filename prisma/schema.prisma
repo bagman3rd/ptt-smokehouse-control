@@ -59,6 +59,9 @@ model Restaurant {
   smokers     Smoker[]
   learningRecommendations LearningRecommendation[]
   systemChecks SystemCheck[]
+  subscriptions Subscription[]
+  supportTickets SupportTicket[]
+  dataRequests CustomerDataRequest[]
 }
 
 model RestaurantMembership {
@@ -392,3 +395,53 @@ model RateLimitBucket {
   updatedAt DateTime @default(now()) @updatedAt
 }
 
+
+
+model Subscription {
+  id                   String   @id @default(cuid())
+  restaurantId         String
+  restaurant           Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  plan                 String   @default("PILOT")
+  status               String   @default("TRIALING")
+  trialEndsAt          DateTime?
+  currentPeriodEndsAt  DateTime?
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  stripeCheckoutUrl    String?
+  stripePortalUrl      String?
+  cancellationReason   String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now()) @updatedAt
+  @@index([restaurantId, status])
+  @@index([stripeCustomerId])
+}
+
+model SupportTicket {
+  id           String   @id @default(cuid())
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id], onDelete: SetNull)
+  name         String
+  email        String
+  subject      String
+  message      String
+  priority     String   @default("NORMAL")
+  status       String   @default("OPEN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+  @@index([restaurantId, status, createdAt])
+  @@index([email])
+}
+
+model CustomerDataRequest {
+  id           String   @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  type         String
+  status       String   @default("PENDING")
+  requestedBy  String   @default("System")
+  notes        String?
+  completedAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+  @@index([restaurantId, type, status, createdAt])
+}

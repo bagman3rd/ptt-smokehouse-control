@@ -59,3 +59,11 @@ export const savedReportSchema = z.object({
   start: z.string().trim().max(20).optional().default(''),
   end: z.string().trim().max(20).optional().default('')
 });
+
+export const supportTicketSchema = z.object({
+  name: z.string().trim().min(2).max(120),
+  email: z.string().trim().email().max(160).transform((v) => v.toLowerCase()),
+  subject: z.string().trim().min(3).max(160),
+  message: z.string().trim().min(10).max(4000),
+  priority: z.enum(['NORMAL', 'HIGH', 'PRODUCTION_BLOCKED']).optional().default('NORMAL')
+});

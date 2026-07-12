@@ -23,7 +23,10 @@ const TENANT_SCOPED_MODELS = new Set([
   'EndOfDayProteinLog',
   'Smoker',
   'LearningRecommendation',
-  'SystemCheck'
+  'SystemCheck',
+  'Subscription',
+  'SupportTicket',
+  'CustomerDataRequest'
 ]);
 
 const READ_OR_WRITE_OPERATIONS = new Set([

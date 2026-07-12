@@ -1,57 +1,120 @@
-# Smokehouse Control — Build 5.1.0
+# Smokehouse Control — Build 5.2.0
 
-Build 5.1.0 is the **Smoker Scheduling + Production Constraints** build.
+Build 5.2.0 is the **Commercial SaaS Readiness** build.
 
 ## Purpose
 
-This release moves the app from simple capacity warnings toward operational production scheduling. It helps the KM answer:
-
-```text
-Can we physically cook this load with the smokers we have today?
-```
+This release starts the path from a pilot app to a sellable SaaS product. It adds subscription records, hosted Stripe checkout handoff, customer support tracking, customer data-request tracking, and uptime health endpoints.
 
 ## Major changes
 
-### Smoker Schedule page
+### Billing and subscription records
+
+New Prisma model:
+
+```text
+Subscription
+```
+
+The app now tracks per-restaurant billing state:
+
+```text
+TRIALING
+ACTIVE
+PAST_DUE
+CANCELED
+EXPIRED
+READ_EXPORT_ONLY
+```
+
+New signup tenants automatically receive a 14-day trial subscription record.
+
+### Stripe hosted checkout handoff
+
+`/billing` now supports:
+
+- Monthly hosted checkout
+- Annual hosted checkout
+- Stripe customer-portal handoff
+- Trial status visibility
+- Billing warning banner in the app shell
+
+Environment variables:
+
+```text
+STRIPE_MONTHLY_PAYMENT_LINK
+STRIPE_ANNUAL_PAYMENT_LINK
+STRIPE_CUSTOMER_PORTAL_URL
+```
+
+Fallbacks:
+
+```text
+STRIPE_PAYMENT_LINK
+STRIPE_CHECKOUT_URL
+STRIPE_PORTAL_URL
+```
+
+### Support channel
 
 New page:
 
 ```text
-/admin/smokers/schedule
+/support
 ```
 
-It shows:
-
-- Latest cook plan date
-- Active smoker count
-- Protein load by smoker
-- Cook/start windows
-- Capacity warnings
-- Suggested fixes when the plan exceeds smoker capacity
-- Active smoker capacity matrix
-
-### Today page schedule upgrade
-
-`/today` now uses the smoker scheduling engine instead of the old static smoker notes. It shows planned load timing and smoker assignment for each protein.
-
-### Printable cook-plan schedule
-
-`/cook-plan/print` now includes a smoker schedule table with:
-
-- Time
-- Protein load
-- Assigned smoker
-- Capacity / warning
-
-### Shared smoker scheduling library
-
-Added:
+New model:
 
 ```text
-lib/smokerSchedule.ts
+SupportTicket
 ```
 
-This centralizes smoker-capacity and schedule logic so `/today`, `/admin/smokers/schedule`, and `/cook-plan/print` use the same rules.
+Set:
+
+```text
+NEXT_PUBLIC_SUPPORT_EMAIL
+```
+
+### Customer data requests
+
+New admin page:
+
+```text
+/admin/data
+```
+
+New model:
+
+```text
+CustomerDataRequest
+```
+
+This tracks export, deactivation, deletion-after-retention, and restore requests.
+
+### Uptime monitoring
+
+New endpoints:
+
+```text
+/api/health
+/api/health/db
+```
+
+Use these with UptimeRobot or Render external monitoring.
+
+### Backup expansion
+
+Tenant backup JSON now includes:
+
+- Subscriptions
+- Support tickets
+- Customer data requests
+
+## Important limitations
+
+Build 5.2.0 uses Stripe hosted payment links and portal handoff. It does not yet include full Stripe API webhook synchronization. For full SaaS automation, the next billing step is Stripe webhooks that automatically update subscription status.
+
+Terms and Privacy pages are still starter templates and should be reviewed by an attorney before selling to unrelated restaurants.
 
 ## Deploy
 
@@ -64,7 +127,7 @@ ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Act
 Commit message:
 
 ```text
-Build 5.1.0 smoker scheduling and production constraints
+Build 5.2.0 commercial SaaS readiness
 ```
 
 Render build command remains:
