@@ -29,7 +29,24 @@ export function QuickEndOfDayForm({ proteins, initialLog }: { proteins: Protein[
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const isLocked = Boolean(initialLog?.lockedAt);
-  const proteinByCode = useMemo(() => new Map(proteins.map((p) => [String(p.code || '').toUpperCase(), p])), [proteins]);
+  const proteinByCode = useMemo(() => {
+    const mapped = new Map<CoreCode, Protein>();
+    for (const protein of proteins) {
+      const explicitCode = String(protein.code || '').toUpperCase();
+      if (explicitCode === 'BRISKET' || explicitCode === 'PORK' || explicitCode === 'CHICKEN' || explicitCode === 'RIBS') {
+        mapped.set(explicitCode, protein);
+        continue;
+      }
+
+      // Backward compatibility for restaurants created before protein codes were required.
+      const name = protein.name.trim().toLowerCase();
+      if (name.includes('brisket')) mapped.set('BRISKET', protein);
+      else if (name.includes('pork') || name.includes('butt')) mapped.set('PORK', protein);
+      else if (name.includes('chicken') || name.includes('breast')) mapped.set('CHICKEN', protein);
+      else if (name.includes('rib')) mapped.set('RIBS', protein);
+    }
+    return mapped;
+  }, [proteins]);
   const savedByProtein = useMemo(() => new Map((initialLog?.proteinLogs || []).map((row) => [row.proteinId, row])), [initialLog]);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -93,14 +110,15 @@ export function QuickEndOfDayForm({ proteins, initialLog }: { proteins: Protein[
           const saved = protein ? savedByProtein.get(protein.id) : undefined;
           return <div key={code} className="rounded-2xl border border-emerald-200 bg-white p-4">
             <h3 className="text-lg font-black">{label}</h3>
+            {!protein ? <p className="mt-1 text-xs font-bold text-red-700">This protein is not configured. The numbers can be entered, but an administrator must configure the protein before submission.</p> : null}
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="label" htmlFor={`sealed-${code}`}>Number of {sealedLabel}</label>
-                <input id={`sealed-${code}`} data-testid={`quick-eod-sealed-${code}`} className="field mt-1 text-lg font-black" name={`sealed-${code}`} type="number" min="0" step="0.1" defaultValue={saved?.sealedUnopenedUnits ?? 0} required disabled={isLocked || !protein} />
+                <input id={`sealed-${code}`} data-testid={`quick-eod-sealed-${code}`} className="field mt-1 text-lg font-black" name={`sealed-${code}`} type="number" min="0" step="0.1" defaultValue={saved?.sealedUnopenedUnits ?? 0} required disabled={isLocked} />
               </div>
               <div>
                 <label className="label" htmlFor={`opened-${code}`}>Pounds from opened {label.toLowerCase()}</label>
-                <input id={`opened-${code}`} data-testid={`quick-eod-opened-${code}`} className="field mt-1 text-lg font-black" name={`opened-${code}`} type="number" min="0" step="0.1" defaultValue={saved?.openedMeatLb ?? 0} required disabled={isLocked || !protein} />
+                <input id={`opened-${code}`} data-testid={`quick-eod-opened-${code}`} className="field mt-1 text-lg font-black" name={`opened-${code}`} type="number" min="0" step="0.1" defaultValue={saved?.openedMeatLb ?? 0} required disabled={isLocked} />
               </div>
             </div>
           </div>;

@@ -1,12 +1,12 @@
-# PTT Smokehouse Control — Build 6.6.0
+# PTT Smokehouse Control — Build 6.6.1
 
 Restaurant smokehouse forecasting, cook planning, smoker allocation, EOD reconciliation, reporting, tenant controls, and operational auditability.
 
-## Build 6.6.0 kitchen closeout
+## Build 6.6.1 kitchen closeout
 
 The End-of-Day page now begins with an eight-number quick report for sealed unopened units and opened-meat pounds across brisket, pork, chicken, and ribs. Only sealed pork, chicken, and ribs become next-load credits. Sealed brisket and all opened-meat pounds are recorded for repurposed menu use but are not carried into the next smoker load. The original detailed EOD form remains available below it.
 
-## Build 6.6.0 reliability focus
+## Build 6.6.1 reliability focus
 
 - Preserves original and renumbered migration history without rewriting `_prisma_migrations`
 - Replays the complete migration chain on fresh PostgreSQL
