@@ -88,17 +88,17 @@ export function AddSmokerForm({ catalog, action }: { catalog: CatalogItem[]; act
   const [selectedId, setSelectedId] = useState('');
   const selected = selectedId ? map.get(selectedId) || null : null;
   return <form action={action} className="mt-4 grid gap-3 md:grid-cols-4">
-    <input className="field" name="name" placeholder="Smoker name" required />
-    <CatalogSelect catalog={catalog} onSelect={(item) => setSelectedId(item?.id || '')} />
-    <input className="field" name="brand" placeholder="Brand" defaultValue={selected?.brand || ''} key={`brand-${selectedId}`} readOnly={Boolean(selected)} />
-    <input className="field" name="model" placeholder="Model" defaultValue={selected?.model || ''} key={`model-${selectedId}`} readOnly={Boolean(selected)} />
-    <input className="field" name="location" placeholder="Indoor / outdoor / pit room" />
-    <input className="field" name="cookWindow" placeholder="Cook window" defaultValue={selected?.cookWindow || ''} key={`cw-${selectedId}`} />
-    <input className="field" name="rackCount" type="number" min="0" step="1" placeholder="Rack count" defaultValue={inputValue(selected?.rackCount)} key={`r-${selectedId}`} />
-    <input className="field" name="brisketCapacity" type="number" min="0" step="0.1" placeholder="Brisket capacity" defaultValue={inputValue(selected?.brisketCapacity)} key={`b-${selectedId}`} />
-    <input className="field" name="porkCapacity" type="number" min="0" step="0.1" placeholder="Pork butt capacity" defaultValue={inputValue(selected?.porkCapacity)} key={`p-${selectedId}`} />
-    <input className="field" name="ribCapacity" type="number" min="0" step="0.1" placeholder="Rib rack capacity" defaultValue={inputValue(selected?.ribCapacity)} key={`rb-${selectedId}`} />
-    <input className="field" name="chickenCapacity" type="number" min="0" step="0.1" placeholder="Chicken breast capacity — manual if needed" defaultValue={inputValue(selected?.chickenCapacity)} key={`c-${selectedId}`} />
+    <label className="text-sm font-bold text-slate-800">Smoker name<input className="field mt-1" name="name" placeholder="Example: Ole Hickory inside" required /></label>
+    <label className="text-sm font-bold text-slate-800">Catalog model<CatalogSelect catalog={catalog} onSelect={(item) => setSelectedId(item?.id || '')} /></label>
+    <label className="text-sm font-bold text-slate-800">Brand<input className="field mt-1" name="brand" placeholder="Brand" defaultValue={selected?.brand || ''} key={`brand-${selectedId}`} readOnly={Boolean(selected)} /></label>
+    <label className="text-sm font-bold text-slate-800">Model<input className="field mt-1" name="model" placeholder="Model" defaultValue={selected?.model || ''} key={`model-${selectedId}`} readOnly={Boolean(selected)} /></label>
+    <label className="text-sm font-bold text-slate-800">Location<input className="field mt-1" name="location" placeholder="Indoor / outdoor / pit room" /></label>
+    <label className="text-sm font-bold text-slate-800">Cook window<input className="field mt-1" name="cookWindow" placeholder="Cook window" defaultValue={selected?.cookWindow || ''} key={`cw-${selectedId}`} /></label>
+    <label className="text-sm font-bold text-slate-800">Rack count<input className="field mt-1" name="rackCount" type="number" min="0" step="1" placeholder="Rack count" defaultValue={inputValue(selected?.rackCount)} key={`r-${selectedId}`} /></label>
+    <label className="text-sm font-bold text-slate-800">Briskets per cook<input className="field mt-1" name="brisketCapacity" type="number" min="0" step="0.1" placeholder="Brisket count" defaultValue={inputValue(selected?.brisketCapacity)} key={`b-${selectedId}`} /></label>
+    <label className="text-sm font-bold text-slate-800">Pork butts per cook<input className="field mt-1" name="porkCapacity" type="number" min="0" step="0.1" placeholder="Pork butt count" defaultValue={inputValue(selected?.porkCapacity)} key={`p-${selectedId}`} /></label>
+    <label className="text-sm font-bold text-slate-800">Rib racks per cook<input className="field mt-1" name="ribCapacity" type="number" min="0" step="0.1" placeholder="Rib rack count" defaultValue={inputValue(selected?.ribCapacity)} key={`rb-${selectedId}`} /></label>
+    <label className="text-sm font-bold text-slate-800">Chicken breasts per cook <span className="block text-xs text-slate-500">Manual only if verified</span><input className="field mt-1" name="chickenCapacity" type="number" min="0" step="0.1" placeholder="Chicken breast count" defaultValue={inputValue(selected?.chickenCapacity)} key={`c-${selectedId}`} /></label>
     <SourceNote selected={selected} />
     <button className="btn-primary md:col-span-4" type="submit">Add smoker</button>
   </form>;

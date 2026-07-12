@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "5.9.1",
+  "version": "5.9.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,7 +16,7 @@
     "test:tenant": "tsx scripts/tenant-integration-test.mjs",
     "test:forecast": "tsx scripts/forecast-engine-test.ts",
     "test:backup": "node scripts/backup-restore-drill-check.mjs",
-    "build:eval": "node scripts/build-5-9-1-evaluation.mjs",
+    "build:eval": "node scripts/build-5-9-2-evaluation.mjs",
     "migration:baseline:check": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
     "render-build:migrate-ready": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build",
     "backup:weekly": "node scripts/run-weekly-backup-cron.mjs",

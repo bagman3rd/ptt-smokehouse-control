@@ -1,35 +1,29 @@
-# Smokehouse Control — Build 5.9.1
+# Smokehouse Control — Build 5.9.2
 
-Build 5.9.1 is a **DevOps/database-integrity repair build**. It fixes the broken empty migration baseline, removes `prisma db push` from CI, and forces CI to rebuild a fresh PostgreSQL database with `prisma migrate deploy`.
+Build 5.9.2 is a user-interface repair build layered on top of the 5.9.1 migration/CI repair.
 
-## Critical Build 5.9.1 changes
+## Fixes
 
-- Full-schema baseline in `prisma/migrations/20260712000100_build_330_baseline/migration.sql`
-- CI now applies migrations to a clean Postgres database with `pnpm run prisma:migrate`
-- CI no longer uses `prisma db push`
-- Render build is now a plain migration deploy path:
+- Top navigation dropdowns now behave like normal menus.
+- Only one dropdown can be open at a time.
+- Clicking anywhere outside the navigation closes the open dropdown.
+- Pressing Escape closes the open dropdown.
+- Selecting a link closes the menu.
+- Smoker Capacity add form now uses visible labels, not placeholder-only fields.
+- Smoker capacity numbers now remain readable after values are loaded from a catalog model.
 
-```bash
-prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build
-```
+## Deploy
 
-- Added migration integrity test:
-
-```bash
-pnpm run test:migration-integrity
-```
-
-## Production warning
-
-Existing production databases that already have the old empty baseline marked applied should not execute the repaired baseline against existing tables. Test this build against staging first. See:
+Commit message:
 
 ```text
-MIGRATION_BASELINE_REPAIR_BUILD_5_9_0.md
-MIGRATION_HISTORY_LOCK_BUILD_5_9_0.md
+Build 5.9.2 navigation dropdown and smoker form labels
 ```
 
-## Deploy commit message
+Normal path:
 
 ```text
-Build 5.9.1 migration baseline and CI repair
+ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Actions → Render Manual Deploy
 ```
+
+Render build remains migration-safe and uses `prisma migrate deploy`.
