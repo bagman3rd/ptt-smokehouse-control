@@ -1,10 +1,10 @@
-# Build 5.9.0 — Migration Baseline Repair
+# Build 5.9.1 — Migration Baseline Repair
 
 ## What was wrong
 
 The original `20260712000100_build_330_baseline/migration.sql` was an empty placeholder. That meant a fresh PostgreSQL database could not be rebuilt from the repository with `prisma migrate deploy`.
 
-That is now fixed. The baseline migration contains the full current schema through Build 5.9.0, including Restaurants, users, tenant records, cook plans, EOD logs, smokers, smoker catalog, SaaS billing/support/data-request tables, and POS import tables.
+That is now fixed. The baseline migration contains the full current schema through Build 5.9.1, including Restaurants, users, tenant records, cook plans, EOD logs, smokers, smoker catalog, SaaS billing/support/data-request tables, and POS import tables.
 
 ## What changed
 
@@ -31,7 +31,7 @@ npx prisma migrate status
 
 4. If the only problem is that the already-applied baseline checksum differs from the repaired file, update the baseline record intentionally after backup review. Do not delete application tables.
 
-The safer long-term path is to test Build 5.9.0 first on a staging database restored from production, then promote to production.
+The safer long-term path is to test Build 5.9.1 first on a staging database restored from production, then promote to production.
 
 ## Fresh database verification
 

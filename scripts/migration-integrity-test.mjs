@@ -52,4 +52,13 @@ for (const [prefix, names] of duplicated) {
   for (const name of names) assert(historyDoc.includes(name), `migration history lock missing ${name}`);
 }
 
-console.log('Build 5.9.0 migration integrity checks completed.');
+
+for (const name of migrations.filter((migrationName) => migrationName !== '20260712000100_build_330_baseline')) {
+  const sql = read(`prisma/migrations/${name}/migration.sql`);
+  const hasConstraint = /ALTER TABLE\s+"[^"]+"\s+ADD CONSTRAINT/.test(sql);
+  const guardedConstraint = sql.includes('EXCEPTION WHEN duplicate_object') || sql.includes('information_schema.table_constraints');
+  assert(!hasConstraint || guardedConstraint, `${name} has an unguarded ADD CONSTRAINT statement that can fail on a fresh full-baseline rebuild`);
+}
+
+console.log('Build 5.9.1 migration integrity checks completed.');
+

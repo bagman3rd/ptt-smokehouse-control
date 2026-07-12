@@ -1,4 +1,4 @@
--- Build 5.9.0 repaired full-schema baseline.
+-- Build 5.9.1 repaired full-schema baseline.
 -- Purpose: a fresh PostgreSQL database must be rebuildable from repository migrations using prisma migrate deploy.
 -- Existing production databases that already have this migration marked applied should not run this SQL;
 -- verify/repair their _prisma_migrations baseline record per MIGRATION_BASELINE_REPAIR_BUILD_5_9_0.md.

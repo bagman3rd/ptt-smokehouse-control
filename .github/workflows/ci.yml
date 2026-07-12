@@ -1,4 +1,4 @@
-name: Build 5.9 CI
+name: Build 5.9.1 CI
 
 on:
   push:
