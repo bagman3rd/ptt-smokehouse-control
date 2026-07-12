@@ -33,7 +33,7 @@ export async function createUser(formData: FormData) {
   const password = String(formData.get('password') || '');
   const role = roleFromForm(formData.get('role'));
   if (!name) throw new Error('Name is required.');
-  if (password.length < 8) throw new Error('Password must be at least 8 characters.');
+  if (password.length < 12) throw new Error('Password must be at least 12 characters.');
   const existing = await prisma.user.findFirst({ where: { restaurantId, OR: [{ username }, { email }] } });
   if (existing) throw new Error('That username or email is already in use.');
   await prisma.user.create({
@@ -67,9 +67,21 @@ export async function resetUserPassword(formData: FormData) {
   const restaurantId = restaurant.id;
   const id = clean(formData.get('id'));
   const password = String(formData.get('password') || '');
-  if (password.length < 8) throw new Error('Password must be at least 8 characters.');
+  if (password.length < 12) throw new Error('Password must be at least 12 characters.');
   const before = await prisma.user.findFirst({ where: { id, restaurantId } });
   await prisma.user.updateMany({ where: { id, restaurantId }, data: { passwordHash: hashPassword(password), sessionVersion: { increment: 1 }, failedLoginCount: 0, lockedUntil: null, lastFailedLoginAt: null } });
   await auditLog({ restaurantId, actorUserId: current.id, actorName: current.name, action: 'RESET_PASSWORD_REVOKE_SESSIONS', entity: 'User', entityId: id, beforeJson: before ? { sessionVersion: before.sessionVersion, lockedUntil: before.lockedUntil, failedLoginCount: before.failedLoginCount } : null, afterJson: { sessionRevoked: true } });
+  revalidatePath('/admin/users');
+}
+
+
+export async function unlockUser(formData: FormData) {
+  const current = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(current);
+  const restaurantId = restaurant.id;
+  const id = clean(formData.get('id'));
+  const before = await prisma.user.findFirst({ where: { id, restaurantId } });
+  await prisma.user.updateMany({ where: { id, restaurantId }, data: { failedLoginCount: 0, lockedUntil: null, lastFailedLoginAt: null } });
+  await auditLog({ restaurantId, actorUserId: current.id, actorName: current.name, action: 'UNLOCK_USER', entity: 'User', entityId: id, beforeJson: before ? { failedLoginCount: before.failedLoginCount, lockedUntil: before.lockedUntil } : null, afterJson: { failedLoginCount: 0, lockedUntil: null } });
   revalidatePath('/admin/users');
 }

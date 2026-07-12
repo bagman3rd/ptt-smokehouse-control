@@ -15,7 +15,7 @@ const pkg = JSON.parse(read('package.json'));
 const version = pkg.version;
 const buildLabel = `Build ${version}`;
 
-assert(version === '4.7.0', 'package.json version must be 4.7.0 for this build');
+assert(version === '4.8.0', 'package.json version must be 4.8.0 for this build');
 assert(read('README.md').includes(buildLabel), 'README must mention the current build label');
 assert(read('components/Nav.tsx').includes(buildLabel), 'Nav badge must show the current build label');
 assert(pkg.scripts.typecheck === 'tsc --noEmit', 'typecheck script must run tsc --noEmit');
@@ -44,4 +44,4 @@ for (const token of noLongerAllowed.slice(0, 4)) {
   assert(!projectText.includes(token), `obsolete token still present: ${token}`);
 }
 
-console.log('Build 4.7.0 preflight checks completed.');
+console.log('Build 4.8.0 preflight checks completed.');

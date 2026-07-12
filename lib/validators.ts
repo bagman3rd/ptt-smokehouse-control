@@ -5,7 +5,8 @@ export const roleSchema = z.enum(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_
 
 export const loginSchema = z.object({
   username: z.string().trim().min(1).max(120).transform((v) => v.toLowerCase()),
-  password: z.string().min(1).max(240)
+  password: z.string().min(1).max(240),
+  otp: z.string().trim().max(12).optional().default('')
 });
 
 export const signupSchema = z.object({

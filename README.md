@@ -1,6 +1,6 @@
-# Smokehouse Control — Build 4.7.0
+# Smokehouse Control — Build 4.8.0
 
-Build 4.7.0 is the **Tenant Isolation Hardening** build.
+Build 4.8.0 is the **Security Hardening + Tenant Migration Recovery** build.
 
 It assumes the production migration baseline has already been repaired and the app can deploy with:
 
@@ -15,7 +15,7 @@ prisma db push
 --accept-data-loss
 ```
 
-## What Build 4.7.0 adds
+## What Build 4.8.0 adds
 
 ### Tenant guard coverage
 
@@ -41,7 +41,7 @@ In development and CI, missing tenant scoping now fails loudly instead of becomi
 
 ### Child-record restaurantId fields
 
-Build 4.7.0 adds `restaurantId` to:
+Build 4.8.0 adds `restaurantId` to:
 
 - CookPlanItem
 - EndOfDayProteinLog
@@ -92,12 +92,12 @@ ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Act
 Commit message:
 
 ```text
-Build 4.7.0 tenant isolation hardening
+Build 4.8.0 tenant isolation hardening
 ```
 
 ## Important note
 
-Build 4.7.0 contains a tenant-constraints migration. If existing production data has duplicates that violate tenant-level uniqueness, the migration can fail. Run this first on staging and confirm:
+Build 4.8.0 contains a tenant-constraints migration. If existing production data has duplicates that violate tenant-level uniqueness, the migration can fail. Run this first on staging and confirm:
 
 ```bash
 pnpm run test:tenant

@@ -102,6 +102,9 @@ model User {
   email        String
   passwordHash String?
   sessionVersion Int    @default(1)
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret String?
+  passwordResetRequired Boolean @default(false)
   failedLoginCount Int  @default(0)
   lockedUntil  DateTime?
   lastFailedLoginAt DateTime?

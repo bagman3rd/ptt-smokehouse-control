@@ -2,7 +2,7 @@ import { Shell } from '@/components/Shell';
 import { prisma } from '@/lib/prisma';
 import { requireRole, ROLE_LABELS, normalizeRole, APP_ROLES } from '@/lib/auth';
 import { ensureDefaultData } from '@/lib/bootstrap';
-import { createUser, resetUserPassword, updateUserAccess } from './actions';
+import { createUser, resetUserPassword, unlockUser, updateUserAccess } from './actions';
 import { currentRestaurantForUser } from '@/lib/tenant';
 
 export const dynamic = 'force-dynamic';
@@ -48,7 +48,7 @@ export default async function UsersPage() {
         </div>
         <div>
           <label className="label">Temp Password</label>
-          <input className="field mt-1" name="password" type="password" minLength={8} required />
+          <input className="field mt-1" name="password" type="password" minLength={12} required />
         </div>
         <div className="md:col-span-5">
           <button className="btn-primary" type="submit">Create User</button>
@@ -67,7 +67,7 @@ export default async function UsersPage() {
               const role = normalizeRole(String(membership.role));
               return <tr key={membership.id} className="border-b align-top">
                 <td className="py-3 pr-4"><div className="font-bold">{user.name}</div><div className="text-slate-500">{user.username || 'no username'} · {user.email}</div><div className="text-xs text-slate-400">Created {fmtDate(user.createdAt)}</div>{user.lockedUntil && user.lockedUntil > new Date() ? <div className="mt-1 rounded bg-red-50 px-2 py-1 text-xs font-bold text-red-700">Locked until {user.lockedUntil.toISOString().slice(0,16).replace('T',' ')}</div> : null}</td>
-                <td className="py-3 pr-4"><span className={`rounded-full px-2 py-1 text-xs font-bold ${membership.active ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>{membership.active ? 'Active' : 'Inactive'}</span><div className="mt-2 font-bold">{ROLE_LABELS[role]}</div><div className="mt-1 text-xs text-slate-500">Failed logins: {user.failedLoginCount || 0} · Session v{user.sessionVersion || 1}</div></td>
+                <td className="py-3 pr-4"><span className={`rounded-full px-2 py-1 text-xs font-bold ${membership.active ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>{membership.active ? 'Active' : 'Inactive'}</span><div className="mt-2 font-bold">{ROLE_LABELS[role]}</div><div className="mt-1 text-xs text-slate-500">Failed logins: {user.failedLoginCount || 0} · Session v{user.sessionVersion || 1}</div><div className="mt-1 text-xs text-slate-500">2FA: {(user as any).twoFactorEnabled ? 'Enabled' : 'Off'}</div></td>
                 <td className="py-3 pr-4">
                   <form action={updateUserAccess} className="flex flex-wrap items-end gap-2">
                     <input type="hidden" name="id" value={user.id} />
@@ -77,9 +77,10 @@ export default async function UsersPage() {
                   </form>
                 </td>
                 <td className="py-3 pr-4">
+                  {user.lockedUntil && user.lockedUntil > new Date() ? <form action={unlockUser} className="mb-2"><input type="hidden" name="id" value={user.id} /><button className="btn-secondary" type="submit">Unlock</button></form> : null}
                   <form action={resetUserPassword} className="flex flex-wrap items-end gap-2">
                     <input type="hidden" name="id" value={user.id} />
-                    <input className="field max-w-56" name="password" type="password" minLength={8} placeholder="new password" required />
+                    <input className="field max-w-56" name="password" type="password" minLength={12} placeholder="new password" required />
                     <button className="btn-secondary" type="submit">Reset</button>
                   </form>
                 </td>

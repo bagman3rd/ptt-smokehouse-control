@@ -6,6 +6,7 @@ import { ensureDefaultData } from '@/lib/bootstrap';
 import { enforceRateLimit } from '@/lib/rateLimit';
 import { auditLog } from '@/lib/tenant';
 import { loginSchema } from '@/lib/validators';
+import { verifyTotp } from '@/lib/totp';
 
 const MAX_FAILED_LOGINS = 6;
 const LOCKOUT_MS = 30 * 60_000;
@@ -67,6 +68,7 @@ export async function POST(request: Request) {
     return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
   }
   const password = parsed.data.password;
+  const otp = parsed.data.otp || '';
 
   const usernameMatch = await prisma.user.findFirst({ where: { active: true, username: identifier } });
   const emailMatches = usernameMatch ? [] : await prisma.user.findMany({ where: { active: true, email: identifier }, take: 2 });
@@ -80,6 +82,18 @@ export async function POST(request: Request) {
   if (!user || !verifyPassword(password, user.passwordHash)) {
     await recordFailedLogin(user, identifier, request, 'bad credentials');
     return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
+  }
+
+  if ((user as any).twoFactorEnabled) {
+    const secret = (user as any).twoFactorSecret || '';
+    if (!otp) {
+      await auditLog({ restaurantId: user.restaurantId || null, actorUserId: user.id, actorName: user.name, action: 'LOGIN_2FA_REQUIRED', entity: 'Auth', entityId: user.id, afterJson: { identifier, ...requestMeta(request) } });
+      return NextResponse.redirect(`${baseUrl}/login?otp=1`, 303);
+    }
+    if (!verifyTotp(otp, secret)) {
+      await recordFailedLogin(user, identifier, request, 'bad two-factor code');
+      return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
+    }
   }
 
   const activeMembership = await prisma.restaurantMembership.findFirst({ where: { userId: user.id, active: true, restaurant: { active: true } } });

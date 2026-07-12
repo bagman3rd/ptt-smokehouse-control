@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { authConfigErrors } from '@/lib/auth';
 
-export default function LoginPage({ searchParams }: { searchParams?: { error?: string; config?: string; locked?: string } }) {
+export default function LoginPage({ searchParams }: { searchParams?: { error?: string; config?: string; locked?: string; otp?: string } }) {
   const configErrors = authConfigErrors();
   const hasConfigError = Boolean(searchParams?.config) || configErrors.length > 0;
   return (
@@ -14,7 +14,8 @@ export default function LoginPage({ searchParams }: { searchParams?: { error?: s
         </div>
         {hasConfigError ? <div className="mb-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-700">Authentication is not configured correctly. Set ADMIN_PASSWORD and APP_SESSION_TOKEN in Render. Both must be at least 12 characters.</div> : null}
         {searchParams?.locked ? <div className="mb-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-700">Account temporarily locked after repeated failed logins. Ask an Admin/Owner to reset access or wait for the lockout window.</div> : null}
-        {searchParams?.error ? <div className="mb-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-700">Invalid username or password.</div> : null}
+        {searchParams?.error ? <div className="mb-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-700">Invalid username, password, or verification code.</div> : null}
+        {searchParams?.otp ? <div className="mb-4 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-800">This account requires a 6-digit authenticator code.</div> : null}
         <form action="/api/login" method="POST" className="space-y-4">
           <div>
             <label className="label">Username or Email</label>
@@ -23,6 +24,10 @@ export default function LoginPage({ searchParams }: { searchParams?: { error?: s
           <div>
             <label className="label">Password</label>
             <input className="field mt-1" name="password" type="password" required autoComplete="current-password" disabled={hasConfigError} />
+          </div>
+          <div>
+            <label className="label">Authenticator Code <span className="text-slate-400">(Admin/Owner if enabled)</span></label>
+            <input className="field mt-1" name="otp" type="text" inputMode="numeric" autoComplete="one-time-code" placeholder="optional" disabled={hasConfigError} />
           </div>
           <button className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50" type="submit" disabled={hasConfigError}>Login</button>
         </form>

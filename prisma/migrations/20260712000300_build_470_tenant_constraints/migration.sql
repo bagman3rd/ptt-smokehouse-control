@@ -15,6 +15,94 @@ SET "restaurantId" = eod."restaurantId"
 FROM "EndOfDayLog" eod
 WHERE epl."endOfDayLogId" = eod."id" AND epl."restaurantId" IS NULL;
 
+
+-- Build 4.8.0 safety cleanup: production data may already contain duplicate rows from earlier bootstrap/retry builds.
+-- Clean those duplicates before adding tenant-level unique indexes so migrate deploy can proceed safely.
+WITH ranked_memberships AS (
+  SELECT "id", ROW_NUMBER() OVER (PARTITION BY "restaurantId", "userId" ORDER BY "active" DESC, "updatedAt" DESC, "createdAt" DESC, "id") AS rn
+  FROM "RestaurantMembership"
+  WHERE "restaurantId" IS NOT NULL AND "userId" IS NOT NULL
+)
+DELETE FROM "RestaurantMembership" rm
+USING ranked_memberships r
+WHERE rm."id" = r."id" AND r.rn > 1;
+
+WITH ranked_day AS (
+  SELECT "id", ROW_NUMBER() OVER (PARTITION BY "restaurantId", "dayOfWeek" ORDER BY "updatedAt" DESC, "id") AS rn
+  FROM "DayMultiplier"
+  WHERE "restaurantId" IS NOT NULL
+)
+DELETE FROM "DayMultiplier" d
+USING ranked_day r
+WHERE d."id" = r."id" AND r.rn > 1;
+
+WITH ranked_month AS (
+  SELECT "id", ROW_NUMBER() OVER (PARTITION BY "restaurantId", "month" ORDER BY "updatedAt" DESC, "id") AS rn
+  FROM "MonthMultiplier"
+  WHERE "restaurantId" IS NOT NULL
+)
+DELETE FROM "MonthMultiplier" m
+USING ranked_month r
+WHERE m."id" = r."id" AND r.rn > 1;
+
+WITH ranked_eod AS (
+  SELECT "id", ROW_NUMBER() OVER (PARTITION BY "restaurantId", "serviceDate" ORDER BY "updatedAt" DESC, "createdAt" DESC, "id") AS rn
+  FROM "EndOfDayLog"
+  WHERE "restaurantId" IS NOT NULL
+), doomed_eod AS (
+  SELECT "id" FROM ranked_eod WHERE rn > 1
+)
+DELETE FROM "EndOfDayProteinLog" epl USING doomed_eod d WHERE epl."endOfDayLogId" = d."id";
+WITH ranked_eod AS (
+  SELECT "id", ROW_NUMBER() OVER (PARTITION BY "restaurantId", "serviceDate" ORDER BY "updatedAt" DESC, "createdAt" DESC, "id") AS rn
+  FROM "EndOfDayLog"
+  WHERE "restaurantId" IS NOT NULL
+)
+DELETE FROM "EndOfDayLog" e USING ranked_eod r WHERE e."id" = r."id" AND r.rn > 1;
+
+WITH ranked_cook AS (
+  SELECT "id", ROW_NUMBER() OVER (PARTITION BY "restaurantId", "serviceDate", "scenarioId" ORDER BY "updatedAt" DESC, "createdAt" DESC, "id") AS rn
+  FROM "CookPlan"
+  WHERE "restaurantId" IS NOT NULL
+), doomed_cook AS (
+  SELECT "id" FROM ranked_cook WHERE rn > 1
+)
+DELETE FROM "CookPlanItem" cpi USING doomed_cook d WHERE cpi."cookPlanId" = d."id";
+WITH ranked_cook AS (
+  SELECT "id", ROW_NUMBER() OVER (PARTITION BY "restaurantId", "serviceDate", "scenarioId" ORDER BY "updatedAt" DESC, "createdAt" DESC, "id") AS rn
+  FROM "CookPlan"
+  WHERE "restaurantId" IS NOT NULL
+)
+DELETE FROM "CookPlan" cp USING ranked_cook r WHERE cp."id" = r."id" AND r.rn > 1;
+
+-- Preserve referenced name-based records by suffixing duplicates instead of deleting them.
+WITH ranked_protein AS (
+  SELECT "id", "name", ROW_NUMBER() OVER (PARTITION BY "restaurantId", "name" ORDER BY "updatedAt" DESC, "createdAt" DESC, "id") AS rn
+  FROM "Protein"
+  WHERE "restaurantId" IS NOT NULL
+)
+UPDATE "Protein" p SET "name" = p."name" || ' duplicate ' || r.rn
+FROM ranked_protein r
+WHERE p."id" = r."id" AND r.rn > 1;
+
+WITH ranked_scenario AS (
+  SELECT "id", "name", ROW_NUMBER() OVER (PARTITION BY "restaurantId", "name" ORDER BY "updatedAt" DESC, "createdAt" DESC, "id") AS rn
+  FROM "ForecastScenario"
+  WHERE "restaurantId" IS NOT NULL
+)
+UPDATE "ForecastScenario" f SET "name" = f."name" || ' duplicate ' || r.rn
+FROM ranked_scenario r
+WHERE f."id" = r."id" AND r.rn > 1;
+
+WITH ranked_smoker AS (
+  SELECT "id", "name", ROW_NUMBER() OVER (PARTITION BY "restaurantId", "name" ORDER BY "updatedAt" DESC, "createdAt" DESC, "id") AS rn
+  FROM "Smoker"
+  WHERE "restaurantId" IS NOT NULL
+)
+UPDATE "Smoker" s SET "name" = s."name" || ' duplicate ' || r.rn
+FROM ranked_smoker r
+WHERE s."id" = r."id" AND r.rn > 1;
+
 CREATE INDEX IF NOT EXISTS "RestaurantMembership_userId_idx" ON "RestaurantMembership"("userId");
 CREATE INDEX IF NOT EXISTS "RestaurantMembership_restaurantId_active_idx" ON "RestaurantMembership"("restaurantId", "active");
 CREATE UNIQUE INDEX IF NOT EXISTS "RestaurantMembership_restaurantId_userId_key" ON "RestaurantMembership"("restaurantId", "userId");
