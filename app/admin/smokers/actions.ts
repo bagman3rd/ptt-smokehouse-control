@@ -16,24 +16,33 @@ function numberField(formData: FormData, key: string, fallback = 0, min = 0, max
   return Math.min(max, Math.max(min, n));
 }
 
+async function catalogFromForm(formData: FormData) {
+  const catalogId = text(formData, 'catalogId');
+  if (!catalogId) return null;
+  return prisma.smokerCatalog.findUnique({ where: { id: catalogId } });
+}
+
 export async function createSmoker(formData: FormData) {
   const user = await requireRole(['ADMIN', 'OWNER']);
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
   const name = text(formData, 'name');
   if (!name) throw new Error('Smoker name is required.');
+  const catalog = await catalogFromForm(formData);
   const smoker = await prisma.smoker.create({
     data: {
       restaurantId,
+      catalogId: catalog?.id || null,
       name,
-      model: text(formData, 'model'),
+      brand: catalog?.brand || text(formData, 'brand'),
+      model: catalog ? catalog.model : text(formData, 'model'),
       location: text(formData, 'location'),
-      rackCount: numberField(formData, 'rackCount', 0, 0, 500),
-      brisketCapacity: numberField(formData, 'brisketCapacity', 0, 0, 1000),
-      porkCapacity: numberField(formData, 'porkCapacity', 0, 0, 1000),
-      ribCapacity: numberField(formData, 'ribCapacity', 0, 0, 5000),
-      chickenCapacity: numberField(formData, 'chickenCapacity', 0, 0, 5000),
-      cookWindow: text(formData, 'cookWindow')
+      rackCount: numberField(formData, 'rackCount', catalog?.rackCount || 0, 0, 500),
+      brisketCapacity: numberField(formData, 'brisketCapacity', catalog?.brisketCapacity || 0, 0, 1000),
+      porkCapacity: numberField(formData, 'porkCapacity', catalog?.porkCapacity || 0, 0, 1000),
+      ribCapacity: numberField(formData, 'ribCapacity', catalog?.ribCapacity || 0, 0, 5000),
+      chickenCapacity: numberField(formData, 'chickenCapacity', catalog?.chickenCapacity || 0, 0, 5000),
+      cookWindow: text(formData, 'cookWindow', catalog?.cookWindow || '')
     }
   });
   await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'CREATE', entity: 'Smoker', entityId: smoker.id, afterJson: smoker });
@@ -48,11 +57,14 @@ export async function updateSmoker(formData: FormData) {
   const id = text(formData, 'id');
   const before = await prisma.smoker.findFirst({ where: { id, restaurantId } });
   if (!before) throw new Error('Smoker not found for this restaurant.');
+  const catalog = await catalogFromForm(formData);
   const data = {
+    catalogId: catalog?.id || before.catalogId || null,
     name: text(formData, 'name', before.name),
-    model: text(formData, 'model'),
+    brand: catalog?.brand || text(formData, 'brand', before.brand || ''),
+    model: catalog ? catalog.model : text(formData, 'model'),
     location: text(formData, 'location'),
-    rackCount: numberField(formData, 'rackCount', before.rackCount, 0, 500),
+    rackCount: numberField(formData, 'rackCount', catalog?.rackCount || before.rackCount, 0, 500),
     brisketCapacity: numberField(formData, 'brisketCapacity', before.brisketCapacity, 0, 1000),
     porkCapacity: numberField(formData, 'porkCapacity', before.porkCapacity, 0, 1000),
     ribCapacity: numberField(formData, 'ribCapacity', before.ribCapacity, 0, 5000),

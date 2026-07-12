@@ -2,10 +2,12 @@ import { ProteinUnit, ScenarioType, Role } from '@prisma/client';
 import { hashPassword } from '@/lib/password';
 import { initialAdminPassword } from '@/lib/auth';
 import { ensureDefaultRestaurant } from '@/lib/tenant';
+import { ensureSmokerCatalog } from '@/lib/smokerCatalogData';
 
 const activeScenarioNames = ['Base $6M', 'Aggressive $8M', 'Base Forecast', 'Busy Forecast'];
 
 export async function ensureDefaultData(prisma: any) {
+  await ensureSmokerCatalog(prisma);
   const restaurant = await ensureDefaultRestaurant();
   const restaurantId = restaurant.id;
 

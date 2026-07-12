@@ -4,6 +4,7 @@ import { requireRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { currentRestaurantForUser } from '@/lib/tenant';
 import { createSmoker, updateSmoker } from './actions';
+import { AddSmokerForm, EditSmokerForm } from '@/components/smokers/SmokerCatalogForms';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -15,7 +16,10 @@ export default async function SmokersPage() {
   noStore();
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
-  const smokers = await prisma.smoker.findMany({ where: { restaurantId }, orderBy: [{ active: 'desc' }, { name: 'asc' }] });
+  const [smokers, catalog] = await Promise.all([
+    prisma.smoker.findMany({ where: { restaurantId }, orderBy: [{ active: 'desc' }, { name: 'asc' }] }),
+    prisma.smokerCatalog.findMany({ where: { active: true }, orderBy: [{ brand: 'asc' }, { model: 'asc' }] })
+  ]);
   const totals = smokers.filter(s => s.active).reduce((sum, s) => ({
     brisket: sum.brisket + s.brisketCapacity,
     pork: sum.pork + s.porkCapacity,
@@ -26,7 +30,7 @@ export default async function SmokersPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Smoker Capacity</h1>
-      <p className="mt-2 text-slate-600">Build the physical production model. Build 5.2.0 adds a smoker schedule view that compares planned loads against cook-window and capacity constraints.</p>
+      <p className="mt-2 text-slate-600">Build the physical production model. Build 5.5.0 adds a researched commercial smoker catalog. Pick brand/model and the app auto-loads rack count and capacity assumptions.</p>
     </div>
     <div className="mb-6 flex gap-2"><a href="/admin/smokers/schedule" className="rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white">Open Smoker Schedule</a><a href="/today" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">Today</a></div>
 
@@ -38,36 +42,18 @@ export default async function SmokersPage() {
     </section>
 
     <section className="card mt-6 p-5">
-      <h2 className="text-xl font-black">Add Smoker</h2>
-      <form action={createSmoker} className="mt-4 grid gap-3 md:grid-cols-4">
-        <input className="field" name="name" placeholder="Smoker name" required />
-        <input className="field" name="model" placeholder="Model" />
-        <input className="field" name="location" placeholder="Indoor / outdoor / pit room" />
-        <input className="field" name="cookWindow" placeholder="Cook window" />
-        <input className="field" name="rackCount" type="number" min="0" step="1" placeholder="Rack count" />
-        <input className="field" name="brisketCapacity" type="number" min="0" step="0.1" placeholder="Brisket capacity" />
-        <input className="field" name="porkCapacity" type="number" min="0" step="0.1" placeholder="Pork butt capacity" />
-        <input className="field" name="ribCapacity" type="number" min="0" step="0.1" placeholder="Rib rack capacity" />
-        <input className="field" name="chickenCapacity" type="number" min="0" step="0.1" placeholder="Chicken breast capacity" />
-        <button className="btn-primary md:col-span-4" type="submit">Add smoker</button>
-      </form>
+      <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+        <div>
+          <h2 className="text-xl font-black">Add Smoker From Catalog</h2>
+          <p className="mt-1 text-sm font-bold text-slate-500">Catalog contains {catalog.length} researched Ole Hickory, Southern Pride, J&amp;R, Cookshack, and M&amp;M models. Official capacities are used where published; estimated rows are clearly marked.</p>
+        </div>
+        <a href="/admin/smokers/catalog" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">View Catalog</a>
+      </div>
+      <AddSmokerForm catalog={catalog} action={createSmoker} />
     </section>
 
     <section className="mt-6 space-y-4">
-      {smokers.map((smoker) => <form key={smoker.id} action={updateSmoker} className="card grid gap-3 p-5 md:grid-cols-4">
-        <input type="hidden" name="id" value={smoker.id} />
-        <input className="field" name="name" defaultValue={smoker.name} />
-        <input className="field" name="model" defaultValue={smoker.model || ''} />
-        <input className="field" name="location" defaultValue={smoker.location || ''} />
-        <input className="field" name="cookWindow" defaultValue={smoker.cookWindow || ''} />
-        <label className="text-sm font-bold">Racks<input className="field mt-1" name="rackCount" type="number" min="0" step="1" defaultValue={smoker.rackCount} /></label>
-        <label className="text-sm font-bold">Briskets<input className="field mt-1" name="brisketCapacity" type="number" min="0" step="0.1" defaultValue={smoker.brisketCapacity} /></label>
-        <label className="text-sm font-bold">Pork butts<input className="field mt-1" name="porkCapacity" type="number" min="0" step="0.1" defaultValue={smoker.porkCapacity} /></label>
-        <label className="text-sm font-bold">Rib racks<input className="field mt-1" name="ribCapacity" type="number" min="0" step="0.1" defaultValue={smoker.ribCapacity} /></label>
-        <label className="text-sm font-bold">Chicken breasts<input className="field mt-1" name="chickenCapacity" type="number" min="0" step="0.1" defaultValue={smoker.chickenCapacity} /></label>
-        <label className="flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-sm font-bold"><input type="checkbox" name="active" defaultChecked={smoker.active} /> Active</label>
-        <button className="btn-secondary md:col-span-2" type="submit">Save smoker</button>
-      </form>)}
+      {smokers.map((smoker) => <EditSmokerForm key={smoker.id} smoker={smoker} catalog={catalog} action={updateSmoker} />)}
     </section>
   </Shell>;
 }

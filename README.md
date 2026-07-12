@@ -1,6 +1,6 @@
-# Smokehouse Control — Build 5.4.0
+# Smokehouse Control — Build 5.5.0
 
-Build 5.4.0 is the **Documentation, Demo, and Sales Package** build.
+Build 5.5.0 is the **Commercial Smoker Catalog + Auto-Capacity Selection** build. It adds a researched smoker catalog table and lets operators pick brand/model from a dropdown so rack count and protein capacities auto-load on the Smoker Capacity page.
 
 ## Purpose
 
@@ -85,7 +85,7 @@ pnpm run build:eval
 ## Commit message
 
 ```text
-Build 5.4.0 documentation demo and sales package
+Build 5.5.0 commercial smoker catalog and auto-capacity selection
 ```
 
 ## Important limitation

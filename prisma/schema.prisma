@@ -337,7 +337,10 @@ model Smoker {
   id           String   @id @default(cuid())
   restaurantId String?
   restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  catalogId    String?
+  catalog      SmokerCatalog? @relation(fields: [catalogId], references: [id])
   name         String
+  brand        String?
   model        String?
   location     String?
   rackCount    Int      @default(0)
@@ -351,6 +354,37 @@ model Smoker {
   updatedAt    DateTime @default(now()) @updatedAt
   @@unique([restaurantId, name])
   @@index([restaurantId, active])
+  @@index([catalogId])
+}
+
+model SmokerCatalog {
+  id              String   @id @default(cuid())
+  brand           String
+  model           String
+  series          String?
+  smokerType      String
+  fuelType        String
+  rackCount       Int      @default(0)
+  rackWidthIn     Float?
+  rackDepthIn     Float?
+  cookingAreaSqIn Float?
+  brisketCapacity Float    @default(0)
+  porkCapacity    Float    @default(0)
+  ribCapacity     Float    @default(0)
+  chickenCapacity Float    @default(0)
+  cookWindow      String?
+  notes           String?
+  sourceUrl       String?
+  sourceLabel     String?
+  sourceConfidence String  @default("RESEARCHED")
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+  smokers         Smoker[]
+
+  @@unique([brand, model])
+  @@index([brand, active])
+  @@index([sourceConfidence])
 }
 
 model LearningRecommendation {

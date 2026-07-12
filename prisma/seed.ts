@@ -1,8 +1,10 @@
 import { PrismaClient, ProteinUnit, ScenarioType, Role } from '@prisma/client';
 import { hashPassword } from '../lib/password';
+import { ensureSmokerCatalog } from '../lib/smokerCatalogData';
 const prisma = new PrismaClient();
 
 async function main() {
+  await ensureSmokerCatalog(prisma);
   const restaurant = await prisma.restaurant.findFirst({ where: { slug: 'pigeon-toed-tavern' } }) || await prisma.restaurant.create({ data: { name: 'Pigeon Toed Tavern', slug: 'pigeon-toed-tavern', city: 'Pigeon Forge', state: 'TN', timezone: 'America/New_York' } });
   const restaurantId = restaurant.id;
   await prisma.protein.updateMany({ where: { restaurantId: null }, data: { restaurantId } });
