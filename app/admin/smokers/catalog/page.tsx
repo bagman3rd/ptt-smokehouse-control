@@ -29,7 +29,7 @@ export default async function SmokerCatalogPage() {
     <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div>
         <h1 className="text-3xl font-black tracking-tight">Commercial Smoker Catalog</h1>
-        <p className="mt-2 text-slate-600">Manufacturer-published smoker data for Ole Hickory, Southern Pride, J&amp;R Manufacturing, Cookshack, and M&amp;M BBQ Company. Count fields load only when the manufacturer publishes usable counts. Whole chickens load 1:1 as chicken / double-breast planning units for this project.</p>
+        <p className="mt-2 text-slate-600">Manufacturer-published smoker data for Ole Hickory, Southern Pride, J&amp;R Manufacturing, Cookshack, and M&amp;M BBQ Company. Count fields load only when the published unit matches the production-planning unit.</p>
       </div>
       <Link href="/admin/smokers" className="rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white">Add Smoker</Link>
     </div>
@@ -44,9 +44,9 @@ export default async function SmokerCatalogPage() {
     <section className="card mt-6 p-5">
       <h2 className="text-xl font-black">Capacity rules</h2>
       <div className="mt-3 grid gap-3 text-sm text-slate-700 md:grid-cols-3">
-        <div className="rounded-2xl bg-slate-50 p-4"><b>Loaded counts</b><br />Briskets, pork butts, rib racks/slabs, and whole chickens load when published as counts.</div>
-        <div className="rounded-2xl bg-slate-50 p-4"><b>Reference specs</b><br />Pounds, ranges, and half chickens stay in official capacity text.</div>
-        <div className="rounded-2xl bg-slate-50 p-4"><b>No estimates</b><br />Blank means the manufacturer did not publish a usable count for that planning unit.</div>
+        <div className="rounded-2xl bg-slate-50 p-4"><b>Loaded counts</b><br />Briskets, pork butts, and rib racks/slabs load only when published as counts.</div>
+        <div className="rounded-2xl bg-slate-50 p-4"><b>Reference specs</b><br />Pounds, ranges, whole chickens, and half chickens stay in official capacity text.</div>
+        <div className="rounded-2xl bg-slate-50 p-4"><b>No estimates</b><br />Blank means the manufacturer did not publish a directly usable planning count.</div>
       </div>
     </section>
 
@@ -54,7 +54,7 @@ export default async function SmokerCatalogPage() {
       <h2 className="text-xl font-black">{brand}</h2>
       <div className="mt-4 overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead><tr className="border-b text-xs uppercase text-slate-500"><th className="py-2">Model</th><th>Type</th><th>Racks</th><th>Official capacity</th><th>Briskets</th><th>Pork</th><th>Ribs</th><th>Chicken / double breasts</th><th>Source</th></tr></thead>
+          <thead><tr className="border-b text-xs uppercase text-slate-500"><th className="py-2">Model</th><th>Type</th><th>Racks</th><th>Official capacity</th><th>Briskets</th><th>Pork</th><th>Ribs</th><th>Chicken breasts</th><th>Source</th></tr></thead>
           <tbody>{catalog.filter((item) => item.brand === brand).map((item) => <tr key={item.id} className="border-b align-top">
             <td className="py-3 font-black">{item.model}<div className="text-xs font-bold text-slate-500">{item.series || '—'}</div></td>
             <td className="py-3 font-bold">{item.smokerType}<div className="text-xs text-slate-500">{item.fuelType}</div></td>

@@ -1,21 +1,29 @@
 # Smokehouse Control — Build 5.9.3
 
-Build 5.9.3 repairs the smoker setup workflow after the 5.9.2 UI cleanup.
+Build 5.9.3 is a user-interface repair build layered on top of the 5.9.1 migration/CI repair.
 
-## Included
+## Fixes
 
-- Whole-chicken manufacturer capacity now loads 1:1 as chicken / double-breast planning capacity for this project.
-- Southern Pride SPK-500 loads 20 briskets, 60 pork butts, 60 rib racks, and 70 chicken / double-breast units.
-- Southern Pride MLR-150 loads 8 briskets, 24 pork butts, 24 rib racks, and 32 chicken / double-breast units.
-- Smoker form label changed from Smoker Name to Smoker Brand.
-- Location is now a dropdown: Outdoor, Indoors under hood, In the wall, Outdoors in smoke house.
-- Cook window is now a dropdown: Overnight only, Same-day only, All day / flexible, Backup / overflow only, Not currently active.
-- Smoker Capacity and Smoker Catalog pages now explain the project-specific chicken capacity rule.
+- Top navigation dropdowns now behave like normal menus.
+- Only one dropdown can be open at a time.
+- Clicking anywhere outside the navigation closes the open dropdown.
+- Pressing Escape closes the open dropdown.
+- Selecting a link closes the menu.
+- Smoker Capacity add form now uses visible labels, not placeholder-only fields.
+- Smoker capacity numbers now remain readable after values are loaded from a catalog model.
 
 ## Deploy
 
 Commit message:
 
 ```text
-Build 5.9.3 smoker capacity chicken and dropdown fixes
+Build 5.9.3 navigation dropdown and smoker form labels
 ```
+
+Normal path:
+
+```text
+ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Actions → Render Manual Deploy
+```
+
+Render build remains migration-safe and uses `prisma migrate deploy`.

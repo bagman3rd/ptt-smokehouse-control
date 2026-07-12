@@ -9,6 +9,15 @@ function text(formData: FormData, key: string, fallback = '') {
   return String(formData.get(key) || fallback).trim();
 }
 
+const LOCATION_OPTIONS = new Set(['Outdoor', 'Indoors under hood', 'In the wall', 'Outdoors in smoke house']);
+const COOK_WINDOW_OPTIONS = new Set(['Overnight only', 'Same-day only', 'All day / flexible', 'Backup / overflow only', 'Not currently active']);
+
+function selectedText(formData: FormData, key: string, allowed: Set<string>, fallback = '') {
+  const value = text(formData, key, fallback);
+  if (!allowed.has(value)) throw new Error(`Invalid ${key} selection.`);
+  return value;
+}
+
 function numberField(formData: FormData, key: string, fallback = 0, min = 0, max = 99999) {
   const raw = formData.get(key);
   const n = raw === null || raw === '' ? fallback : Number(raw);
@@ -36,13 +45,13 @@ export async function createSmoker(formData: FormData) {
       name,
       brand: catalog?.brand || text(formData, 'brand'),
       model: catalog ? catalog.model : text(formData, 'model'),
-      location: text(formData, 'location'),
+      location: selectedText(formData, 'location', LOCATION_OPTIONS),
       rackCount: numberField(formData, 'rackCount', catalog?.rackCount || 0, 0, 500),
       brisketCapacity: numberField(formData, 'brisketCapacity', catalog?.brisketCapacity || 0, 0, 1000),
       porkCapacity: numberField(formData, 'porkCapacity', catalog?.porkCapacity || 0, 0, 1000),
       ribCapacity: numberField(formData, 'ribCapacity', catalog?.ribCapacity || 0, 0, 5000),
       chickenCapacity: numberField(formData, 'chickenCapacity', catalog?.chickenCapacity || 0, 0, 5000),
-      cookWindow: text(formData, 'cookWindow', catalog?.cookWindow || '')
+      cookWindow: selectedText(formData, 'cookWindow', COOK_WINDOW_OPTIONS, catalog?.cookWindow || '')
     }
   });
   await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'CREATE', entity: 'Smoker', entityId: smoker.id, afterJson: smoker });
@@ -63,13 +72,13 @@ export async function updateSmoker(formData: FormData) {
     name: text(formData, 'name', before.name),
     brand: catalog?.brand || text(formData, 'brand', before.brand || ''),
     model: catalog ? catalog.model : text(formData, 'model'),
-    location: text(formData, 'location'),
+    location: selectedText(formData, 'location', LOCATION_OPTIONS),
     rackCount: numberField(formData, 'rackCount', catalog?.rackCount || before.rackCount, 0, 500),
     brisketCapacity: numberField(formData, 'brisketCapacity', before.brisketCapacity, 0, 1000),
     porkCapacity: numberField(formData, 'porkCapacity', before.porkCapacity, 0, 1000),
     ribCapacity: numberField(formData, 'ribCapacity', before.ribCapacity, 0, 5000),
     chickenCapacity: numberField(formData, 'chickenCapacity', before.chickenCapacity, 0, 5000),
-    cookWindow: text(formData, 'cookWindow'),
+    cookWindow: selectedText(formData, 'cookWindow', COOK_WINDOW_OPTIONS),
     active: formData.get('active') === 'on'
   };
   await prisma.smoker.updateMany({ where: { id, restaurantId }, data });
