@@ -6,7 +6,7 @@ import { importSalesHistoryCsv } from '../setup/actions';
 type ParsedRow = { date: string; totalSales: number; bbqSales: number; valid: boolean; reason?: string };
 
 function parseCsv(csv: string): ParsedRow[] {
-  return csv.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).flatMap((line) => {
+  return csv.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).flatMap((line): ParsedRow[] => {
     if (/^date\s*,/i.test(line)) return [];
     const [date = '', total = '', bbq = ''] = line.split(',').map((part) => part.trim());
     const totalSales = Number(total);
@@ -14,7 +14,7 @@ function parseCsv(csv: string): ParsedRow[] {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return [{ date, totalSales: 0, bbqSales: 0, valid: false, reason: 'Invalid date' }];
     if (!Number.isFinite(totalSales) || totalSales <= 0) return [{ date, totalSales: 0, bbqSales: 0, valid: false, reason: 'Invalid totalSales' }];
     if (!Number.isFinite(bbqSales) || bbqSales < 0) return [{ date, totalSales, bbqSales: 0, valid: false, reason: 'Invalid bbqSales' }];
-    return [{ date, totalSales, bbqSales, valid: true }];
+    return [{ date, totalSales, bbqSales, valid: true, reason: undefined }];
   });
 }
 

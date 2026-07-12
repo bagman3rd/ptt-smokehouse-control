@@ -1,8 +1,8 @@
-# Smokehouse Control — Build 3.8.0
+# Smokehouse Control — Build 3.8.1
 
-Build 3.8.0 is an operational reliability and commercial-polish build. It adds test-status tracking, restore-drill tracking, setup-completion scoring, POS import preview/confirmation, forecast-change impact review, and a printable daily cook plan while keeping the current Render db-push recovery path.
+Build 3.8.1 is an operational reliability and commercial-polish build. It adds test-status tracking, restore-drill tracking, setup-completion scoring, POS import preview/confirmation, forecast-change impact review, and a printable daily cook plan while keeping the current Render db-push recovery path.
 
-## What changed in 3.8.0
+## What changed in 3.8.1
 
 - Added admin test-status tracking on `/admin/system` for tenant tests, backup tests, forecast tests, restore drills, migration review, and security review.
 - Added persistent `SystemCheck` records and backup/tenant export coverage for those records.
@@ -82,7 +82,7 @@ pnpm run test:tenant
 pnpm run test:backup
 ```
 
-`pnpm run build:eval` is a static project check and was run for Build 3.8.0.
+`pnpm run build:eval` is a static project check and was run for Build 3.8.1.
 
 `pnpm run test:tenant` and `pnpm run test:backup` require a live staging PostgreSQL `DATABASE_URL`. Run both before adding a real second customer.
 
@@ -94,7 +94,7 @@ pnpm run test:backup
 - Keep billing/Stripe deferred until there is a real paying prospect ready to onboard.
 
 
-## Build 3.8.0
+## Build 3.8.1
 
 Pilot Control Center release:
 
@@ -106,9 +106,9 @@ Pilot Control Center release:
 - Kept Render on `prisma db push` recovery mode; do not switch back to `migrate deploy` until staging migration baseline is complete.
 
 
-## Build 3.8.0 Notes
+## Build 3.8.1 Notes
 
-Build 3.8.0 adds controlled learning updates:
+Build 3.8.1 adds controlled learning updates:
 
 - Accepted learning recommendations can update settings after Admin/Owner confirmation.
 - The Learning page now shows before/after previews, confidence levels, minimum sample-size thresholds, forecast accuracy, and rollback controls.
