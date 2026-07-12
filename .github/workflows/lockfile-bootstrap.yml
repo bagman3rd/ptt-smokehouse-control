@@ -1,0 +1,34 @@
+name: Generate pnpm lockfile
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-lockfile:
+    if: ${{ hashFiles('pnpm-lock.yaml') == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.18.1
+      - name: Generate real lockfile from exact package manifest
+        run: pnpm install --lockfile-only
+      - name: Commit lockfile
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pnpm-lock.yaml
+          git commit -m "Build 6.3.0: commit deterministic pnpm lockfile"
+          git push

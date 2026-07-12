@@ -12,7 +12,7 @@ const pkg = JSON.parse(read('package.json'));
 const version = pkg.version;
 const buildLabel = `Build ${version}`;
 
-assert(version === '6.2.1', 'package.json version must be 6.2.1 for this build');
+assert(version === '6.3.0', 'package.json version must be 6.3.0 for this build');
 assert(read('README.md').includes(buildLabel), 'README must mention the current build label');
 assert(read('components/Nav.tsx').includes(buildLabel), 'Nav badge must show the current build label');
 assert(pkg.scripts.typecheck === 'tsc --noEmit', 'typecheck script must run tsc --noEmit');
@@ -25,6 +25,15 @@ assert(existsSync('prisma/migrations'), 'prisma/migrations folder must exist');
 assert(readdirSync('prisma/migrations').some((name) => name.includes('build_330_baseline')), 'baseline migration must exist');
 assert(existsSync('.github/workflows/ci.yml'), 'GitHub Actions CI workflow must exist');
 assert(read('.github/workflows/ci.yml').includes('pnpm run preflight'), 'CI must run preflight before typecheck/lint/tests');
+
+assert(existsSync('pnpm-lock.yaml') || existsSync('.github/workflows/lockfile-bootstrap.yml'), 'pnpm-lock.yaml or the one-time lockfile bootstrap workflow must exist');
+assert(read('.github/workflows/ci.yml').includes('pnpm install --frozen-lockfile'), 'CI must enforce the committed lockfile');
+assert(read('render.yaml').includes('--frozen-lockfile'), 'Render must enforce the committed lockfile');
+assert(read('lib/smokerSchedule.ts').includes('!smoker.configurationReviewedAt'), 'unreviewed smokers must be excluded from scheduling');
+assert(existsSync('scripts/production-smoke-check.mjs'), 'production monitoring smoke check must exist');
+assert(existsSync('scripts/migration-smoke-check.mjs'), 'migration smoke check must exist');
+assert(existsSync('docs/archive'), 'historical release artifacts must be archived');
+
 
 
 const baseline = read('prisma/migrations/20260712000100_build_330_baseline/migration.sql');
@@ -42,4 +51,4 @@ for (const token of ['Build 4.4.0', 'build-4-4-0-evaluation', 'prisma db push &&
 assert(!read('lib/tenantGuard.ts').includes('tenantOrLegacyWhere'), 'retired tenantOrLegacyWhere helper must not return');
 assert(!read('lib/tenantGuard.ts').includes('tenantWhere('), 'retired tenantWhere helper must not return');
 
-console.log('Build 6.2.1 preflight checks completed.');
+console.log('Build 6.3.0 preflight checks completed.');

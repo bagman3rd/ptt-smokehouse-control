@@ -1,0 +1,28 @@
+import fs from 'node:fs';
+const read = (p) => fs.readFileSync(p, 'utf8');
+const assert = (ok, msg) => { if (!ok) throw new Error(msg); };
+const pkg = JSON.parse(read('package.json'));
+const schedule = read('lib/smokerSchedule.ts');
+const page = read('app/admin/smokers/schedule/page.tsx');
+const today = read('app/today/page.tsx');
+const print = read('app/cook-plan/print/page.tsx');
+assert(pkg.version === '6.0.1', 'package version must be 6.0.1');
+assert(pkg.scripts['build:eval'] === 'node scripts/build-6-0-1-evaluation.mjs', 'build:eval must target Build 6.0.1');
+for (const value of ['Overnight only','Same-day only','All day / flexible','Backup / overflow only','Not currently active']) assert(schedule.includes(value), `missing cook-window rule: ${value}`);
+assert(schedule.includes('smokerEligibleForKind'), 'cook-window eligibility helper missing');
+assert(schedule.includes('allocateLoad'), 'multi-smoker load allocation missing');
+assert(schedule.includes("priorityFor(a, kind) - priorityFor(b, kind)"), 'backup priority ordering missing');
+assert(schedule.includes('remaining > 0'), 'capacity overflow detection missing');
+assert(schedule.includes('allocationSummary'), 'assignment summary missing');
+assert(page.includes('row.allocationSummary'), 'schedule page does not show split assignment');
+assert(today.includes('row.allocationSummary'), 'Today page does not show split assignment');
+assert(print.includes('row.allocationSummary'), 'print page does not show split assignment');
+console.log('Build 6.0.1 evaluation passed.');
+
+const workflow = read('.github/workflows/ci.yml');
+assert(workflow.includes('name: Build 6.0.1 CI'), 'CI workflow name must match Build 6.0.1');
+assert(workflow.includes('postgres:16-alpine'), 'CI must provide fresh PostgreSQL');
+assert(workflow.includes('npm install --no-audit --no-fund'), 'CI must install dependencies with npm');
+assert(workflow.includes('npm run prisma:migrate'), 'CI must apply migrations');
+assert(workflow.includes('npm run build'), 'CI must run production build');
+console.log('Build 6.0.1 CI workflow evaluation passed.');

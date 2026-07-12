@@ -10,6 +10,7 @@ export type SmokerScheduleSmoker = {
   ribCapacity: number;
   chickenCapacity: number;
   cookWindow: string | null;
+  configurationReviewedAt: Date | string | null;
   active: boolean;
 };
 
@@ -77,10 +78,10 @@ function smokerCapacityFor(smoker: SmokerScheduleSmoker, kind: ProteinKind): num
 }
 
 function isOvernightKind(kind: ProteinKind): boolean { return kind === PROTEIN_CODE.BRISKET || kind === PROTEIN_CODE.PORK; }
-function normalizedWindow(smoker: SmokerScheduleSmoker): string { return smoker.cookWindow || COOK_WINDOW.FLEXIBLE; }
+function normalizedWindow(smoker: SmokerScheduleSmoker): string { return smoker.cookWindow || COOK_WINDOW.INACTIVE; }
 
 export function smokerEligibleForKind(smoker: SmokerScheduleSmoker, kind: ProteinKind): boolean {
-  if (!smoker.active) return false;
+  if (!smoker.active || !smoker.configurationReviewedAt) return false;
   const window = normalizedWindow(smoker);
   if (window === COOK_WINDOW.INACTIVE) return false;
   if (window === COOK_WINDOW.BACKUP_OVERFLOW) return true;

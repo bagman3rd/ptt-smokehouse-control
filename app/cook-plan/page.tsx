@@ -99,7 +99,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
       </div>
     </section> : null}
 
-    <section id="latest-plan" className="card mt-6 p-5">
+    <section id="latest-plan" data-testid="latest-cook-plan" className="card mt-6 p-5">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-black">Latest Plan</h2>
@@ -114,7 +114,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
         {plan.items.map(item => {
           const timing = timingCategory(item.protein.name);
           const noPriorEodData = (item.notes ?? '').toLowerCase().includes('no data, check hot box');
-          return <div key={item.id} className="rounded-2xl border border-slate-200 p-4">
+          return <div key={item.id} data-testid={`protein-card-${item.protein.code || item.protein.id}`} className="rounded-2xl border border-slate-200 p-4">
           <input type="hidden" name="itemId" value={item.id} />
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
@@ -124,7 +124,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
               <div className="mt-3 grid gap-2 text-sm text-slate-600 md:grid-cols-3">
                 <div className="rounded-xl bg-slate-50 p-3"><span className="block text-xs font-black uppercase text-slate-500">Gross forecast need</span><strong className="text-xl text-slate-950">{item.forecastCookUnits || item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
                 <div className={timing.usesCredit ? "rounded-xl bg-amber-50 p-3" : "rounded-xl bg-slate-50 p-3"}>
-                  <span className={timing.usesCredit ? "block text-xs font-black uppercase text-amber-700" : "block text-xs font-black uppercase text-slate-500"}>{timing.usesCredit ? 'Prior EOD leftover credit' : 'Leftover credit not used'}</span>
+                  <span className={timing.usesCredit ? "block text-xs font-black uppercase text-amber-700" : "block text-xs font-black uppercase text-slate-500"}>{timing.usesCredit ? <span data-testid={`prior-eod-credit-${item.protein.code || item.protein.id}`}>Prior EOD leftover credit</span> : 'Leftover credit not used'}</span>
                   {noPriorEodData ? <strong className="text-base text-amber-900">no data, check hot box</strong> : <><strong className={timing.usesCredit ? "text-xl text-amber-900" : "text-xl text-slate-500"}>{item.usableLeftoverUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)} <span className="text-xs">/ {item.usableLeftoverLb} lb</span></>}
                 </div>
                 <div className="rounded-xl bg-emerald-50 p-3"><span className="block text-xs font-black uppercase text-emerald-700">{timing.label}</span><strong className="text-xl text-emerald-900">{item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
@@ -146,7 +146,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
         {plan.items.map(item => {
           const timing = timingCategory(item.protein.name);
           const noPriorEodData = (item.notes ?? '').toLowerCase().includes('no data, check hot box');
-          return <div key={item.id} className="rounded-2xl border border-slate-200 p-4">
+          return <div key={item.id} data-testid={`protein-card-${item.protein.code || item.protein.id}`} className="rounded-2xl border border-slate-200 p-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
                 <div className="flex flex-wrap items-center gap-2"><span className="text-lg font-black">{item.protein.name}</span><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">{timing.badge}</span></div>
@@ -154,7 +154,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
                 <div className="mt-3 grid gap-2 text-sm text-slate-600 md:grid-cols-3">
                   <div className="rounded-xl bg-slate-50 p-3"><span className="block text-xs font-black uppercase text-slate-500">Gross forecast need</span><strong className="text-xl text-slate-950">{item.forecastCookUnits || item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
                   <div className={timing.usesCredit ? "rounded-xl bg-amber-50 p-3" : "rounded-xl bg-slate-50 p-3"}>
-                    <span className={timing.usesCredit ? "block text-xs font-black uppercase text-amber-700" : "block text-xs font-black uppercase text-slate-500"}>{timing.usesCredit ? 'Prior EOD leftover credit' : 'Leftover credit not used'}</span>
+                    <span className={timing.usesCredit ? "block text-xs font-black uppercase text-amber-700" : "block text-xs font-black uppercase text-slate-500"}>{timing.usesCredit ? <span data-testid={`prior-eod-credit-${item.protein.code || item.protein.id}`}>Prior EOD leftover credit</span> : 'Leftover credit not used'}</span>
                     {noPriorEodData ? <strong className="text-base text-amber-900">no data, check hot box</strong> : <><strong className={timing.usesCredit ? "text-xl text-amber-900" : "text-xl text-slate-500"}>{item.usableLeftoverUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)} <span className="text-xs">/ {item.usableLeftoverLb} lb</span></>}
                   </div>
                   <div className="rounded-xl bg-emerald-50 p-3"><span className="block text-xs font-black uppercase text-emerald-700">{timing.label}</span><strong className="text-xl text-emerald-900">{item.approvedCookUnits ?? item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>

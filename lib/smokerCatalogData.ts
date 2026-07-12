@@ -131,7 +131,7 @@ export async function ensureSmokerCatalog(prisma: any) {
       porkCapacity: item.porkCapacity ?? null,
       ribCapacity: item.ribCapacity ?? null,
       chickenCapacity: item.chickenCapacity ?? null,
-      cookWindow: item.cookWindow || COOK_WINDOW.FLEXIBLE,
+      cookWindow: item.cookWindow || null,
       notes: item.notes || null,
       officialCapacityText: item.officialCapacityText || null,
       brisketCapacityUnit: item.brisketCapacityUnit || (item.brisketCapacity != null ? 'COUNT' : null),

@@ -34,7 +34,7 @@ export default async function CookPlanPrintPage({ searchParams }: { searchParams
     : await prisma.cookPlan.findFirst({ where: { restaurantId: restaurant.id }, orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } });
 
   if (!plan) return <main className="p-8"><h1>No cook plan found.</h1></main>;
-  const smokers = await prisma.smoker.findMany({ where: { restaurantId: restaurant.id, active: true }, orderBy: { name: 'asc' } });
+  const smokers = await prisma.smoker.findMany({ where: { restaurantId: restaurant.id, active: true, configurationReviewedAt: { not: null } }, orderBy: { name: 'asc' } });
   const scheduleRows = buildSmokerLoadSchedule(smokers, plan);
   const nextDay = addUtcDays(plan.serviceDate, 1);
 

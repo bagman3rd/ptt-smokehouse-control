@@ -41,7 +41,7 @@ export default async function DashboardPage() {
     prisma.endOfDayLog.findFirst({ where: { restaurantId }, orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true } } } }),
     prisma.forecastScenario.findMany({ where: activeScenarioWhere(restaurantId), orderBy: { annualSales: 'asc' } }),
     prisma.endOfDayLog.findMany({ where: { restaurantId }, orderBy: { serviceDate: 'desc' }, take: 7, include: { proteinLogs: true } }),
-    prisma.smoker.findMany({ where: { restaurantId, active: true } }),
+    prisma.smoker.findMany({ where: { restaurantId, active: true, configurationReviewedAt: { not: null } } }),
     computeDataQuality(prisma, restaurantId)
   ]);
   const latestPlan = latestOperationalPlan;

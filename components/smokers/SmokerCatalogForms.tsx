@@ -98,7 +98,7 @@ export function AddSmokerForm({ catalog, action }: { catalog: CatalogItem[]; act
   const map = useMemo(() => buildCatalogMap(catalog), [catalog]);
   const [selectedId, setSelectedId] = useState('');
   const selected = selectedId ? map.get(selectedId) || null : null;
-  return <form action={action} className="mt-4 grid gap-3 md:grid-cols-4">
+  return <form action={action} data-testid="add-smoker-form" className="mt-4 grid gap-3 md:grid-cols-4">
     <label className="text-sm font-bold text-slate-800">Smoker Brand<input className="field mt-1" name="name" placeholder="Example: Southern Pride outdoor" required /></label>
     <label className="text-sm font-bold text-slate-800">Catalog model<CatalogSelect catalog={catalog} onSelect={(item) => setSelectedId(item?.id || '')} /></label>
     <label className="text-sm font-bold text-slate-800">Manufacturer<input className="field mt-1" name="brand" placeholder="Manufacturer" defaultValue={selected?.brand || ''} key={`brand-${selectedId}`} readOnly={Boolean(selected)} /></label>
@@ -111,7 +111,7 @@ export function AddSmokerForm({ catalog, action }: { catalog: CatalogItem[]; act
     <label className="text-sm font-bold text-slate-800">Rib racks per cook<input className="field mt-1" name="ribCapacity" type="number" min="0" step="0.1" placeholder="Rib rack count" defaultValue={inputValue(selected?.ribCapacity)} key={`rb-${selectedId}`} /></label>
     <label className="text-sm font-bold text-slate-800">Chicken breasts per cook <span className="block text-xs text-slate-500">Whole chicken = one 2.5 lb double breast</span><input className="field mt-1" name="chickenCapacity" type="number" min="0" step="0.1" placeholder="Chicken breast count" defaultValue={inputValue(selected?.chickenCapacity)} key={`c-${selectedId}`} /></label>
     <SourceNote selected={selected} />
-    <button className="btn-primary md:col-span-4" type="submit">Add smoker</button>
+    <button data-testid="add-smoker-submit" className="btn-primary md:col-span-4" type="submit">Add smoker</button>
   </form>;
 }
 
@@ -121,7 +121,7 @@ export function EditSmokerForm({ smoker, catalog, action }: { smoker: SmokerItem
   const selected = selectedId ? map.get(selectedId) || null : null;
   const brand = selected?.brand ?? smoker.brand ?? '';
   const model = selected?.model ?? smoker.model ?? '';
-  return <form action={action} className="card grid gap-3 p-5 md:grid-cols-4">
+  return <form action={action} data-testid={`edit-smoker-${smoker.id}`} className="card grid gap-3 p-5 md:grid-cols-4">
     <input type="hidden" name="id" value={smoker.id} />
     <label className="text-sm font-bold">Smoker Brand<input className="field mt-1" name="name" defaultValue={smoker.name} required /></label>
     <CatalogSelect catalog={catalog} defaultValue={smoker.catalogId || ''} onSelect={(item) => setSelectedId(item?.id || '')} />
@@ -136,6 +136,6 @@ export function EditSmokerForm({ smoker, catalog, action }: { smoker: SmokerItem
     <label className="text-sm font-bold">Chicken breasts <span className="text-xs text-slate-500">whole chicken = one double breast</span><input className="field mt-1" name="chickenCapacity" type="number" min="0" step="0.1" defaultValue={preferredNumberInput(selected?.chickenCapacity, smoker.chickenCapacity)} key={`c-${smoker.id}-${selectedId}`} /></label>
     <label className="flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-sm font-bold"><input type="checkbox" name="active" defaultChecked={smoker.active} /> Active</label>
     <SourceNote selected={selected} />
-    <button className="btn-secondary md:col-span-4" type="submit">Save smoker</button>
+    <button data-testid={`save-smoker-${smoker.id}`} className="btn-secondary md:col-span-4" type="submit">Save smoker</button>
   </form>;
 }

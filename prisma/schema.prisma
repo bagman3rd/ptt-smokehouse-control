@@ -84,8 +84,8 @@ model RestaurantMembership {
 
 model AuditLog {
   id           String   @id @default(cuid())
-  restaurantId String?
-  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   actorUserId  String?
   actorName    String   @default("System")
   action       String
@@ -127,8 +127,8 @@ model User {
 
 model Protein {
   id                  String      @id @default(cuid())
-  restaurantId        String?
-  restaurant          Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId        String
+  restaurant          Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   name                String
   code                String      @default("OTHER")
   inputUnit           ProteinUnit
@@ -254,8 +254,8 @@ model EventModifier {
 
 model CookPlan {
   id              String   @id @default(cuid())
-  restaurantId    String?
-  restaurant      Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId    String
+  restaurant      Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   serviceDate     DateTime
   scenarioId      String
   scenario        ForecastScenario @relation(fields: [scenarioId], references: [id])
@@ -275,8 +275,8 @@ model CookPlan {
 
 model CookPlanItem {
   id                    String   @id @default(cuid())
-  restaurantId          String?
-  restaurant            Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId          String
+  restaurant            Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   cookPlanId            String
   cookPlan              CookPlan @relation(fields: [cookPlanId], references: [id], onDelete: Cascade)
   proteinId             String
@@ -297,8 +297,8 @@ model CookPlanItem {
 
 model EndOfDayLog {
   id             String   @id @default(cuid())
-  restaurantId   String?
-  restaurant     Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId   String
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   serviceDate    DateTime
   enteredBy       String   @default("KM")
   totalSales      Float    @default(0)
@@ -316,8 +316,8 @@ model EndOfDayLog {
 
 model EndOfDayProteinLog {
   id              String   @id @default(cuid())
-  restaurantId    String?
-  restaurant      Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId    String
+  restaurant      Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   endOfDayLogId   String
   endOfDayLog     EndOfDayLog @relation(fields: [endOfDayLogId], references: [id], onDelete: Cascade)
   proteinId       String
@@ -336,8 +336,8 @@ model EndOfDayProteinLog {
 
 model Smoker {
   id           String   @id @default(cuid())
-  restaurantId String?
-  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   catalogId    String?
   catalog      SmokerCatalog? @relation(fields: [catalogId], references: [id])
   name         String

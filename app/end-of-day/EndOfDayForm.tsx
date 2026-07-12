@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-type Protein = { id: string; name: string; inputUnit: string };
+type Protein = { id: string; name: string; code?: string | null; inputUnit: string };
 
 type InitialProteinLog = {
   proteinId: string;
@@ -243,7 +243,7 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} onChange={(event) => persistDraft(event.currentTarget)} className="space-y-6">
+    <form data-testid="end-of-day-form" ref={formRef} onSubmit={handleSubmit} onChange={(event) => persistDraft(event.currentTarget)} className="space-y-6">
       <section className="card p-5">
         <h2 className="text-xl font-black">Guided Closeout Workflow</h2>
         <div className="mt-4 grid gap-3 md:grid-cols-5">
@@ -299,7 +299,7 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
           {proteins.map((protein) => {
             const saved = logByProteinId.get(protein.id);
             return (
-            <div key={protein.id} className="rounded-2xl border border-slate-200 p-4">
+            <div key={protein.id} data-testid={`eod-protein-${protein.code || protein.id}`} className="rounded-2xl border border-slate-200 p-4">
               <div className="mb-3 text-lg font-black">{protein.name}</div>
               <div className="grid gap-3 md:grid-cols-7">
                 <div><label className="label">Cooked / Loaded Units</label><input className="field mt-1" name={`cookedUnits-${protein.id}`} type="number" step="0.1" defaultValue={saved?.cookedUnits ?? ''} disabled={isLocked} /></div>
@@ -314,7 +314,7 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
           )})}
         </div>
         <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center">
-          <button className="btn-primary w-full md:w-auto" type="submit" disabled={isSaving || isLocked}>{isSaving ? 'Saving...' : isLocked ? 'Locked' : 'Save End-of-Day Log'}</button>
+          <button className="btn-primary w-full md:w-auto" data-testid="save-eod" type="submit" disabled={isSaving || isLocked}>{isSaving ? 'Saving...' : isLocked ? 'Locked' : 'Save End-of-Day Log'}</button>
           {message ? <div className="rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800">{message}</div> : null}
           {error ? <div className="rounded-xl bg-red-50 px-3 py-2 text-sm font-bold text-red-800">{error}</div> : null}
           {warnings.length > 0 ? <div className="rounded-xl bg-amber-50 px-3 py-2 text-sm font-bold text-amber-900"><div>Validation warnings:</div><ul className="mt-1 list-disc pl-5">{warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul></div> : null}

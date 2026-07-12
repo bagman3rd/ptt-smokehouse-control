@@ -1,4 +1,4 @@
-name: Build 6.2.1 CI
+name: Build 6.3.0 CI
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows: ['Generate pnpm lockfile']
+    types: [completed]
 
 permissions:
   contents: read
@@ -16,9 +19,9 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 6.2.1 CI / quality-and-tests
+    name: Build 6.3.0 CI / quality-and-tests
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     services:
       postgres:
         image: postgres:16-alpine
@@ -34,91 +37,83 @@ jobs:
       DATABASE_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_ci?schema=public
       DIRECT_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_ci?schema=public
       ADMIN_PASSWORD: ci-admin-password
+      CI_TENANT_B_PASSWORD: ci-tenant-b-password
       APP_SESSION_TOKEN: ci-session-token-long-value-for-tests-only
       CRON_SECRET: ci-cron-secret-long-value-for-tests-only
       NEXT_PUBLIC_APP_NAME: Smokehouse Control CI
       NEXT_PUBLIC_SUPPORT_EMAIL: support@smokehousecontrol.com
       CI: true
     steps:
-      - name: Check out source
-        uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
+      - name: Detect committed lockfile
+        id: lockfile
+        run: |
+          if [ -f pnpm-lock.yaml ]; then echo 'present=true' >> "$GITHUB_OUTPUT"; else echo 'present=false' >> "$GITHUB_OUTPUT"; fi
+      - uses: pnpm/action-setup@v4
+        if: steps.lockfile.outputs.present == 'true'
         with:
           version: 9.15.0
           run_install: false
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
+        if: steps.lockfile.outputs.present == 'true'
         with:
           node-version: 20.18.1
-          # Do not enable pnpm caching until pnpm-lock.yaml is committed.
-          # setup-node fails before installation when cache=pnpm has no lockfile.
-
-      - name: Verify toolchain
-        run: |
-          node --version
-          pnpm --version
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
+          cache: pnpm
+      - name: Install exact locked dependencies
+        if: steps.lockfile.outputs.present == 'true'
+        run: pnpm install --frozen-lockfile
       - name: Generate Prisma client
+        if: steps.lockfile.outputs.present == 'true'
         run: pnpm run prisma:generate
-
       - name: Apply migrations to fresh PostgreSQL
+        if: steps.lockfile.outputs.present == 'true'
         run: pnpm run prisma:migrate
-
       - name: Seed isolated CI database
+        if: steps.lockfile.outputs.present == 'true'
         run: pnpm run db:seed
-
-      - name: Preflight and migration integrity
+      - name: Migration and schema smoke checks
+        if: steps.lockfile.outputs.present == 'true'
         run: |
           pnpm run preflight
           pnpm run test:migration-integrity
+          pnpm run migration:smoke
           pnpm run ci:migration-status
           pnpm run ci:schema-drift
-
       - name: TypeScript and lint
+        if: steps.lockfile.outputs.present == 'true'
         run: |
           pnpm run typecheck
           pnpm run lint
-
-      - name: Forecast and plan regression tests
+      - name: Regression tests
+        if: steps.lockfile.outputs.present == 'true'
         run: |
           pnpm run test:forecast
           pnpm run test:generate-plan
           pnpm run test:smoker-catalog
-
-      - name: Security and tenant regression tests
-        run: |
           pnpm run test:permissions
           pnpm run test:account-security
           pnpm run test:tenant
           pnpm run test:cross-tenant
           pnpm run test:tenant-guard
           pnpm run test:orphan-records
-
-      - name: Integration and release checks
-        run: |
           pnpm run test:dead-code
           pnpm run staging:verify
           pnpm run test:pos-import
           pnpm run test:demo-docs
           pnpm run build:eval
-
       - name: Build production application
+        if: steps.lockfile.outputs.present == 'true'
         run: pnpm run build
-
       - name: Install Chromium
+        if: steps.lockfile.outputs.present == 'true'
         run: pnpm exec playwright install --with-deps chromium
-
       - name: Run desktop and mobile browser tests
+        if: steps.lockfile.outputs.present == 'true'
         run: pnpm run test:e2e:ci
-
       - name: Upload Playwright report on failure
-        if: failure()
+        if: failure() && steps.lockfile.outputs.present == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report

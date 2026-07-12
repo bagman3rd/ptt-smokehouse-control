@@ -75,6 +75,28 @@ async function main() {
     const existing = await prisma.restaurantMembership.findFirst({ where: { restaurantId, userId: admin.id } });
     if (!existing) await prisma.restaurantMembership.create({ data: { restaurantId, userId: admin.id, role: Role.ADMIN, active: true } });
   }
+
+
+  // CI-only second tenant used by authenticated cross-tenant browser tests.
+  if (process.env.CI === 'true') {
+    const tenantB = await prisma.restaurant.upsert({
+      where: { id: 'ci-tenant-b' },
+      update: { name: 'CI Tenant B', active: true },
+      create: { id: 'ci-tenant-b', name: 'CI Tenant B', slug: 'ci-tenant-b', city: 'Knoxville', state: 'TN', timezone: 'America/New_York' }
+    });
+    const tenantBPassword = process.env.CI_TENANT_B_PASSWORD || 'ci-tenant-b-password';
+    const tenantBHash = hashPassword(tenantBPassword);
+    const tenantBUser = await prisma.user.upsert({
+      where: { id: 'ci-tenant-b-user' },
+      update: { username: 'tenantb', email: 'tenantb@smokehouse.local', name: 'Tenant B Admin', passwordHash: tenantBHash, role: Role.ADMIN, active: true, restaurantId: tenantB.id },
+      create: { id: 'ci-tenant-b-user', username: 'tenantb', email: 'tenantb@smokehouse.local', name: 'Tenant B Admin', passwordHash: tenantBHash, role: Role.ADMIN, active: true, createdBy: 'CI Seed', restaurantId: tenantB.id }
+    });
+    await prisma.restaurantMembership.upsert({
+      where: { restaurantId_userId: { restaurantId: tenantB.id, userId: tenantBUser.id } },
+      update: { role: Role.ADMIN, active: true },
+      create: { restaurantId: tenantB.id, userId: tenantBUser.id, role: Role.ADMIN, active: true }
+    });
+  }
 }
 
 main().finally(async () => prisma.$disconnect());

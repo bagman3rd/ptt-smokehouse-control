@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const read = (path) => fs.readFileSync(path, 'utf8');
+const pkg = JSON.parse(read('package.json'));
+const forms = read('components/smokers/SmokerCatalogForms.tsx');
+const actions = read('app/admin/smokers/actions.ts');
+const catalog = read('lib/smokerCatalogData.ts');
+assert.equal(pkg.version, '5.9.3');
+assert(read('components/Nav.tsx').includes('Build 5.9.3'));
+for (const option of ['Outdoor','Indoors under hood','In the wall','Outdoors in smoke house']) assert(forms.includes(option));
+for (const option of ['Overnight only','Same-day only','All day / flexible','Backup / overflow only','Not currently active']) assert(forms.includes(option));
+assert(forms.includes('Smoker Brand'));
+assert(actions.includes('LOCATION_OPTIONS') && actions.includes('COOK_WINDOW_OPTIONS'));
+assert(catalog.includes('1 whole chicken = 1 double breast = 2.5 lb'));
+assert(catalog.includes("model:'SPK-500'") && catalog.includes('chickenCapacity:70'));
+console.log('Build 5.9.3 evaluation checks completed.');

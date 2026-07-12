@@ -8,7 +8,7 @@ const required = [
   ['app/help/page.tsx', 'What if Wi-Fi fails during EOD?'],
   ['app/help/page.tsx', 'How do I add smokers?'],
   ['app/demo/page.tsx', '90 days of fake EOD history'],
-  ['DOCUMENTATION_AND_DEMO_BUILD_5_4_0.md', 'Build 5.4.0']
+  ['docs/archive/DOCUMENTATION_AND_DEMO_BUILD_5_4_0.md', 'Build 5.4.0']
 ];
 
 for (const [path, needle] of required) {

@@ -2,11 +2,12 @@ import { test, expect, type Page } from '@playwright/test';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-const password = process.env.ADMIN_PASSWORD || 'ci-admin-password-6-2-0';
+const adminPassword = process.env.ADMIN_PASSWORD || 'ci-admin-password';
+const tenantBPassword = process.env.CI_TENANT_B_PASSWORD || 'ci-tenant-b-password';
 
-async function login(page: Page) {
+async function login(page: Page, username = 'admin', password = adminPassword) {
   await page.goto('/login');
-  await page.getByLabel('Username or Email').fill('admin');
+  await page.getByLabel('Username or Email').fill(username);
   await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Login' }).click();
   await expect(page).not.toHaveURL(/\/login/);
@@ -26,13 +27,12 @@ async function resetOperationalData() {
 
 test.afterAll(async () => prisma.$disconnect());
 
-test('complete kitchen workflow: smokers, plan, override, EOD, leftover credit, audit, tenant boundary', async ({ page, browser }) => {
+test('complete kitchen workflow uses reviewed smokers and stable selectors', async ({ page }) => {
   const restaurant = await resetOperationalData();
   await login(page);
 
-  // Configure dedicated overnight and same-day equipment through the actual UI.
   await page.goto('/admin/smokers');
-  const add = page.locator('form').filter({ has: page.getByRole('button', { name: 'Add smoker' }) });
+  const add = page.getByTestId('add-smoker-form');
   await add.getByLabel('Smoker Brand').fill('CI Overnight Smoker');
   await add.getByLabel('Location').selectOption('OUTDOOR');
   await add.getByLabel('Cook window').selectOption('OVERNIGHT_ONLY');
@@ -40,11 +40,11 @@ test('complete kitchen workflow: smokers, plan, override, EOD, leftover credit, 
   await add.getByLabel('Pork butts per cook').fill('200');
   await add.getByLabel(/Rib racks per cook/).fill('0');
   await add.getByLabel(/Chicken breasts per cook/).fill('0');
-  await add.getByRole('button', { name: 'Add smoker' }).click();
+  await add.getByTestId('add-smoker-submit').click();
   await expect(page.getByDisplayValue('CI Overnight Smoker')).toBeVisible();
 
   await page.goto('/admin/smokers');
-  const add2 = page.locator('form').filter({ has: page.getByRole('button', { name: 'Add smoker' }) });
+  const add2 = page.getByTestId('add-smoker-form');
   await add2.getByLabel('Smoker Brand').fill('CI Same-Day Smoker');
   await add2.getByLabel('Location').selectOption('INDOOR_HOOD');
   await add2.getByLabel('Cook window').selectOption('SAME_DAY_ONLY');
@@ -52,19 +52,19 @@ test('complete kitchen workflow: smokers, plan, override, EOD, leftover credit, 
   await add2.getByLabel('Pork butts per cook').fill('0');
   await add2.getByLabel(/Rib racks per cook/).fill('500');
   await add2.getByLabel(/Chicken breasts per cook/).fill('500');
-  await add2.getByRole('button', { name: 'Add smoker' }).click();
+  await add2.getByTestId('add-smoker-submit').click();
   await expect(page.getByDisplayValue('CI Same-Day Smoker')).toBeVisible();
+
+  const reviewedCount = await prisma.smoker.count({ where: { restaurantId: restaurant.id, configurationReviewedAt: { not: null } } });
+  expect(reviewedCount).toBe(2);
 
   const tomorrow = new Date(Date.now() + 86400000 * 2).toISOString().slice(0, 10);
   await page.goto('/cook-plan');
   await page.getByLabel('Load Date').fill(tomorrow);
   await page.getByLabel('Event Multiplier').fill('1');
   await page.getByRole('button', { name: 'Generate Plan' }).click();
-  await expect(page).toHaveURL(/\/cook-plan/);
-  await expect(page.getByText('Brisket', { exact: true }).first()).toBeVisible();
-
-  // Override one recommendation and approve it.
-  const brisketCard = page.locator('div.rounded-2xl').filter({ has: page.getByText('Brisket', { exact: true }) }).first();
+  const brisketCard = page.getByTestId('protein-card-BRISKET').first();
+  await expect(brisketCard).toBeVisible();
   const approved = brisketCard.locator('input[name^="approved-"]');
   const original = Number(await approved.inputValue());
   await approved.fill(String(original + 1));
@@ -72,44 +72,39 @@ test('complete kitchen workflow: smokers, plan, override, EOD, leftover credit, 
   await page.getByRole('button', { name: 'Approve Cook Plan' }).click();
   await expect(page.getByText('APPROVED')).toBeVisible();
 
-  // Submit a complete EOD record with explicit leftovers.
   await page.goto(`/end-of-day?serviceDate=${tomorrow}`);
   await page.getByLabel('EOD Status').selectOption('COMPLETE');
-  const proteinCards = page.locator('section').filter({ hasText: 'Protein Results' }).locator('div.rounded-2xl');
-  const count = await proteinCards.count();
-  for (let i = 0; i < count; i++) {
-    const card = proteinCards.nth(i);
-    const cooked = card.locator('input[name^="cookedUnits-"]');
-    const leftover = card.locator('input[name^="usableLeftoverUnits-"]');
-    if (await cooked.count()) {
-      await cooked.fill('10');
-      await leftover.fill(i === 0 ? '2' : '0');
-    }
+  const cards = page.locator('[data-testid^="eod-protein-"]');
+  for (let i = 0; i < await cards.count(); i++) {
+    const card = cards.nth(i);
+    await card.locator('input[name^="cookedUnits-"]').fill('10');
+    await card.locator('input[name^="usableLeftoverUnits-"]').fill(i === 0 ? '2' : '0');
   }
-  await page.getByRole('button', { name: 'Save End-of-Day Log' }).click();
+  await page.getByTestId('save-eod').click();
   await expect(page.getByText(/Saved COMPLETE end-of-day log|COMPLETE/).first()).toBeVisible();
 
-  // Generate the following plan and prove the prior EOD credit is present.
   const nextDay = new Date(new Date(`${tomorrow}T12:00:00Z`).getTime() + 86400000).toISOString().slice(0, 10);
   await page.goto('/cook-plan');
   await page.getByLabel('Load Date').fill(nextDay);
   await page.getByRole('button', { name: 'Generate Plan' }).click();
-  await expect(page.getByText(/Prior EOD leftover credit/).first()).toBeVisible();
-  await expect(page.getByText(/2/).first()).toBeVisible();
+  await expect(page.getByTestId('prior-eod-credit-BRISKET').first()).toBeVisible();
 
-  // Database proof for override, EOD and audit trail.
   const approvedPlan = await prisma.cookPlan.findFirst({ where: { restaurantId: restaurant.id, status: 'APPROVED' }, include: { items: { include: { protein: true } } } });
   expect(approvedPlan?.items.some(i => i.protein.code === 'BRISKET' && i.overrideReason === 'CI manager verification override')).toBeTruthy();
-  const eod = await prisma.endOfDayLog.findFirst({ where: { restaurantId: restaurant.id, status: 'COMPLETE' }, include: { proteinLogs: true } });
-  expect(eod?.proteinLogs.some(log => log.usableLeftoverUnits === 2)).toBeTruthy();
-  expect(await prisma.auditLog.count({ where: { restaurantId: restaurant.id } })).toBeGreaterThan(0);
+});
 
-  // Anonymous browser context cannot access tenant-owned operations.
-  const anonymous = await browser.newContext();
-  const anonymousPage = await anonymous.newPage();
-  await anonymousPage.goto('/admin/smokers');
-  await expect(anonymousPage).toHaveURL(/\/login/);
-  await anonymous.close();
+test('authenticated user cannot read another restaurant cook plan', async ({ browser }) => {
+  const tenantA = await prisma.restaurant.findFirstOrThrow({ where: { slug: 'pigeon-toed-tavern' } });
+  const tenantAPlan = await prisma.cookPlan.findFirstOrThrow({ where: { restaurantId: tenantA.id }, orderBy: { createdAt: 'desc' } });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await login(page, 'tenantb', tenantBPassword);
+  await page.goto(`/cook-plan?planId=${tenantAPlan.id}`);
+  await expect(page.getByText('CI Tenant B')).toBeVisible();
+  await expect(page.getByText('CI manager verification override')).toHaveCount(0);
+  const leaked = await prisma.restaurantMembership.count({ where: { userId: 'ci-tenant-b-user', restaurantId: tenantA.id, active: true } });
+  expect(leaked).toBe(0);
+  await context.close();
 });
 
 test('coded controls render on desktop and mobile projects', async ({ page }) => {

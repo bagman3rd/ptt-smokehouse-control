@@ -3,7 +3,7 @@ services:
     name: ptt-smokehouse-control
     env: node
     plan: starter
-    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
+    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && if [ -f pnpm-lock.yaml ]; then pnpm install --prod=false --frozen-lockfile; else pnpm install --prod=false --no-frozen-lockfile; fi && pnpm run render-build
     startCommand: pnpm run start
     envVars:
       - key: NODE_VERSION
@@ -29,7 +29,7 @@ services:
     name: ptt-smokehouse-control-weekly-backup
     env: node
     schedule: "0 8 * * 0"
-    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false
+    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && if [ -f pnpm-lock.yaml ]; then pnpm install --prod=false --frozen-lockfile; else pnpm install --prod=false --no-frozen-lockfile; fi
     startCommand: pnpm run backup:weekly
     envVars:
       - key: NODE_VERSION

@@ -62,7 +62,7 @@ export default async function TodayPage({ searchParams }: { searchParams?: { kit
     prisma.cookPlan.findFirst({ where: { restaurantId, serviceDate: tomorrow }, orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } }),
     prisma.endOfDayLog.findFirst({ where: { restaurantId, serviceDate: today }, include: { proteinLogs: { include: { protein: true } } } }),
     prisma.endOfDayLog.findFirst({ where: { restaurantId, serviceDate: yesterday }, include: { proteinLogs: true } }),
-    prisma.smoker.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } }).catch(() => []),
+    prisma.smoker.findMany({ where: { restaurantId, active: true, configurationReviewedAt: { not: null } }, orderBy: { name: 'asc' } }).catch(() => []),
     computeDataQuality(prisma, restaurantId)
   ]);
 
