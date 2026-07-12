@@ -15,7 +15,7 @@ function baseUrl(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const limited = enforceRateLimit(request, 'signup', 8, 15 * 60_000);
+  const limited = await enforceRateLimit(request, 'signup', 8, 15 * 60_000);
   if (limited) return limited;
   const root = baseUrl(request);
   if (authConfigErrors().length > 0) return NextResponse.redirect(`${root}/signup?error=${encodeURIComponent('Server auth variables are not configured.')}`, 303);
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     await prisma.restaurantMembership.create({ data: { restaurantId: restaurant.id, userId: user.id, role: Role.OWNER, active: true } });
     await auditLog({ restaurantId: restaurant.id, actorUserId: user.id, actorName: user.name, action: 'SELF_SERVICE_SIGNUP', entity: 'Restaurant', entityId: restaurant.id, afterJson: { restaurantName: restaurant.name, owner: user.username } });
     setCurrentRestaurantCookie(restaurant.id);
-    setSessionCookie(user.id);
+    setSessionCookie(user.id, user.sessionVersion || 1);
     return NextResponse.redirect(`${root}/admin/restaurants/setup?welcome=1`, 303);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Signup failed.';

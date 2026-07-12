@@ -30,7 +30,7 @@ function capacityForProtein(name: string, totals: { brisket: number; pork: numbe
 }
 
 export async function GET(request: Request) {
-  const limited = enforceRateLimit(request, 'api:cook-plan-preview', 80, 60_000);
+  const limited = await enforceRateLimit(request, 'api:cook-plan-preview', 80, 60_000);
   if (limited) return limited;
   try {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);

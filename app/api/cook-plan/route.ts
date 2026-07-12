@@ -29,7 +29,7 @@ async function exactEodFor(serviceDate: Date, restaurantId: string) {
 }
 
 export async function POST(request: Request) {
-  const limited = enforceRateLimit(request, 'api:cook-plan', 40, 60_000);
+  const limited = await enforceRateLimit(request, 'api:cook-plan', 40, 60_000);
   if (limited) return limited;
   try {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);

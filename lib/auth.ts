@@ -67,10 +67,10 @@ export function hasMinimumRole(user: Pick<User, 'role'> | null | undefined, mini
   return ROLE_ORDER[normalizeRole(String(user.role))] >= ROLE_ORDER[minimum];
 }
 
-function signUserId(userId: string) {
+function signSession(userId: string, sessionVersion: number) {
   const secret = configuredSessionToken();
   if (!secret) throw new Error('APP_SESSION_TOKEN is not configured.');
-  return createHmac('sha256', secret).update(userId).digest('hex');
+  return createHmac('sha256', secret).update(`${userId}:${sessionVersion}`).digest('hex');
 }
 
 function constantTimeTextEquals(a: string, b: string) {
@@ -81,18 +81,25 @@ function constantTimeTextEquals(a: string, b: string) {
 
 function parseSessionCookie() {
   const raw = cookies().get(COOKIE_NAME)?.value || '';
-  const [userId, signature] = raw.split('.');
-  if (!userId || !signature) return null;
-  const expected = signUserId(userId);
+  const parts = raw.split('.');
+  if (parts.length === 2) {
+    // Legacy cookie format. Reject it after Build 4.3.0 so password resets/deactivation can revoke sessions.
+    return null;
+  }
+  const [userId, versionText, signature] = parts;
+  const sessionVersion = Number(versionText);
+  if (!userId || !signature || !Number.isInteger(sessionVersion) || sessionVersion < 1) return null;
+  const expected = signSession(userId, sessionVersion);
   if (!constantTimeTextEquals(signature, expected)) return null;
-  return userId;
+  return { userId, sessionVersion };
 }
 
 export async function currentUser() {
-  const userId = parseSessionCookie();
-  if (!userId) return null;
-  const user = await prisma.user.findFirst({ where: { id: userId, active: true } });
+  const parsedSession = parseSessionCookie();
+  if (!parsedSession) return null;
+  const user = await prisma.user.findFirst({ where: { id: parsedSession.userId, active: true } });
   if (!user) return null;
+  if ((user as any).sessionVersion !== parsedSession.sessionVersion) return null;
   const membership = await currentMembershipForUser(user).catch(() => null);
   if (!membership) return null;
   return { ...user, role: membership.role, restaurantId: membership.restaurantId };
@@ -126,9 +133,9 @@ export async function requireApiRole(allowed: AppRole[]) {
   return null;
 }
 
-export function setSessionCookie(userId: string) {
-  const signature = signUserId(userId);
-  cookies().set(COOKIE_NAME, `${userId}.${signature}`, {
+export function setSessionCookie(userId: string, sessionVersion = 1) {
+  const signature = signSession(userId, sessionVersion);
+  cookies().set(COOKIE_NAME, `${userId}.${sessionVersion}.${signature}`, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

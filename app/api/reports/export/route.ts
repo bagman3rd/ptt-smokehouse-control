@@ -25,7 +25,7 @@ function responseCsv(filename: string, body: string) {
 }
 
 export async function GET(req: NextRequest) {
-  const limited = enforceRateLimit(req, 'api:report-export', 40, 60_000);
+  const limited = await enforceRateLimit(req, 'api:report-export', 40, 60_000);
   if (limited) return limited;
   const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   if (authError) return authError;

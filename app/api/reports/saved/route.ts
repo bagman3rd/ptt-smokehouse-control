@@ -8,7 +8,7 @@ import { enforceRateLimit } from '@/lib/rateLimit';
 import { savedReportSchema } from '@/lib/validators';
 
 export async function POST(req: NextRequest) {
-  const limited = enforceRateLimit(req, 'api:saved-reports', 40, 60_000);
+  const limited = await enforceRateLimit(req, 'api:saved-reports', 40, 60_000);
   if (limited) return limited;
   const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
   if (authError) return authError;

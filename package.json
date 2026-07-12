@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,7 +16,7 @@
     "test:tenant": "tsx scripts/tenant-integration-test.mjs",
     "test:forecast": "tsx scripts/forecast-engine-test.ts",
     "test:backup": "node scripts/backup-restore-drill-check.mjs",
-    "build:eval": "node scripts/build-4-2-0-evaluation.mjs",
+    "build:eval": "node scripts/build-4-3-0-evaluation.mjs",
     "migration:baseline:check": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
     "render-build:migrate-ready": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build",
     "backup:weekly": "node scripts/run-weekly-backup-cron.mjs",
@@ -24,8 +24,10 @@
     "test:permissions": "node scripts/permission-boundary-test.mjs",
     "ci:schema-drift": "prisma migrate diff --from-url \"$DATABASE_URL\" --to-schema-datamodel prisma/schema.prisma --exit-code",
     "ci:migration-status": "prisma migrate status",
-    "ci:test": "pnpm run typecheck && pnpm run lint && pnpm run test:forecast && pnpm run test:permissions && pnpm run test:dead-code && pnpm run test:tenant && pnpm run ci:schema-drift",
-    "test:dead-code": "node scripts/dead-code-check.mjs"
+    "ci:test": "pnpm run typecheck && pnpm run lint && pnpm run test:forecast && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run ci:schema-drift",
+    "test:dead-code": "node scripts/dead-code-check.mjs",
+    "test:cross-tenant": "tsx scripts/cross-tenant-regression-test.mjs",
+    "test:account-security": "node scripts/account-security-test.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

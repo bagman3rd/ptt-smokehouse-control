@@ -66,8 +66,8 @@ export default async function UsersPage() {
               const user = membership.user;
               const role = normalizeRole(String(membership.role));
               return <tr key={membership.id} className="border-b align-top">
-                <td className="py-3 pr-4"><div className="font-bold">{user.name}</div><div className="text-slate-500">{user.username || 'no username'} · {user.email}</div><div className="text-xs text-slate-400">Created {fmtDate(user.createdAt)}</div></td>
-                <td className="py-3 pr-4"><span className={`rounded-full px-2 py-1 text-xs font-bold ${membership.active ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>{membership.active ? 'Active' : 'Inactive'}</span><div className="mt-2 font-bold">{ROLE_LABELS[role]}</div></td>
+                <td className="py-3 pr-4"><div className="font-bold">{user.name}</div><div className="text-slate-500">{user.username || 'no username'} · {user.email}</div><div className="text-xs text-slate-400">Created {fmtDate(user.createdAt)}</div>{user.lockedUntil && user.lockedUntil > new Date() ? <div className="mt-1 rounded bg-red-50 px-2 py-1 text-xs font-bold text-red-700">Locked until {user.lockedUntil.toISOString().slice(0,16).replace('T',' ')}</div> : null}</td>
+                <td className="py-3 pr-4"><span className={`rounded-full px-2 py-1 text-xs font-bold ${membership.active ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>{membership.active ? 'Active' : 'Inactive'}</span><div className="mt-2 font-bold">{ROLE_LABELS[role]}</div><div className="mt-1 text-xs text-slate-500">Failed logins: {user.failedLoginCount || 0} · Session v{user.sessionVersion || 1}</div></td>
                 <td className="py-3 pr-4">
                   <form action={updateUserAccess} className="flex flex-wrap items-end gap-2">
                     <input type="hidden" name="id" value={user.id} />

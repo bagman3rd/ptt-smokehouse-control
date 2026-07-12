@@ -13,7 +13,7 @@ function toDateOnly(value: string) {
 }
 
 export async function GET(request: Request) {
-  const limited = enforceRateLimit(request, 'api:eod-status', 100, 60_000);
+  const limited = await enforceRateLimit(request, 'api:eod-status', 100, 60_000);
   if (limited) return limited;
   try {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);

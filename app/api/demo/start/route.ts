@@ -14,7 +14,7 @@ function baseUrl(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const limited = enforceRateLimit(request, 'demo', 5, 15 * 60_000);
+  const limited = await enforceRateLimit(request, 'demo', 5, 15 * 60_000);
   if (limited) return limited;
   const now = Date.now();
   const restaurant = await prisma.restaurant.create({ data: { name: `Demo Smokehouse ${new Date().toISOString().slice(0,10)}`, slug: `demo-${now}`, city: 'Demo City', state: 'US', timezone: 'America/New_York', active: true } });
@@ -24,6 +24,6 @@ export async function POST(request: Request) {
   await createDemoHistory(prisma, restaurant.id);
   await auditLog({ restaurantId: restaurant.id, actorUserId: user.id, actorName: user.name, action: 'CREATE_DEMO_DATA', entity: 'Restaurant', entityId: restaurant.id, afterJson: { demo: true } });
   setCurrentRestaurantCookie(restaurant.id);
-  setSessionCookie(user.id);
+  setSessionCookie(user.id, user.sessionVersion || 1);
   return NextResponse.redirect(`${baseUrl(request)}/dashboard?demo=1`, 303);
 }

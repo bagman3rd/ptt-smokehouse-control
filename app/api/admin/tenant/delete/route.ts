@@ -11,7 +11,7 @@ function baseUrl(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const limited = enforceRateLimit(request, 'api:tenant-delete', 3, 60 * 60_000);
+  const limited = await enforceRateLimit(request, 'api:tenant-delete', 3, 60 * 60_000);
   if (limited) return limited;
   const authError = await requireApiRole(['ADMIN', 'OWNER']);
   if (authError) return authError;

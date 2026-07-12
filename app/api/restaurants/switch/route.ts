@@ -4,7 +4,7 @@ import { membershipForUserRestaurant, setCurrentRestaurantCookie } from '@/lib/t
 import { enforceRateLimit } from '@/lib/rateLimit';
 
 export async function POST(request: Request) {
-  const limited = enforceRateLimit(request, 'api:restaurant-switch', 40, 60_000);
+  const limited = await enforceRateLimit(request, 'api:restaurant-switch', 40, 60_000);
   if (limited) return limited;
   const user = await currentUser();
   if (!user) redirect('/login');

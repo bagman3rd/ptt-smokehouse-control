@@ -25,7 +25,7 @@ function hasBlank(value: unknown) {
 }
 
 export async function POST(request: Request) {
-  const limited = enforceRateLimit(request, 'api:end-of-day', 80, 60_000);
+  const limited = await enforceRateLimit(request, 'api:end-of-day', 80, 60_000);
   if (limited) return limited;
   try {
     const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);

@@ -5,7 +5,7 @@ import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
 import { enforceRateLimit } from '@/lib/rateLimit';
 
 export async function GET(request: Request) {
-  const limited = enforceRateLimit(request, 'api:backup', 10, 60_000);
+  const limited = await enforceRateLimit(request, 'api:backup', 10, 60_000);
   if (limited) return limited;
   const authError = await requireApiRole(['ADMIN', 'OWNER']);
   if (authError) return authError;
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 
   const body = JSON.stringify({
     app: 'PTT Smokehouse Control',
-    build: '4.2.0',
+    build: '4.3.0',
     restaurant,
     exportedAt,
     counts: { proteins: proteins.length, scenarios: scenarios.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, savedReports: savedReports.length, reportRuns: reportRuns.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length, systemChecks: systemChecks.length },

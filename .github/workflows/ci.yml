@@ -1,4 +1,4 @@
-name: Build 4.2 CI
+name: Build 4.3 CI
 
 on:
   push:
@@ -58,6 +58,9 @@ jobs:
       - name: Permission-boundary tests
         run: pnpm run test:permissions
 
+      - name: Account-security tests
+        run: pnpm run test:account-security
+
       - name: Dead-code check
         run: pnpm run test:dead-code
 
@@ -66,6 +69,9 @@ jobs:
 
       - name: Tenant isolation integration test
         run: pnpm run test:tenant
+
+      - name: Cross-tenant regression test
+        run: pnpm run test:cross-tenant
 
       - name: Prisma schema drift check
         run: pnpm run ci:schema-drift

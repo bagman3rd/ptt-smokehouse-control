@@ -5,7 +5,7 @@ import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
 import { enforceRateLimit } from '@/lib/rateLimit';
 
 export async function GET(request: Request) {
-  const limited = enforceRateLimit(request, 'api:tenant-export', 8, 60_000);
+  const limited = await enforceRateLimit(request, 'api:tenant-export', 8, 60_000);
   if (limited) return limited;
   const authError = await requireApiRole(['ADMIN', 'OWNER']);
   if (authError) return authError;
@@ -31,6 +31,6 @@ export async function GET(request: Request) {
   ]);
   await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'EXPORT_TENANT_DATA', entity: 'Restaurant', entityId: restaurantId, afterJson: { counts: { users: users.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length, systemChecks: systemChecks.length } } });
   const exportedAt = new Date().toISOString();
-  const body = JSON.stringify({ app: 'Smokehouse Control', build: '4.2.0', exportedAt, restaurant, memberships, users, proteins, scenarios, dayMultipliers: days, monthMultipliers: months, cookPlans, endOfDayLogs: eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks }, null, 2);
+  const body = JSON.stringify({ app: 'Smokehouse Control', build: '4.3.0', exportedAt, restaurant, memberships, users, proteins, scenarios, dayMultipliers: days, monthMultipliers: months, cookPlans, endOfDayLogs: eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks }, null, 2);
   return new NextResponse(body, { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Content-Disposition': `attachment; filename="tenant-export-${restaurant.slug || restaurant.id}-${exportedAt.slice(0,10)}.json"` } });
 }
