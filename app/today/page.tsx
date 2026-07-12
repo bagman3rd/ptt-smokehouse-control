@@ -133,7 +133,7 @@ export default async function TodayPage({ searchParams }: { searchParams?: { kit
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-black">Smoker Load Schedule</h2>
-          <p className="mt-1 text-sm text-slate-600">Planned protein loads are assigned to active smokers and capacity conflicts are flagged before service.</p>
+          <p className="mt-1 text-sm text-slate-600">Loads are assigned by cook window, split across eligible smokers, and routed to backup equipment only when required.</p>
         </div>
         <Link href="/admin/smokers/schedule" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">Full Schedule</Link>
       </div>
@@ -142,7 +142,7 @@ export default async function TodayPage({ searchParams }: { searchParams?: { kit
         {scheduleRows.map((row) => <div key={`${row.proteinName}-${row.startTime}`} className={row.capacityStatus === 'WARNING' ? 'rounded-2xl border border-red-200 bg-red-50 p-4' : 'rounded-2xl border border-slate-200 p-4'}>
           <div className="flex items-center justify-between gap-3"><div className="text-lg font-black">{row.startTime}</div><div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black">{row.phase}</div></div>
           <div className="mt-2 text-sm font-bold text-slate-700">{row.units} {row.unitLabel} {row.proteinName} → {row.smokerName}</div>
-          <div className="text-xs text-slate-500">{row.smokerModel} · {row.smokerLocation} · capacity {row.capacity || 'not set'}</div>
+          <div className="text-xs text-slate-500">{row.allocationSummary} · eligible capacity {row.capacity || 'not set'}</div>
           <p className="mt-2 text-sm font-bold text-slate-700">{row.instruction}</p>
           {row.warning ? <p className="mt-2 rounded-xl bg-white px-3 py-2 text-xs font-black text-red-900">{row.warning}</p> : null}
         </div>)}

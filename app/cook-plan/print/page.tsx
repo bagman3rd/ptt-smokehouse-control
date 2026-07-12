@@ -68,7 +68,7 @@ export default async function CookPlanPrintPage({ searchParams }: { searchParams
         <h2 className="text-xl font-black">Smoker Schedule</h2>
         <table className="mt-3 w-full border-collapse text-sm">
           <thead><tr className="border-b-2 border-slate-900 text-left"><th className="p-2">Time</th><th className="p-2">Load</th><th className="p-2">Smoker</th><th className="p-2">Capacity / Warning</th></tr></thead>
-          <tbody>{scheduleRows.map((row) => <tr key={`${row.proteinName}-${row.startTime}`} className="border-b border-slate-300 align-top"><td className="p-2 font-black">{row.startTime}<div className="text-xs">to {row.endTime}</div></td><td className="p-2 font-black">{row.units} {row.unitLabel} {row.proteinName}</td><td className="p-2">{row.smokerName}<div className="text-xs">{row.smokerModel} · {row.smokerLocation}</div></td><td className="p-2 font-bold">{row.capacity || 'Not set'}{row.warning ? <div className="mt-1 text-xs font-black">WARNING: {row.warning}</div> : null}</td></tr>)}</tbody>
+          <tbody>{scheduleRows.map((row) => <tr key={`${row.proteinName}-${row.startTime}`} className="border-b border-slate-300 align-top"><td className="p-2 font-black">{row.startTime}<div className="text-xs">to {row.endTime}</div></td><td className="p-2 font-black">{row.units} {row.unitLabel} {row.proteinName}</td><td className="p-2">{row.smokerName}<div className="text-xs">{row.allocationSummary}</div></td><td className="p-2 font-bold">{row.capacity || 'Not set'}{row.warning ? <div className="mt-1 text-xs font-black">WARNING: {row.warning}</div> : null}</td></tr>)}</tbody>
         </table>
       </section>
 

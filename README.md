@@ -1,6 +1,6 @@
-# Smokehouse Control — Build 5.9.3
+# Smokehouse Control — Build 6.0.0
 
-Build 5.9.3 is a user-interface repair build layered on top of the 5.9.1 migration/CI repair.
+Build 6.0.0 is a user-interface repair build layered on top of the 5.9.1 migration/CI repair.
 
 ## Fixes
 
@@ -17,7 +17,7 @@ Build 5.9.3 is a user-interface repair build layered on top of the 5.9.1 migrati
 Commit message:
 
 ```text
-Build 5.9.3 navigation dropdown and smoker form labels
+Build 6.0.0 navigation dropdown and smoker form labels
 ```
 
 Normal path:

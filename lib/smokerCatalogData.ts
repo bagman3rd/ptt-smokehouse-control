@@ -45,7 +45,7 @@ const JR = 'https://jrmanufacturing.com/';
 const COOKSHACK = 'https://www.cookshack.com/';
 const MM = 'https://mmbbqcompany.com/product/';
 
-// Build 5.9.3 catalog policy:
+// Build 6.0.0 catalog policy:
 // 1) No estimated capacity numbers.
 // 2) Published count fields are loaded directly.
 // 3) Project rule: 1 whole chicken = 1 double breast = 2.5 lb and equal smoker space.

@@ -37,7 +37,7 @@ export default async function SmokerSchedulePage() {
     <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div>
         <h1 className="text-3xl font-black tracking-tight">Smoker Schedule</h1>
-        <p className="mt-2 text-slate-600">Assign planned protein loads to active smokers and surface capacity conflicts before service.</p>
+        <p className="mt-2 text-slate-600">Assign overnight and same-day loads only to eligible smokers, split loads across equipment, and reserve backup capacity until needed.</p>
       </div>
       <div className="flex flex-wrap gap-2">
         <Link href="/admin/smokers" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">Edit Smokers</Link>
@@ -73,7 +73,7 @@ export default async function SmokerSchedulePage() {
             <td className="py-3 font-black">{row.startTime}<div className="text-xs font-bold text-slate-500">to {row.endTime}</div></td>
             <td className="py-3 font-black">{row.proteinName}<div className="text-xs font-bold text-slate-500">{row.phase}</div></td>
             <td className="py-3 text-lg font-black">{row.units} {row.unitLabel}</td>
-            <td className="py-3 font-bold">{row.smokerName}<div className="text-xs text-slate-500">{row.smokerModel} · {row.smokerLocation}</div></td>
+            <td className="py-3 font-bold">{row.smokerName}<div className="mt-1 text-xs text-slate-500">{row.allocationSummary}</div></td>
             <td className="py-3 font-bold">{row.capacity || 'Not set'}</td>
             <td className="py-3"><span className={`rounded-full border px-3 py-1 text-xs font-black ${statusClass(row.capacityStatus)}`}>{row.capacityStatus.replace('_', ' ')}</span></td>
             <td className="py-3"><div className="font-bold text-slate-700">{row.instruction}</div>{row.suggestedFix ? <div className="mt-2 rounded-xl bg-amber-50 px-3 py-2 text-xs font-bold text-amber-900">Suggested fix: {row.suggestedFix}</div> : null}</td>
