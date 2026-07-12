@@ -4,6 +4,7 @@ import { verifyPassword } from '@/lib/password';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { enforceRateLimit } from '@/lib/rateLimit';
+import { auditLog } from '@/lib/tenant';
 import { loginSchema } from '@/lib/validators';
 
 function getBaseUrl(request: Request) {
@@ -24,7 +25,10 @@ export async function POST(request: Request) {
   await ensureDefaultData(prisma);
   const form = await request.formData();
   const parsed = loginSchema.safeParse(Object.fromEntries(form.entries()));
-  if (!parsed.success) return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
+  if (!parsed.success) {
+    await auditLog({ action: 'LOGIN_FAILURE', entity: 'Auth', actorName: 'Unknown', afterJson: { reason: 'invalid form' } });
+    return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
+  }
   const identifier = parsed.data.username;
   const password = parsed.data.password;
 
@@ -33,14 +37,17 @@ export async function POST(request: Request) {
   const user = usernameMatch || (emailMatches.length === 1 ? emailMatches[0] : null);
 
   if (!user || !verifyPassword(password, user.passwordHash)) {
+    await auditLog({ action: 'LOGIN_FAILURE', entity: 'Auth', actorName: identifier, afterJson: { reason: 'bad credentials', identifier } });
     return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
   }
 
   const activeMembership = await prisma.restaurantMembership.findFirst({ where: { userId: user.id, active: true, restaurant: { active: true } } });
   if (!activeMembership) {
+    await auditLog({ action: 'LOGIN_FAILURE', entity: 'Auth', actorUserId: user.id, actorName: user.name, afterJson: { reason: 'no active membership', identifier } });
     return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
   }
 
   setSessionCookie(user.id);
+  await auditLog({ restaurantId: activeMembership.restaurantId, actorUserId: user.id, actorName: user.name, action: 'LOGIN_SUCCESS', entity: 'Auth', afterJson: { username: user.username, email: user.email } });
   return NextResponse.redirect(`${baseUrl}/dashboard`, 303);
 }

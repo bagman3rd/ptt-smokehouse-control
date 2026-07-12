@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized' }, { status: 401 });
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
-  const [memberships, users, proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations] = await Promise.all([
+  const [memberships, users, proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks] = await Promise.all([
     prisma.restaurantMembership.findMany({ where: { restaurantId }, include: { user: true } }),
     prisma.user.findMany({ where: { memberships: { some: { restaurantId } } }, select: { id: true, name: true, username: true, email: true, active: true, createdAt: true, updatedAt: true } }),
     prisma.protein.findMany({ where: { restaurantId } }),
@@ -26,10 +26,11 @@ export async function GET(request: Request) {
     prisma.reportRun.findMany({ where: { restaurantId } }),
     prisma.auditLog.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }),
     prisma.smoker.findMany({ where: { restaurantId } }),
-    prisma.learningRecommendation.findMany({ where: { restaurantId } })
+    prisma.learningRecommendation.findMany({ where: { restaurantId } }),
+    prisma.systemCheck.findMany({ where: { restaurantId } }).catch(() => [])
   ]);
-  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'EXPORT_TENANT_DATA', entity: 'Restaurant', entityId: restaurantId, afterJson: { counts: { users: users.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length } } });
+  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'EXPORT_TENANT_DATA', entity: 'Restaurant', entityId: restaurantId, afterJson: { counts: { users: users.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length, systemChecks: systemChecks.length } } });
   const exportedAt = new Date().toISOString();
-  const body = JSON.stringify({ app: 'Smokehouse Control', build: '3.7.0', exportedAt, restaurant, memberships, users, proteins, scenarios, dayMultipliers: days, monthMultipliers: months, cookPlans, endOfDayLogs: eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations }, null, 2);
+  const body = JSON.stringify({ app: 'Smokehouse Control', build: '3.8.0', exportedAt, restaurant, memberships, users, proteins, scenarios, dayMultipliers: days, monthMultipliers: months, cookPlans, endOfDayLogs: eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks }, null, 2);
   return new NextResponse(body, { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Content-Disposition': `attachment; filename="tenant-export-${restaurant.slug || restaurant.id}-${exportedAt.slice(0,10)}.json"` } });
 }

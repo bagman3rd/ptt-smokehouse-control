@@ -1,7 +1,7 @@
-# PTT Smokehouse Control — Build 3.7.0 Test Report
+# PTT Smokehouse Control — Build 3.8.0 Test Report
 
 ## Scope
-Build 3.7.0 focuses on controlled learning and production-readiness:
+Build 3.8.0 focuses on controlled learning and production-readiness:
 
 - Accepted learning recommendations update settings.
 - Before/after preview and confirmation before applying changes.
@@ -15,19 +15,19 @@ Build 3.7.0 focuses on controlled learning and production-readiness:
 Command run:
 
 ```bash
-node scripts/build-3-7-0-evaluation.mjs
+node scripts/build-3-8-0-evaluation.mjs
 ```
 
 Result:
 
 ```text
-Build 3.7.0 evaluation checks completed.
+Build 3.8.0 evaluation checks completed.
 ```
 
 ## Verified Checks
 
-- package.json version is `3.7.0`.
-- Nav badge shows `Build 3.7.0`.
+- package.json version is `3.8.0`.
+- Nav badge shows `Build 3.8.0`.
 - `LearningRecommendation` stores confidence, sample count, minimum sample count, applied/rollback timestamps, and setting key.
 - Learning actions can apply accepted recommendations to settings.
 - Learning actions can roll back applied recommendations.
@@ -52,4 +52,4 @@ pnpm run test:forecast
 
 ## Deployment Note
 
-Build 3.7.0 keeps the current db-push recovery path and does not use `--accept-data-loss`.
+Build 3.8.0 keeps the current db-push recovery path and does not use `--accept-data-loss`.

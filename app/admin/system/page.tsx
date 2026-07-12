@@ -4,6 +4,7 @@ import { requireRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { currentRestaurantForUser } from '@/lib/tenant';
 import pkg from '@/package.json';
+import { recordSystemCheck } from './actions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -17,7 +18,7 @@ export default async function SystemPage() {
   noStore();
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
-  const [restaurantCount, userCount, smokerCount, lastEod, lastPlan, lastAudit, backupRunCount, recommendationCount] = await Promise.all([
+  const [restaurantCount, userCount, smokerCount, lastEod, lastPlan, lastAudit, backupRunCount, recommendationCount, systemChecks] = await Promise.all([
     prisma.restaurant.count(),
     prisma.user.count({ where: { memberships: { some: { restaurantId, active: true } } } }),
     prisma.smoker.count({ where: { restaurantId, active: true } }),
@@ -25,7 +26,8 @@ export default async function SystemPage() {
     prisma.cookPlan.findFirst({ where: { restaurantId }, orderBy: { serviceDate: 'desc' } }),
     prisma.auditLog.findFirst({ where: { restaurantId }, orderBy: { createdAt: 'desc' } }),
     prisma.reportRun.count({ where: { restaurantId, dataset: { contains: 'backup', mode: 'insensitive' } } }).catch(() => 0),
-    prisma.learningRecommendation.count({ where: { restaurantId, status: 'PENDING' } }).catch(() => 0)
+    prisma.learningRecommendation.count({ where: { restaurantId, status: 'PENDING' } }).catch(() => 0),
+    prisma.systemCheck.findMany({ where: { restaurantId }, orderBy: { createdAt: 'desc' }, take: 10 }).catch(() => [])
   ]);
 
   const migrationMode = 'DB Push Recovery Mode';
@@ -49,6 +51,50 @@ export default async function SystemPage() {
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">Last EOD</div><div className="mt-2 text-lg font-black">{fmt(lastEod?.serviceDate)}</div></div>
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">Last Cook Plan</div><div className="mt-2 text-lg font-black">{fmt(lastPlan?.serviceDate)}</div></div>
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">Pending Learning Items</div><div className="mt-2 text-3xl font-black">{recommendationCount}</div></div>
+    </section>
+
+
+
+    <section className="card mt-6 p-5">
+      <h2 className="text-xl font-black">Test Status Tracking</h2>
+      <p className="mt-2 text-sm text-slate-600">Record staging checks here after running them against a real staging database. This is intentionally separate from the local static build evaluation.</p>
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+        {[
+          ['TENANT_ISOLATION_TEST', 'Tenant isolation test', 'DATABASE_URL=... pnpm run test:tenant'],
+          ['BACKUP_EXPORT_TEST', 'Backup export test', 'DATABASE_URL=... pnpm run test:backup'],
+          ['FORECAST_ENGINE_TEST', 'Forecast engine test', 'pnpm run test:forecast'],
+          ['RESTORE_DRILL', 'Backup restore drill', 'Restore backup into staging and verify counts'],
+          ['MIGRATION_BASELINE_REVIEW', 'Migration baseline review', 'Confirm db-push recovery mode can be replaced safely'],
+          ['SECURITY_REVIEW', 'Security review', 'Review auth, rate limits, roles, and tenant scoping']
+        ].map(([type, label, hint]) => (
+          <form key={type} action={recordSystemCheck} className="rounded-2xl border border-slate-200 p-4">
+            <input type="hidden" name="type" value={type} />
+            <div className="font-black">{label}</div>
+            <div className="mt-1 text-xs font-mono text-slate-500">{hint}</div>
+            <label className="label mt-3 block">Result</label>
+            <select name="status" className="field mt-1">
+              <option value="PASS">Pass</option>
+              <option value="FAIL">Fail</option>
+              <option value="NEEDS_REVIEW">Needs review</option>
+            </select>
+            <label className="label mt-3 block">Notes</label>
+            <textarea name="notes" className="field mt-1 min-h-20" placeholder="What was tested, where, and what happened?" />
+            <button className="btn-secondary mt-3" type="submit">Record Check</button>
+          </form>
+        ))}
+      </div>
+    </section>
+
+    <section className="card mt-6 p-5">
+      <h2 className="text-xl font-black">Recent Staging / Restore Checks</h2>
+      {systemChecks.length === 0 ? <p className="mt-2 text-sm text-amber-700 font-bold">No staging or restore checks have been recorded yet.</p> : (
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[760px] text-left text-sm">
+            <thead className="bg-slate-50 text-slate-600"><tr><th className="p-3">When</th><th className="p-3">Type</th><th className="p-3">Status</th><th className="p-3">Verified By</th><th className="p-3">Notes</th></tr></thead>
+            <tbody>{systemChecks.map((check) => <tr key={check.id} className="border-t border-slate-100"><td className="p-3">{fmt(check.createdAt)}</td><td className="p-3 font-black">{check.type}</td><td className="p-3 font-black">{check.status}</td><td className="p-3">{check.verifiedBy}</td><td className="p-3 text-slate-600">{check.notes || '—'}</td></tr>)}</tbody>
+          </table>
+        </div>
+      )}
     </section>
 
     <section className="card mt-6 p-5">

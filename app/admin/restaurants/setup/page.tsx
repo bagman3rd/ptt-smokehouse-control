@@ -5,6 +5,7 @@ import { currentRestaurantForUser } from '@/lib/tenant';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { prisma } from '@/lib/prisma';
 import { saveRestaurantProfile, saveSetupCurve, saveSetupForecast, saveSetupProtein, importSalesHistoryCsv } from './actions';
+import { setupCompletionScore, setupWarnings } from '@/lib/setupStatus';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -23,20 +24,54 @@ export default async function RestaurantSetupWizardPage() {
   await ensureDefaultData(prisma);
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
-  const [scenarios, proteins, days, months, memberships] = await Promise.all([
+  const [scenarios, proteins, days, months, memberships, smokerCount, cookPlanCount, completeEodCount, reportRunCount, restoreCheck] = await Promise.all([
     prisma.forecastScenario.findMany({ where: activeScenarioWhere(restaurantId), orderBy: { annualSales: 'asc' } }),
     prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } }),
     prisma.dayMultiplier.findMany({ where: { restaurantId }, orderBy: { dayOfWeek: 'asc' } }),
     prisma.monthMultiplier.findMany({ where: { restaurantId }, orderBy: { month: 'asc' } }),
-    prisma.restaurantMembership.findMany({ where: { restaurantId, active: true }, include: { user: true }, orderBy: { role: 'asc' } })
+    prisma.restaurantMembership.findMany({ where: { restaurantId, active: true }, include: { user: true }, orderBy: { role: 'asc' } }),
+    prisma.smoker.count({ where: { restaurantId, active: true } }),
+    prisma.cookPlan.count({ where: { restaurantId } }),
+    prisma.endOfDayLog.count({ where: { restaurantId, status: { in: ['COMPLETE', 'REVIEWED', 'LOCKED'] } } }),
+    prisma.reportRun.count({ where: { restaurantId } }),
+    prisma.systemCheck.findFirst({ where: { restaurantId, type: 'RESTORE_DRILL', status: 'PASS' }, orderBy: { createdAt: 'desc' } }).catch(() => null)
   ]);
   const scenario = scenarios[0];
+  const setupChecks = [
+    { key: 'profile', label: 'Restaurant profile complete', complete: Boolean(restaurant.name && restaurant.timezone), warning: 'Restaurant profile is incomplete.' },
+    { key: 'owner', label: 'Owner/Admin account active', complete: memberships.some((m) => ['ADMIN', 'OWNER'].includes(String(m.role))), warning: 'No active owner/admin membership exists.' },
+    { key: 'proteins', label: 'Proteins reviewed', complete: proteins.length >= 4 && proteins.every((p) => p.rawWeightEachLb > 0 && p.cookedWeightEachLb >= 0 && p.cookedYieldPercent > 0), warning: 'Protein specs still need review.' },
+    { key: 'forecast', label: 'Sales model reviewed', complete: Boolean(scenario && scenario.annualSales > 0 && scenario.bbqSalesPercent > 0), warning: 'Sales model is missing or still invalid.' },
+    { key: 'dayCurve', label: 'Day curve reviewed', complete: days.length === 7, warning: 'Day-of-week curve is incomplete.' },
+    { key: 'monthCurve', label: 'Month curve reviewed', complete: months.length === 12, warning: 'Monthly curve is incomplete.' },
+    { key: 'smokers', label: 'Smoker capacity entered', complete: smokerCount > 0, warning: 'No smoker capacity entered. Cook-plan alerts may be incomplete.' },
+    { key: 'cookPlan', label: 'First cook plan generated', complete: cookPlanCount > 0, warning: 'No cook plan has been generated.' },
+    { key: 'eod', label: 'First completed EOD log', complete: completeEodCount > 0, warning: 'No completed EOD log exists.' },
+    { key: 'reports', label: 'Report/export reviewed', complete: reportRunCount > 0, warning: 'No report or export has been run.' },
+    { key: 'restore', label: 'Backup restore drill recorded', complete: Boolean(restoreCheck), warning: 'No passing backup restore drill has been recorded.' }
+  ];
+  const completionScore = setupCompletionScore(setupChecks);
+  const warnings = setupWarnings(setupChecks);
 
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Restaurant Setup Wizard</h1>
-      <p className="mt-2 text-slate-600">{restaurant.name} · Build 3.7.0 adds self-service setup, generic BBQ defaults, sales-history import, and audit-backed onboarding. Each save writes tenant-scoped settings and audit entries.</p>
+      <p className="mt-2 text-slate-600">{restaurant.name} · Build 3.8.0 adds self-service setup, generic BBQ defaults, sales-history import, and audit-backed onboarding. Each save writes tenant-scoped settings and audit entries.</p>
     </div>
+
+
+
+    <section className="card mb-6 p-5">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 className="text-xl font-black">Setup Completion: {completionScore}%</h2>
+          <p className="mt-1 text-sm text-slate-600">This score helps owners know whether forecasts are still running on default assumptions or real operating setup.</p>
+        </div>
+        <div className="h-4 rounded-full bg-slate-100 md:w-80"><div className="h-4 rounded-full bg-emerald-600" style={{ width: `${completionScore}%` }} /></div>
+      </div>
+      {warnings.length ? <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900"><div className="font-black">Setup warnings</div><ul className="mt-2 list-disc pl-5">{warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul></div> : <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold text-emerald-900">Core setup looks complete. Keep verifying with real EOD logs and reports.</div>}
+      <div className="mt-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">{setupChecks.map((check) => <div key={check.key} className={check.complete ? 'rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-900' : 'rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm font-bold text-amber-900'}>{check.complete ? '✓' : '!'} {check.label}</div>)}</div>
+    </section>
 
     <div className="grid gap-4">
       <section className="card p-5">

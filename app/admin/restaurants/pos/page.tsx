@@ -1,7 +1,7 @@
 import { Shell } from '@/components/Shell';
 import { requireRole } from '@/lib/auth';
 import { currentRestaurantForUser } from '@/lib/tenant';
-import { importSalesHistoryCsv } from '../setup/actions';
+import { PosImportPreviewForm } from './PosImportPreviewForm';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -12,15 +12,12 @@ export default async function PosImportPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">POS / Sales Import</h1>
-      <p className="mt-2 text-slate-600">{restaurant.name} · Build 3.7.0 adds a first POS-ready CSV path. Toast API should come later; this closes the first onboarding friction point without locking us to one POS vendor.</p>
+      <p className="mt-2 text-slate-600">{restaurant.name} · Build 3.8.0 adds a first POS-ready CSV path. Toast API should come later; this closes the first onboarding friction point without locking us to one POS vendor.</p>
     </div>
     <section className="card p-5">
       <h2 className="text-xl font-black">Sales History CSV</h2>
       <p className="mt-2 text-sm text-slate-600">Paste rows from Toast/Square/Clover or a spreadsheet. Columns: <strong>date,totalSales,bbqSales</strong>. The import updates operating curves and creates draft sales-history EOD records.</p>
-      <form action={importSalesHistoryCsv} className="mt-4 grid gap-3">
-        <textarea className="field min-h-56 font-mono text-xs" name="salesCsv" placeholder={'date,totalSales,bbqSales\n2026-07-01,8750,3325\n2026-07-02,9220,3504'} />
-        <button className="btn-primary" type="submit">Import Sales History</button>
-      </form>
+      <PosImportPreviewForm />
     </section>
     <section className="mt-6 card p-5">
       <h2 className="text-xl font-black">Toast API Roadmap</h2>

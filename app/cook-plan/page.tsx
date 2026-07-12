@@ -95,7 +95,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
           {plan?.notes ? <p className="mt-1 text-sm font-bold text-slate-500">{plan.notes} · Created {plan.createdAt.toLocaleString('en-US', { timeZone: 'America/New_York' })}</p> : null}
           {searchParams?.generatedAt ? <p className="mt-1 text-sm font-black text-emerald-700">Showing newly generated plan.</p> : null}
         </div>
-        {plan ? <div className="rounded-full bg-slate-100 px-4 py-2 text-sm font-black">{plan.status}</div> : null}
+        {plan ? <div className="flex flex-wrap gap-2"><a href={`/cook-plan/print?planId=${plan.id}`} className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">Print View</a><div className="rounded-full bg-slate-100 px-4 py-2 text-sm font-black">{plan.status}</div></div> : null}
       </div>
       {!plan ? <p className="mt-4 text-slate-600">No plan has been created yet.</p> : canManagePlan ? <form action={approveCookPlan} className="mt-5 space-y-4">
         <input type="hidden" name="cookPlanId" value={plan.id} />

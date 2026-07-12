@@ -1,14 +1,17 @@
-# Smokehouse Control — Build 3.7.0
+# Smokehouse Control — Build 3.8.0
 
-Build 3.7.0 is a cleanup and operational-hardening build after the 3.4.1 deploy-recovery release.
+Build 3.8.0 is an operational reliability and commercial-polish build. It adds test-status tracking, restore-drill tracking, setup-completion scoring, POS import preview/confirmation, forecast-change impact review, and a printable daily cook plan while keeping the current Render db-push recovery path.
 
-## What changed in 3.7.0
+## What changed in 3.8.0
 
-- Fixed the README/package.json mismatch. The package version, README, nav badge, backup export metadata, and evaluation script now all agree on Build 3.7.0.
+- Added admin test-status tracking on `/admin/system` for tenant tests, backup tests, forecast tests, restore drills, migration review, and security review.
+- Added persistent `SystemCheck` records and backup/tenant export coverage for those records.
+- Added setup-completion scoring and setup-blocking warnings to `/admin/restaurants/setup`.
+- Added POS/sales CSV import preview and explicit confirmation before data is submitted.
+- Added forecast-change impact messaging before learning recommendations are accepted.
+- Added printable Cook Plan view at `/cook-plan/print`.
+- Expanded audit coverage for login success/failure, report exports, backup exports, and system checks.
 - Kept the Render deploy-recovery path using `prisma db push` because the active Render database has a failed migration record. Do not switch production back to `prisma migrate deploy` until the database is repaired/baselined on staging.
-- Removed the unused tenant helper functions `tenantWhere()` and `tenantOrLegacyWhere()` from `lib/tenant.ts`. The app now has one clear tenant-scoping pattern: explicit `restaurantId` filtering tied to the active restaurant context.
-- Added an operational note for the in-memory rate limiter. It is acceptable for one Render instance, but a Redis-backed limiter should replace it before horizontal scaling.
-- Clarified that `test:tenant` and `test:backup` must be run against a real staging `DATABASE_URL`; static evaluation only proves the scripts exist and the code path is wired.
 
 ## Existing commercial-readiness features
 
@@ -79,7 +82,7 @@ pnpm run test:tenant
 pnpm run test:backup
 ```
 
-`pnpm run build:eval` is a static project check and was run for Build 3.7.0.
+`pnpm run build:eval` is a static project check and was run for Build 3.8.0.
 
 `pnpm run test:tenant` and `pnpm run test:backup` require a live staging PostgreSQL `DATABASE_URL`. Run both before adding a real second customer.
 
@@ -91,7 +94,7 @@ pnpm run test:backup
 - Keep billing/Stripe deferred until there is a real paying prospect ready to onboard.
 
 
-## Build 3.7.0
+## Build 3.8.0
 
 Pilot Control Center release:
 
@@ -103,9 +106,9 @@ Pilot Control Center release:
 - Kept Render on `prisma db push` recovery mode; do not switch back to `migrate deploy` until staging migration baseline is complete.
 
 
-## Build 3.7.0 Notes
+## Build 3.8.0 Notes
 
-Build 3.7.0 adds controlled learning updates:
+Build 3.8.0 adds controlled learning updates:
 
 - Accepted learning recommendations can update settings after Admin/Owner confirmation.
 - The Learning page now shows before/after previews, confidence levels, minimum sample-size thresholds, forecast accuracy, and rollback controls.
