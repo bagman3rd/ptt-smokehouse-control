@@ -55,7 +55,7 @@ export async function GET(request: Request) {
     if (!scenario) throw new Error('No scenario found for capacity preview.');
 
     const [proteins, loadMonth, nextMonth, smokers] = await Promise.all([
-      prisma.protein.findMany({ where: { restaurantId, active: true, configurationReviewedAt: { not: null } }, orderBy: { name: 'asc' } }),
+      prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } }),
       prisma.monthMultiplier.findFirst({ where: { restaurantId, month: loadDate.getUTCMonth() + 1 } }),
       prisma.monthMultiplier.findFirst({ where: { restaurantId, month: nextDay.getUTCMonth() + 1 } }),
       prisma.smoker.findMany({ where: { restaurantId, active: true, configurationReviewedAt: { not: null } } })

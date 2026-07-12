@@ -8,7 +8,7 @@ for (const endpoint of endpoints) {
   let lastError;
   for (let attempt = 1; attempt <= attempts; attempt++) {
     try {
-      const response = await fetch(`${baseUrl}${endpoint}`, { headers: { 'user-agent': 'PTT-Build-6.3.0-Monitor' }, signal: AbortSignal.timeout(20000) });
+      const response = await fetch(`${baseUrl}${endpoint}`, { headers: { 'user-agent': 'PTT-Build-6.3.1-Monitor' }, signal: AbortSignal.timeout(20000) });
       const body = await response.text();
       if (!response.ok) throw new Error(`${response.status} ${body.slice(0, 250)}`);
       console.log(`PASS ${endpoint}: ${response.status}`);
