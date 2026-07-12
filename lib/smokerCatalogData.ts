@@ -1,3 +1,4 @@
+import { COOK_WINDOW } from './domainCodes';
 export type SmokerCatalogSeed = {
   brand: string;
   model: string;
@@ -130,7 +131,7 @@ export async function ensureSmokerCatalog(prisma: any) {
       porkCapacity: item.porkCapacity ?? null,
       ribCapacity: item.ribCapacity ?? null,
       chickenCapacity: item.chickenCapacity ?? null,
-      cookWindow: item.cookWindow || null,
+      cookWindow: item.cookWindow || COOK_WINDOW.FLEXIBLE,
       notes: item.notes || null,
       officialCapacityText: item.officialCapacityText || null,
       brisketCapacityUnit: item.brisketCapacityUnit || (item.brisketCapacity != null ? 'COUNT' : null),

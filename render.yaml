@@ -4,7 +4,7 @@ services:
     env: node
     plan: starter
     buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
-    startCommand: npm run start
+    startCommand: pnpm run start
     envVars:
       - key: NODE_VERSION
         value: 20.18.1
@@ -25,7 +25,6 @@ services:
       - key: BACKUP_APP_URL
         sync: false
 
-  # Optional Render Cron job. Enable after BACKUP_APP_URL and CRON_SECRET are set.
   - type: cron
     name: ptt-smokehouse-control-weekly-backup
     env: node

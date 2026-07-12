@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { COOK_WINDOW_LABELS, SMOKER_LOCATION_LABELS } from '@/lib/domainCodes';
 
 type CatalogItem = {
   id: string;
@@ -41,25 +42,13 @@ type SmokerItem = {
 
 type FormAction = (formData: FormData) => void | Promise<void>;
 
-const LOCATION_OPTIONS = [
-  'Outdoor',
-  'Indoors under hood',
-  'In the wall',
-  'Outdoors in smoke house'
-] as const;
+const LOCATION_OPTIONS = Object.entries(SMOKER_LOCATION_LABELS).map(([value, label]) => ({ value, label }));
+const COOK_WINDOW_OPTIONS = Object.entries(COOK_WINDOW_LABELS).map(([value, label]) => ({ value, label }));
 
-const COOK_WINDOW_OPTIONS = [
-  'Overnight only',
-  'Same-day only',
-  'All day / flexible',
-  'Backup / overflow only',
-  'Not currently active'
-] as const;
-
-function SelectField({ name, defaultValue = '', options, required = false }: { name: string; defaultValue?: string; options: readonly string[]; required?: boolean }) {
-  return <select className="field mt-1" name={name} defaultValue={options.some((option) => option === defaultValue) ? defaultValue : ''} required={required}>
+function SelectField({ name, defaultValue = '', options, required = false }: { name: string; defaultValue?: string; options: readonly { value: string; label: string }[]; required?: boolean }) {
+  return <select className="field mt-1" name={name} defaultValue={options.some((option) => option.value === defaultValue) ? defaultValue : ''} required={required}>
     <option value="">Select one</option>
-    {options.map((option) => <option key={option} value={option}>{option}</option>)}
+    {options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
   </select>;
 }
 

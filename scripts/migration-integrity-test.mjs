@@ -31,8 +31,8 @@ assert(baseline.includes('CREATE UNIQUE INDEX "RestaurantMembership_restaurantId
 const workflow = read('.github/workflows/ci.yml');
 assert(!workflow.includes('prisma db push'), 'CI workflow must not use prisma db push');
 assert(workflow.includes('prisma migrate deploy') || workflow.includes('pnpm run prisma:migrate'), 'CI workflow must apply migrations with migrate deploy');
-assert(workflow.includes('npm run ci:migration-status'), 'CI must check migration status after migrate deploy');
-assert(workflow.includes('npm run ci:schema-drift'), 'CI must run schema drift check after migrations');
+assert(workflow.includes('pnpm run ci:migration-status'), 'CI must check migration status after migrate deploy');
+assert(workflow.includes('pnpm run ci:schema-drift'), 'CI must run schema drift check after migrations');
 
 const pkg = JSON.parse(read('package.json'));
 assert(!pkg.scripts['render-build'].includes('migrate resolve'), 'render-build must not hide migration errors with migrate resolve');
@@ -60,5 +60,5 @@ for (const name of migrations.filter((migrationName) => migrationName !== '20260
   assert(!hasConstraint || guardedConstraint, `${name} has an unguarded ADD CONSTRAINT statement that can fail on a fresh full-baseline rebuild`);
 }
 
-console.log('Build 5.9.2 migration integrity checks completed.');
+console.log('Build 6.1.0 migration integrity checks completed.');
 

@@ -1,3 +1,4 @@
+import { COOK_WINDOW, labelForCookWindow, labelForSmokerLocation, PROTEIN_CODE, type ProteinCode } from '@/lib/domainCodes';
 export type SmokerScheduleSmoker = {
   id: string;
   name: string;
@@ -12,10 +13,10 @@ export type SmokerScheduleSmoker = {
   active: boolean;
 };
 
-export type SmokerScheduleProtein = { name: string; inputUnit: string };
+export type SmokerScheduleProtein = { name: string; inputUnit: string; code?: string | null };
 export type SmokerScheduleItem = { id: string; recommendedCookUnits: number; approvedCookUnits: number | null; protein: SmokerScheduleProtein };
 export type SmokerSchedulePlan = { id: string; serviceDate: Date; status: string; items: SmokerScheduleItem[] };
-export type ProteinKind = 'brisket' | 'pork' | 'ribs' | 'chicken' | 'other';
+export type ProteinKind = ProteinCode;
 
 export type SmokerAllocation = {
   smokerId: string;
@@ -48,51 +49,52 @@ export type SmokerScheduleRow = {
   suggestedFix: string | null;
 };
 
-export function proteinKind(name: string): ProteinKind {
+export function proteinKind(name: string, code?: string | null): ProteinKind {
+  if (code && Object.values(PROTEIN_CODE).includes(code as ProteinCode)) return code as ProteinCode;
   const lower = name.toLowerCase();
-  if (lower.includes('brisket')) return 'brisket';
-  if (lower.includes('pork')) return 'pork';
-  if (lower.includes('rib')) return 'ribs';
-  if (lower.includes('chicken')) return 'chicken';
-  return 'other';
+  if (lower.includes('brisket')) return PROTEIN_CODE.BRISKET;
+  if (lower.includes('pork')) return PROTEIN_CODE.PORK;
+  if (lower.includes('rib')) return PROTEIN_CODE.RIBS;
+  if (lower.includes('chicken')) return PROTEIN_CODE.CHICKEN;
+  return PROTEIN_CODE.OTHER;
 }
 
 export function displayProteinUnit(proteinName: string, inputUnit: string): string {
   const kind = proteinKind(proteinName);
-  if (kind === 'pork') return 'butts';
-  if (kind === 'ribs') return 'racks';
-  if (kind === 'chicken') return 'breasts';
-  if (kind === 'brisket') return 'briskets';
+  if (kind === PROTEIN_CODE.PORK) return 'butts';
+  if (kind === PROTEIN_CODE.RIBS) return 'racks';
+  if (kind === PROTEIN_CODE.CHICKEN) return 'breasts';
+  if (kind === PROTEIN_CODE.BRISKET) return 'briskets';
   return inputUnit.toLowerCase().replace('_', ' ');
 }
 
 function smokerCapacityFor(smoker: SmokerScheduleSmoker, kind: ProteinKind): number {
-  if (kind === 'brisket') return smoker.brisketCapacity || 0;
-  if (kind === 'pork') return smoker.porkCapacity || 0;
-  if (kind === 'ribs') return smoker.ribCapacity || 0;
-  if (kind === 'chicken') return smoker.chickenCapacity || 0;
+  if (kind === PROTEIN_CODE.BRISKET) return smoker.brisketCapacity || 0;
+  if (kind === PROTEIN_CODE.PORK) return smoker.porkCapacity || 0;
+  if (kind === PROTEIN_CODE.RIBS) return smoker.ribCapacity || 0;
+  if (kind === PROTEIN_CODE.CHICKEN) return smoker.chickenCapacity || 0;
   return 0;
 }
 
-function isOvernightKind(kind: ProteinKind): boolean { return kind === 'brisket' || kind === 'pork'; }
-function normalizedWindow(smoker: SmokerScheduleSmoker): string { return smoker.cookWindow || 'All day / flexible'; }
+function isOvernightKind(kind: ProteinKind): boolean { return kind === PROTEIN_CODE.BRISKET || kind === PROTEIN_CODE.PORK; }
+function normalizedWindow(smoker: SmokerScheduleSmoker): string { return smoker.cookWindow || COOK_WINDOW.FLEXIBLE; }
 
 export function smokerEligibleForKind(smoker: SmokerScheduleSmoker, kind: ProteinKind): boolean {
   if (!smoker.active) return false;
   const window = normalizedWindow(smoker);
-  if (window === 'Not currently active') return false;
-  if (window === 'Backup / overflow only') return true;
-  if (kind === 'other') return window === 'All day / flexible';
+  if (window === COOK_WINDOW.INACTIVE) return false;
+  if (window === COOK_WINDOW.BACKUP_OVERFLOW) return true;
+  if (kind === PROTEIN_CODE.OTHER) return window === COOK_WINDOW.FLEXIBLE;
   return isOvernightKind(kind)
-    ? window === 'Overnight only' || window === 'All day / flexible'
-    : window === 'Same-day only' || window === 'All day / flexible';
+    ? window === COOK_WINDOW.OVERNIGHT_ONLY || window === COOK_WINDOW.FLEXIBLE
+    : window === COOK_WINDOW.SAME_DAY_ONLY || window === COOK_WINDOW.FLEXIBLE;
 }
 
 function priorityFor(smoker: SmokerScheduleSmoker, kind: ProteinKind): number {
   const window = normalizedWindow(smoker);
-  if (window === 'Backup / overflow only') return 3;
-  if (isOvernightKind(kind) && window === 'Overnight only') return 1;
-  if (!isOvernightKind(kind) && kind !== 'other' && window === 'Same-day only') return 1;
+  if (window === COOK_WINDOW.BACKUP_OVERFLOW) return 3;
+  if (isOvernightKind(kind) && window === COOK_WINDOW.OVERNIGHT_ONLY) return 1;
+  if (!isOvernightKind(kind) && kind !== PROTEIN_CODE.OTHER && window === COOK_WINDOW.SAME_DAY_ONLY) return 1;
   return 2;
 }
 
@@ -116,11 +118,11 @@ function allocateLoad(smokers: SmokerScheduleSmoker[], kind: ProteinKind, units:
       smokerId: smoker.id,
       smokerName: smoker.name,
       smokerModel: smoker.model || 'No model entered',
-      smokerLocation: smoker.location || 'No location entered',
-      cookWindow: normalizedWindow(smoker),
+      smokerLocation: labelForSmokerLocation(smoker.location),
+      cookWindow: labelForCookWindow(normalizedWindow(smoker)),
       units: assigned,
       capacity,
-      isBackup: normalizedWindow(smoker) === 'Backup / overflow only'
+      isBackup: normalizedWindow(smoker) === COOK_WINDOW.BACKUP_OVERFLOW
     });
     remaining -= assigned;
   }
@@ -128,10 +130,10 @@ function allocateLoad(smokers: SmokerScheduleSmoker[], kind: ProteinKind, units:
 }
 
 function defaultTiming(kind: ProteinKind): Pick<SmokerScheduleRow, 'startTime' | 'endTime' | 'phase' | 'instruction' | 'suggestedFix'> {
-  if (kind === 'pork') return { startTime: '5:00 PM prior day', endTime: 'Overnight / next morning', phase: 'Overnight prior-day load', instruction: 'Load pork butts at 5:00 PM for next-day service; verify hot-hold plan before close.', suggestedFix: 'Activate additional overnight or flexible capacity, use a backup smoker, or schedule another overnight cycle.' };
-  if (kind === 'brisket') return { startTime: '9:00 AM', endTime: '9:00 PM / hot hold overnight', phase: 'Prior-day brisket cook', instruction: 'Cook briskets 9:00 AM–9:00 PM, then hold overnight for next-day service.', suggestedFix: 'Activate additional overnight or flexible capacity, use a backup smoker, or schedule another brisket cycle.' };
-  if (kind === 'ribs') return { startTime: '8:00 AM same day', endTime: 'Lunch service window', phase: 'Same-day rib cook', instruction: 'Load ribs same day after hot-box verification; cook against today’s service demand.', suggestedFix: 'Activate additional same-day or flexible capacity, use a backup smoker, or stagger rib loads.' };
-  if (kind === 'chicken') return { startTime: '10:00 AM same day', endTime: 'Lunch / afternoon service window', phase: 'Same-day chicken cook', instruction: 'Load chicken breasts same day after hot-box verification; avoid overholding.', suggestedFix: 'Activate additional same-day or flexible capacity, use a backup smoker, or cook chicken in waves.' };
+  if (kind === PROTEIN_CODE.PORK) return { startTime: '5:00 PM prior day', endTime: 'Overnight / next morning', phase: 'Overnight prior-day load', instruction: 'Load pork butts at 5:00 PM for next-day service; verify hot-hold plan before close.', suggestedFix: 'Activate additional overnight or flexible capacity, use a backup smoker, or schedule another overnight cycle.' };
+  if (kind === PROTEIN_CODE.BRISKET) return { startTime: '9:00 AM', endTime: '9:00 PM / hot hold overnight', phase: 'Prior-day brisket cook', instruction: 'Cook briskets 9:00 AM–9:00 PM, then hold overnight for next-day service.', suggestedFix: 'Activate additional overnight or flexible capacity, use a backup smoker, or schedule another brisket cycle.' };
+  if (kind === PROTEIN_CODE.RIBS) return { startTime: '8:00 AM same day', endTime: 'Lunch service window', phase: 'Same-day rib cook', instruction: 'Load ribs same day after hot-box verification; cook against today’s service demand.', suggestedFix: 'Activate additional same-day or flexible capacity, use a backup smoker, or stagger rib loads.' };
+  if (kind === PROTEIN_CODE.CHICKEN) return { startTime: '10:00 AM same day', endTime: 'Lunch / afternoon service window', phase: 'Same-day chicken cook', instruction: 'Load chicken breasts same day after hot-box verification; avoid overholding.', suggestedFix: 'Activate additional same-day or flexible capacity, use a backup smoker, or cook chicken in waves.' };
   return { startTime: 'Manager scheduled', endTime: 'Manager scheduled', phase: 'Custom cook', instruction: 'Schedule per kitchen manager direction.', suggestedFix: 'Add a protein-specific cook cycle before relying on automated scheduling.' };
 }
 
@@ -139,7 +141,7 @@ export function buildSmokerLoadSchedule(smokers: SmokerScheduleSmoker[], plan: S
   if (!plan) return [];
   return plan.items.map((item) => {
     const units = item.approvedCookUnits ?? item.recommendedCookUnits;
-    const kind = proteinKind(item.protein.name);
+    const kind = proteinKind(item.protein.name, item.protein.code);
     const { allocations, totalCapacity, remaining } = allocateLoad(smokers, kind, units);
     const timing = defaultTiming(kind);
     const unitLabel = displayProteinUnit(item.protein.name, item.protein.inputUnit);

@@ -130,6 +130,7 @@ model Protein {
   restaurantId        String?
   restaurant          Restaurant? @relation(fields: [restaurantId], references: [id])
   name                String
+  code                String      @default("OTHER")
   inputUnit           ProteinUnit
   rawWeightEachLb     Float       @default(0)
   cookedWeightEachLb  Float       @default(0)

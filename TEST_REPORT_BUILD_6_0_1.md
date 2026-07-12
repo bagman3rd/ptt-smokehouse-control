@@ -1,4 +1,4 @@
-# Test Report — Build 6.0.1
+# Test Report — Build 6.1.0
 
 ## Scope
 
@@ -6,9 +6,9 @@ CI workflow repair and packaging verification.
 
 ## Verified
 
-- Build version references are 6.0.1.
+- Build version references are 6.1.0.
 - `.github/workflows/ci.yml` is present in the project ZIP.
-- Workflow name and job name identify Build 6.0.1.
+- Workflow name and job name identify Build 6.1.0.
 - Workflow provisions PostgreSQL 16 and waits for database health.
 - Workflow uses `npm install`, Prisma generate, and Prisma migrate deploy.
 - Workflow runs preflight before quality and regression checks.
