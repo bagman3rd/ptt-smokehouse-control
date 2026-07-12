@@ -1,73 +1,71 @@
-# Smokehouse Control — Build 5.3.0
+# Smokehouse Control — Build 5.4.0
 
-Build 5.3.0 is the **POS Integration** build.
+Build 5.4.0 is the **Documentation, Demo, and Sales Package** build.
 
 ## Purpose
 
-This release reduces manual entry friction by adding item-level POS CSV import, menu-item mapping to smoked proteins, protein-level preview before import, POS import history, and POS data backup/export coverage.
+This release makes the product easier to demo, explain, train, and sell. It adds a guided tour, expanded help docs, a sales one-pager, and a stronger synthetic demo dataset.
 
 ## Major changes
 
-### POS menu-item mapping
+### Guided tour
 
-New Prisma model:
-
-```text
-MenuItemMapping
-```
-
-Each restaurant can map POS item names to smoked proteins with:
-
-- POS item name
-- normalized item name
-- protein
-- cooked portion size in pounds
-- yield factor
-- active/inactive status
-
-### POS item-sales import
-
-New Prisma models:
+New page:
 
 ```text
-PosImportBatch
-PosImportRow
+/tour
 ```
 
-The import workflow supports CSV from Toast, Square, Clover, or spreadsheets.
+The tour walks users through:
 
-Required format:
+- Today Command Center
+- Cook Plan
+- Print Pit Sheet
+- End of Day
+- Reports
+- Learning
+- Forecast Proof
+- POS Import
+- Smoker Schedule
+- System verification
 
-```csv
-date,itemName,quantity,grossSales
-2026-07-01,Brisket Plate,18,540
-2026-07-01,Pulled Pork Sandwich,42,714
+### Sales package
+
+New page:
+
+```text
+/sales
 ```
 
-### POS preview before import
+The page explains the product around the core value propositions:
 
-The POS page now previews:
+- Reduce BBQ waste
+- Prevent sellouts
+- Standardize pitmaster decisions
+- Prove improvement
+- Train from real data
+- Run multiple restaurants
 
-- rows found
-- valid rows
-- invalid rows
-- unmapped rows
-- gross sales
-- mapped cooked pounds
-- sales by protein
-- unmapped item warnings
+### Expanded Help page
 
-### Learning/data foundation
+The Help page now includes practical operator docs:
 
-Imported POS rows are stored at item level. Mapped rows estimate cooked pounds by protein, creating the foundation for better forecast training and POS-vs-EOD reconciliation.
+- What is a load date?
+- Why pork uses tomorrow
+- Why brisket uses tomorrow
+- How leftovers affect plans
+- How forecast confidence works
+- How to import POS sales
+- How to add smokers
+- How to add users
+- How to read reports
+- What to do when Wi-Fi fails during EOD
 
-### Backup/export coverage
+### Improved Demo page
 
-Tenant export and backup JSON now include:
+The Demo page now clearly explains what the demo creates and links to the tour and sales package.
 
-- menuItemMappings
-- posImportBatches
-- posImportRows
+Demo Mode now creates 90 days of synthetic EOD history instead of four weeks.
 
 ## Deploy command
 
@@ -80,16 +78,16 @@ corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --pro
 ## New scripts
 
 ```bash
-pnpm run test:pos-import
+pnpm run test:demo-docs
 pnpm run build:eval
 ```
 
 ## Commit message
 
 ```text
-Build 5.3.0 POS integration and menu item mapping
+Build 5.4.0 documentation demo and sales package
 ```
 
 ## Important limitation
 
-This is CSV-first POS integration. Direct Toast/Square/Clover API sync should come later after the item-mapping workflow proves itself in staging and live restaurant use.
+The demo data is synthetic. The app still needs real PTT operating data to prove final forecast accuracy and learning recommendations in production.

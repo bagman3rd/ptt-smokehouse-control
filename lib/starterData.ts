@@ -52,11 +52,11 @@ export async function createDemoHistory(prisma: any, restaurantId: string) {
   if (!scenario || proteins.length === 0) return;
   const today = new Date();
   today.setUTCHours(0,0,0,0);
-  for (let i = 28; i >= 1; i--) {
+  for (let i = 90; i >= 1; i--) {
     const serviceDate = new Date(today);
     serviceDate.setUTCDate(today.getUTCDate() - i);
     const dow = serviceDate.getUTCDay();
-    const sales = Math.round(6200 + dow * 350 + (i % 5) * 420);
+    const sales = Math.round(6200 + dow * 350 + (i % 5) * 420 + (i % 17 === 0 ? 1800 : 0));
     const bbqSales = Math.round(sales * 0.38);
     const eod = await prisma.endOfDayLog.create({ data: { restaurantId, serviceDate, totalSales: sales, bbqSales, status: 'COMPLETE', enteredBy: 'Demo System', notes: 'Demo operating data' } });
     await prisma.endOfDayProteinLog.createMany({ data: proteins.map((protein: DemoProteinForHistory, idx: number) => ({
@@ -68,7 +68,7 @@ export async function createDemoHistory(prisma: any, restaurantId: string) {
       usableLeftoverUnits: i % 4 === 0 ? 2 : 1,
       usableLeftoverLb: i % 4 === 0 ? 8 : 3,
       wasteLb: i % 6 === 0 ? 6 : 2,
-      eightySixed: i % 13 === 0,
+      eightySixed: i % 13 === 0 || i % 29 === 0,
       wasteReason: i % 6 === 0 ? 'Demo overproduction' : ''
     })) });
   }
