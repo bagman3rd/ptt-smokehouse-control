@@ -33,3 +33,39 @@ input, select, textarea { font-size: 16px; }
   h2 { font-size: 20px !important; }
   @page { size: letter; margin: .4in; }
 }
+
+/* Build 4.9.0 kitchen field usability pass */
+.kitchen-mode .card,
+.kitchen-mode section {
+  border-width: 2px;
+}
+.kitchen-mode h1 {
+  font-size: clamp(2rem, 8vw, 4rem);
+}
+.kitchen-mode h2 {
+  font-size: clamp(1.4rem, 5vw, 2.25rem);
+}
+.kitchen-mode a,
+.kitchen-mode button {
+  min-height: 52px;
+  font-size: 1rem;
+}
+.kitchen-mode input,
+.kitchen-mode select,
+.kitchen-mode textarea {
+  min-height: 52px;
+}
+@media (max-width: 640px) {
+  .kitchen-mode .card,
+  .kitchen-mode section {
+    padding: 1rem !important;
+  }
+  .kitchen-mode .rounded-full {
+    border-radius: .9rem;
+  }
+}
+@media print {
+  .print-big-type { font-size: 18px !important; }
+  .print-one-page { break-inside: avoid; page-break-inside: avoid; }
+  .print-signoff { margin-top: 24px; border-top: 2px solid #000; padding-top: 10px; }
+}

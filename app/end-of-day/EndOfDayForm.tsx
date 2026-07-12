@@ -62,6 +62,9 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
+  const [lastDraftSavedAt, setLastDraftSavedAt] = useState<string | null>(null);
+  const [hasLocalDraft, setHasLocalDraft] = useState(false);
+  const [pendingRetryPayload, setPendingRetryPayload] = useState<string | null>(null);
   const draftKey = useMemo(() => `ptt-eod-draft-${serviceDate || today()}`, [serviceDate]);
   const dateLabel = useMemo(() => formatDateWithDow(serviceDate), [serviceDate]);
   const isLocked = Boolean(initialLog?.lockedAt) || initialLog?.status === 'LOCKED';
@@ -72,33 +75,69 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
   function persistDraft(form: HTMLFormElement) {
     if (typeof window === 'undefined' || isLocked) return;
     const formData = new FormData(form);
-    const draft: Record<string, string | boolean> = { serviceDate, status, lockLog };
+    const savedAt = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    const draft: Record<string, string | boolean> = { serviceDate, status, lockLog, savedAt };
     formData.forEach((value, key) => { draft[key] = String(value); });
     for (const input of Array.from(form.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[]) {
       if (input.name) draft[input.name] = input.checked;
     }
     window.localStorage.setItem(draftKey, JSON.stringify(draft));
+    setLastDraftSavedAt(savedAt);
+    setHasLocalDraft(true);
   }
 
-  useEffect(() => {
-    if (typeof window === 'undefined' || isLocked || initialLog) return;
+  function restoreDraftFromBrowser() {
+    if (typeof window === 'undefined' || !formRef.current) return;
     const raw = window.localStorage.getItem(draftKey);
-    if (!raw || !formRef.current) return;
+    if (!raw) return;
     try {
       const draft = JSON.parse(raw) as Record<string, string | boolean>;
       for (const [key, value] of Object.entries(draft)) {
         if (key === 'serviceDate' && typeof value === 'string') setServiceDate(value);
         if (key === 'status' && typeof value === 'string') setStatus(value);
+        if (key === 'savedAt' && typeof value === 'string') setLastDraftSavedAt(value);
         const field = formRef.current.elements.namedItem(key);
         if (!field) continue;
         if (field instanceof HTMLInputElement && field.type === 'checkbox') field.checked = Boolean(value);
         else if (field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement) field.value = String(value);
       }
-      setMessage('Recovered an unsaved local draft from this device. Review values before saving.');
+      setHasLocalDraft(true);
+      setMessage('Restored local EOD draft. Review values before saving.');
     } catch {
       window.localStorage.removeItem(draftKey);
+      setHasLocalDraft(false);
     }
+  }
+
+  function clearLocalDraft() {
+    if (typeof window === 'undefined') return;
+    window.localStorage.removeItem(draftKey);
+    setHasLocalDraft(false);
+    setLastDraftSavedAt(null);
+    setMessage('Local EOD draft cleared on this device.');
+  }
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || isLocked || initialLog) return;
+    if (window.localStorage.getItem(draftKey)) restoreDraftFromBrowser();
   }, [draftKey, initialLog, isLocked]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || isLocked) return;
+    const timer = window.setInterval(() => {
+      if (formRef.current) persistDraft(formRef.current);
+    }, 5000);
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!hasLocalDraft || isSaving) return;
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', onBeforeUnload);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener('beforeunload', onBeforeUnload);
+    };
+  }, [draftKey, hasLocalDraft, isLocked, isSaving, lockLog, serviceDate, status]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -124,6 +163,8 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
         const usableLeftoverUnits = numberFromForm(formData, `usableLeftoverUnits-${protein.id}`);
         const usableLeftoverLb = numberFromForm(formData, `usableLeftoverLb-${protein.id}`);
         const wasteLb = numberFromForm(formData, `wasteLb-${protein.id}`);
+        const eightySixed = formData.get(`eightySixed-${protein.id}`) === 'on';
+        const wasteReason = String(formData.get(`wasteReason-${protein.id}`) || '');
 
         if ([cookedUnits, soldCookedLb, usableLeftoverUnits, usableLeftoverLb, wasteLb].some((value) => value < 0)) {
           blockingErrors.push(`${protein.name}: negative values are not allowed.`);
@@ -139,6 +180,9 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
         }
         if (['COMPLETE', 'REVIEWED', 'LOCKED'].includes(selectedStatus) && cookedUnits > 0 && usableLeftoverUnitsRaw === '') {
           blockingErrors.push(`${protein.name}: usable leftover units are required before marking the EOD log ${selectedStatus}. Enter 0 if none.`);
+        }
+        if (['COMPLETE', 'REVIEWED', 'LOCKED'].includes(selectedStatus) && eightySixed && !wasteReason) {
+          blockingErrors.push(`${protein.name}: choose a reason when marking an 86 event before closeout.`);
         }
       }
 
@@ -174,6 +218,10 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
         }))
       };
 
+      const retryJson = JSON.stringify(payload);
+      setPendingRetryPayload(retryJson);
+      if (typeof window !== 'undefined') window.localStorage.setItem(`${draftKey}-last-submit`, retryJson);
+
       const response = await fetch('/api/end-of-day', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
@@ -182,12 +230,13 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || data.ok === false) throw new Error(data.message || `Save failed with status ${response.status}`);
-      if (typeof window !== 'undefined') window.localStorage.removeItem(draftKey);
+      if (typeof window !== 'undefined') { window.localStorage.removeItem(draftKey); window.localStorage.removeItem(`${draftKey}-last-submit`); }
+      setPendingRetryPayload(null);
       setMessage(`Saved ${selectedStatus} end-of-day log for ${formatDateWithDow(serviceDate)}. Loading saved values...`);
       window.location.assign(data.redirectUrl || `/end-of-day?serviceDate=${encodeURIComponent(serviceDate)}&savedAt=${Date.now()}`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Save end-of-day log failed.';
-      setError(errorMessage);
+      setError(`${errorMessage} Your local draft and last submit payload were kept on this device. Fix the connection and retry.`);
     } finally {
       setIsSaving(false);
     }
@@ -208,6 +257,17 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
       <section className="card p-5">
         <h2 className="text-xl font-black">Service Summary</h2>
         {isLocked ? <div className="mt-3 rounded-xl bg-slate-100 px-3 py-2 text-sm font-black text-slate-700">This EOD log is locked. Create a corrected log under a different service date or unlock in the database if this was accidental.</div> : null}
+        {!isLocked ? <div className="mt-3 rounded-2xl border border-blue-200 bg-blue-50 p-3 text-sm font-bold text-blue-950">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div>Bad-Wi-Fi protection: this form autosaves locally every 5 seconds. {lastDraftSavedAt ? `Last local save: ${lastDraftSavedAt}.` : 'Start typing to create a local draft.'}</div>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" className="rounded-full border border-blue-300 bg-white px-3 py-2 text-xs font-black" onClick={() => formRef.current && persistDraft(formRef.current)}>Save Draft Now</button>
+              <button type="button" className="rounded-full border border-blue-300 bg-white px-3 py-2 text-xs font-black" onClick={restoreDraftFromBrowser}>Restore Draft</button>
+              <button type="button" className="rounded-full border border-blue-300 bg-white px-3 py-2 text-xs font-black" onClick={clearLocalDraft}>Clear Draft</button>
+            </div>
+          </div>
+          {pendingRetryPayload ? <textarea readOnly className="mt-3 h-24 w-full rounded-xl border border-blue-200 bg-white p-2 text-xs font-mono" value={pendingRetryPayload} /> : null}
+        </div> : null}
         <div className="mt-4 grid gap-4 md:grid-cols-5">
           <div>
             <label className="label">Service Date</label>

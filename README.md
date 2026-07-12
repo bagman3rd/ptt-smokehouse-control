@@ -1,89 +1,61 @@
-# Smokehouse Control — Build 4.8.0
+# Smokehouse Control — Build 4.9.0
 
-Build 4.8.0 is the **Security Hardening + Tenant Migration Recovery** build.
+Build 4.9.0 is the **Kitchen Field Usability** build.
 
-It assumes the production migration baseline has already been repaired and the app can deploy with:
+## Purpose
 
-```bash
-prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build
-```
+This release focuses on the two places the app will actually be used during live service:
 
-The build intentionally does **not** use:
+- `/today` — daily command center for KM/pit crew
+- `/end-of-day` — closing log used with imperfect kitchen Wi-Fi
+- `/cook-plan/print` — pit-friendly printed load plan
 
-```bash
-prisma db push
---accept-data-loss
-```
+## Major changes
 
-## What Build 4.8.0 adds
+### Kitchen Mode on Today
 
-### Tenant guard coverage
+`/today` now includes a Kitchen Mode toggle:
 
-`lib/tenantGuard.ts` now covers every tenant-scoped operating model, including child records:
+- Larger text
+- Larger touch targets
+- Higher contrast emphasis
+- Execution-first layout
 
-- AuditLog
-- Protein
-- ForecastScenario
-- DayMultiplier
-- MonthMultiplier
-- EventModifier
-- CookPlan
-- CookPlanItem
-- EndOfDayLog
-- EndOfDayProteinLog
-- SavedReport
-- ReportRun
-- Smoker
-- LearningRecommendation
-- SystemCheck
+### EOD bad-Wi-Fi protection
 
-In development and CI, missing tenant scoping now fails loudly instead of becoming a silent cross-tenant leak.
+The End-of-Day form now:
 
-### Child-record restaurantId fields
+- Autosaves a local browser draft every 5 seconds
+- Shows the last local draft save time
+- Provides Save Draft Now / Restore Draft / Clear Draft controls
+- Warns before leaving the page with an unsaved local draft
+- Preserves the last submit payload if the save fails
+- Keeps the full protein log available on the device after a network failure
 
-Build 4.8.0 adds `restaurantId` to:
+### EOD quality checks
 
-- CookPlanItem
-- EndOfDayProteinLog
+Build 4.9.0 strengthens closeout checks:
 
-That makes direct tenant checks possible on child rows instead of relying only on parent joins.
+- Negative values blocked
+- Complete/Reviewed/Locked logs require explicit leftover units
+- All-zero completed logs blocked
+- 86 events require a reason before closeout
+- Leftover units greater than cooked units trigger a hot-box warning
 
-### Tenant indexes and composite uniqueness
+### Print polish
 
-The Prisma schema now expresses tenant-safe uniqueness and lookup patterns, including:
+`/cook-plan/print` now has:
 
-- RestaurantMembership: `restaurantId + userId`
-- Protein: `restaurantId + name`
-- ForecastScenario: `restaurantId + name`
-- DayMultiplier: `restaurantId + dayOfWeek`
-- MonthMultiplier: `restaurantId + month`
-- CookPlan: `restaurantId + serviceDate + scenarioId`
-- EndOfDayLog: `restaurantId + serviceDate`
-- Smoker: `restaurantId + name`
+- Bigger type
+- Higher contrast
+- Pit-friendly manager signoff
+- Hot-box verification wording
+- EOD closeout reminder
+- Better print CSS for letter-size output
 
-### CI checks
+## Deploy
 
-CI now includes:
-
-```bash
-pnpm run test:tenant
-pnpm run test:cross-tenant
-pnpm run test:tenant-guard
-pnpm run test:orphan-records
-pnpm run ci:schema-drift
-```
-
-### New scripts
-
-```bash
-pnpm run test:tenant-guard
-pnpm run test:orphan-records
-pnpm run build:eval
-```
-
-## Deployment
-
-Normal deploy path:
+Use the normal deploy path:
 
 ```text
 ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Actions → Render Manual Deploy
@@ -92,18 +64,13 @@ ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Act
 Commit message:
 
 ```text
-Build 4.8.0 tenant isolation hardening
+Build 4.9.0 kitchen field usability
 ```
 
-## Important note
-
-Build 4.8.0 contains a tenant-constraints migration. If existing production data has duplicates that violate tenant-level uniqueness, the migration can fail. Run this first on staging and confirm:
+Render build command remains:
 
 ```bash
-pnpm run test:tenant
-pnpm run test:cross-tenant
-pnpm run test:tenant-guard
-pnpm run test:orphan-records
+corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
 ```
 
-Do not add unrelated customers until these tests pass on a real staging PostgreSQL database.
+`render-build` uses `prisma migrate deploy`, does not use `prisma db push`, and does not use `--accept-data-loss`.

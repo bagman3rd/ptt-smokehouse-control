@@ -45,7 +45,7 @@ function capacityFor(smokers: Array<any>, proteinName: string) {
   }, 0);
 }
 
-export default async function TodayPage() {
+export default async function TodayPage({ searchParams }: { searchParams?: { kitchen?: string } }) {
   const user = await requireRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
   noStore();
   const restaurant = await currentRestaurantForUser(user);
@@ -54,6 +54,7 @@ export default async function TodayPage() {
   const tomorrow = addUtcDays(today, 1);
   const yesterday = addUtcDays(today, -1);
   const canManagePlan = hasRole(user, ['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
+  const kitchenMode = searchParams?.kitchen === '1';
 
   const [todayPlan, nextPlan, todayEod, priorEod, smokers, dataQuality] = await Promise.all([
     prisma.cookPlan.findFirst({ where: { restaurantId, serviceDate: today }, orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } }),
@@ -73,12 +74,15 @@ export default async function TodayPage() {
   }).filter(Boolean) ?? [];
 
   return <Shell>
+    <div className={kitchenMode ? 'kitchen-mode' : ''}>
     <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div>
         <h1 className="text-3xl font-black tracking-tight">Today</h1>
         <p className="mt-2 text-slate-600">{restaurant.name} · daily command center for the KM and pit crew.</p>
+        {kitchenMode ? <p className="mt-2 rounded-xl bg-slate-950 px-3 py-2 text-sm font-black text-white">Kitchen Mode: large touch targets, high contrast, execution-first layout.</p> : null}
       </div>
       <div className="flex flex-wrap gap-2">
+        <Link href={kitchenMode ? '/today' : '/today?kitchen=1'} className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">{kitchenMode ? 'Standard View' : 'Kitchen Mode'}</Link>
         <Link href="/cook-plan" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">Cook Plan</Link>
         <Link href={`/end-of-day?serviceDate=${today.toISOString().slice(0,10)}`} className="rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white">Start EOD Log</Link>
         {operationalPlan ? <Link href={`/cook-plan/print?planId=${operationalPlan.id}`} className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">Print Cook Plan</Link> : null}
@@ -147,5 +151,6 @@ export default async function TodayPage() {
       <p className="mt-2 text-sm text-slate-600">Use this screen for execution. Generate/approve plans from Cook Plan. Close actual results from End of Day.</p>
       {!canManagePlan ? <p className="mt-2 rounded-xl bg-slate-50 px-3 py-2 text-sm font-bold text-slate-700">Kitchen Crew access is read-only for cook plans and write-enabled for End-of-Day logs.</p> : null}
     </section>
+    </div>
   </Shell>;
 }
