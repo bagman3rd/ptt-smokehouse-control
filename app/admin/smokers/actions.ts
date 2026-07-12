@@ -27,7 +27,7 @@ export async function createSmoker(formData: FormData) {
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
   const name = text(formData, 'name');
-  if (!name) throw new Error('Smoker name is required.');
+  if (!name) throw new Error('Smoker Brand is required.');
   const catalog = await catalogFromForm(formData);
   const smoker = await prisma.smoker.create({
     data: {
