@@ -43,19 +43,19 @@ export default async function SystemPage() {
 
     <div className="rounded-2xl border border-amber-300 bg-amber-50 p-5 text-amber-900">
       <div className="text-lg font-black">Pilot Mode Warning</div>
-      <p className="mt-1 text-sm">This deployment is configured for <strong>{migrationMode}</strong>. Build 4.7.0 is the staging-verification build: record proof that tenant, cross-tenant, forecast, backup, restore, and migration checks passed against a real staging database before relying on outside-customer data.</p>
+      <p className="mt-1 text-sm">This deployment is configured for <strong>{migrationMode}</strong>. Record proof that tenant, cross-tenant, forecast, backup, restore, and migration checks passed against staging before relying on outside-customer data.</p>
     </div>
 
 
     <section className="mt-6 grid gap-4 lg:grid-cols-3">
       <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-900">
         <div className="text-lg font-black">Migration Repair Gate</div>
-        <p className="mt-2 text-sm">The production migration baseline has been repaired. Build 4.7.0 keeps migrate deploy active and requires proof checks against staging so future schema changes are tested before production.</p>
+        <p className="mt-2 text-sm">The production migration baseline has been repaired. Keep migrate deploy active and test future schema changes against staging before production.</p>
         <div className="mt-3 rounded-xl bg-white/70 p-3 font-mono text-xs">TENANT_ISOLATION_BUILD_4_7_0.md</div>
       </div>
       <div className="rounded-2xl border border-slate-200 bg-white p-5">
         <div className="text-lg font-black">Scheduled Backup Readiness</div>
-        <p className="mt-2 text-sm text-slate-600">Build 4.7.0 keeps weekly backup support and adds explicit staging verification tracking. Configure CRON_SECRET and BACKUP_APP_URL for scheduled backups, then run restore drills against staging.</p>
+        <p className="mt-2 text-sm text-slate-600">Configure CRON_SECRET and BACKUP_APP_URL for scheduled backups, then run restore drills against staging.</p>
         <div className={cronReady ? 'mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800' : 'mt-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm font-bold text-amber-800'}>
           CRON_SECRET: {cronReady ? 'configured' : 'missing or too short'}
         </div>

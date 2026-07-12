@@ -69,3 +69,16 @@ input, select, textarea { font-size: 16px; }
   .print-one-page { break-inside: avoid; page-break-inside: avoid; }
   .print-signoff { margin-top: 24px; border-top: 2px solid #000; padding-top: 10px; }
 }
+
+/* Build 5.8.0 readability and navigation cleanup */
+body { line-height: 1.55; }
+.card { @apply shadow-sm; }
+table th { @apply font-black; }
+table td { @apply leading-relaxed; }
+summary::-webkit-details-marker { display: none; }
+details[open] > summary { @apply bg-slate-100; }
+@media (max-width: 768px) {
+  header nav { row-gap: .5rem; }
+  details.relative { position: static; }
+  details.relative > div { left: 1rem; right: 1rem; width: auto; }
+}

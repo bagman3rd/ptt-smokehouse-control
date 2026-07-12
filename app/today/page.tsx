@@ -133,7 +133,7 @@ export default async function TodayPage({ searchParams }: { searchParams?: { kit
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-black">Smoker Load Schedule</h2>
-          <p className="mt-1 text-sm text-slate-600">Build 5.2.0 assigns planned protein loads to the best active smoker and flags capacity conflicts.</p>
+          <p className="mt-1 text-sm text-slate-600">Planned protein loads are assigned to active smokers and capacity conflicts are flagged before service.</p>
         </div>
         <Link href="/admin/smokers/schedule" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">Full Schedule</Link>
       </div>

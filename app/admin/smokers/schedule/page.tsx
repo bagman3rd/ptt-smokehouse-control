@@ -37,7 +37,7 @@ export default async function SmokerSchedulePage() {
     <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div>
         <h1 className="text-3xl font-black tracking-tight">Smoker Schedule</h1>
-        <p className="mt-2 text-slate-600">Build 5.2.0 production-constraint view: assign planned protein loads to active smokers and surface capacity conflicts before service.</p>
+        <p className="mt-2 text-slate-600">Assign planned protein loads to active smokers and surface capacity conflicts before service.</p>
       </div>
       <div className="flex flex-wrap gap-2">
         <Link href="/admin/smokers" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">Edit Smokers</Link>

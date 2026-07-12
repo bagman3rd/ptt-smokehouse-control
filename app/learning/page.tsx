@@ -167,7 +167,7 @@ export default async function LearningPage() {
     <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
       <div>
         <h1 className="text-3xl font-black tracking-tight">Learning & Adjustment Recommendations</h1>
-        <p className="mt-2 max-w-3xl text-slate-600">Build 5.0.0 adds formal forecast proof metrics while keeping accepted learning changes controlled: preview before/after, enforce sample-size rules, audit the setting change, and keep rollback available.</p>
+        <p className="mt-2 max-w-3xl text-slate-600">Forecast proof, recommendation review, before/after previews, audit trail, and rollback are managed here.</p>
       </div>
       <Link className="btn-secondary" href="/learning/proof">Open Forecast Proof</Link>
     </div>

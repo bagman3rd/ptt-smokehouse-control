@@ -114,14 +114,14 @@ export async function POST(request: Request) {
             : `Prior EOD leftover credit source: EOD ${fmtDateWithDow(priorEodDate)} (${leftoverLog.status}${lockedFlag}) only.`;
       const result = forecastProteinLoad({ protein, proteins, scenario, forecastBbqSales: targetForecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
       const timingNote = lower.includes('brisket')
-        ? `${fmtDateWithDow(loadDate)}: cook brisket 9:00 AM–9:00 PM using ${fmtDateWithDow(targetServiceDate)} service forecast, then hold overnight. ${leftoverSourceNote}`
+        ? `Brisket: 9 AM–9 PM cook, hold overnight. ${leftoverSourceNote}`
         : lower.includes('pork')
-          ? `${fmtDateWithDow(loadDate)}: load pork butts at 5:00 PM using ${fmtDateWithDow(targetServiceDate)} service forecast. ${leftoverSourceNote}`
+          ? `Pork: 5 PM load for next-day service. ${leftoverSourceNote}`
           : lower.includes('rib')
-            ? `${fmtDateWithDow(loadDate)}: cook/load ribs same day using ${fmtDateWithDow(targetServiceDate)} service forecast. ${leftoverSourceNote}`
+            ? `Ribs: same-day cook. ${leftoverSourceNote}`
             : lower.includes('chicken')
-              ? `${fmtDateWithDow(loadDate)}: cook/load pulled chicken breasts same day using ${fmtDateWithDow(targetServiceDate)} service forecast. Default assumption is 1 breast ≈ 2.5 raw lb and 1.875 cooked lb. ${leftoverSourceNote}`
-              : `${fmtDateWithDow(loadDate)}: cook/load using ${fmtDateWithDow(targetServiceDate)} service forecast. ${leftoverSourceNote}`;
+              ? `Chicken: same-day cook. ${leftoverSourceNote}`
+              : `Custom protein cook. ${leftoverSourceNote}`;
       return {
         restaurantId,
         proteinId: protein.id,
@@ -149,7 +149,7 @@ export async function POST(request: Request) {
           forecastBbqSales: sameDayForecastBbqSales,
           confidence: confidenceForHistory(logsCount),
           status: 'DRAFT',
-          notes: `Load plan date ${fmtDateWithDow(loadDate)} · brisket/pork use next-day service forecast ${fmtDateWithDow(nextDayServiceDate)} (${nextDayForecastSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} total / ${nextDayForecastBbqSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} smoked meat) · ribs/chicken use same-day service forecast ${fmtDateWithDow(loadDate)} (${sameDayForecastSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} total / ${sameDayForecastBbqSales.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} smoked meat) · liquor/bar ${LIQUOR_SALES_PERCENT}% excluded / food ${FOOD_SALES_PERCENT}% before smoked-meat demand · ${dayPattern.name} day pattern · event multiplier ${eventMultiplier}`,
+          notes: `Load date ${fmtDateWithDow(loadDate)}. Brisket/pork use next-day forecast; ribs/chicken use same-day forecast. Pattern: ${dayPattern.name}; event multiplier ${eventMultiplier}.`,
           items: { create: items }
         },
         include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } }

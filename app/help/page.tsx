@@ -19,7 +19,7 @@ export default function HelpPage() {
     <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
       <div>
         <h1 className="text-3xl font-black tracking-tight">Help, Training, and Support</h1>
-        <p className="mt-3 max-w-3xl text-slate-600">Build 5.4.0 adds a practical operator guide, guided tour, sales package, and clearer troubleshooting for kitchen staff, managers, and owners.</p>
+        <p className="mt-3 max-w-3xl text-slate-600">Practical operator guide for kitchen staff, managers, and owners.</p>
       </div>
       <div className="flex flex-wrap gap-2">
         <Link href="/tour" className="btn-primary">Guided Tour</Link>

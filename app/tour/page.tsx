@@ -16,7 +16,7 @@ const tourSteps = [
 export default function TourPage() {
   return <main className="mx-auto max-w-6xl px-4 py-10">
     <div className="rounded-3xl bg-slate-900 p-8 text-white shadow-sm">
-      <div className="text-sm font-black uppercase tracking-wide text-emerald-300">Build 5.4.0 guided tour</div>
+      <div className="text-sm font-black uppercase tracking-wide text-emerald-300">Guided tour</div>
       <h1 className="mt-2 text-4xl font-black tracking-tight">Learn the smokehouse workflow in 10 minutes</h1>
       <p className="mt-4 max-w-3xl text-slate-200">This tour explains where to click, what each screen proves, and how the daily loop moves from forecast to production to EOD learning.</p>
       <div className="mt-6 flex flex-wrap gap-3">

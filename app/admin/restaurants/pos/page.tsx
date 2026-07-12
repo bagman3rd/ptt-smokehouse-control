@@ -20,7 +20,7 @@ export default async function PosImportPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">POS / Sales Import</h1>
-      <p className="mt-2 text-slate-600">{restaurant.name} · Build 5.3.0 adds item-level POS import, reusable menu-item mapping, protein-level preview, and POS import history. Start with CSV exports from Toast, Square, Clover, or a spreadsheet.</p>
+      <p className="mt-2 text-slate-600">{restaurant.name} · Import item-level POS sales, map menu items to proteins, preview protein impact, and keep import history.</p>
     </div>
 
     <section className="card p-5">

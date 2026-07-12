@@ -376,6 +376,11 @@ model SmokerCatalog {
   notes           String?
   sourceUrl       String?
   sourceLabel     String?
+  officialCapacityText String?
+  brisketCapacityUnit String?
+  porkCapacityUnit String?
+  ribCapacityUnit String?
+  chickenCapacityUnit String?
   sourceConfidence String  @default("RESEARCHED")
   active          Boolean  @default(true)
   createdAt       DateTime @default(now())

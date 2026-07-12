@@ -19,7 +19,7 @@ export default async function BillingPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Billing</h1>
-      <p className="mt-2 text-slate-600">Build 5.2.0 adds subscription records, hosted Stripe checkout handoff, trial status, customer portal handoff, and read/export-only billing states.</p>
+      <p className="mt-2 text-slate-600">Manage subscription status, hosted checkout, trial status, customer portal access, and data export access.</p>
     </div>
 
     <section className="card p-5">

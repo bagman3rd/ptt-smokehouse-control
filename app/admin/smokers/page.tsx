@@ -30,7 +30,7 @@ export default async function SmokersPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Smoker Capacity</h1>
-      <p className="mt-2 text-slate-600">Build the physical production model. Build 5.7.0 uses a manufacturer-verified smoker catalog only. Pick brand/model and the app auto-loads official published values; missing manufacturer data stays blank instead of estimated.</p>
+      <p className="mt-2 text-slate-600">Build the physical production model. Pick a brand/model to load manufacturer-published count capacities. Pound capacities, ranges, and whole-chicken capacities are shown for reference and are not converted into planning counts.</p>
     </div>
     <div className="mb-6 flex gap-2"><a href="/admin/smokers/schedule" className="rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white">Open Smoker Schedule</a><a href="/today" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">Today</a></div>
 
@@ -45,7 +45,7 @@ export default async function SmokersPage() {
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
           <h2 className="text-xl font-black">Add Smoker From Catalog</h2>
-          <p className="mt-1 text-sm font-bold text-slate-500">Catalog contains {catalog.length} researched Ole Hickory, Southern Pride, J&amp;R, Cookshack, and M&amp;M models. Only manufacturer-published capacities are active. There are no estimated capacity rows.</p>
+          <p className="mt-1 text-sm font-bold text-slate-500">Catalog contains {catalog.length} active manufacturer rows. Count fields auto-load only when the manufacturer publishes that exact planning unit.</p>
         </div>
         <a href="/admin/smokers/catalog" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100">View Catalog</a>
       </div>

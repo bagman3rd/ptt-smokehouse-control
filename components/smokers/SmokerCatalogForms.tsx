@@ -14,9 +14,13 @@ type CatalogItem = {
   ribCapacity: number | null;
   chickenCapacity: number | null;
   cookWindow: string | null;
+  officialCapacityText: string | null;
+  brisketCapacityUnit: string | null;
+  porkCapacityUnit: string | null;
+  ribCapacityUnit: string | null;
+  chickenCapacityUnit: string | null;
   sourceConfidence: string;
   sourceLabel: string | null;
-  notes: string | null;
 };
 
 type SmokerItem = {
@@ -41,17 +45,21 @@ function buildCatalogMap(catalog: CatalogItem[]) {
   return new Map(catalog.map((item) => [item.id, item]));
 }
 
-function cap(value: number | null, label: string) {
-  return typeof value === 'number' ? `${value} ${label}` : `${label}: official data not published`;
-}
-
 function formatCapacityLabel(item: CatalogItem) {
-  const parts = [cap(item.brisketCapacity, 'briskets'), cap(item.porkCapacity, 'butts'), cap(item.ribCapacity, 'ribs')];
-  return parts.join(' / ');
+  const parts = [];
+  if (typeof item.brisketCapacity === 'number') parts.push(`${item.brisketCapacity} briskets`);
+  if (typeof item.porkCapacity === 'number') parts.push(`${item.porkCapacity} butts`);
+  if (typeof item.ribCapacity === 'number') parts.push(`${item.ribCapacity} ribs`);
+  return parts.length ? parts.join(' / ') : 'official capacities shown in details';
 }
 
-function inputValue(value: number | null | undefined) {
+function inputValue(value: number | null | undefined): number | '' {
   return typeof value === 'number' ? value : '';
+}
+
+function preferredNumberInput(catalogValue: number | null | undefined, existingValue: number | null | undefined): number | '' {
+  if (typeof catalogValue === 'number') return catalogValue;
+  return inputValue(existingValue);
 }
 
 
@@ -66,11 +74,12 @@ function CatalogSelect({ catalog, defaultValue = '', onSelect }: { catalog: Cata
 }
 
 function SourceNote({ selected }: { selected: CatalogItem | null }) {
-  if (!selected) return <p className="text-xs font-bold text-slate-500 md:col-span-4">Pick a catalog smoker to auto-load only manufacturer-published values. Blank fields mean the manufacturer did not publish that capacity; enter your verified number manually if you have a spec sheet or measured load.</p>;
-  const confidenceClass = selected.sourceConfidence === 'OFFICIAL' ? 'bg-emerald-50 text-emerald-900 border-emerald-200' : selected.sourceConfidence === 'OFFICIAL_PARTIAL' ? 'bg-blue-50 text-blue-900 border-blue-200' : 'bg-slate-50 text-slate-900 border-slate-200';
+  if (!selected) return <p className="text-xs font-bold text-slate-500 md:col-span-4">Pick a catalog smoker to load manufacturer-published planning counts. Blank fields mean the published capacity is in pounds, ranges, whole chickens, or was not published. Enter a manual number only if you have a verified spec sheet or measured load.</p>;
+  const confidenceClass = selected.sourceConfidence === 'OFFICIAL' ? 'bg-emerald-50 text-emerald-900 border-emerald-200' : 'bg-blue-50 text-blue-900 border-blue-200';
   return <div className={`rounded-2xl border p-3 text-xs font-bold md:col-span-4 ${confidenceClass}`}>
-    <div>{selected.brand} {selected.model} · {selected.smokerType} · {selected.fuelType} · Source confidence: {selected.sourceConfidence}</div>
-    <div className="mt-1">{selected.sourceLabel || 'Research source'}{selected.notes ? ` — ${selected.notes}` : ''}</div>
+    <div>{selected.brand} {selected.model} · {selected.smokerType} · {selected.fuelType}</div>
+    <div className="mt-1">Official capacity: {selected.officialCapacityText || 'not published for every protein'}</div>
+    <div className="mt-1 text-slate-600">Auto-loaded fields use count-based units only. Pound capacities and whole-chicken capacities are displayed above, not converted.</div>
   </div>;
 }
 
@@ -89,7 +98,7 @@ export function AddSmokerForm({ catalog, action }: { catalog: CatalogItem[]; act
     <input className="field" name="brisketCapacity" type="number" min="0" step="0.1" placeholder="Brisket capacity" defaultValue={inputValue(selected?.brisketCapacity)} key={`b-${selectedId}`} />
     <input className="field" name="porkCapacity" type="number" min="0" step="0.1" placeholder="Pork butt capacity" defaultValue={inputValue(selected?.porkCapacity)} key={`p-${selectedId}`} />
     <input className="field" name="ribCapacity" type="number" min="0" step="0.1" placeholder="Rib rack capacity" defaultValue={inputValue(selected?.ribCapacity)} key={`rb-${selectedId}`} />
-    <input className="field" name="chickenCapacity" type="number" min="0" step="0.1" placeholder="Chicken breast capacity" defaultValue={inputValue(selected?.chickenCapacity)} key={`c-${selectedId}`} />
+    <input className="field" name="chickenCapacity" type="number" min="0" step="0.1" placeholder="Chicken breast capacity — manual if needed" defaultValue={inputValue(selected?.chickenCapacity)} key={`c-${selectedId}`} />
     <SourceNote selected={selected} />
     <button className="btn-primary md:col-span-4" type="submit">Add smoker</button>
   </form>;
@@ -109,11 +118,11 @@ export function EditSmokerForm({ smoker, catalog, action }: { smoker: SmokerItem
     <input className="field" name="model" placeholder="Model" defaultValue={model} key={`model-${smoker.id}-${selectedId}`} readOnly={Boolean(selected)} />
     <input className="field" name="location" defaultValue={smoker.location || ''} />
     <input className="field" name="cookWindow" defaultValue={selected?.cookWindow || smoker.cookWindow || ''} key={`cw-${smoker.id}-${selectedId}`} />
-    <label className="text-sm font-bold">Racks<input className="field mt-1" name="rackCount" type="number" min="0" step="1" defaultValue={inputValue(selected?.rackCount) || smoker.rackCount} key={`r-${smoker.id}-${selectedId}`} /></label>
-    <label className="text-sm font-bold">Briskets<input className="field mt-1" name="brisketCapacity" type="number" min="0" step="0.1" defaultValue={inputValue(selected?.brisketCapacity) || smoker.brisketCapacity} key={`b-${smoker.id}-${selectedId}`} /></label>
-    <label className="text-sm font-bold">Pork butts<input className="field mt-1" name="porkCapacity" type="number" min="0" step="0.1" defaultValue={inputValue(selected?.porkCapacity) || smoker.porkCapacity} key={`p-${smoker.id}-${selectedId}`} /></label>
-    <label className="text-sm font-bold">Rib racks<input className="field mt-1" name="ribCapacity" type="number" min="0" step="0.1" defaultValue={inputValue(selected?.ribCapacity) || smoker.ribCapacity} key={`rb-${smoker.id}-${selectedId}`} /></label>
-    <label className="text-sm font-bold">Chicken breasts<input className="field mt-1" name="chickenCapacity" type="number" min="0" step="0.1" defaultValue={inputValue(selected?.chickenCapacity) || smoker.chickenCapacity} key={`c-${smoker.id}-${selectedId}`} /></label>
+    <label className="text-sm font-bold">Racks<input className="field mt-1" name="rackCount" type="number" min="0" step="1" defaultValue={preferredNumberInput(selected?.rackCount, smoker.rackCount)} key={`r-${smoker.id}-${selectedId}`} /></label>
+    <label className="text-sm font-bold">Briskets<input className="field mt-1" name="brisketCapacity" type="number" min="0" step="0.1" defaultValue={preferredNumberInput(selected?.brisketCapacity, smoker.brisketCapacity)} key={`b-${smoker.id}-${selectedId}`} /></label>
+    <label className="text-sm font-bold">Pork butts<input className="field mt-1" name="porkCapacity" type="number" min="0" step="0.1" defaultValue={preferredNumberInput(selected?.porkCapacity, smoker.porkCapacity)} key={`p-${smoker.id}-${selectedId}`} /></label>
+    <label className="text-sm font-bold">Rib racks<input className="field mt-1" name="ribCapacity" type="number" min="0" step="0.1" defaultValue={preferredNumberInput(selected?.ribCapacity, smoker.ribCapacity)} key={`rb-${smoker.id}-${selectedId}`} /></label>
+    <label className="text-sm font-bold">Chicken breasts <span className="text-xs text-slate-500">manual if whole-chicken spec</span><input className="field mt-1" name="chickenCapacity" type="number" min="0" step="0.1" defaultValue={preferredNumberInput(selected?.chickenCapacity, smoker.chickenCapacity)} key={`c-${smoker.id}-${selectedId}`} /></label>
     <label className="flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-sm font-bold"><input type="checkbox" name="active" defaultChecked={smoker.active} /> Active</label>
     <SourceNote selected={selected} />
     <button className="btn-secondary md:col-span-4" type="submit">Save smoker</button>

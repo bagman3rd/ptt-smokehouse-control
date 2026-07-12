@@ -74,7 +74,7 @@ export async function importPosItemCsv(formData: FormData) {
       totalSales: summary.totalSales,
       bbqSales: summary.byProtein.filter((x) => x.proteinId).reduce((sum, x) => sum + x.grossSales, 0),
       importedBy: user.name,
-      notes: 'Build 5.3.0 POS item-sales CSV import'
+      notes: 'POS item-sales CSV import'
     }
   });
 

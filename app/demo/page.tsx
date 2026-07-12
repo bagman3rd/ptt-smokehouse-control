@@ -13,7 +13,7 @@ const demoFeatures = [
 export default function DemoPage() {
   return <main className="min-h-screen bg-slate-50 px-4 py-10">
     <div className="mx-auto max-w-3xl rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-      <div className="text-sm font-black uppercase tracking-wide text-emerald-700">Build 5.4.0 demo package</div>
+      <div className="text-sm font-black uppercase tracking-wide text-emerald-700">Demo workspace</div>
       <h1 className="mt-2 text-3xl font-black tracking-tight">Launch a sample smokehouse</h1>
       <p className="mt-3 text-slate-600">This creates a demo restaurant with enough fake operating history to show the full sales story: daily production planning, EOD closeout, reports, learning, forecast proof, data quality, smoker scheduling, and support workflows.</p>
       <ul className="mt-5 grid gap-2 text-sm text-slate-700 md:grid-cols-2">
