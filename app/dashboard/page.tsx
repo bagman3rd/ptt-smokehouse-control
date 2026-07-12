@@ -8,6 +8,7 @@ import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { deleteFutureCookPlans } from '@/app/actions';
 import { currentRestaurantForUser } from '@/lib/tenant';
 import { FOOD_SALES_PERCENT, LIQUOR_SALES_PERCENT, salesBreakdown, salesBreakdownLine } from '@/lib/salesModel';
+import { computeDataQuality, confidenceFromDataQuality } from '@/lib/dataQuality';
 
 function money(n: number) { return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }); }
 function displayUnit(proteinName: string, inputUnit: string) {
@@ -30,7 +31,7 @@ export default async function DashboardPage() {
   const operationalHorizonDate = addUtcDays(todayUtc, 14);
 
   const planInclude = { items: { include: { protein: true } }, scenario: true };
-  const [latestOperationalPlan, latestAnyPlan, latestLog, scenarios, logs, smokers] = await Promise.all([
+  const [latestOperationalPlan, latestAnyPlan, latestLog, scenarios, logs, smokers, dataQuality] = await Promise.all([
     prisma.cookPlan.findFirst({
       where: { restaurantId, serviceDate: { gte: operationalStartDate, lte: operationalHorizonDate } },
       orderBy: { createdAt: 'desc' },
@@ -40,7 +41,8 @@ export default async function DashboardPage() {
     prisma.endOfDayLog.findFirst({ where: { restaurantId }, orderBy: { serviceDate: 'desc' }, include: { proteinLogs: { include: { protein: true } } } }),
     prisma.forecastScenario.findMany({ where: activeScenarioWhere(restaurantId), orderBy: { annualSales: 'asc' } }),
     prisma.endOfDayLog.findMany({ where: { restaurantId }, orderBy: { serviceDate: 'desc' }, take: 7, include: { proteinLogs: true } }),
-    prisma.smoker.findMany({ where: { restaurantId, active: true } })
+    prisma.smoker.findMany({ where: { restaurantId, active: true } }),
+    computeDataQuality(prisma, restaurantId)
   ]);
   const latestPlan = latestOperationalPlan;
   const ignoredFuturePlan = latestAnyPlan && !latestOperationalPlan && latestAnyPlan.serviceDate > operationalHorizonDate ? latestAnyPlan : null;
@@ -62,6 +64,7 @@ export default async function DashboardPage() {
   const leftoverLb = latestLog?.proteinLogs.reduce((sum, l) => sum + l.usableLeftoverLb, 0) ?? 0;
   const leftoverUnits = latestLog?.proteinLogs.reduce((sum, l) => sum + (l.usableLeftoverUnits || 0), 0) ?? 0;
   const sellouts7 = logs.flatMap(l => l.proteinLogs).filter(l => l.eightySixed).length;
+  const dataConfidence = confidenceFromDataQuality(dataQuality.score);
 
   return <Shell>
     <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -72,13 +75,16 @@ export default async function DashboardPage() {
       {hasRole(user, ['ADMIN', 'OWNER', 'KITCHEN_MANAGER']) ? <Link href="/cook-plan" className="btn-primary">Create / Review Cook Plan</Link> : <Link href="/end-of-day" className="btn-primary">Enter End-of-Day Log</Link>}
     </div>
 
-    <div className="grid gap-4 md:grid-cols-5">
+    <div className="grid gap-4 md:grid-cols-6">
       <StatCard label="Latest Forecast" value={latestPlan ? money(latestPlan.forecastSales) : 'No plan'} note={latestPlan ? `${fmtDateWithDow(latestPlan.serviceDate)} · ${latestPlan.scenario.name}` : 'Create first cook plan'} />
       <StatCard label="Smoked Meat Forecast" value={latestPlan ? money(latestPlan.forecastBbqSales) : '—'} note={latestPlan ? `20% liquor is excluded before meat demand · Confidence: ${latestPlan.confidence}` : undefined} />
       <StatCard label="Liquor/Food Split" value={`${LIQUOR_SALES_PERCENT}% / ${FOOD_SALES_PERCENT}%`} note={latestPlan ? `${money(latestPlan.forecastSales * 0.2)} liquor · ${money(latestPlan.forecastSales * 0.8)} food` : 'Total sales split before BBQ forecast'} />
       <StatCard label="Usable Leftover" value={`${Math.round(leftoverUnits)} units`} note={`${Math.round(leftoverLb)} lb from latest EOD log`} />
       <StatCard label="7-Day Sellouts" value={`${sellouts7}`} note={`7-day waste: ${Math.round(wasteLb7)} lb`} />
+      <StatCard label="Data Quality" value={`${dataQuality.score}%`} note={`${dataQuality.label} quality · ${dataConfidence} forecast confidence`} />
     </div>
+
+    {dataQuality.warnings.length ? <section className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950"><h2 className="text-lg font-black">Data Quality Warnings</h2><ul className="mt-2 list-disc pl-5 font-bold">{dataQuality.warnings.slice(0, 6).map((warning) => <li key={warning}>{warning}</li>)}</ul></section> : null}
 
 
     <section className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-950">

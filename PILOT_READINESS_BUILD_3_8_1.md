@@ -1,6 +1,6 @@
-# Build 3.8.1 Pilot Readiness Notes
+# Build 3.9.0 Pilot Readiness Notes
 
-Build 3.8.1 focuses on operational reliability and commercial polish.
+Build 3.9.0 focuses on operational reliability and commercial polish.
 
 ## Added
 

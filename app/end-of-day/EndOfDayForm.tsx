@@ -160,6 +160,16 @@ export function EndOfDayForm({ proteins, initialLog }: { proteins: Protein[]; in
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <section className="card p-5">
+        <h2 className="text-xl font-black">Guided Closeout Workflow</h2>
+        <div className="mt-4 grid gap-3 md:grid-cols-5">
+          {['1. Confirm cooked/loaded units', '2. Enter sold, waste, leftovers', '3. Confirm 86 events', '4. Add manager notes', '5. Mark Complete / Lock'].map((step) => <div key={step} className="rounded-xl bg-slate-50 p-3 text-sm font-black text-slate-700">{step}</div>)}
+        </div>
+        <div className="mt-4 grid gap-2 md:grid-cols-3">
+          {['All proteins reviewed', 'Leftovers physically counted', 'Waste entered', '86 events confirmed', 'Hot box checked', 'Manager reviewed'].map((item) => <label key={item} className="flex items-center gap-2 rounded-xl border border-slate-200 p-3 text-sm font-bold"><input type="checkbox" className="h-4 w-4" disabled={isLocked} /> {item}</label>)}
+        </div>
+      </section>
+
+      <section className="card p-5">
         <h2 className="text-xl font-black">Service Summary</h2>
         {isLocked ? <div className="mt-3 rounded-xl bg-slate-100 px-3 py-2 text-sm font-black text-slate-700">This EOD log is locked. Create a corrected log under a different service date or unlock in the database if this was accidental.</div> : null}
         <div className="mt-4 grid gap-4 md:grid-cols-5">

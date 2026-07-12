@@ -6,13 +6,13 @@ function read(file) { return fs.readFileSync(path.join(root, file), 'utf8'); }
 function assert(condition, message) { if (!condition) throw new Error(message); }
 
 const pkg = JSON.parse(read('package.json'));
-assert(pkg.version === '3.8.1', 'package version must be 3.8.1');
-assert(pkg.scripts['build:eval'].includes('build-3-8-1-evaluation'), 'build:eval must use Build 3.8.1 evaluation script');
+assert(pkg.version === '3.9.0', 'package version must be 3.9.0');
+assert(pkg.scripts['build:eval'].includes('build-3-8-1-evaluation'), 'build:eval must use Build 3.9.0 evaluation script');
 const schema = read('prisma/schema.prisma');
 assert(schema.includes('model SystemCheck'), 'SystemCheck model missing');
 assert(schema.includes('systemChecks SystemCheck[]'), 'Restaurant.systemChecks relation missing');
 const nav = read('components/Nav.tsx');
-assert(nav.includes('Build 3.8.1'), 'Nav badge not updated');
+assert(nav.includes('Build 3.9.0'), 'Nav badge not updated');
 const systemPage = read('app/admin/system/page.tsx');
 assert(systemPage.includes('Test Status Tracking'), 'System test-status tracking missing');
 assert(systemPage.includes('RESTORE_DRILL'), 'Restore drill tracker missing');
@@ -40,4 +40,4 @@ assert(exportRoute.includes('REPORT_EXPORTED'), 'Report export audit missing');
 const renderBuild = pkg.scripts['render-build'];
 assert(renderBuild.includes('prisma db push'), 'Render build should remain in db-push recovery mode');
 assert(!renderBuild.includes('--accept-data-loss'), 'Render build must not use --accept-data-loss');
-console.log('Build 3.8.1 evaluation checks completed.');
+console.log('Build 3.9.0 evaluation checks completed.');

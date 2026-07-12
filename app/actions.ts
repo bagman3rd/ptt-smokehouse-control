@@ -39,11 +39,18 @@ export async function approveCookPlan(formData: FormData) {
   if (!plan) throw new Error('Cook plan not found for this restaurant.');
   const allowedItemIds = new Set(plan.items.map((item) => item.id));
   const itemIds = formData.getAll('itemId').map(String).filter((id) => allowedItemIds.has(id));
+  const beforeItems = plan.items.map((item) => ({ id: item.id, approvedCookUnits: item.approvedCookUnits, overrideReason: item.overrideReason }));
   for (const itemId of itemIds) {
+    const originalItem = plan.items.find((item) => item.id === itemId);
+    if (!originalItem) continue;
     const approvedBaseUnits = numberField(formData, `approved-${itemId}`);
     const hotBoxAdjustment = signedNumberField(formData, `hotBoxAdjustment-${itemId}`, 0, -999, 999);
     const approvedCookUnits = Math.max(0, approvedBaseUnits + hotBoxAdjustment);
     const overrideReasonRaw = String(formData.get(`reason-${itemId}`) || '').trim();
+    const changedFromRecommendation = Math.round(approvedCookUnits) !== Math.round(originalItem.recommendedCookUnits);
+    if ((changedFromRecommendation || hotBoxAdjustment !== 0) && overrideReasonRaw.length < 4) {
+      throw new Error('Manual cook-plan overrides require a manager reason. Add a reason for every protein where approved units differ from recommendation or hot-box adjustment is used.');
+    }
     const adjustmentNote = hotBoxAdjustment !== 0 ? `Manual hot-box adjustment ${hotBoxAdjustment > 0 ? '+' : ''}${hotBoxAdjustment}` : '';
     const overrideReason = [overrideReasonRaw, adjustmentNote].filter(Boolean).join(' · ');
     await prisma.cookPlanItem.update({
@@ -52,7 +59,8 @@ export async function approveCookPlan(formData: FormData) {
     });
   }
   await prisma.cookPlan.updateMany({ where: { id: cookPlanId, restaurantId }, data: { status: 'APPROVED' } });
-  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'APPROVE', entity: 'CookPlan', entityId: cookPlanId });
+  const afterItems = await prisma.cookPlanItem.findMany({ where: { cookPlanId }, select: { id: true, approvedCookUnits: true, overrideReason: true, recommendedCookUnits: true } });
+  await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'APPROVE', entity: 'CookPlan', entityId: cookPlanId, beforeJson: beforeItems, afterJson: afterItems });
   revalidatePath('/cook-plan');
   revalidatePath('/dashboard');
 }

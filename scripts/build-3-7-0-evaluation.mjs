@@ -12,8 +12,8 @@ const form = read('app/cook-plan/CreateCookPlanForm.tsx');
 const previewRoute = read('app/api/cook-plan/capacity-preview/route.ts');
 const actions = read('app/actions.ts');
 
-assert(pkg.version === '3.8.1', 'package.json version should be 3.8.1');
-assert(nav.includes('Build 3.8.1'), 'nav badge should show Build 3.8.1');
+assert(pkg.version === '3.9.0', 'package.json version should be 3.9.0');
+assert(nav.includes('Build 3.9.0'), 'nav badge should show Build 3.9.0');
 assert(schema.includes('confidence   String'), 'LearningRecommendation should store confidence');
 assert(schema.includes('sampleCount  Int'), 'LearningRecommendation should store sample count');
 assert(schema.includes('rolledBackAt DateTime?'), 'LearningRecommendation should support rollback');
@@ -32,4 +32,4 @@ assert(previewRoute.includes('projectedUnits'), 'capacity preview route should r
 assert(previewRoute.includes('overCapacity'), 'capacity preview route should detect over-capacity loads');
 assert(actions.includes('beforeJson: before') && actions.includes('afterJson: data'), 'settings actions should audit before/after values');
 
-console.log('Build 3.8.1 evaluation checks completed.');
+console.log('Build 3.9.0 evaluation checks completed.');

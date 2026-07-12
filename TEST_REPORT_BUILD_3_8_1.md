@@ -1,8 +1,8 @@
-# TEST REPORT — Build 3.8.1
+# TEST REPORT — Build 3.9.0
 
 ## Purpose
 
-Build 3.8.1 is a deploy-fix patch for Build 3.8.0.
+Build 3.9.0 is a deploy-fix patch for Build 3.8.0.
 
 The Render failure was caused by a TypeScript inference error in:
 
@@ -14,8 +14,8 @@ The valid CSV row branch returned an object without the `reason` property while 
 
 - Annotated the `flatMap` callback return type as `ParsedRow[]`.
 - Returned `reason: undefined` for valid rows to keep the row shape stable.
-- Updated app version to `3.8.1`.
-- Updated nav badge to `Build 3.8.1`.
+- Updated app version to `3.9.0`.
+- Updated nav badge to `Build 3.9.0`.
 - Updated static evaluation script to `scripts/build-3-8-1-evaluation.mjs`.
 
 ## Static Evaluation
@@ -29,12 +29,12 @@ node scripts/build-3-8-1-evaluation.mjs
 Result:
 
 ```text
-Build 3.8.1 evaluation checks completed.
+Build 3.9.0 evaluation checks completed.
 ```
 
 ## Deployment Notes
 
-Build 3.8.1 keeps Render in db-push recovery mode:
+Build 3.9.0 keeps Render in db-push recovery mode:
 
 ```bash
 prisma generate && prisma db push && tsx prisma/seed.ts && next build

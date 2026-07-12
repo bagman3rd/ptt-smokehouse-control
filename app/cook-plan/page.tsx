@@ -8,6 +8,7 @@ import { CreateCookPlanForm } from '@/app/cook-plan/CreateCookPlanForm';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { currentRestaurantForUser } from '@/lib/tenant';
 import { FOOD_SALES_PERCENT, LIQUOR_SALES_PERCENT } from '@/lib/salesModel';
+import { computeDataQuality, confidenceFromDataQuality } from '@/lib/dataQuality';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -45,6 +46,16 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
     prisma.cookPlan.findFirst({ where: { restaurantId }, orderBy: { createdAt: 'desc' }, include: { scenario: true, items: { include: { protein: true }, orderBy: { protein: { name: 'asc' } } } } })
   ]);
   const plan = selectedPlan ?? latestPlan;
+  const [dataQuality, previousPlan] = await Promise.all([
+    computeDataQuality(prisma, restaurantId),
+    plan ? prisma.cookPlan.findFirst({
+      where: { restaurantId, serviceDate: { lt: plan.serviceDate } },
+      orderBy: { serviceDate: 'desc' },
+      include: { items: { include: { protein: true } } }
+    }) : Promise.resolve(null)
+  ]);
+  const dataConfidence = confidenceFromDataQuality(dataQuality.score);
+  const previousByProtein = new Map((previousPlan?.items || []).map((item) => [item.protein.name, item]));
   const loadDate = plan?.serviceDate ?? null;
   const nextDayServiceDate = loadDate ? addUtcDays(loadDate, 1) : null;
 
@@ -52,6 +63,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Daily Load Plan</h1>
       <p className="mt-2 text-slate-600">{restaurant.name} · Generate, review, and approve the actual smoker load for the selected production date. Brisket and pork use next-day service estimates; ribs and chicken use same-day estimates. The model treats {LIQUOR_SALES_PERCENT}% of total sales as liquor/bar and excludes that from meat production.</p>
+      <div className="mt-3 inline-flex rounded-full bg-slate-100 px-4 py-2 text-sm font-black text-slate-700">Data Quality {dataQuality.score}% · Forecast confidence {dataConfidence}</div>
     </div>
 
     {canManagePlan ? <section className="card p-5">
@@ -108,6 +120,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
             <div>
               <div className="flex flex-wrap items-center gap-2"><span className="text-lg font-black">{item.protein.name}</span><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">{timing.badge}</span></div>
               <div className="mt-1 text-sm font-bold text-slate-600">{item.notes}</div>
+              <div className="mt-2 flex flex-wrap gap-2 text-xs font-black"><span className="rounded-full bg-blue-50 px-3 py-1 text-blue-800">Forecast confidence: {dataConfidence}</span>{previousByProtein.get(item.protein.name) ? <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">Variance vs last plan: {Math.round((item.recommendedCookUnits - (previousByProtein.get(item.protein.name)?.recommendedCookUnits || 0)) * 10) / 10} {displayUnit(item.protein.name, item.protein.inputUnit)}</span> : <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">No prior plan for variance</span>}</div>
               <div className="mt-3 grid gap-2 text-sm text-slate-600 md:grid-cols-3">
                 <div className="rounded-xl bg-slate-50 p-3"><span className="block text-xs font-black uppercase text-slate-500">Gross forecast need</span><strong className="text-xl text-slate-950">{item.forecastCookUnits || item.recommendedCookUnits}</strong> {displayUnit(item.protein.name, item.protein.inputUnit)}</div>
                 <div className={timing.usesCredit ? "rounded-xl bg-amber-50 p-3" : "rounded-xl bg-slate-50 p-3"}>
@@ -124,7 +137,7 @@ export default async function CookPlanPage({ searchParams }: { searchParams?: { 
               <label className="label">Manual Hot Box Adjustment</label>
               <input className="field" name={`hotBoxAdjustment-${item.id}`} type="number" step="1" defaultValue={0} placeholder="-1, 0, +2" />
               <p className="text-xs font-bold text-slate-500">Adjustment applies on approve. Use this after visually checking the hot box.</p>
-              <input className="field" name={`reason-${item.id}`} placeholder="Override reason, if any" defaultValue={item.overrideReason ?? ''} />
+              <input className="field" name={`reason-${item.id}`} placeholder="Required if approved units differ or hot-box adjustment is used" defaultValue={item.overrideReason ?? ''} />
             </div>
           </div>
         </div>})}

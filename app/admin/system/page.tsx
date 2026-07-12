@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { currentRestaurantForUser } from '@/lib/tenant';
 import pkg from '@/package.json';
 import { recordSystemCheck } from './actions';
+import { computeDataQuality } from '@/lib/dataQuality';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -18,7 +19,7 @@ export default async function SystemPage() {
   noStore();
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
-  const [restaurantCount, userCount, smokerCount, lastEod, lastPlan, lastAudit, backupRunCount, recommendationCount, systemChecks] = await Promise.all([
+  const [restaurantCount, userCount, smokerCount, lastEod, lastPlan, lastAudit, backupRunCount, recommendationCount, systemChecks, dataQuality] = await Promise.all([
     prisma.restaurant.count(),
     prisma.user.count({ where: { memberships: { some: { restaurantId, active: true } } } }),
     prisma.smoker.count({ where: { restaurantId, active: true } }),
@@ -27,7 +28,8 @@ export default async function SystemPage() {
     prisma.auditLog.findFirst({ where: { restaurantId }, orderBy: { createdAt: 'desc' } }),
     prisma.reportRun.count({ where: { restaurantId, dataset: { contains: 'backup', mode: 'insensitive' } } }).catch(() => 0),
     prisma.learningRecommendation.count({ where: { restaurantId, status: 'PENDING' } }).catch(() => 0),
-    prisma.systemCheck.findMany({ where: { restaurantId }, orderBy: { createdAt: 'desc' }, take: 10 }).catch(() => [])
+    prisma.systemCheck.findMany({ where: { restaurantId }, orderBy: { createdAt: 'desc' }, take: 10 }).catch(() => []),
+    computeDataQuality(prisma, restaurantId)
   ]);
 
   const migrationMode = 'DB Push Recovery Mode';
@@ -51,6 +53,18 @@ export default async function SystemPage() {
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">Last EOD</div><div className="mt-2 text-lg font-black">{fmt(lastEod?.serviceDate)}</div></div>
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">Last Cook Plan</div><div className="mt-2 text-lg font-black">{fmt(lastPlan?.serviceDate)}</div></div>
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">Pending Learning Items</div><div className="mt-2 text-3xl font-black">{recommendationCount}</div></div>
+      <div className="card p-5"><div className="text-sm font-bold text-slate-500">Data Quality</div><div className="mt-2 text-3xl font-black">{dataQuality.score}%</div><div className="text-xs font-bold text-slate-500">{dataQuality.label}</div></div>
+    </section>
+
+    <section className="card mt-6 p-5">
+      <h2 className="text-xl font-black">PTT Pilot-Readiness Checklist</h2>
+      <p className="mt-2 text-sm text-slate-600">Go/no-go checks before relying on the app during live service.</p>
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        {dataQuality.checks.map((check) => <div key={check.key} className={check.complete ? 'rounded-xl border border-emerald-200 bg-emerald-50 p-3' : 'rounded-xl border border-amber-200 bg-amber-50 p-3'}>
+          <div className="font-black">{check.complete ? '✓' : '✗'} {check.label}</div>
+          <div className="mt-1 text-xs font-bold text-slate-600">{check.detail} · {check.points}/{check.max} pts</div>
+        </div>)}
+      </div>
     </section>
 
 
