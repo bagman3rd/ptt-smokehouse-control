@@ -19,7 +19,7 @@ export default async function RestaurantsPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Restaurants</h1>
-      <p className="mt-2 text-slate-600">Create and switch restaurants. Build 3.9.0 supports self-service onboarding, demo data, per-tenant exports, and tenant deletion controls. It starts the onboarding flow by creating a tenant, giving you a role in that restaurant, and seeding starter BBQ production assumptions.</p><div className="mt-4 flex flex-wrap gap-2"><a href="/admin/restaurants/setup" className="btn-secondary inline-flex">Open Setup Wizard</a><a href="/admin/restaurants/pos" className="btn-secondary inline-flex">POS / Sales Import</a><a href="/api/admin/tenant/export" className="btn-secondary inline-flex">Export Active Tenant</a></div>
+      <p className="mt-2 text-slate-600">Create and switch restaurants. Build 4.0.0 supports self-service onboarding, demo data, per-tenant exports, and tenant deletion controls. It starts the onboarding flow by creating a tenant, giving you a role in that restaurant, and seeding starter BBQ production assumptions.</p><div className="mt-4 flex flex-wrap gap-2"><a href="/admin/restaurants/setup" className="btn-secondary inline-flex">Open Setup Wizard</a><a href="/admin/restaurants/pos" className="btn-secondary inline-flex">POS / Sales Import</a><a href="/api/admin/tenant/export" className="btn-secondary inline-flex">Export Active Tenant</a></div>
     </div>
 
     <section className="card p-5">
@@ -50,7 +50,7 @@ export default async function RestaurantsPage() {
 
     <section className="mt-6 card p-5">
       <h2 className="text-xl font-black text-red-700">Tenant Export and Deletion</h2>
-      <p className="mt-2 text-sm text-slate-600">Before canceling or deleting a restaurant, export the tenant JSON. Build 3.9.0 soft-deletes tenant access instead of hard-deleting rows so there is a safety window for restore.</p>
+      <p className="mt-2 text-sm text-slate-600">Before canceling or deleting a restaurant, export the tenant JSON. Build 4.0.0 soft-deletes tenant access instead of hard-deleting rows so there is a safety window for restore.</p>
       <div className="mt-4 flex flex-wrap gap-2"><a href="/api/admin/tenant/export" className="btn-secondary">Download Tenant Export</a></div>
       <form action="/api/admin/tenant/delete" method="POST" className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-4">
         <label className="label text-red-800">Type the active restaurant name to deactivate tenant</label>

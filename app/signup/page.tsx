@@ -11,7 +11,7 @@ export default function SignupPage({ searchParams }: { searchParams?: Record<str
       <div className="mb-6">
         <div className="text-sm font-black uppercase tracking-wide text-emerald-700">Smokehouse Control</div>
         <h1 className="mt-2 text-3xl font-black tracking-tight">Create your restaurant account</h1>
-        <p className="mt-2 text-slate-600">Build 3.9.0 adds self-service signup with sensible generic BBQ defaults. Pigeon Forge/PTT assumptions are no longer forced onto new restaurants.</p>
+        <p className="mt-2 text-slate-600">Build 4.0.0 adds self-service signup with sensible generic BBQ defaults. Pigeon Forge/PTT assumptions are no longer forced onto new restaurants.</p>
       </div>
       {errors.length > 0 ? <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">Server auth is not configured. Set ADMIN_PASSWORD and APP_SESSION_TOKEN first.</div> : null}
       {error ? <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">{decodeURIComponent(error)}</div> : null}

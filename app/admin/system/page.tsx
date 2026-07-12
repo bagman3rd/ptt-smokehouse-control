@@ -33,6 +33,8 @@ export default async function SystemPage() {
   ]);
 
   const migrationMode = 'DB Push Recovery Mode';
+  const cronReady = Boolean(process.env.CRON_SECRET && process.env.CRON_SECRET.length >= 12);
+  const backupPostReady = Boolean(process.env.BACKUP_POST_URL);
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">System Health</h1>
@@ -43,6 +45,31 @@ export default async function SystemPage() {
       <div className="text-lg font-black">Pilot Mode Warning</div>
       <p className="mt-1 text-sm">This deployment is intentionally running in <strong>{migrationMode}</strong>. It is appropriate for the controlled PTT pilot, but staging tenant tests, backup restore drills, and migration baselining must pass before paid outside customers are added.</p>
     </div>
+
+
+    <section className="mt-6 grid gap-4 lg:grid-cols-3">
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-900">
+        <div className="text-lg font-black">Migration Repair Required</div>
+        <p className="mt-2 text-sm">The live database still has a failed Prisma migration record. Keep production in db-push recovery mode until a staging copy passes the repair runbook.</p>
+        <div className="mt-3 rounded-xl bg-white/70 p-3 font-mono text-xs">MIGRATION_REPAIR_RUNBOOK_BUILD_4_0_0.md</div>
+      </div>
+      <div className="rounded-2xl border border-slate-200 bg-white p-5">
+        <div className="text-lg font-black">Scheduled Backup Readiness</div>
+        <p className="mt-2 text-sm text-slate-600">Build 4.0.0 adds a weekly backup endpoint for Render Cron or another scheduler.</p>
+        <div className={cronReady ? 'mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800' : 'mt-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm font-bold text-amber-800'}>
+          CRON_SECRET: {cronReady ? 'configured' : 'missing or too short'}
+        </div>
+        <div className={backupPostReady ? 'mt-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800' : 'mt-2 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold text-slate-700'}>
+          BACKUP_POST_URL: {backupPostReady ? 'configured' : 'optional; not configured'}
+        </div>
+      </div>
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-emerald-900">
+        <div className="text-lg font-black">Data Quality as Product Feature</div>
+        <p className="mt-2 text-sm">Use this in demos: the app does not just forecast. It tells the restaurant when bad logging is making forecasts less trustworthy.</p>
+        <div className="mt-3 text-3xl font-black">{dataQuality.score}%</div>
+        <div className="text-xs font-bold">Current tenant data quality · {dataQuality.label}</div>
+      </div>
+    </section>
 
     <section className="mt-6 grid gap-4 md:grid-cols-4">
       <div className="card p-5"><div className="text-sm font-bold text-slate-500">App Version</div><div className="mt-2 text-2xl font-black">{pkg.version}</div></div>
@@ -79,7 +106,9 @@ export default async function SystemPage() {
           ['FORECAST_ENGINE_TEST', 'Forecast engine test', 'pnpm run test:forecast'],
           ['RESTORE_DRILL', 'Backup restore drill', 'Restore backup into staging and verify counts'],
           ['MIGRATION_BASELINE_REVIEW', 'Migration baseline review', 'Confirm db-push recovery mode can be replaced safely'],
-          ['SECURITY_REVIEW', 'Security review', 'Review auth, rate limits, roles, and tenant scoping']
+          ['SECURITY_REVIEW', 'Security review', 'Review auth, rate limits, roles, and tenant scoping'],
+          ['WEEKLY_BACKUP_EXPORT', 'Weekly backup export', 'Render Cron calls /api/admin/backups/weekly with CRON_SECRET'],
+          ['MIGRATION_REPAIR_RUNBOOK', 'Migration repair runbook rehearsal', 'Run Build 4.0.0 migration repair runbook against staging']
         ].map(([type, label, hint]) => (
           <form key={type} action={recordSystemCheck} className="rounded-2xl border border-slate-200 p-4">
             <input type="hidden" name="type" value={type} />
@@ -119,6 +148,33 @@ export default async function SystemPage() {
         <div>pnpm run test:forecast</div>
       </div>
       <p className="mt-3 text-sm text-slate-600">The scripts exist in the repo. This page intentionally does not claim they passed until they are run against a real staging PostgreSQL database.</p>
+    </section>
+
+
+    <section className="card mt-6 p-5">
+      <h2 className="text-xl font-black">Scheduled Backup Endpoint</h2>
+      <p className="mt-2 text-sm text-slate-600">Use this with Render Cron after setting <strong>CRON_SECRET</strong>. If <strong>BACKUP_POST_URL</strong> is set, the route posts the full tenant JSON backup to that destination; otherwise it records the check and returns backup counts.</p>
+      <div className="mt-3 rounded-xl bg-slate-950 p-4 font-mono text-sm text-white">
+        <div>GET /api/admin/backups/weekly</div>
+        <div>Authorization: Bearer $CRON_SECRET</div>
+        <div>Optional: /api/admin/backups/weekly?restaurantId=...</div>
+      </div>
+      <p className="mt-3 text-sm text-slate-600">This is a structural backup discipline step. It does not replace Render Postgres backups or restore drills.</p>
+    </section>
+
+    <section className="card mt-6 p-5">
+      <h2 className="text-xl font-black">Migration Repair Runbook Summary</h2>
+      <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-slate-700">
+        <li>Create a staging Render PostgreSQL database.</li>
+        <li>Export production tenant JSON and create a Render database backup.</li>
+        <li>Restore/copy production data into staging.</li>
+        <li>Run <code>pnpm prisma migrate status</code> against staging.</li>
+        <li>Resolve or baseline the failed migration on staging only.</li>
+        <li>Run tenant, backup, and forecast tests against staging.</li>
+        <li>Deploy staging with <code>prisma migrate deploy</code>.</li>
+        <li>Only then schedule production migration repair.</li>
+      </ol>
+      <p className="mt-3 text-sm font-bold text-red-700">Do not switch production to migrate deploy until the staging rehearsal passes and is recorded above.</p>
     </section>
 
     <section className="card mt-6 p-5">
