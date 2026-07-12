@@ -18,6 +18,10 @@ services:
         sync: false
       - key: NEXT_PUBLIC_APP_NAME
         value: PTT Smokehouse Control
+      - key: BILLING_MODE
+        value: MANUAL_INVOICE
+      - key: BILLING_CONTACT_EMAIL
+        sync: false
       - key: CRON_SECRET
         sync: false
       - key: BACKUP_POST_URL

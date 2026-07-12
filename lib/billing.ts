@@ -1,6 +1,17 @@
 import type { Restaurant, Subscription } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
+
+export type BillingMode = 'MANUAL_INVOICE' | 'STRIPE';
+
+export function billingMode(): BillingMode {
+  return process.env.BILLING_MODE === 'STRIPE' ? 'STRIPE' : 'MANUAL_INVOICE';
+}
+
+export function manualInvoiceEmail() {
+  return process.env.BILLING_CONTACT_EMAIL || supportEmail();
+}
+
 export const PLAN_LABELS: Record<string, string> = {
   PILOT: 'Pilot Trial',
   MONTHLY: 'Monthly Smokehouse Control',

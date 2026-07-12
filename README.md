@@ -1,12 +1,36 @@
-# Smokehouse Control — Build 6.4.0
+# PTT Smokehouse Control — Build 6.5.0
 
-Build 6.4.0 is a release-engineering reliability update. It commits the dependency lockfile, requires frozen installs, removes the temporary lockfile bootstrap workflow, hardens tenant-boundary browser assertions, sanitizes public health failures, verifies the deployed build, and performs an authenticated production smoke transaction.
+Restaurant smokehouse forecasting, cook planning, smoker allocation, EOD reconciliation, reporting, tenant controls, and operational auditability.
 
-## Deployment
+## Build 6.5.0 reliability focus
 
-Render and GitHub Actions must use `pnpm install --frozen-lockfile`. Configure these GitHub Actions secrets for the hourly production monitor:
+- Preserves original and renumbered migration history without rewriting `_prisma_migrations`
+- Replays the complete migration chain on fresh PostgreSQL
+- Executes a database dump-and-restore drill in CI and retains evidence
+- Runs desktop, mobile, cross-tenant, kitchen-workflow, and 50-session load smoke tests
+- Uses a committed pnpm lockfile with frozen installs in CI and Render
+- Defaults founding-customer billing to documented manual invoicing
+- Tracks external pilot gates for live PTT data and physical-device testing
 
-- `PRODUCTION_SMOKE_USERNAME`
-- `PRODUCTION_SMOKE_PASSWORD`
+## Local setup
 
-The account should be a dedicated low-privilege active user with access only to the production restaurant used for monitoring.
+```bash
+pnpm install --frozen-lockfile
+pnpm run prisma:generate
+pnpm run prisma:migrate
+pnpm run db:seed
+pnpm run dev
+```
+
+## Production build
+
+```bash
+pnpm run render-build
+```
+
+## Current policy documents
+
+- `docs/MIGRATION_HISTORY.md`
+- `docs/BILLING_POLICY.md`
+- `docs/PILOT_EVIDENCE_CHECKLIST.md`
+- `docs/SUPPORT_OPERATIONS.md`

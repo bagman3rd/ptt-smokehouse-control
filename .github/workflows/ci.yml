@@ -1,4 +1,4 @@
-name: Build 6.4.0 CI
+name: Build 6.5.0 CI
 
 on:
   push:
@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 6.4.0 CI / quality-and-tests
+    name: Build 6.5.0 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
     services:
@@ -33,6 +33,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_ci?schema=public
       DIRECT_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_ci?schema=public
+      RESTORE_DATABASE_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_restore?schema=public
       ADMIN_PASSWORD: ci-admin-password
       CI_TENANT_B_PASSWORD: ci-tenant-b-password
       APP_SESSION_TOKEN: ci-session-token-long-value-for-tests-only
@@ -58,6 +59,11 @@ jobs:
         run: pnpm run prisma:generate
       - name: Apply migrations to fresh PostgreSQL
         run: pnpm run prisma:migrate
+      - name: Prepare restore-drill database
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+          PGPASSWORD=ptt_ci_password createdb -h localhost -U ptt_ci ptt_restore
       - name: Seed isolated CI database
         run: pnpm run db:seed
       - name: Migration and schema smoke checks
@@ -67,6 +73,10 @@ jobs:
           pnpm run migration:smoke
           pnpm run ci:migration-status
           pnpm run ci:schema-drift
+      - name: Execute database dump-and-restore drill
+        env:
+          RESTORE_EVIDENCE_PATH: restore-evidence.txt
+        run: pnpm run test:restore-drill
       - name: TypeScript and lint
         run: |
           pnpm run typecheck
@@ -93,6 +103,15 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Run desktop and mobile browser tests
         run: pnpm run test:e2e:ci
+      - name: Run 50-session load smoke test
+        run: pnpm run test:load-smoke
+      - name: Upload restore-drill evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-restore-evidence
+          path: restore-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload Playwright report on failure
         if: failure()
         uses: actions/upload-artifact@v4
