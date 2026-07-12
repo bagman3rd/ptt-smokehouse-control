@@ -1,6 +1,6 @@
-# Pilot Readiness — Build 4.3.2
+# Pilot Readiness — Build 4.3.3
 
-Build 4.3.2 raises tenant isolation and account security readiness.
+Build 4.3.3 raises tenant isolation and account security readiness.
 
 ## Must run after staging deploy
 

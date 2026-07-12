@@ -46,7 +46,7 @@ export async function checkRateLimit(key: string, limit: number, windowMs: numbe
     });
     return result;
   } catch {
-    // Fallback preserves availability before the 4.3.2 migration is applied.
+    // Fallback preserves availability before the 4.3.3 migration is applied.
     // Once RateLimitBucket exists, limits are durable across restarts/instances.
     return checkMemoryRateLimit(key, limit, windowMs);
   }

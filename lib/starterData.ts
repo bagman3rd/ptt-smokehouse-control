@@ -44,8 +44,10 @@ export async function createDefaultRestaurantData(prisma: any, restaurantId: str
   }
 }
 
+type DemoProteinForHistory = { id: string; avgSalesPerCookedLb: number };
+
 export async function createDemoHistory(prisma: any, restaurantId: string) {
-  const proteins = await prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } });
+  const proteins = await prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } }) as DemoProteinForHistory[];
   const scenario = await prisma.forecastScenario.findFirst({ where: { restaurantId }, orderBy: { annualSales: 'asc' } });
   if (!scenario || proteins.length === 0) return;
   const today = new Date();
@@ -57,7 +59,7 @@ export async function createDemoHistory(prisma: any, restaurantId: string) {
     const sales = Math.round(6200 + dow * 350 + (i % 5) * 420);
     const bbqSales = Math.round(sales * 0.38);
     const eod = await prisma.endOfDayLog.create({ data: { restaurantId, serviceDate, totalSales: sales, bbqSales, status: 'COMPLETE', enteredBy: 'Demo System', notes: 'Demo operating data' } });
-    await prisma.endOfDayProteinLog.createMany({ data: proteins.map((protein, idx) => ({
+    await prisma.endOfDayProteinLog.createMany({ data: proteins.map((protein: DemoProteinForHistory, idx: number) => ({
       endOfDayLogId: eod.id,
       proteinId: protein.id,
       cookedUnits: 8 + idx * 3 + (dow === 6 ? 5 : 0),

@@ -1,8 +1,8 @@
-# Build 4.3.2 Tenant + Security Hardening Notes
+# Build 4.3.3 Tenant + Security Hardening Notes
 
 ## Multi-tenant enforcement
 
-Build 4.3.2 adds `lib/tenantGuard.ts`, a Prisma client extension wired through `lib/prisma.ts`.
+Build 4.3.3 adds `lib/tenantGuard.ts`, a Prisma client extension wired through `lib/prisma.ts`.
 
 In non-production environments, tenant-scoped models must include `restaurantId` in their `where` clause or create data. Missing tenant scope throws loudly instead of becoming a silent cross-tenant leak.
 
@@ -35,7 +35,7 @@ It creates two restaurants and verifies Tenant A cannot read, update, or delete 
 
 ## Durable rate limiting
 
-Build 4.3.2 adds the `RateLimitBucket` table and rewrites the rate limiter to use Postgres upserts. This survives restarts and is safe if the Render service is later scaled to more than one instance.
+Build 4.3.3 adds the `RateLimitBucket` table and rewrites the rate limiter to use Postgres upserts. This survives restarts and is safe if the Render service is later scaled to more than one instance.
 
 ## Account lockout
 

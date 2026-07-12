@@ -1,8 +1,8 @@
-# Smokehouse Control — Build 4.3.2
+# Smokehouse Control — Build 4.3.3
 
-Build 4.3.2 is the tenant-isolation and account-security hardening build. It adds Postgres-backed rate limiting, account lockout, session revocation, a Prisma tenant-guard extension, cross-tenant regression tests, and CI coverage for security boundaries.
+Build 4.3.3 is the tenant-isolation and account-security hardening build. It adds Postgres-backed rate limiting, account lockout, session revocation, a Prisma tenant-guard extension, cross-tenant regression tests, and CI coverage for security boundaries.
 
-## What changed in 4.3.2
+## What changed in 4.3.3
 
 - Added GitHub Actions CI: `.github/workflows/ci.yml`.
 - CI now runs type-check, lint, forecast tests, permission-boundary tests, dead-code checks, tenant isolation against a Postgres service container, and a Prisma schema drift check.
@@ -24,7 +24,7 @@ prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build
 
 ## Critical deployment warning
 
-Do not deploy Build 4.3.2 to the existing production Render service until the failed Prisma migration state has been repaired or baselined on a staging copy first.
+Do not deploy Build 4.3.3 to the existing production Render service until the failed Prisma migration state has been repaired or baselined on a staging copy first.
 
 The prior live database had a failed migration record. `prisma migrate deploy` will fail against that database until repaired. The correct sequence is:
 
@@ -45,7 +45,7 @@ pnpm run test:backup
 8. Record passing checks in `/admin/system`.
 9. Take a fresh production backup.
 10. Repair production during a low-traffic window.
-11. Deploy Build 4.3.2 to production.
+11. Deploy Build 4.3.3 to production.
 
 ## Required Render environment variables
 
@@ -79,7 +79,7 @@ Keep the external Render build command as:
 corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
 ```
 
-In Build 4.3.2, `pnpm run render-build` runs `prisma migrate deploy`.
+In Build 4.3.3, `pnpm run render-build` runs `prisma migrate deploy`.
 
 ## Test commands
 
@@ -96,7 +96,7 @@ pnpm run test:backup
 pnpm run backup:weekly
 ```
 
-`pnpm run build:eval` is a static project check and was run for Build 4.3.2.
+`pnpm run build:eval` is a static project check and was run for Build 4.3.3.
 
 `test:tenant`, `ci:schema-drift`, and `test:backup` require a live PostgreSQL `DATABASE_URL`. GitHub Actions supplies a throwaway Postgres service container for CI; staging still needs to be run separately before production.
 
@@ -117,4 +117,4 @@ pnpm run backup:weekly
 
 ## Remaining pre-pilot requirement
 
-Build 4.3.2 is intended to make the migration repair mandatory. The app is pilot-ready only after staging migration repair, tenant tests, backup tests, and a restore drill are completed and recorded.
+Build 4.3.3 is intended to make the migration repair mandatory. The app is pilot-ready only after staging migration repair, tenant tests, backup tests, and a restore drill are completed and recorded.

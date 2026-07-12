@@ -1,8 +1,8 @@
-# TEST REPORT — Build 4.3.2
+# TEST REPORT — Build 4.3.3
 
 ## Purpose
 
-Build 4.3.2 is a deploy-fix release for the Build 4.3.x tenant/security hardening line.
+Build 4.3.3 is a deploy-fix release for the Build 4.3.x tenant/security hardening line.
 
 ## Render failure fixed
 
@@ -25,13 +25,13 @@ Added explicit lightweight local types for EOD logs and EOD protein logs inside 
 ## Static checks run
 
 ```bash
-node scripts/build-4-3-2-evaluation.mjs
+node scripts/build-4-3-3-evaluation.mjs
 ```
 
 Result:
 
 ```text
-Build 4.3.2 evaluation checks completed.
+Build 4.3.3 evaluation checks completed.
 ```
 
 ## Remaining required verification

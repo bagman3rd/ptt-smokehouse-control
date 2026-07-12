@@ -83,7 +83,7 @@ function parseSessionCookie() {
   const raw = cookies().get(COOKIE_NAME)?.value || '';
   const parts = raw.split('.');
   if (parts.length === 2) {
-    // Legacy cookie format. Reject it after Build 4.3.2 so password resets/deactivation can revoke sessions.
+    // Legacy cookie format. Reject it after Build 4.3.3 so password resets/deactivation can revoke sessions.
     return null;
   }
   const [userId, versionText, signature] = parts;
