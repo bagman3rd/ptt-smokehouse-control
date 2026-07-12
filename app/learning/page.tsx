@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
 import { currentRestaurantForUser } from '@/lib/tenant';
+import Link from 'next/link';
 import { decideLearningRecommendation, rollbackLearningRecommendation, saveLearningRecommendation } from './actions';
 
 export const dynamic = 'force-dynamic';
@@ -163,9 +164,12 @@ export default async function LearningPage() {
   const dataQuality = matchedSampleCount >= 80 ? 'HIGH' : matchedSampleCount >= 24 ? 'MEDIUM' : 'LOW';
 
   return <Shell>
-    <div className="mb-6">
-      <h1 className="text-3xl font-black tracking-tight">Learning & Adjustment Recommendations</h1>
-      <p className="mt-2 text-slate-600">Build 4.7.0 adds visible trailing-30-day forecast accuracy proof points while keeping accepted learning changes controlled: preview before/after, enforce sample-size rules, audit the setting change, and keep rollback available.</p>
+    <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+      <div>
+        <h1 className="text-3xl font-black tracking-tight">Learning & Adjustment Recommendations</h1>
+        <p className="mt-2 max-w-3xl text-slate-600">Build 5.0.0 adds formal forecast proof metrics while keeping accepted learning changes controlled: preview before/after, enforce sample-size rules, audit the setting change, and keep rollback available.</p>
+      </div>
+      <Link className="btn-secondary" href="/learning/proof">Open Forecast Proof</Link>
     </div>
 
     <div className="grid gap-4 md:grid-cols-4">

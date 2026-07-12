@@ -1,6 +1,6 @@
-# Smokehouse Control — Build 4.9.0
+# Smokehouse Control — Build 5.0.0
 
-Build 4.9.0 is the **Kitchen Field Usability** build.
+Build 5.0.0 is the **Kitchen Field Usability** build.
 
 ## Purpose
 
@@ -34,7 +34,7 @@ The End-of-Day form now:
 
 ### EOD quality checks
 
-Build 4.9.0 strengthens closeout checks:
+Build 5.0.0 strengthens closeout checks:
 
 - Negative values blocked
 - Complete/Reviewed/Locked logs require explicit leftover units
@@ -64,7 +64,7 @@ ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Act
 Commit message:
 
 ```text
-Build 4.9.0 kitchen field usability
+Build 5.0.0 kitchen field usability
 ```
 
 Render build command remains:
@@ -74,3 +74,7 @@ corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --pro
 ```
 
 `render-build` uses `prisma migrate deploy`, does not use `prisma db push`, and does not use `--accept-data-loss`.
+
+## Build 5.0.0 Forecast Proof
+
+Build 5.0.0 adds `/learning/proof`, a forecast proof page showing trailing 7/30/90-day MAPE, accuracy, bias, and matched forecast-vs-actual rows by protein. This is the structure needed to prove the forecasting engine during the PTT pilot. Full domain validation still requires 60–90 days of completed EOD logs and matching cook plans.
