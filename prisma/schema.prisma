@@ -350,6 +350,7 @@ model Smoker {
   ribCapacity Float     @default(0)
   chickenCapacity Float @default(0)
   cookWindow   String?
+  configurationReviewedAt DateTime?
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt

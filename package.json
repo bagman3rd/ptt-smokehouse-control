@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "6.1.1",
+  "version": "6.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,15 +10,15 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "prisma:seed": "tsx prisma/seed.ts",
-    "render-build": "prisma generate && tsx scripts/reconcile-migration-history.ts && prisma migrate deploy && next build",
+    "render-build": "prisma generate && prisma migrate deploy && next build",
     "db:seed": "tsx prisma/seed.ts",
     "migration:status": "prisma migrate status",
     "test:tenant": "tsx scripts/tenant-integration-test.mjs",
     "test:forecast": "tsx scripts/forecast-engine-test.ts",
     "test:backup": "node scripts/backup-restore-drill-check.mjs",
-    "build:eval": "node scripts/build-6-1-1-evaluation.mjs",
+    "build:eval": "node scripts/build-6-2-0-evaluation.mjs",
     "migration:baseline:check": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
-    "render-build:migrate-ready": "prisma generate && tsx scripts/reconcile-migration-history.ts && prisma migrate deploy && next build",
+    "render-build:migrate-ready": "prisma generate && prisma migrate deploy && next build",
     "backup:weekly": "node scripts/run-weekly-backup-cron.mjs",
     "typecheck": "tsc --noEmit",
     "test:permissions": "node scripts/permission-boundary-test.mjs",
@@ -40,7 +40,10 @@
     "test:migration-integrity": "node scripts/migration-integrity-test.mjs",
     "seed:production": "tsx scripts/seed-production.ts",
     "test:e2e": "playwright test",
-    "test:e2e:install": "playwright install --with-deps chromium"
+    "test:e2e:install": "playwright install --with-deps chromium",
+    "repair:migrations:6.2.0": "tsx scripts/reconcile-migration-history.ts",
+    "test:e2e:ci": "playwright test",
+    "lockfile:generate": "pnpm install --lockfile-only"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

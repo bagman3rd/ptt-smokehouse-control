@@ -1,6 +1,6 @@
-# Smokehouse Control — Build 6.1.1
+# Smokehouse Control — Build 6.2.0
 
-Build 6.1.1 is a user-interface repair build layered on top of the 5.9.1 migration/CI repair.
+Build 6.2.0 is a reliability release focused on safer migrations, explicit smoker configuration, production-mode browser testing, mobile CI coverage, and a complete kitchen workflow regression test.
 
 ## Fixes
 
@@ -17,7 +17,7 @@ Build 6.1.1 is a user-interface repair build layered on top of the 5.9.1 migrati
 Commit message:
 
 ```text
-Build 6.1.1 navigation dropdown and smoker form labels
+Build 6.2.0 navigation dropdown and smoker form labels
 ```
 
 Normal path:

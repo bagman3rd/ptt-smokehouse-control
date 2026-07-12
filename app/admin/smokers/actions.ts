@@ -32,7 +32,7 @@ export async function createSmoker(formData: FormData) {
     location: selectedText(formData, 'location', LOCATION_OPTIONS), rackCount: numberField(formData, 'rackCount', catalog?.rackCount || 0, 0, 500),
     brisketCapacity: numberField(formData, 'brisketCapacity', catalog?.brisketCapacity || 0, 0, 1000), porkCapacity: numberField(formData, 'porkCapacity', catalog?.porkCapacity || 0, 0, 1000),
     ribCapacity: numberField(formData, 'ribCapacity', catalog?.ribCapacity || 0, 0, 5000), chickenCapacity: numberField(formData, 'chickenCapacity', catalog?.chickenCapacity || 0, 0, 5000),
-    cookWindow: selectedText(formData, 'cookWindow', COOK_WINDOW_OPTIONS, catalog?.cookWindow || COOK_WINDOW.FLEXIBLE)
+    cookWindow: selectedText(formData, 'cookWindow', COOK_WINDOW_OPTIONS, catalog?.cookWindow || COOK_WINDOW.INACTIVE)
   }});
   await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'CREATE', entity: 'Smoker', entityId: smoker.id, afterJson: smoker });
   revalidatePath('/admin/smokers'); revalidatePath('/admin/system');

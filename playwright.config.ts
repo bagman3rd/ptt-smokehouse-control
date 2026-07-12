@@ -5,10 +5,11 @@ export default defineConfig({
   timeout: 30_000,
   expect: { timeout: 8_000 },
   retries: process.env.CI ? 1 : 0,
+  workers: 1,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: { baseURL: 'http://127.0.0.1:3000', trace: 'retain-on-failure', screenshot: 'only-on-failure' },
   webServer: {
-    command: 'pnpm run dev',
+    command: 'pnpm run start',
     url: 'http://127.0.0.1:3000/login',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000

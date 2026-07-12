@@ -8,7 +8,7 @@ const renames: Array<[string, string]> = [
 ];
 
 async function main() {
-  // Build 6.1.1 recovery: Render may already contain a failed record for the
+  // Build 6.2.0 recovery: Render may already contain a failed record for the
   // original 6.1.0 domain-code migration. Mark only that unfinished attempt
   // rolled back so Prisma can safely retry the corrected migration.
   const recovered = await prisma.$executeRawUnsafe(
