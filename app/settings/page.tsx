@@ -56,12 +56,12 @@ export default async function SettingsPage() {
               })()}
               <div className="grid gap-3 md:grid-cols-4">
                 <div><label className="label">Annual Sales</label><input className="field mt-1" name="annualSales" type="number" defaultValue={scenario.annualSales} /></div>
-                <div><label className="label">Smoked Meat % of Total Sales</label><input className="field mt-1" name="bbqSalesPercent" type="number" step="0.1" defaultValue={scenario.bbqSalesPercent} /><div className="mt-1 text-xs font-bold text-slate-500">PTT default 40% = 80% food × 50% smoked-meat share of food.</div></div>
+                <div><label className="label">Smoked Meat % of Total Sales</label><input className="field mt-1" name="bbqSalesPercent" type="number" step="0.1" defaultValue={scenario.bbqSalesPercent} /><div className="mt-1 text-xs font-bold text-slate-500">Default 40% = 80% food × 50% smoked-meat share of food. Protein mix percentages are cooked-weight mix, not dollar mix.</div></div>
                 <div><label className="label">Safety %</label><input className="field mt-1" name="safetyFactorPct" type="number" step="0.1" defaultValue={scenario.safetyFactorPct} /></div>
-                <div><label className="label">Brisket Mix %</label><input className="field mt-1" name="brisketMixPct" type="number" step="0.1" defaultValue={scenario.brisketMixPct} /></div>
-                <div><label className="label">Pork Mix %</label><input className="field mt-1" name="porkMixPct" type="number" step="0.1" defaultValue={scenario.porkMixPct} /></div>
-                <div><label className="label">Ribs Mix %</label><input className="field mt-1" name="ribsMixPct" type="number" step="0.1" defaultValue={scenario.ribsMixPct} /></div>
-                <div><label className="label">Chicken Mix %</label><input className="field mt-1" name="chickenMixPct" type="number" step="0.1" defaultValue={scenario.chickenMixPct} /></div>
+                <div><label className="label">Brisket Mix % of cooked meat weight</label><input className="field mt-1" name="brisketMixPct" type="number" step="0.1" defaultValue={scenario.brisketMixPct} /></div>
+                <div><label className="label">Pork Mix % of cooked meat weight</label><input className="field mt-1" name="porkMixPct" type="number" step="0.1" defaultValue={scenario.porkMixPct} /></div>
+                <div><label className="label">Ribs Mix % of cooked meat weight</label><input className="field mt-1" name="ribsMixPct" type="number" step="0.1" defaultValue={scenario.ribsMixPct} /></div>
+                <div><label className="label">Chicken Mix % of cooked meat weight</label><input className="field mt-1" name="chickenMixPct" type="number" step="0.1" defaultValue={scenario.chickenMixPct} /></div>
               </div>
               <button className="btn-secondary mt-4" type="submit">Save Scenario</button>
             </form>
@@ -141,7 +141,7 @@ export default async function SettingsPage() {
         </div>
         <div className="card p-5">
           <h2 className="text-xl font-black">Month Multipliers</h2>
-          <p className="mt-2 text-sm text-slate-600">Editable seasonality placeholders. For PTT, these reflect the Pigeon Forge tourist pattern; other restaurants should set their own market curve during onboarding.</p>
+          <p className="mt-2 text-sm text-slate-600">Editable seasonality placeholders. These defaults can reflect a tourist-heavy Pigeon Forge pattern; other restaurants should set their own market curve during onboarding.</p>
           <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">
             {months.map((month) => (
               <form key={month.id} action={updateMonthMultiplier} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3">

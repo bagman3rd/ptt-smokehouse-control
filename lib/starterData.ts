@@ -1,4 +1,5 @@
 import { ProteinUnit, ScenarioType } from '@prisma/client';
+import { proteinMixPercent, totalCookedLbFromBbqSales, type ProteinForecastInput } from '@/lib/forecast';
 
 export type StarterProfile = 'generic' | 'tourist' | 'demo';
 
@@ -44,7 +45,14 @@ export async function createDefaultRestaurantData(prisma: any, restaurantId: str
   }
 }
 
-type DemoProteinForHistory = { id: string; avgSalesPerCookedLb: number };
+type DemoProteinForHistory = ProteinForecastInput & { id: string };
+
+function demoSoldCookedLb(protein: DemoProteinForHistory, proteins: DemoProteinForHistory[], scenario: any, bbqSales: number) {
+  const mixTotal = proteins.reduce((sum, row) => sum + Math.max(0, proteinMixPercent(row.name, scenario)), 0) || 100;
+  const totalCookedLb = totalCookedLbFromBbqSales({ proteins, scenario, forecastBbqSales: bbqSales });
+  const proteinCookedLb = totalCookedLb * (Math.max(0, proteinMixPercent(protein.name, scenario)) / mixTotal);
+  return Math.round(proteinCookedLb);
+}
 
 export async function createDemoHistory(prisma: any, restaurantId: string) {
   const proteins = await prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } }) as DemoProteinForHistory[];
@@ -64,7 +72,7 @@ export async function createDemoHistory(prisma: any, restaurantId: string) {
       endOfDayLogId: eod.id,
       proteinId: protein.id,
       cookedUnits: 8 + idx * 3 + (dow === 6 ? 5 : 0),
-      soldCookedLb: Math.round((bbqSales * ([0.30,0.40,0.15,0.15][idx] || 0.1)) / Math.max(1, protein.avgSalesPerCookedLb)),
+      soldCookedLb: demoSoldCookedLb(protein, proteins, scenario, bbqSales),
       usableLeftoverUnits: i % 4 === 0 ? 2 : 1,
       usableLeftoverLb: i % 4 === 0 ? 8 : 3,
       wasteLb: i % 6 === 0 ? 6 : 2,

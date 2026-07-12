@@ -78,7 +78,7 @@ export async function GET(request: Request) {
       const lower = protein.name.toLowerCase();
       const priorDayProtein = lower.includes('brisket') || lower.includes('pork');
       const forecastBbqSales = priorDayProtein ? nextBbqSales : loadBbqSales;
-      const forecast = forecastProteinLoad({ protein, scenario, forecastBbqSales, usableLeftoverLb: 0, usableLeftoverUnits: 0 });
+      const forecast = forecastProteinLoad({ protein, proteins, scenario, forecastBbqSales, usableLeftoverLb: 0, usableLeftoverUnits: 0 });
       const capacity = capacityForProtein(protein.name, totals);
       const overBy = Math.max(0, forecast.recommendedCookUnits - capacity);
       return {

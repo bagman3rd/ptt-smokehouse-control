@@ -41,28 +41,60 @@ export function proteinMixPercent(name: string, scenario: ScenarioInput) {
   return 0;
 }
 
+export function effectiveRevenuePerCookedLb(protein: ProteinForecastInput) {
+  const cookedLbEach = cookedLbPerUnit(protein);
+  if (protein.name.toLowerCase().includes('rib') && protein.inputUnit === 'RACK') {
+    return Math.max(1, protein.salesPriceEach ?? 33) / cookedLbEach;
+  }
+  return Math.max(1, protein.avgSalesPerCookedLb ?? 22);
+}
+
+export function cookedLbPerUnit(protein: ProteinForecastInput) {
+  return Math.max(
+    0.1,
+    protein.cookedWeightEachLb ||
+      (protein.rawWeightEachLb * (protein.cookedYieldPercent / 100)) ||
+      1
+  );
+}
+
+export function totalCookedLbFromBbqSales(args: { proteins: ProteinForecastInput[]; scenario: ScenarioInput; forecastBbqSales: number }) {
+  const mixRows = args.proteins
+    .map((protein) => ({ protein, mixPct: Math.max(0, proteinMixPercent(protein.name, args.scenario)) }))
+    .filter((row) => row.mixPct > 0);
+  const mixTotal = mixRows.reduce((sum, row) => sum + row.mixPct, 0);
+  if (mixTotal <= 0) return 0;
+  const weightedRevenuePerCookedLb = mixRows.reduce((sum, row) => {
+    return sum + (row.mixPct / mixTotal) * effectiveRevenuePerCookedLb(row.protein);
+  }, 0);
+  return weightedRevenuePerCookedLb > 0 ? args.forecastBbqSales / weightedRevenuePerCookedLb : 0;
+}
+
 export function forecastProteinLoad(args: {
   protein: ProteinForecastInput;
+  proteins?: ProteinForecastInput[];
   scenario: ScenarioInput;
   forecastBbqSales: number;
   usableLeftoverLb: number;
   usableLeftoverUnits?: number;
 }) {
-  const mixPct = proteinMixPercent(args.protein.name, args.scenario) / 100;
-  const proteinSalesDollars = args.forecastBbqSales * mixPct;
+  const proteinsForMix = args.proteins && args.proteins.length > 0 ? args.proteins : [args.protein];
+  const mixPct = Math.max(0, proteinMixPercent(args.protein.name, args.scenario));
+  const mixTotal = proteinsForMix.reduce((sum, protein) => sum + Math.max(0, proteinMixPercent(protein.name, args.scenario)), 0) || mixPct || 100;
+  const totalCookedLbBeforeSafety = totalCookedLbFromBbqSales({ proteins: proteinsForMix, scenario: args.scenario, forecastBbqSales: args.forecastBbqSales });
+  const targetCookedLbBeforeLeftover = totalCookedLbBeforeSafety * (mixPct / mixTotal);
   const leftoverUnits = Math.max(0, args.usableLeftoverUnits ?? 0);
   const lower = args.protein.name.toLowerCase();
 
-  // Ribs are operationally managed by rack, not by cooked pounds.
-  // The primary calculation is sales dollars / sales price per rack.
-  // Weight/yield assumptions remain available for raw/cooked reporting.
+  // Build 5.6.0: scenario mix percentages are cooked-weight mix, not dollar mix.
+  // BBQ sales are converted to a total smoked-meat cooked-pound forecast by using
+  // the weighted average revenue per cooked pound across all active proteins.
+  // Then 40/30/15/15 is applied to cooked pounds. Ribs are still loaded as racks.
   if (lower.includes('rib') && args.protein.inputUnit === 'RACK') {
-    const salesPricePerRack = Math.max(1, args.protein.salesPriceEach ?? 33);
-    const cookedLbPerRack = Math.max(0.1, args.protein.cookedWeightEachLb || (args.protein.rawWeightEachLb * (args.protein.cookedYieldPercent / 100)) || 3);
+    const cookedLbPerRack = cookedLbPerUnit(args.protein);
     const rawLbPerRack = Math.max(0.1, args.protein.rawWeightEachLb || 3.3);
-    const grossRackNeedBeforeSafety = proteinSalesDollars / salesPricePerRack;
-    const grossRackNeedWithSafety = grossRackNeedBeforeSafety * (1 + args.scenario.safetyFactorPct / 100);
-    const grossCookUnits = Math.ceil(grossRackNeedWithSafety);
+    const grossCookedLbWithSafety = targetCookedLbBeforeLeftover * (1 + args.scenario.safetyFactorPct / 100);
+    const grossCookUnits = Math.ceil(grossCookedLbWithSafety / cookedLbPerRack);
     const recommendedCookUnits = Math.min(
       args.protein.maxCookUnits,
       Math.max(args.protein.minCookUnits, Math.ceil(Math.max(0, grossCookUnits - leftoverUnits)))
@@ -77,8 +109,6 @@ export function forecastProteinLoad(args: {
     };
   }
 
-  const proteinSalesPerCookedLb = Math.max(1, args.protein.avgSalesPerCookedLb ?? 22);
-  const targetCookedLbBeforeLeftover = proteinSalesDollars / proteinSalesPerCookedLb;
   const grossCookedLbWithSafety = targetCookedLbBeforeLeftover * (1 + args.scenario.safetyFactorPct / 100);
   const grossRawLbNeeded = args.protein.cookedYieldPercent > 0 ? grossCookedLbWithSafety / (args.protein.cookedYieldPercent / 100) : grossCookedLbWithSafety;
   const grossCookUnits = args.protein.rawWeightEachLb > 0 ? Math.ceil(grossRawLbNeeded / args.protein.rawWeightEachLb) : Math.ceil(grossCookedLbWithSafety);

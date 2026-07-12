@@ -112,7 +112,7 @@ export async function POST(request: Request) {
           : incompletePriorEod
             ? `Prior EOD leftover credit source: EOD ${fmtDateWithDow(priorEodDate)} is ${leftoverLog.status}; saved but incomplete — check hot box.`
             : `Prior EOD leftover credit source: EOD ${fmtDateWithDow(priorEodDate)} (${leftoverLog.status}${lockedFlag}) only.`;
-      const result = forecastProteinLoad({ protein, scenario, forecastBbqSales: targetForecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
+      const result = forecastProteinLoad({ protein, proteins, scenario, forecastBbqSales: targetForecastBbqSales, usableLeftoverLb, usableLeftoverUnits });
       const timingNote = lower.includes('brisket')
         ? `${fmtDateWithDow(loadDate)}: cook brisket 9:00 AM–9:00 PM using ${fmtDateWithDow(targetServiceDate)} service forecast, then hold overnight. ${leftoverSourceNote}`
         : lower.includes('pork')

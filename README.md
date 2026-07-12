@@ -1,93 +1,77 @@
-# Smokehouse Control — Build 5.5.0
+# Smokehouse Control — Build 5.6.0
 
-Build 5.5.0 is the **Commercial Smoker Catalog + Auto-Capacity Selection** build. It adds a researched smoker catalog table and lets operators pick brand/model from a dropdown so rack count and protein capacities auto-load on the Smoker Capacity page.
+Build 5.6.0 is the **Cooked-Weight Protein Mix Correction** build.
 
-## Purpose
+## Critical forecasting correction
 
-This release makes the product easier to demo, explain, train, and sell. It adds a guided tour, expanded help docs, a sales one-pager, and a stronger synthetic demo dataset.
+Protein mix percentages are now treated as **cooked meat weight mix**, not dollar mix.
 
-## Major changes
+For example:
 
-### Guided tour
+- Pulled Pork: 40% of cooked smoked-meat pounds
+- Brisket: 30% of cooked smoked-meat pounds
+- Pulled Chicken: 15% of cooked smoked-meat pounds
+- Ribs: 15% of cooked smoked-meat pounds
 
-New page:
+The app still starts with projected BBQ sales dollars, but it now converts those dollars into total cooked smoked-meat pounds using the weighted average revenue per cooked pound across the active proteins. It then applies the 40/30/15/15 mix by cooked pounds.
 
-```text
-/tour
-```
+That fixes the prior behavior where high-dollar brisket could be overrepresented because the mix was being applied directly to sales dollars.
 
-The tour walks users through:
+## Forecast method
 
-- Today Command Center
-- Cook Plan
-- Print Pit Sheet
-- End of Day
-- Reports
-- Learning
-- Forecast Proof
-- POS Import
-- Smoker Schedule
-- System verification
+1. Calculate total daily sales.
+2. Apply smoked-meat sales percent.
+3. Convert smoked-meat sales dollars to total cooked smoked-meat pounds.
+4. Apply the protein mix by cooked weight.
+5. Convert cooked pounds to operational units:
+   - Briskets
+   - Pork butts
+   - Rib racks
+   - Chicken breasts
+6. Apply safety factor.
+7. Subtract prior EOD leftovers.
+8. Clamp to protein min/max settings.
 
-### Sales package
+## UI cleanup
 
-New page:
-
-```text
-/sales
-```
-
-The page explains the product around the core value propositions:
-
-- Reduce BBQ waste
-- Prevent sellouts
-- Standardize pitmaster decisions
-- Prove improvement
-- Train from real data
-- Run multiple restaurants
-
-### Expanded Help page
-
-The Help page now includes practical operator docs:
-
-- What is a load date?
-- Why pork uses tomorrow
-- Why brisket uses tomorrow
-- How leftovers affect plans
-- How forecast confidence works
-- How to import POS sales
-- How to add smokers
-- How to add users
-- How to read reports
-- What to do when Wi-Fi fails during EOD
-
-### Improved Demo page
-
-The Demo page now clearly explains what the demo creates and links to the tour and sales package.
-
-Demo Mode now creates 90 days of synthetic EOD history instead of four weeks.
-
-## Deploy command
-
-Render build command stays:
-
-```bash
-corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
-```
-
-## New scripts
-
-```bash
-pnpm run test:demo-docs
-pnpm run build:eval
-```
-
-## Commit message
+The top navigation now shows:
 
 ```text
-Build 5.5.0 commercial smoker catalog and auto-capacity selection
+Smokehouse Control
 ```
 
-## Important limitation
+instead of:
 
-The demo data is synthetic. The app still needs real PTT operating data to prove final forecast accuracy and learning recommendations in production.
+```text
+PTT Smokehouse Control
+```
+
+The app can still support Pigeon Toed Tavern as the default restaurant, but the product header is now generic for multi-tenant/commercial use.
+
+## Testing
+
+Static evaluation scripts verify:
+
+- Package version is 5.6.0.
+- Nav badge shows Build 5.6.0.
+- Top nav does not show PTT Smokehouse Control.
+- Forecast engine no longer splits BBQ dollars directly by protein mix percentage.
+- Cook plan and capacity preview pass all active proteins into the forecast engine.
+- Settings page labels protein mix as cooked-weight mix.
+- Render build still uses `prisma migrate deploy`.
+- Render build does not use `prisma db push`.
+- No `--accept-data-loss` exists in package scripts.
+
+## Deploy
+
+Use the normal flow:
+
+```text
+ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Actions → Render Manual Deploy
+```
+
+Commit message:
+
+```text
+Build 5.6.0 cooked-weight protein mix correction
+```
