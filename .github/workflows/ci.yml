@@ -1,4 +1,4 @@
-name: Build 6.1.0 CI
+name: Build 6.1.1 CI
 
 on:
   push:
@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 6.1.0 CI / quality-and-tests
+    name: Build 6.1.1 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
     services:
@@ -33,9 +33,9 @@ jobs:
     env:
       DATABASE_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_ci?schema=public
       DIRECT_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_ci?schema=public
-      ADMIN_PASSWORD: ci-admin-password-6-1-0
-      APP_SESSION_TOKEN: ci-session-token-6-1-0-long-value
-      CRON_SECRET: ci-cron-secret-6-1-0-long-value
+      ADMIN_PASSWORD: ci-admin-password-6-1-1
+      APP_SESSION_TOKEN: ci-session-token-6-1-1-long-value
+      CRON_SECRET: ci-cron-secret-6-1-1-long-value
       NEXT_PUBLIC_APP_NAME: Smokehouse Control CI
       NEXT_PUBLIC_SUPPORT_EMAIL: support@smokehousecontrol.com
       CI: true
