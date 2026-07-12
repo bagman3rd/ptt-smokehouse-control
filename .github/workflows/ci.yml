@@ -1,4 +1,4 @@
-name: Build 6.3.3 CI
+name: Build 6.3.4 CI
 
 on:
   push:
@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
-  workflow_run:
-    workflows: ['Generate pnpm lockfile']
-    types: [completed]
 
 permissions:
   contents: read
@@ -19,7 +16,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 6.3.3 CI / quality-and-tests
+    name: Build 6.3.4 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
     services:
@@ -45,8 +42,6 @@ jobs:
       CI: true
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
       - name: Detect committed lockfile
         id: lockfile
         run: |
