@@ -1,4 +1,4 @@
-name: Build 4.3 CI
+name: Build 4.5 CI
 
 on:
   push:
@@ -45,6 +45,9 @@ jobs:
 
       - name: Prisma generate
         run: pnpm run prisma:generate
+
+      - name: Preflight build checks
+        run: pnpm run preflight
 
       - name: Type-check
         run: pnpm run typecheck

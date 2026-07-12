@@ -58,7 +58,7 @@ export async function GET(request: Request) {
 
     const payload = {
       app: 'PTT Smokehouse Control',
-      build: '4.4.0',
+      build: '4.5.0',
       backupType: 'scheduled-weekly-tenant-export',
       restaurant,
       exportedAt,

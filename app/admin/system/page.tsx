@@ -43,19 +43,19 @@ export default async function SystemPage() {
 
     <div className="rounded-2xl border border-amber-300 bg-amber-50 p-5 text-amber-900">
       <div className="text-lg font-black">Pilot Mode Warning</div>
-      <p className="mt-1 text-sm">This deployment is configured for <strong>{migrationMode}</strong>. Deploy Build 4.4.0 to production only after the failed migration state is repaired/baselined on staging and the staging checks pass.</p>
+      <p className="mt-1 text-sm">This deployment is configured for <strong>{migrationMode}</strong>. Deploy Build 4.5.0 to production only after the failed migration state is repaired/baselined on staging and the staging checks pass.</p>
     </div>
 
 
     <section className="mt-6 grid gap-4 lg:grid-cols-3">
       <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-900">
         <div className="text-lg font-black">Migration Repair Gate</div>
-        <p className="mt-2 text-sm">The previous live database had a failed Prisma migration record. Build 4.4.0 makes migrate deploy the active path; use the runbook on staging before production deployment.</p>
+        <p className="mt-2 text-sm">The previous live database had a failed Prisma migration record. Build 4.5.0 makes migrate deploy the active path; use the runbook on staging before production deployment.</p>
         <div className="mt-3 rounded-xl bg-white/70 p-3 font-mono text-xs">MIGRATION_REPAIR_RUNBOOK_BUILD_4_3_1.md</div>
       </div>
       <div className="rounded-2xl border border-slate-200 bg-white p-5">
         <div className="text-lg font-black">Scheduled Backup Readiness</div>
-        <p className="mt-2 text-sm text-slate-600">Build 4.4.0 includes a weekly backup endpoint plus a cron runner script. Configure CRON_SECRET and BACKUP_APP_URL for scheduled backups.</p>
+        <p className="mt-2 text-sm text-slate-600">Build 4.5.0 includes a weekly backup endpoint plus a cron runner script. Configure CRON_SECRET and BACKUP_APP_URL for scheduled backups.</p>
         <div className={cronReady ? 'mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800' : 'mt-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm font-bold text-amber-800'}>
           CRON_SECRET: {cronReady ? 'configured' : 'missing or too short'}
         </div>
@@ -109,7 +109,7 @@ export default async function SystemPage() {
           ['SECURITY_REVIEW', 'Security review', 'Review auth, rate limits, roles, and tenant scoping'],
           ['WEEKLY_BACKUP_EXPORT', 'Weekly backup export', 'Render Cron calls /api/admin/backups/weekly with CRON_SECRET'],
           ['PRODUCTION_MIGRATION_REPAIR', 'Production migration repair', 'Run the same passing staging repair path on production after a fresh backup'],
-          ['MIGRATION_REPAIR_RUNBOOK', 'Migration repair runbook rehearsal', 'Run Build 4.4.0 migration repair runbook against staging']
+          ['MIGRATION_REPAIR_RUNBOOK', 'Migration repair runbook rehearsal', 'Run Build 4.5.0 migration repair runbook against staging']
         ].map(([type, label, hint]) => (
           <form key={type} action={recordSystemCheck} className="rounded-2xl border border-slate-200 p-4">
             <input type="hidden" name="type" value={type} />
@@ -175,7 +175,7 @@ export default async function SystemPage() {
         <li>Deploy staging with <code>prisma migrate deploy</code>.</li>
         <li>Only then schedule production migration repair.</li>
       </ol>
-      <p className="mt-3 text-sm font-bold text-red-700">Do not deploy Build 4.4.0 to production until the staging rehearsal passes and is recorded above.</p>
+      <p className="mt-3 text-sm font-bold text-red-700">Do not deploy Build 4.5.0 to production until the staging rehearsal passes and is recorded above.</p>
     </section>
 
     <section className="card mt-6 p-5">
