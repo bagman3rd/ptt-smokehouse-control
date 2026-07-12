@@ -1,6 +1,10 @@
-# PTT Smokehouse Control — Build 6.7.0
+# PTT Smokehouse Control — Build 6.7.1
 
 Restaurant smokehouse forecasting, cook planning, smoker allocation, EOD reconciliation, reporting, tenant controls, and operational auditability.
+
+## Build 6.7.1 — Whole-number sealed inventory
+
+The Quick EOD sealed/unopened brisket, pork, chicken, and rib fields now accept and store whole units only. Opened-meat quantities remain decimal pounds.
 
 ## Build 6.7.0 kitchen closeout
 
