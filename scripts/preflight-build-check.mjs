@@ -12,7 +12,7 @@ const pkg = JSON.parse(read('package.json'));
 const version = pkg.version;
 const buildLabel = `Build ${version}`;
 
-assert(version === '5.2.0', 'package.json version must be 5.2.0 for this build');
+assert(version === '5.3.0', 'package.json version must be 5.3.0 for this build');
 assert(read('README.md').includes(buildLabel), 'README must mention the current build label');
 assert(read('components/Nav.tsx').includes(buildLabel), 'Nav badge must show the current build label');
 assert(pkg.scripts.typecheck === 'tsc --noEmit', 'typecheck script must run tsc --noEmit');
@@ -33,4 +33,4 @@ for (const token of ['Build 4.4.0', 'build-4-4-0-evaluation', 'prisma db push &&
 assert(!read('lib/tenantGuard.ts').includes('tenantOrLegacyWhere'), 'retired tenantOrLegacyWhere helper must not return');
 assert(!read('lib/tenantGuard.ts').includes('tenantWhere('), 'retired tenantWhere helper must not return');
 
-console.log('Build 5.2.0 preflight checks completed.');
+console.log('Build 5.3.0 preflight checks completed.');

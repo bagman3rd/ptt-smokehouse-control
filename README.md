@@ -1,139 +1,95 @@
-# Smokehouse Control — Build 5.2.0
+# Smokehouse Control — Build 5.3.0
 
-Build 5.2.0 is the **Commercial SaaS Readiness** build.
+Build 5.3.0 is the **POS Integration** build.
 
 ## Purpose
 
-This release starts the path from a pilot app to a sellable SaaS product. It adds subscription records, hosted Stripe checkout handoff, customer support tracking, customer data-request tracking, and uptime health endpoints.
+This release reduces manual entry friction by adding item-level POS CSV import, menu-item mapping to smoked proteins, protein-level preview before import, POS import history, and POS data backup/export coverage.
 
 ## Major changes
 
-### Billing and subscription records
+### POS menu-item mapping
 
 New Prisma model:
 
 ```text
-Subscription
+MenuItemMapping
 ```
 
-The app now tracks per-restaurant billing state:
+Each restaurant can map POS item names to smoked proteins with:
+
+- POS item name
+- normalized item name
+- protein
+- cooked portion size in pounds
+- yield factor
+- active/inactive status
+
+### POS item-sales import
+
+New Prisma models:
 
 ```text
-TRIALING
-ACTIVE
-PAST_DUE
-CANCELED
-EXPIRED
-READ_EXPORT_ONLY
+PosImportBatch
+PosImportRow
 ```
 
-New signup tenants automatically receive a 14-day trial subscription record.
+The import workflow supports CSV from Toast, Square, Clover, or spreadsheets.
 
-### Stripe hosted checkout handoff
+Required format:
 
-`/billing` now supports:
-
-- Monthly hosted checkout
-- Annual hosted checkout
-- Stripe customer-portal handoff
-- Trial status visibility
-- Billing warning banner in the app shell
-
-Environment variables:
-
-```text
-STRIPE_MONTHLY_PAYMENT_LINK
-STRIPE_ANNUAL_PAYMENT_LINK
-STRIPE_CUSTOMER_PORTAL_URL
+```csv
+date,itemName,quantity,grossSales
+2026-07-01,Brisket Plate,18,540
+2026-07-01,Pulled Pork Sandwich,42,714
 ```
 
-Fallbacks:
+### POS preview before import
 
-```text
-STRIPE_PAYMENT_LINK
-STRIPE_CHECKOUT_URL
-STRIPE_PORTAL_URL
-```
+The POS page now previews:
 
-### Support channel
+- rows found
+- valid rows
+- invalid rows
+- unmapped rows
+- gross sales
+- mapped cooked pounds
+- sales by protein
+- unmapped item warnings
 
-New page:
+### Learning/data foundation
 
-```text
-/support
-```
+Imported POS rows are stored at item level. Mapped rows estimate cooked pounds by protein, creating the foundation for better forecast training and POS-vs-EOD reconciliation.
 
-New model:
+### Backup/export coverage
 
-```text
-SupportTicket
-```
+Tenant export and backup JSON now include:
 
-Set:
+- menuItemMappings
+- posImportBatches
+- posImportRows
 
-```text
-NEXT_PUBLIC_SUPPORT_EMAIL
-```
+## Deploy command
 
-### Customer data requests
-
-New admin page:
-
-```text
-/admin/data
-```
-
-New model:
-
-```text
-CustomerDataRequest
-```
-
-This tracks export, deactivation, deletion-after-retention, and restore requests.
-
-### Uptime monitoring
-
-New endpoints:
-
-```text
-/api/health
-/api/health/db
-```
-
-Use these with UptimeRobot or Render external monitoring.
-
-### Backup expansion
-
-Tenant backup JSON now includes:
-
-- Subscriptions
-- Support tickets
-- Customer data requests
-
-## Important limitations
-
-Build 5.2.0 uses Stripe hosted payment links and portal handoff. It does not yet include full Stripe API webhook synchronization. For full SaaS automation, the next billing step is Stripe webhooks that automatically update subscription status.
-
-Terms and Privacy pages are still starter templates and should be reviewed by an attorney before selling to unrelated restaurants.
-
-## Deploy
-
-Use the normal deploy path:
-
-```text
-ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Actions → Render Manual Deploy
-```
-
-Commit message:
-
-```text
-Build 5.2.0 commercial SaaS readiness
-```
-
-Render build command remains:
+Render build command stays:
 
 ```bash
 corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
 ```
 
-`render-build` uses `prisma migrate deploy`, does not use `prisma db push`, and does not use `--accept-data-loss`.
+## New scripts
+
+```bash
+pnpm run test:pos-import
+pnpm run build:eval
+```
+
+## Commit message
+
+```text
+Build 5.3.0 POS integration and menu item mapping
+```
+
+## Important limitation
+
+This is CSV-first POS integration. Direct Toast/Square/Clover API sync should come later after the item-mapping workflow proves itself in staging and live restaurant use.

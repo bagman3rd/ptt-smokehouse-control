@@ -1,4 +1,4 @@
-name: Build 4.7 CI
+name: Build 5.3 CI
 
 on:
   push:
@@ -81,6 +81,9 @@ jobs:
 
       - name: Orphan record check
         run: pnpm run test:orphan-records
+
+      - name: POS import mapping tests
+        run: pnpm run test:pos-import
 
       - name: Prisma schema drift check
         run: pnpm run ci:schema-drift

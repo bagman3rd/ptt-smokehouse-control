@@ -62,6 +62,9 @@ model Restaurant {
   subscriptions Subscription[]
   supportTickets SupportTicket[]
   dataRequests CustomerDataRequest[]
+  menuItemMappings MenuItemMapping[]
+  posImportBatches PosImportBatch[]
+  posImportRows PosImportRow[]
 }
 
 model RestaurantMembership {
@@ -146,6 +149,8 @@ model Protein {
   updatedAt           DateTime    @default(now()) @updatedAt
   cookPlanItems       CookPlanItem[]
   logs                EndOfDayProteinLog[]
+  menuItemMappings    MenuItemMapping[]
+  posImportRows       PosImportRow[]
   @@unique([restaurantId, name])
   @@index([restaurantId, active])
 }
@@ -445,3 +450,66 @@ model CustomerDataRequest {
   updatedAt    DateTime @default(now()) @updatedAt
   @@index([restaurantId, type, status, createdAt])
 }
+
+model MenuItemMapping {
+  id             String   @id @default(cuid())
+  restaurantId   String
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  posItemName    String
+  normalizedName String
+  proteinId      String?
+  protein        Protein? @relation(fields: [proteinId], references: [id], onDelete: SetNull)
+  portionSizeLb  Float    @default(0)
+  yieldFactor    Float    @default(1)
+  active         Boolean  @default(true)
+  source         String   @default("CSV")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  @@unique([restaurantId, normalizedName])
+  @@index([restaurantId, active])
+  @@index([restaurantId, proteinId])
+}
+
+model PosImportBatch {
+  id             String   @id @default(cuid())
+  restaurantId   String
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  source         String   @default("CSV")
+  status         String   @default("PREVIEWED")
+  rowCount       Int      @default(0)
+  validRowCount  Int      @default(0)
+  invalidRowCount Int     @default(0)
+  unmappedCount  Int      @default(0)
+  totalSales     Float    @default(0)
+  bbqSales       Float    @default(0)
+  importedBy     String   @default("System")
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  rows           PosImportRow[]
+  @@index([restaurantId, createdAt])
+  @@index([restaurantId, status])
+}
+
+model PosImportRow {
+  id             String   @id @default(cuid())
+  restaurantId   String
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  batchId        String
+  batch          PosImportBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  serviceDate    DateTime
+  itemName       String
+  quantity       Float    @default(0)
+  grossSales     Float    @default(0)
+  mappedProteinId String?
+  mappedProtein  Protein? @relation(fields: [mappedProteinId], references: [id], onDelete: SetNull)
+  portionSizeLb  Float    @default(0)
+  estimatedCookedLb Float @default(0)
+  valid          Boolean  @default(true)
+  reason         String?
+  createdAt      DateTime @default(now())
+  @@index([restaurantId, serviceDate])
+  @@index([restaurantId, batchId])
+  @@index([restaurantId, mappedProteinId])
+}
+

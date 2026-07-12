@@ -26,7 +26,10 @@ const TENANT_SCOPED_MODELS = new Set([
   'SystemCheck',
   'Subscription',
   'SupportTicket',
-  'CustomerDataRequest'
+  'CustomerDataRequest',
+  'MenuItemMapping',
+  'PosImportBatch',
+  'PosImportRow'
 ]);
 
 const READ_OR_WRITE_OPERATIONS = new Set([
