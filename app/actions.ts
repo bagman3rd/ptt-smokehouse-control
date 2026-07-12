@@ -43,13 +43,13 @@ export async function approveCookPlan(formData: FormData) {
     }
     const adjustmentNote = hotBoxAdjustment !== 0 ? `Manual hot-box adjustment ${hotBoxAdjustment > 0 ? '+' : ''}${hotBoxAdjustment}` : '';
     const overrideReason = [overrideReasonRaw, adjustmentNote].filter(Boolean).join(' · ');
-    await prisma.cookPlanItem.update({
-      where: { id: itemId },
+    await prisma.cookPlanItem.updateMany({
+      where: { id: itemId, restaurantId },
       data: { approvedCookUnits, overrideReason }
     });
   }
   await prisma.cookPlan.updateMany({ where: { id: cookPlanId, restaurantId }, data: { status: 'APPROVED' } });
-  const afterItems = await prisma.cookPlanItem.findMany({ where: { cookPlanId }, select: { id: true, approvedCookUnits: true, overrideReason: true, recommendedCookUnits: true } });
+  const afterItems = await prisma.cookPlanItem.findMany({ where: { cookPlanId, restaurantId }, select: { id: true, approvedCookUnits: true, overrideReason: true, recommendedCookUnits: true } });
   await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'APPROVE', entity: 'CookPlan', entityId: cookPlanId, beforeJson: beforeItems, afterJson: afterItems });
   revalidatePath('/cook-plan');
   revalidatePath('/dashboard');

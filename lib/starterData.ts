@@ -60,6 +60,7 @@ export async function createDemoHistory(prisma: any, restaurantId: string) {
     const bbqSales = Math.round(sales * 0.38);
     const eod = await prisma.endOfDayLog.create({ data: { restaurantId, serviceDate, totalSales: sales, bbqSales, status: 'COMPLETE', enteredBy: 'Demo System', notes: 'Demo operating data' } });
     await prisma.endOfDayProteinLog.createMany({ data: proteins.map((protein: DemoProteinForHistory, idx: number) => ({
+      restaurantId,
       endOfDayLogId: eod.id,
       proteinId: protein.id,
       cookedUnits: 8 + idx * 3 + (dow === 6 ? 5 : 0),

@@ -1,69 +1,109 @@
-# Smokehouse Control — Build 4.6.0
+# Smokehouse Control — Build 4.7.0
 
-Build 4.6.0 is the staging verification and database-integrity build.
+Build 4.7.0 is the **Tenant Isolation Hardening** build.
 
-The main purpose is to close the gap between:
-
-```text
-The test exists.
-```
-
-and:
-
-```text
-The test passed against a real staging PostgreSQL database and was recorded.
-```
-
-## What changed in 4.6.0
-
-- Added `STAGING_VERIFICATION_BUILD_4_6_0.md`.
-- Added `DATABASE_INTEGRITY_RUNBOOK_BUILD_4_6_0.md`.
-- Added `scripts/staging-verification-check.mjs`.
-- Added package script `pnpm run staging:verify`.
-- Updated `/admin/system` with staging proof checks:
-  - Staging migration status
-  - Staging tenant isolation test
-  - Staging cross-tenant regression test
-  - Staging forecast test
-  - Staging backup export test
-  - Staging app click-through
-  - Staging restore drill
-  - Production migration status
-- Kept Render on the correct long-term build path:
+It assumes the production migration baseline has already been repaired and the app can deploy with:
 
 ```bash
 prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build
 ```
 
-- Confirmed the app must not use:
+The build intentionally does **not** use:
 
 ```bash
 prisma db push
 --accept-data-loss
 ```
 
-## Standard deploy command on Render
+## What Build 4.7.0 adds
+
+### Tenant guard coverage
+
+`lib/tenantGuard.ts` now covers every tenant-scoped operating model, including child records:
+
+- AuditLog
+- Protein
+- ForecastScenario
+- DayMultiplier
+- MonthMultiplier
+- EventModifier
+- CookPlan
+- CookPlanItem
+- EndOfDayLog
+- EndOfDayProteinLog
+- SavedReport
+- ReportRun
+- Smoker
+- LearningRecommendation
+- SystemCheck
+
+In development and CI, missing tenant scoping now fails loudly instead of becoming a silent cross-tenant leak.
+
+### Child-record restaurantId fields
+
+Build 4.7.0 adds `restaurantId` to:
+
+- CookPlanItem
+- EndOfDayProteinLog
+
+That makes direct tenant checks possible on child rows instead of relying only on parent joins.
+
+### Tenant indexes and composite uniqueness
+
+The Prisma schema now expresses tenant-safe uniqueness and lookup patterns, including:
+
+- RestaurantMembership: `restaurantId + userId`
+- Protein: `restaurantId + name`
+- ForecastScenario: `restaurantId + name`
+- DayMultiplier: `restaurantId + dayOfWeek`
+- MonthMultiplier: `restaurantId + month`
+- CookPlan: `restaurantId + serviceDate + scenarioId`
+- EndOfDayLog: `restaurantId + serviceDate`
+- Smoker: `restaurantId + name`
+
+### CI checks
+
+CI now includes:
 
 ```bash
-corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --prod=false --frozen-lockfile=false && pnpm run render-build
-```
-
-## Required staging commands before outside customers
-
-Run these against a real staging database:
-
-```bash
-npx prisma migrate status
 pnpm run test:tenant
 pnpm run test:cross-tenant
-pnpm run test:forecast
-pnpm run test:backup
-pnpm run test:permissions
-pnpm run staging:verify
+pnpm run test:tenant-guard
+pnpm run test:orphan-records
+pnpm run ci:schema-drift
 ```
 
-Then record the results in `/admin/system`.
+### New scripts
+
+```bash
+pnpm run test:tenant-guard
+pnpm run test:orphan-records
+pnpm run build:eval
+```
+
+## Deployment
+
+Normal deploy path:
+
+```text
+ZIP → File Explorer copy/replace → GitHub Desktop commit/push → GitHub Actions → Render Manual Deploy
+```
+
+Commit message:
+
+```text
+Build 4.7.0 tenant isolation hardening
+```
 
 ## Important note
 
-Build 4.6.0 does not claim staging has passed. It gives you the controls and documentation to run and record those checks.
+Build 4.7.0 contains a tenant-constraints migration. If existing production data has duplicates that violate tenant-level uniqueness, the migration can fail. Run this first on staging and confirm:
+
+```bash
+pnpm run test:tenant
+pnpm run test:cross-tenant
+pnpm run test:tenant-guard
+pnpm run test:orphan-records
+```
+
+Do not add unrelated customers until these tests pass on a real staging PostgreSQL database.

@@ -26,7 +26,7 @@ export async function Nav({ user }: { user: User }) {
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between">
-        <Link href="/dashboard" className="text-xl font-black tracking-tight">PTT Smokehouse Control <span className="ml-2 rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">Build 4.6.0</span></Link>
+        <Link href="/dashboard" className="text-xl font-black tracking-tight">PTT Smokehouse Control <span className="ml-2 rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">Build 4.7.0</span></Link>
         <nav className="flex gap-2 overflow-x-auto pb-1">
           {restaurants.length > 1 ? (
             <form action="/api/restaurants/switch" method="POST" className="flex items-center gap-2">

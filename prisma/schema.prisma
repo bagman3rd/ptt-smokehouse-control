@@ -52,7 +52,9 @@ model Restaurant {
   monthMultipliers MonthMultiplier[]
   eventModifiers EventModifier[]
   cookPlans   CookPlan[]
+  cookPlanItems CookPlanItem[]
   eodLogs     EndOfDayLog[]
+  eodProteinLogs EndOfDayProteinLog[]
   auditLogs   AuditLog[]
   smokers     Smoker[]
   learningRecommendations LearningRecommendation[]
@@ -69,6 +71,9 @@ model RestaurantMembership {
   active       Boolean    @default(true)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @default(now()) @updatedAt
+  @@unique([restaurantId, userId])
+  @@index([userId])
+  @@index([restaurantId, active])
 }
 
 model AuditLog {
@@ -83,6 +88,8 @@ model AuditLog {
   beforeJson   String?
   afterJson    String?
   createdAt    DateTime @default(now())
+  @@index([restaurantId, createdAt])
+  @@index([action, createdAt])
 }
 
 model User {
@@ -103,6 +110,10 @@ model User {
   createdBy    String   @default("System")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt
+  @@index([restaurantId])
+  @@index([active])
+  @@index([username])
+  @@index([email])
 }
 
 model Protein {
@@ -129,6 +140,8 @@ model Protein {
   updatedAt           DateTime    @default(now()) @updatedAt
   cookPlanItems       CookPlanItem[]
   logs                EndOfDayProteinLog[]
+  @@unique([restaurantId, name])
+  @@index([restaurantId, active])
 }
 
 model SavedReport {
@@ -147,6 +160,7 @@ model SavedReport {
   createdBy   String   @default("Archer")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
+  @@index([restaurantId, createdAt])
 }
 
 model ReportRun {
@@ -164,6 +178,7 @@ model ReportRun {
   totalValue  Float    @default(0)
   createdBy   String   @default("Archer")
   createdAt   DateTime @default(now())
+  @@index([restaurantId, createdAt])
 }
 
 model ForecastScenario {
@@ -184,6 +199,8 @@ model ForecastScenario {
   createdAt        DateTime     @default(now())
   updatedAt           DateTime    @default(now()) @updatedAt
   cookPlans        CookPlan[]
+  @@unique([restaurantId, name])
+  @@index([restaurantId])
 }
 
 model DayMultiplier {
@@ -195,6 +212,7 @@ model DayMultiplier {
   multiplier  Float    @default(1)
   updatedBy   String   @default("System")
   updatedAt           DateTime    @default(now()) @updatedAt
+  @@unique([restaurantId, dayOfWeek])
 }
 
 model MonthMultiplier {
@@ -206,6 +224,7 @@ model MonthMultiplier {
   multiplier  Float    @default(1)
   updatedBy   String   @default("System")
   updatedAt           DateTime    @default(now()) @updatedAt
+  @@unique([restaurantId, month])
 }
 
 model EventModifier {
@@ -218,6 +237,7 @@ model EventModifier {
   multiplier  Float    @default(1.25)
   notes       String?
   createdAt   DateTime @default(now())
+  @@index([restaurantId, startsOn, endsOn])
 }
 
 model CookPlan {
@@ -236,10 +256,15 @@ model CookPlan {
   createdAt       DateTime @default(now())
   updatedAt           DateTime    @default(now()) @updatedAt
   items           CookPlanItem[]
+  @@unique([restaurantId, serviceDate, scenarioId])
+  @@index([restaurantId, serviceDate])
+  @@index([scenarioId])
 }
 
 model CookPlanItem {
   id                    String   @id @default(cuid())
+  restaurantId          String?
+  restaurant            Restaurant? @relation(fields: [restaurantId], references: [id])
   cookPlanId            String
   cookPlan              CookPlan @relation(fields: [cookPlanId], references: [id], onDelete: Cascade)
   proteinId             String
@@ -254,6 +279,8 @@ model CookPlanItem {
   approvedCookUnits     Float?
   overrideReason        String?
   notes                 String?
+  @@index([restaurantId, cookPlanId])
+  @@index([restaurantId, proteinId])
 }
 
 model EndOfDayLog {
@@ -271,10 +298,14 @@ model EndOfDayLog {
   createdAt       DateTime @default(now())
   updatedAt           DateTime    @default(now()) @updatedAt
   proteinLogs     EndOfDayProteinLog[]
+  @@unique([restaurantId, serviceDate])
+  @@index([restaurantId, serviceDate])
 }
 
 model EndOfDayProteinLog {
   id              String   @id @default(cuid())
+  restaurantId    String?
+  restaurant      Restaurant? @relation(fields: [restaurantId], references: [id])
   endOfDayLogId   String
   endOfDayLog     EndOfDayLog @relation(fields: [endOfDayLogId], references: [id], onDelete: Cascade)
   proteinId       String
@@ -286,6 +317,8 @@ model EndOfDayProteinLog {
   wasteLb         Float    @default(0)
   eightySixed     Boolean  @default(false)
   wasteReason     String?
+  @@index([restaurantId, endOfDayLogId])
+  @@index([restaurantId, proteinId])
 }
 
 
@@ -305,6 +338,8 @@ model Smoker {
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt
+  @@unique([restaurantId, name])
+  @@index([restaurantId, active])
 }
 
 model LearningRecommendation {
@@ -331,6 +366,7 @@ model LearningRecommendation {
   rollbackBy   String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt
+  @@index([restaurantId, status, createdAt])
 }
 
 
@@ -343,6 +379,7 @@ model SystemCheck {
   notes        String?
   verifiedBy   String   @default("System")
   createdAt    DateTime @default(now())
+  @@index([restaurantId, type, createdAt])
 }
 model RateLimitBucket {
   id        String   @id @default(cuid())

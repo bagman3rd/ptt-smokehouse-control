@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Build 4.3.3 cross-tenant regression test.
+  Build 4.7.0 cross-tenant regression test.
   Creates two tenants and verifies tenant A cannot read/write tenant B data through
   the same guarded query patterns used by server actions and API routes.
 */
@@ -18,7 +18,7 @@ async function main() {
 
   const proteinB = await prisma.protein.create({ data: { restaurantId: restaurantB.id, name: 'Tenant B Brisket', inputUnit: ProteinUnit.EACH, rawWeightEachLb: 14, cookedWeightEachLb: 7, cookedYieldPercent: 50, avgSalesPerCookedLb: 42 } });
   const scenarioB = await prisma.forecastScenario.create({ data: { restaurantId: restaurantB.id, name: 'Tenant B Base', type: ScenarioType.BASE, annualSales: 7000000 } });
-  const planB = await prisma.cookPlan.create({ data: { restaurantId: restaurantB.id, serviceDate: new Date('2036-03-01T00:00:00.000Z'), scenarioId: scenarioB.id, forecastSales: 2000, forecastBbqSales: 800, items: { create: [{ proteinId: proteinB.id, cookedLbNeeded: 20, safetyFactorPct: 8, rawLbNeeded: 40, recommendedCookUnits: 4, forecastCookUnits: 4 }] } } });
+  const planB = await prisma.cookPlan.create({ data: { restaurantId: restaurantB.id, serviceDate: new Date('2036-03-01T00:00:00.000Z'), scenarioId: scenarioB.id, forecastSales: 2000, forecastBbqSales: 800, items: { create: [{ restaurantId: restaurantB.id, proteinId: proteinB.id, cookedLbNeeded: 20, safetyFactorPct: 8, rawLbNeeded: 40, recommendedCookUnits: 4, forecastCookUnits: 4 }] } } });
   const eodB = await prisma.endOfDayLog.create({ data: { restaurantId: restaurantB.id, serviceDate: new Date('2036-03-01T00:00:00.000Z'), enteredBy: 'Tenant B', totalSales: 2000, bbqSales: 800 } });
 
   const tenantASeesBPlan = await prisma.cookPlan.findFirst({ where: { id: planB.id, restaurantId: restaurantA.id } });
@@ -36,7 +36,7 @@ async function main() {
   const directBStillExists = await prisma.cookPlan.findFirst({ where: { id: planB.id, restaurantId: restaurantB.id } });
   assert.ok(directBStillExists, 'Tenant B record unexpectedly disappeared.');
 
-  console.log('Build 4.3.3 cross-tenant regression test passed. Tenant-scoped read/write paths do not cross restaurants.');
+  console.log('Build 4.7.0 cross-tenant regression test passed. Tenant-scoped read/write paths do not cross restaurants.');
 }
 
 main().finally(async () => {

@@ -12,7 +12,7 @@ export default function HelpPage() {
       <h2 className="text-xl font-black">Common questions</h2>
       <div className="mt-4 space-y-4 text-sm text-slate-700">
         <p><strong>Why did my forecast change?</strong> Check Learning, Data Quality, prior EOD credit, and any approved recommendation/audit events.</p>
-        <p><strong>What if Wi-Fi drops during EOD?</strong> Build 4.6.0 saves an unsaved EOD draft in this device browser until the log saves successfully.</p>
+        <p><strong>What if Wi-Fi drops during EOD?</strong> Build 4.7.0 saves an unsaved EOD draft in this device browser until the log saves successfully.</p>
         <p><strong>Can kitchen crew edit settings?</strong> No. Kitchen crew can use Today, Cook Plan read-only, and EOD logging.</p>
         <p><strong>Where do I print the pit sheet?</strong> Open Cook Plan, then Print View.</p>
         <p><strong>How do I prove backups work?</strong> Admin/System tracks backup exports and restore-drill SystemChecks.</p>

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Build 4.3.3 Postgres tenant isolation integration test.
+  Build 4.7.0 Postgres tenant isolation integration test.
 
   Usage:
     DATABASE_URL="postgresql://..." pnpm exec tsx scripts/tenant-integration-test.mjs
@@ -49,8 +49,8 @@ async function main() {
 
   const serviceDate = new Date('2035-01-15T00:00:00.000Z');
   await Promise.all([
-    prisma.cookPlan.create({ data: { restaurantId: restaurantA.id, serviceDate, scenarioId: scenarioA.id, forecastSales: 1000, forecastBbqSales: 400, items: { create: [{ proteinId: proteinA.id, cookedLbNeeded: 10, safetyFactorPct: 8, rawLbNeeded: 20, recommendedCookUnits: 2, forecastCookUnits: 2 }] } } }),
-    prisma.cookPlan.create({ data: { restaurantId: restaurantB.id, serviceDate, scenarioId: scenarioB.id, forecastSales: 2000, forecastBbqSales: 800, items: { create: [{ proteinId: proteinB.id, cookedLbNeeded: 20, safetyFactorPct: 8, rawLbNeeded: 40, recommendedCookUnits: 4, forecastCookUnits: 4 }] } } })
+    prisma.cookPlan.create({ data: { restaurantId: restaurantA.id, serviceDate, scenarioId: scenarioA.id, forecastSales: 1000, forecastBbqSales: 400, items: { create: [{ restaurantId: restaurantA.id, proteinId: proteinA.id, cookedLbNeeded: 10, safetyFactorPct: 8, rawLbNeeded: 20, recommendedCookUnits: 2, forecastCookUnits: 2 }] } } }),
+    prisma.cookPlan.create({ data: { restaurantId: restaurantB.id, serviceDate, scenarioId: scenarioB.id, forecastSales: 2000, forecastBbqSales: 800, items: { create: [{ restaurantId: restaurantB.id, proteinId: proteinB.id, cookedLbNeeded: 20, safetyFactorPct: 8, rawLbNeeded: 40, recommendedCookUnits: 4, forecastCookUnits: 4 }] } } })
   ]);
 
   const [plansA, plansB, proteinsA, proteinsB] = await Promise.all([
@@ -68,7 +68,7 @@ async function main() {
   const crossMembership = await prisma.restaurantMembership.findFirst({ where: { userId: userA.id, restaurantId: restaurantB.id, active: true } });
   assert(!crossMembership, 'User A unexpectedly has Tenant B membership.');
 
-  console.log('Build 4.3.3 tenant integration test passed.');
+  console.log('Build 4.7.0 tenant integration test passed.');
 }
 
 main().finally(async () => {

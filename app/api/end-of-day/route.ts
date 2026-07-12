@@ -120,8 +120,8 @@ export async function POST(request: Request) {
             }
           });
 
-      await tx.endOfDayProteinLog.deleteMany({ where: { endOfDayLogId: parent.id } });
-      await tx.endOfDayProteinLog.createMany({ data: proteinRows.map((row) => ({ endOfDayLogId: parent.id, ...row })) });
+      await tx.endOfDayProteinLog.deleteMany({ where: { restaurantId, endOfDayLogId: parent.id } });
+      await tx.endOfDayProteinLog.createMany({ data: proteinRows.map((row) => ({ restaurantId, endOfDayLogId: parent.id, ...row })) });
 
       return tx.endOfDayLog.findUniqueOrThrow({
         where: { id: parent.id },

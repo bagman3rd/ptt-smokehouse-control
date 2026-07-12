@@ -1,4 +1,4 @@
-name: Build 4.5 CI
+name: Build 4.7 CI
 
 on:
   push:
@@ -75,6 +75,12 @@ jobs:
 
       - name: Cross-tenant regression test
         run: pnpm run test:cross-tenant
+
+      - name: Tenant guard coverage test
+        run: pnpm run test:tenant-guard
+
+      - name: Orphan record check
+        run: pnpm run test:orphan-records
 
       - name: Prisma schema drift check
         run: pnpm run ci:schema-drift
