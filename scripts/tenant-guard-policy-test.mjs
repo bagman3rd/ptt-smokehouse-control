@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-const source=readFileSync('lib/tenantGuard.ts','utf8');
+const source = readFileSync('lib/tenantGuard.ts', 'utf8');
 assert.ok(source.includes('export function tenantGuardEnabled()'));
-assert.ok(source.includes("TENANT_GUARD_ENABLED === '1'"));
-assert.ok(source.includes("NODE_ENV === 'development' || process.env.NODE_ENV === 'test'"));
-assert.ok(source.includes('Production isolation is enforced by database constraints'));
-console.log('Build 7.7.2 tenant-guard policy is explicit and internally consistent.');
+assert.ok(source.includes("DISABLE_TENANT_GUARD === '1'"));
+assert.ok(source.includes("TENANT_GUARD_ENABLED !== '0'"));
+assert.ok(source.includes('enabled by default in every runtime, including production'));
+assert.ok(!source.includes("NODE_ENV === 'development' || process.env.NODE_ENV === 'test'"));
+const render = readFileSync('render.yaml', 'utf8');
+assert.ok(render.includes('TENANT_GUARD_ENABLED'));
+assert.ok(render.includes('value: "1"'));
+console.log('Build 7.8.0 tenant guard is production-on by default and Render explicitly confirms it.');

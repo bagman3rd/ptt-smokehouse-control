@@ -1,4 +1,4 @@
-# Build 7.7.2 local verification
+# Build 7.8.0 local verification
 
 Verified locally:
 

@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "7.7.2",
+  "version": "7.8.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -67,7 +67,9 @@
     "test:eod-guard-contract": "tsx scripts/eod-tenant-guard-contract-test.ts",
     "test:release-gate": "node scripts/release-gate-check.mjs",
     "test:staging-four-flow": "node scripts/staging-four-flow-smoke.mjs",
-    "ci:node-engine-check": "node scripts/node-engine-lockfile-check.mjs"
+    "ci:node-engine-check": "node scripts/node-engine-lockfile-check.mjs",
+    "test:e2e:eod-lifecycle": "playwright test e2e/eod-lifecycle.spec.ts --project=chromium",
+    "test:report-rollup": "node scripts/report-rollup-contract-test.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

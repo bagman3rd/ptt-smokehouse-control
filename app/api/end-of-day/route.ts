@@ -114,8 +114,14 @@ export async function POST(request: Request) {
     const log = await prisma.$transaction(async (tx) => {
       const parent = existing
         ? await tx.endOfDayLog.update({
-            where: { id: existing.id },
+            where: {
+              restaurantId_serviceDate: {
+                restaurantId,
+                serviceDate
+              }
+            },
             data: {
+              restaurantId,
               totalSales,
               bbqSales,
               status,
