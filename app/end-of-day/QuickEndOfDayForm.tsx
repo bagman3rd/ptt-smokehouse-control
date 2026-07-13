@@ -87,7 +87,7 @@ export function QuickEndOfDayForm({ proteins, initialLog }: { proteins: Protein[
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok || !result.ok) throw new Error(result.message || 'Unable to submit EOD report.');
-      setMessage('EOD report submitted. Only sealed pork, chicken, and ribs will reduce the next load.');
+      setMessage('EOD report submitted. Saved sealed units and opened-meat pounds will credit the next applicable cook plan.');
       window.location.assign(result.redirectUrl || `/end-of-day?serviceDate=${encodeURIComponent(serviceDate)}&savedAt=${Date.now()}`);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Unable to submit EOD report.');
@@ -99,8 +99,8 @@ export function QuickEndOfDayForm({ proteins, initialLog }: { proteins: Protein[
   return <section className="card mb-6 border-2 border-emerald-300 bg-emerald-50 p-5" data-testid="quick-eod-section">
     <div className="mb-4">
       <h2 className="text-2xl font-black text-emerald-950">Quick EOD Report — 8 Numbers</h2>
-      <p className="mt-1 text-sm font-bold text-emerald-900">Enter sealed unopened units and pounds remaining from opened meat. Open meat and sealed brisket are recorded for repurposing but are not carried into tomorrow’s smoker load.</p>
-      <p className="mt-1 text-sm text-emerald-900"><strong>Tomorrow’s load credit:</strong> sealed pork, sealed chicken, and sealed ribs only.</p>
+      <p className="mt-1 text-sm font-bold text-emerald-900">Enter sealed unopened units and pounds remaining from opened meat. These saved leftovers are applied to the next applicable cook plan.</p>
+      <p className="mt-1 text-sm text-emerald-900"><strong>Next cook-plan credit:</strong> sealed units and opened-meat pounds for brisket, pork, chicken, and ribs.</p>
     </div>
     <form onSubmit={submit} className="space-y-4">
       <div className="max-w-xs">

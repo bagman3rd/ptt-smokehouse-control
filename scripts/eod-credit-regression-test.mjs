@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+const eod=fs.readFileSync('app/api/end-of-day/route.ts','utf8');
+const cook=fs.readFileSync('app/api/cook-plan/route.ts','utf8');
+const schema=fs.readFileSync('prisma/schema.prisma','utf8');
+if (!eod.includes("coreProteinCode === 'OTHER' ?") || !eod.includes(': sealedUnopenedUnits')) throw new Error('Quick EOD does not credit all four core proteins.');
+if (!eod.includes('isQuickMode ? openedMeatLb')) throw new Error('Opened meat pounds are not carried into cook-plan credit.');
+if (!cook.includes('Math.max(prior.usableLeftoverUnits') || !cook.includes('prior.sealedUnopenedUnits')) throw new Error('Cook plan does not read existing sealed counts.');
+if (!cook.includes('Math.max(prior.usableLeftoverLb') || !cook.includes('prior.openedMeatLb')) throw new Error('Cook plan does not read existing opened pounds.');
+if (!schema.includes('sealedUnopenedUnits Int @default(0)')) throw new Error('Sealed units are not integer-backed.');
+console.log('Build 7.2.1 EOD credit regression checks passed.');

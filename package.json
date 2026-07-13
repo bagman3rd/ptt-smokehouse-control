@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "7.2.0",
+  "version": "7.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,7 +16,7 @@
     "test:tenant": "tsx scripts/tenant-integration-test.mjs",
     "test:forecast": "tsx scripts/forecast-engine-test.ts",
     "test:backup": "pnpm run test:restore-drill",
-    "build:eval": "node scripts/build-7-2-0-evaluation.mjs",
+    "build:eval": "node scripts/build-7-2-1-evaluation.mjs",
     "migration:baseline:check": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
     "render-build:migrate-ready": "prisma generate && prisma migrate deploy && next build",
     "backup:weekly": "node scripts/run-weekly-backup-cron.mjs",
@@ -48,7 +48,8 @@
     "production:smoke": "node scripts/production-smoke-check.mjs",
     "test:load-smoke": "playwright test e2e/load-smoke.spec.ts --project=chromium",
     "test:restore-drill": "node scripts/database-restore-drill.mjs",
-    "test:comprehensive": "node scripts/build-7-2-0-evaluation.mjs"
+    "test:comprehensive": "node scripts/build-7-2-1-evaluation.mjs",
+    "test:eod-credit": "node scripts/eod-credit-regression-test.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",
