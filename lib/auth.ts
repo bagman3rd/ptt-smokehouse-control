@@ -92,7 +92,8 @@ export async function requireRole(allowed: AppRole[]) {
   const user = await requireAuth();
   if (!hasRole(user, allowed)) redirect('/dashboard?denied=1');
   const role = normalizeRole(String(user.role));
-  if (privilegedTwoFactorRequired() && (role === 'ADMIN' || role === 'OWNER') && !user.twoFactorEnabled) redirect('/account/security?required=1');
+  const privilegedOnlyRoute = allowed.every((allowedRole) => allowedRole === 'ADMIN' || allowedRole === 'OWNER');
+  if (privilegedOnlyRoute && privilegedTwoFactorRequired() && (role === 'ADMIN' || role === 'OWNER') && !user.twoFactorEnabled) redirect('/account/security?required=1');
   return user;
 }
 export async function requireApiAuth() {
@@ -104,7 +105,8 @@ export async function requireApiRole(allowed: AppRole[]) {
   if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401 });
   if (!hasRole(user, allowed)) return NextResponse.json({ ok: false, message: 'Forbidden for this access level.' }, { status: 403 });
   const role = normalizeRole(String(user.role));
-  if (privilegedTwoFactorRequired() && (role === 'ADMIN' || role === 'OWNER') && !user.twoFactorEnabled) return NextResponse.json({ ok: false, message: 'Two-factor authentication is required for privileged access.' }, { status: 403 });
+  const privilegedOnlyRoute = allowed.every((allowedRole) => allowedRole === 'ADMIN' || allowedRole === 'OWNER');
+  if (privilegedOnlyRoute && privilegedTwoFactorRequired() && (role === 'ADMIN' || role === 'OWNER') && !user.twoFactorEnabled) return NextResponse.json({ ok: false, message: 'Two-factor authentication is required for privileged access.' }, { status: 403 });
   return null;
 }
 
@@ -117,7 +119,8 @@ export async function requireApiUserRole(allowed: AppRole[]) {
   if (!allowed.includes(role)) {
     return { ok: false as const, response: NextResponse.json({ ok: false, message: 'Forbidden for this access level.' }, { status: 403, headers: { 'X-Auth-Denial': 'role' } }) };
   }
-  if (privilegedTwoFactorRequired() && (role === 'ADMIN' || role === 'OWNER') && !user.twoFactorEnabled) {
+  const privilegedOnlyRoute = allowed.every((allowedRole) => allowedRole === 'ADMIN' || allowedRole === 'OWNER');
+  if (privilegedOnlyRoute && privilegedTwoFactorRequired() && (role === 'ADMIN' || role === 'OWNER') && !user.twoFactorEnabled) {
     return { ok: false as const, response: NextResponse.json({ ok: false, message: 'Two-factor authentication is required for privileged access.' }, { status: 403, headers: { 'X-Auth-Denial': 'two-factor' } }) };
   }
   return { ok: true as const, user };

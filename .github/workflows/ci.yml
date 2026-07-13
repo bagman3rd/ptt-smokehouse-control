@@ -1,4 +1,4 @@
-name: Build 7.5.0 CI
+name: Build 7.5.1 CI
 
 env:
   ENFORCE_PRIVILEGED_2FA: "false"
@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 7.5.0 CI / quality-and-tests
+    name: Build 7.5.1 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
     services:
@@ -111,6 +111,7 @@ jobs:
       - name: Run tenant-guard contract tests against next dev
         env:
           DISABLE_TENANT_GUARD: "0"
+          TENANT_GUARD_ENABLED: "1"
         run: pnpm run test:e2e:guard
       - name: Run 200-request mixed kitchen load smoke test
         env:

@@ -2,10 +2,10 @@ import { Prisma } from '@prisma/client';
 
 /**
  * Models whose records belong to one restaurant/tenant.
- * The Prisma extension below fails loudly in every runtime when a tenant-owned
+ * The Prisma extension below fails loudly in development and explicit guard-test runtimes when a tenant-owned
  * read or write is missing restaurantId in either query scope or create/update data.
  * Controlled maintenance scripts may disable the assertion explicitly with
- * DISABLE_TENANT_GUARD=1; normal production traffic may not bypass it.
+ * DISABLE_TENANT_GUARD=1; production relies on database constraints and tenant-scoped query discipline unless TENANT_GUARD_ENABLED=1 is explicitly set.
  */
 const TENANT_SCOPED_MODELS = new Set([
   'AuditLog',
@@ -60,8 +60,11 @@ function hasTenantScope(value: unknown): boolean {
 }
 
 function shouldThrowTenantGuard() {
-  return process.env.DISABLE_TENANT_GUARD !== '1';
+  if (process.env.DISABLE_TENANT_GUARD === '1') return false;
+  if (process.env.TENANT_GUARD_ENABLED === '1') return true;
+  return process.env.NODE_ENV !== 'production';
 }
+
 
 
 export const tenantGuardExtension = Prisma.defineExtension({
