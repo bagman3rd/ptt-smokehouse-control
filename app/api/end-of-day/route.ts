@@ -143,11 +143,38 @@ export async function POST(request: Request) {
             }
           });
 
+      // Avoid Prisma/PostgreSQL binary-parameter failures observed with compound-key upsert.
+      // First insert any missing tenant-scoped rows, then update every row through an
+      // explicitly tenant-scoped updateMany. The database unique index prevents duplicates,
+      // skipDuplicates makes concurrent first saves safe, and the tenant guard can verify
+      // restaurantId in both the create data and update where clause.
+      await tx.endOfDayProteinLog.createMany({
+        data: proteinRows.map((row) => ({
+          restaurantId,
+          endOfDayLogId: parent.id,
+          ...row
+        })),
+        skipDuplicates: true
+      });
+
       for (const row of proteinRows) {
-        await tx.endOfDayProteinLog.upsert({
-          where: { restaurantId_endOfDayLogId_proteinId: { restaurantId, endOfDayLogId: parent.id, proteinId: row.proteinId } },
-          update: { ...row, restaurantId },
-          create: { restaurantId, endOfDayLogId: parent.id, ...row }
+        await tx.endOfDayProteinLog.updateMany({
+          where: {
+            restaurantId,
+            endOfDayLogId: parent.id,
+            proteinId: row.proteinId
+          },
+          data: {
+            cookedUnits: row.cookedUnits,
+            soldCookedLb: row.soldCookedLb,
+            usableLeftoverLb: row.usableLeftoverLb,
+            usableLeftoverUnits: row.usableLeftoverUnits,
+            wasteLb: row.wasteLb,
+            eightySixed: row.eightySixed,
+            wasteReason: row.wasteReason,
+            sealedUnopenedUnits: row.sealedUnopenedUnits,
+            openedMeatLb: row.openedMeatLb
+          }
         });
       }
 

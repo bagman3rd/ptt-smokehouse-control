@@ -10,4 +10,4 @@ assert.ok(!source.includes("NODE_ENV === 'development' || process.env.NODE_ENV =
 const render = readFileSync('render.yaml', 'utf8');
 assert.ok(render.includes('TENANT_GUARD_ENABLED'));
 assert.ok(render.includes('value: "1"'));
-console.log('Build 7.8.2 tenant guard is production-on by default and Render explicitly confirms it.');
+console.log('Build 7.8.3 tenant guard is production-on by default and Render explicitly confirms it.');
