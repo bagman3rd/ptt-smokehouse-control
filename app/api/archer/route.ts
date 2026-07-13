@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 const Body = z.object({
   message: z.string().trim().min(2).max(500),
   path: z.string().max(300).optional(),
-  history: z.array(z.object({ role: z.enum(['user','assistant']), content: z.string().max(1200) })).max(8).optional()
+  history: z.array(z.object({ role: z.enum(['user','assistant']), content: z.string().trim().min(1).max(2400) })).max(8).optional()
 });
 
 function extractText(data: any): string {
@@ -26,7 +26,12 @@ export async function POST(request: Request) {
   if (limited) return limited;
   let parsed;
   try { parsed = Body.parse(await request.json()); }
-  catch { return NextResponse.json({ ok: false, message: 'Enter a question between 2 and 500 characters.' }, { status: 400 }); }
+  catch (error) {
+    const message = error instanceof z.ZodError && error.issues.some((issue) => issue.path[0] === 'history')
+      ? 'Archer could not continue the conversation history. Please ask the question again.'
+      : 'Enter a question between 2 and 500 characters.';
+    return NextResponse.json({ ok: false, message }, { status: 400 });
+  }
 
   if (isArcherIdentityQuestion(parsed.message)) {
     return NextResponse.json({ ok: true, answer: getArcherIdentityAnswer(), mode: 'approved-identity' });

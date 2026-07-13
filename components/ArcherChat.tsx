@@ -39,6 +39,7 @@ export function ArcherChat() {
   const [speechSupported, setSpeechSupported] = useState(false);
   const recognitionRef = useRef<RecognitionLike | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
+  const requestSequenceRef = useRef(0);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -111,15 +112,21 @@ export function ArcherChat() {
     if (busy || question.length < 2) return;
     recognitionRef.current?.stop();
     const next = [...messages, { role: 'user' as const, content: question }];
+    const requestId = ++requestSequenceRef.current;
+    const history = messages.slice(-6).map((message) => ({ ...message, content: message.content.slice(0, 2400) }));
     setMessages(next); setInput(''); setBusy(true); setError('');
     try {
-      const response = await fetch('/api/archer', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: question, path, history: messages.slice(-6) }) });
+      const response = await fetch('/api/archer', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: question, path, history }) });
       const data = await response.json();
       if (!response.ok || !data.ok) throw new Error(data.message || 'Archer is unavailable.');
+      if (requestId !== requestSequenceRef.current) return;
       setMessages([...next, { role: 'assistant', content: data.answer }]);
       speak(data.answer);
-    } catch (e) { setError(e instanceof Error ? e.message : 'Archer is unavailable.'); }
-    finally { setBusy(false); }
+    } catch (e) {
+      if (requestId === requestSequenceRef.current) setError(e instanceof Error ? e.message : 'Archer is unavailable.');
+    } finally {
+      if (requestId === requestSequenceRef.current) setBusy(false);
+    }
   }
 
   return <div className="archer-root no-print" data-testid="archer-chat">

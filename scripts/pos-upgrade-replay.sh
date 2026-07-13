@@ -22,4 +22,4 @@ CREATE TABLE "PosConnection" (
 SQL
 psql "$UPGRADE_URL" -v ON_ERROR_STOP=1 -f prisma/migrations/20260712001500_build_800_pos_integration_foundation/migration.sql
 psql "$UPGRADE_URL" -v ON_ERROR_STOP=1 -Atc "SELECT 1 FROM information_schema.columns WHERE table_name='PosConnection' AND column_name='externalLocationId'" | grep -qx 1
-printf 'Build 9.5.0 prior-schema POS upgrade replay passed.\n'
+printf 'Build 9.7.0 prior-schema POS upgrade replay passed.\n'

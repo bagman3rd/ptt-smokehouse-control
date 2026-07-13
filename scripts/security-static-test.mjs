@@ -6,4 +6,4 @@ const dbHealth=readFileSync('app/api/health/db/route.ts','utf8');
 assert.ok(render.includes('TOTP_ENCRYPTION_KEY'));
 assert.ok(!dbHealth.includes('error.message'), 'public DB health must not expose raw errors');
 assert.ok(readFileSync('lib/auth.ts','utf8').includes("sameSite: 'lax'"));
-console.log('Build 9.5.0 static security checks passed.');
+console.log('Build 9.7.0 static security checks passed.');
