@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "7.7.1",
+  "version": "7.7.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -94,7 +94,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "engines": {
-    "node": "22.x"
+    "node": ">=20.19.0 <23"
   },
   "packageManager": "pnpm@9.15.0"
 }

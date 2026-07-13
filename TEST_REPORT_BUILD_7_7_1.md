@@ -1,4 +1,4 @@
-# Build 7.7.1 local verification
+# Build 7.7.2 local verification
 
 ## Confirmed root cause
 
@@ -6,7 +6,7 @@ The GitHub Actions job failed at `Install exact locked dependencies`. The projec
 
 ## Repairs verified locally
 
-- package version: 7.7.1
+- package version: 7.7.2
 - Node engine: 22.x
 - `.node-version`: 22.16.0
 - `.nvmrc`: 22.16.0

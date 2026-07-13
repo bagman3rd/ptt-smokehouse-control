@@ -4,10 +4,10 @@ import assert from 'node:assert/strict';
 
 const [major, minor] = process.versions.node.split('.').map(Number);
 const supported = major >= 24 || (major === 22 && minor >= 13) || (major === 20 && minor >= 19);
-assert.ok(supported, `Node ${process.versions.node} is too old for the committed lockfile. Use Node 22.13+ (project pin: 22.16.0).`);
+assert.ok(supported, `Node ${process.versions.node} is outside the supported runtime range. Use Node 20.19+ or Node 22.x (project pin: 22.16.0).`);
 
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-assert.equal(pkg.engines?.node, '22.x', 'package.json must require Node 22.x.');
+assert.equal(pkg.engines?.node, '>=20.19.0 <23', 'package.json must support Node 20.19+ and Node 22.x.');
 assert.equal(fs.readFileSync('.node-version', 'utf8').trim(), '22.16.0');
 assert.equal(fs.readFileSync('.nvmrc', 'utf8').trim(), '22.16.0');
 const workflow = fs.readFileSync('.github/workflows/ci.yml', 'utf8');
