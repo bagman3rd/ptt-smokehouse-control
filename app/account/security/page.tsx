@@ -25,7 +25,7 @@ export default async function AccountSecurityPage() {
   return <Shell>
     <div className="mb-6">
       <h1 className="text-3xl font-black tracking-tight">Account Security</h1>
-      <p className="mt-2 text-slate-600">Manage your password, active devices, and authenticator-code protection. Two-factor authentication is mandatory for Admin and Owner accounts.</p>
+      <p className="mt-2 text-slate-600">Manage your password, active devices, and authenticator-code protection. Two-factor authentication is strongly recommended for Admin and Owner accounts. It can be enforced after enrollment is complete.</p>
     </div>
 
     <div className="grid gap-6 lg:grid-cols-2">

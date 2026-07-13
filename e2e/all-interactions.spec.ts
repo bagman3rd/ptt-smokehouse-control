@@ -14,43 +14,43 @@ const menus = [
   {
     slug: 'operations',
     links: [
-      ['dashboard', /\/dashboard/],
-      ['cook-plan', /\/cook-plan/],
-      ['end-of-day', /\/end-of-day/],
-      ['smoker-schedule', /\/admin\/smokers\/schedule/]
+      ['dashboard', /\/dashboard/, 'Dashboard'],
+      ['cook-plan', /\/cook-plan/, 'Cook Plan'],
+      ['end-of-day', /\/end-of-day/, 'End of Day'],
+      ['smoker-schedule', /\/admin\/smokers\/schedule/, 'Smoker Load Schedule']
     ]
   },
   {
     slug: 'insights',
     links: [
-      ['reports', /\/reports/],
-      ['learning', /\/learning$/],
-      ['forecast-proof', /\/learning\/proof/],
-      ['tour', /\/tour/]
+      ['reports', /\/reports/, 'Reports'],
+      ['learning', /\/learning$/, 'Learning Engine'],
+      ['forecast-proof', /\/learning\/proof/, 'Forecast Proof'],
+      ['tour', /\/tour/, 'Product Tour']
     ]
   },
   {
     slug: 'admin',
     links: [
-      ['settings', /\/settings/],
-      ['users', /\/admin\/users/],
-      ['restaurants', /\/admin\/restaurants$/],
-      ['pos-import', /\/admin\/restaurants\/pos/],
-      ['smokers', /\/admin\/smokers$/],
-      ['smoker-catalog', /\/admin\/smokers\/catalog/],
-      ['audit-log', /\/admin\/audit/],
-      ['system', /\/admin\/system/],
-      ['billing', /\/billing/],
-      ['data', /\/admin\/data/]
+      ['settings', /\/settings/, 'Settings'],
+      ['users', /\/admin\/users/, 'User Access'],
+      ['restaurants', /\/admin\/restaurants$/, 'Restaurants'],
+      ['pos-import', /\/admin\/restaurants\/pos/, 'POS / Sales Import'],
+      ['smokers', /\/admin\/smokers$/, 'Smoker Capacity'],
+      ['smoker-catalog', /\/admin\/smokers\/catalog/, 'Commercial Smoker Catalog'],
+      ['audit-log', /\/admin\/audit/, 'Audit Log'],
+      ['system', /\/admin\/system/, 'System Health'],
+      ['billing', /\/billing/, 'Billing'],
+      ['data', /\/admin\/data/, 'Data Export & Cancellation']
     ]
   },
   {
     slug: 'help',
     links: [
-      ['support', /\/support/],
-      ['help-docs', /\/help/],
-      ['demo', /\/demo/],
-      ['account', /\/account\/security/]
+      ['support', /\/support/, 'Support'],
+      ['help-docs', /\/help/, 'Help'],
+      ['demo', /\/demo/, 'Demo'],
+      ['account', /\/account\/security/, 'Account Security']
     ]
   }
 ] as const;
@@ -66,11 +66,15 @@ test('every top navigation dropdown opens, closes, and every menu link navigates
     await button.click();
     await expect(button).toHaveAttribute('aria-expanded', 'false');
 
-    for (const [linkSlug, expectedUrl] of menu.links) {
+    for (const [linkSlug, expectedUrl, expectedHeading] of menu.links) {
       await button.click();
       await expect(page.getByTestId(`nav-menu-panel-${menu.slug}`)).toBeVisible();
       await page.getByTestId(`nav-link-${linkSlug}`).click();
       await expect(page).toHaveURL(expectedUrl);
+      if (menu.slug === 'admin') {
+        await expect(page).not.toHaveURL(/\/account\/security/);
+      }
+      await expect(page.getByRole('heading', { name: expectedHeading, exact: true })).toBeVisible();
       await expect(page.getByText(/Application error: a server-side exception/)).toHaveCount(0);
       await page.goto('/today');
     }

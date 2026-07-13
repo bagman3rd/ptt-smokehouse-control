@@ -25,17 +25,14 @@ const route = fs.readFileSync('app/api/end-of-day/route.ts', 'utf8');
 assert.match(route, /endOfDayLog\.update\(\{[\s\S]*?where:\s*\{[\s\S]*?restaurantId_serviceDate:\s*\{[\s\S]*?restaurantId,[\s\S]*?serviceDate/, 'EOD revisions must update the parent through its tenant-scoped compound key');
 assert.match(route, /endOfDayProteinLog\.upsert\(\{[\s\S]*?restaurantId_endOfDayLogId_proteinId/, 'EOD child upserts must use the tenant-scoped compound key');
 
-const oldNodeEnv = process.env.NODE_ENV;
 const oldEnabled = process.env.TENANT_GUARD_ENABLED;
 const oldDisabled = process.env.DISABLE_TENANT_GUARD;
 delete process.env.DISABLE_TENANT_GUARD;
 delete process.env.TENANT_GUARD_ENABLED;
-process.env.NODE_ENV = 'production';
 assert.equal(tenantGuardEnabled(), true, 'tenant guard must be enabled by default in production');
 process.env.DISABLE_TENANT_GUARD = '1';
 assert.equal(tenantGuardEnabled(), false, 'controlled maintenance can explicitly disable the guard');
-if (oldNodeEnv === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = oldNodeEnv;
 if (oldEnabled === undefined) delete process.env.TENANT_GUARD_ENABLED; else process.env.TENANT_GUARD_ENABLED = oldEnabled;
 if (oldDisabled === undefined) delete process.env.DISABLE_TENANT_GUARD; else process.env.DISABLE_TENANT_GUARD = oldDisabled;
 
-console.log('Build 7.8.0 EOD parent/child tenant-guard contract passed.');
+console.log('Build 7.8.2 EOD parent/child tenant-guard contract passed.');

@@ -37,7 +37,7 @@ A release cannot be approved when any visible interactive control is untested. T
 
 ## Current automated coverage
 
-Build 7.8.0 adds:
+Build 7.8.2 adds:
 
 - Click testing for Operations, Insights, Admin, and Help dropdown triggers.
 - Open, close, outside-click, and Escape behavior.

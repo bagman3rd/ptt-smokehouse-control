@@ -1,7 +1,7 @@
-name: Build 7.8.0 audited release
+name: Build 7.8.2 audited release
 on:
   workflow_run:
-    workflows: ["Build 7.8.0 CI"]
+    workflows: ["Build 7.8.2 CI"]
     types: [completed]
 permissions:
   contents: read
@@ -31,10 +31,10 @@ jobs:
       - name: Create auditable release evidence
         run: node scripts/release-gate-check.mjs
       - name: Package exact successful commit
-        run: zip -qr ptt-smokehouse-control-build-7.8.0-ci-${GITHUB_RUN_ID}.zip . -x '.git/*'
+        run: zip -qr ptt-smokehouse-control-build-7.8.2-ci-${GITHUB_RUN_ID}.zip . -x '.git/*'
       - uses: actions/upload-artifact@v4
         with:
-          name: ptt-smokehouse-control-build-7.8.0-ci-${{ github.event.workflow_run.id }}
-          path: ptt-smokehouse-control-build-7.8.0-ci-${{ github.event.workflow_run.id }}.zip
+          name: ptt-smokehouse-control-build-7.8.2-ci-${{ github.event.workflow_run.id }}
+          path: ptt-smokehouse-control-build-7.8.2-ci-${{ github.event.workflow_run.id }}.zip
           if-no-files-found: error
           retention-days: 30

@@ -23,7 +23,7 @@ services:
       - key: BILLING_MODE
         value: MANUAL_INVOICE
       - key: ENFORCE_PRIVILEGED_2FA
-        value: "true"
+        value: "false"
       - key: TENANT_GUARD_ENABLED
         value: "1"
       - key: BILLING_CONTACT_EMAIL

@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "7.8.0",
+  "version": "7.8.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -24,7 +24,7 @@
     "test:permissions": "node scripts/permission-boundary-test.mjs",
     "ci:schema-drift": "prisma migrate diff --from-url \"$DATABASE_URL\" --to-schema-datamodel prisma/schema.prisma --exit-code",
     "ci:migration-status": "prisma migrate status",
-    "ci:test": "pnpm run preflight && pnpm run test:comprehensive && pnpm run test:page-parity && pnpm run test:navigation && pnpm run test:tenant-guard-policy && pnpm run test:accessibility && pnpm run test:api-roles && pnpm run test:security-static && pnpm run typecheck && pnpm run lint && pnpm run test:migration-integrity && pnpm run migration:smoke && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:quick-eod-carryover && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:auth-coverage && pnpm run test:failure-modes && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:tenant-guard && pnpm run test:orphan-records && pnpm run staging:verify && pnpm run test:pos-import && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run test:unsupported-prisma && pnpm run ci:migration-status && pnpm run ci:schema-drift",
+    "ci:test": "pnpm run preflight && pnpm run test:comprehensive && pnpm run test:page-parity && pnpm run test:navigation && pnpm run test:admin-navigation && pnpm run test:tenant-guard-policy && pnpm run test:accessibility && pnpm run test:api-roles && pnpm run test:security-static && pnpm run typecheck && pnpm run lint && pnpm run test:migration-integrity && pnpm run migration:smoke && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:quick-eod-carryover && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:auth-coverage && pnpm run test:failure-modes && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:tenant-guard && pnpm run test:orphan-records && pnpm run staging:verify && pnpm run test:pos-import && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run test:unsupported-prisma && pnpm run ci:migration-status && pnpm run ci:schema-drift",
     "test:dead-code": "node scripts/dead-code-check.mjs",
     "test:cross-tenant": "tsx scripts/cross-tenant-regression-test.mjs",
     "test:account-security": "node scripts/account-security-test.mjs",
@@ -69,7 +69,8 @@
     "test:staging-four-flow": "node scripts/staging-four-flow-smoke.mjs",
     "ci:node-engine-check": "node scripts/node-engine-lockfile-check.mjs",
     "test:e2e:eod-lifecycle": "playwright test e2e/eod-lifecycle.spec.ts --project=chromium",
-    "test:report-rollup": "node scripts/report-rollup-contract-test.mjs"
+    "test:report-rollup": "node scripts/report-rollup-contract-test.mjs",
+    "test:admin-navigation": "node scripts/admin-navigation-policy-test.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

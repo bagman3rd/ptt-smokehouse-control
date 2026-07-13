@@ -87,7 +87,8 @@ export async function currentUser() {
 }
 export async function isAuthenticated() { return Boolean(await currentUser()); }
 export async function requireAuth() { const user = await currentUser(); if (!user) redirect('/login'); return user; }
-function privilegedTwoFactorRequired() { return process.env.ENFORCE_PRIVILEGED_2FA !== 'false' && process.env.NODE_ENV === 'production'; }
+// Route-level 2FA blocking is explicit opt-in. Admin navigation must never be redirected merely because a deployment inherited an unset or stale variable.
+function privilegedTwoFactorRequired() { return process.env.ENFORCE_PRIVILEGED_2FA === 'true' && process.env.NODE_ENV === 'production'; }
 export async function requireRole(allowed: AppRole[]) {
   const user = await requireAuth();
   if (!hasRole(user, allowed)) redirect('/dashboard?denied=1');

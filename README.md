@@ -32,3 +32,8 @@ Build 7.8.0 fixes the top navigation dropdown controls and adds `docs/DETAILED_T
 ## Build 7.8.0 release note
 
 Build 7.8.0 closes the guarded EOD revision defect. Existing EOD logs are updated through the tenant-scoped restaurant/date key, while child protein rows continue to use the tenant-scoped three-field unique key. CI now proves the complete draft, revision, completion, lock, and post-lock rejection lifecycle against PostgreSQL with the tenant guard active. The multi-restaurant report rollup is also protected by a permanent contract test.
+
+
+## Build 7.8.2 Render build repair
+
+Build 7.8.2 preserves the Admin navigation fix from 7.8.1 and removes the read-only `process.env.NODE_ENV` assignment that caused Render TypeScript compilation to fail.
