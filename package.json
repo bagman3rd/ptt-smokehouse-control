@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "7.6.0",
+  "version": "7.6.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -62,7 +62,8 @@
     "test:e2e:concurrency": "playwright test e2e/concurrency-and-tenant-mutation.spec.ts --project=chromium",
     "test:load-realistic": "playwright test e2e/realistic-load.spec.ts --project=chromium",
     "security:audit": "pnpm audit --audit-level=high",
-    "test:unsupported-prisma": "node scripts/unsupported-prisma-delegate-test.mjs"
+    "test:unsupported-prisma": "node scripts/unsupported-prisma-delegate-test.mjs",
+    "test:e2e:interactions": "playwright test e2e/all-interactions.spec.ts"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

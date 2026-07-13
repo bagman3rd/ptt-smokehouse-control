@@ -1,4 +1,4 @@
-name: Build 7.6.0 production monitor
+name: Build 7.6.1 production monitor
 
 on:
   schedule:
@@ -20,7 +20,7 @@ jobs:
       - name: Verify deployed build and authenticated transaction
         env:
           PRODUCTION_URL: ${{ vars.PRODUCTION_URL || 'https://ptt-smokehouse-control.onrender.com' }}
-          EXPECTED_BUILD: '7.6.0'
+          EXPECTED_BUILD: '7.6.1'
           PRODUCTION_SMOKE_USERNAME: ${{ secrets.PRODUCTION_SMOKE_USERNAME }}
           PRODUCTION_SMOKE_PASSWORD: ${{ secrets.PRODUCTION_SMOKE_PASSWORD }}
         run: node scripts/production-smoke-check.mjs
