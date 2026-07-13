@@ -1,6 +1,6 @@
-# Build 8.0.0 — Live POS Integration Foundation
+# Build 8.0.1 — Live POS Integration Foundation
 
-Build 8.0.0 begins the 8.x POS program. It provides the shared multi-provider data model and a real Square OAuth/API connector. Toast and the remaining providers are represented in the provider registry but remain disabled until partner credentials and sandboxes are available.
+Build 8.0.1 begins the 8.x POS program. It provides the shared multi-provider data model and a real Square OAuth/API connector. Toast and the remaining providers are represented in the provider registry but remain disabled until partner credentials and sandboxes are available.
 
 ## Included
 - Tenant-scoped encrypted POS connections
@@ -28,4 +28,4 @@ Build 8.0.0 begins the 8.x POS program. It provides the shared multi-provider da
 - Existing `TOTP_ENCRYPTION_KEY` encrypts POS tokens as well.
 
 ## Honest boundary
-Only Square is enabled in 8.0.0. A provider is not called integrated until OAuth/credentials, catalog, order ingestion, reconciliation and sandbox tests are complete.
+Only Square is enabled in 8.0.1. A provider is not called integrated until OAuth/credentials, catalog, order ingestion, reconciliation and sandbox tests are complete.

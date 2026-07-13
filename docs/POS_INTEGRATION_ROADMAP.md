@@ -1,6 +1,6 @@
 # Live POS Integration Roadmap
 
-## Build 8.0.0 — Foundation + Square
+## Build 8.0.1 — Foundation + Square
 Shared connector contracts, tenant-scoped encrypted credentials, raw records, normalized sales, item mapping, manual/daily sync, webhook intake, sync history, and the first enabled Square connector.
 
 ## Build 8.1.0 — Square production hardening

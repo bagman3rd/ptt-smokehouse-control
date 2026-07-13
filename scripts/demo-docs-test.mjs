@@ -15,8 +15,8 @@ const required = [
 for (const [path, needle] of required) {
   const text = fs.readFileSync(path, 'utf8');
   if (!text.includes(needle)) {
-    console.error(`Build 8.0.0 demo/docs test failed: ${path} missing ${needle}`);
+    console.error(`Build 8.0.1 demo/docs test failed: ${path} missing ${needle}`);
     process.exit(1);
   }
 }
-console.log('Build 8.0.0 demo/docs checks completed.');
+console.log('Build 8.0.1 demo/docs checks completed.');
