@@ -1,7 +1,7 @@
-name: Build 7.7.0 audited release
+name: Build 7.7.1 audited release
 on:
   workflow_run:
-    workflows: ["Build 7.7.0 CI"]
+    workflows: ["Build 7.7.1 CI"]
     types: [completed]
 permissions:
   contents: read
@@ -23,7 +23,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_sha }}
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.18.1
+          node-version: 22.16.0
       - name: Require staging configuration
         run: test -n "$STAGING_URL" && test -n "$STAGING_SMOKE_USERNAME" && test -n "$STAGING_SMOKE_PASSWORD"
       - name: Run authenticated staging four-flow smoke
@@ -31,10 +31,10 @@ jobs:
       - name: Create auditable release evidence
         run: node scripts/release-gate-check.mjs
       - name: Package exact successful commit
-        run: zip -qr ptt-smokehouse-control-build-7.7.0-ci-${GITHUB_RUN_ID}.zip . -x '.git/*'
+        run: zip -qr ptt-smokehouse-control-build-7.7.1-ci-${GITHUB_RUN_ID}.zip . -x '.git/*'
       - uses: actions/upload-artifact@v4
         with:
-          name: ptt-smokehouse-control-build-7.7.0-ci-${{ github.event.workflow_run.id }}
-          path: ptt-smokehouse-control-build-7.7.0-ci-${{ github.event.workflow_run.id }}.zip
+          name: ptt-smokehouse-control-build-7.7.1-ci-${{ github.event.workflow_run.id }}
+          path: ptt-smokehouse-control-build-7.7.1-ci-${{ github.event.workflow_run.id }}.zip
           if-no-files-found: error
           retention-days: 30

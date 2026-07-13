@@ -1,4 +1,4 @@
-name: Build 7.7.0 CI
+name: Build 7.7.1 CI
 
 env:
   ENFORCE_PRIVILEGED_2FA: "false"
@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 7.7.0 CI / quality-and-tests
+    name: Build 7.7.1 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
     services:
@@ -55,8 +55,10 @@ jobs:
           run_install: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.18.1
+          node-version: 22.16.0
           cache: pnpm
+      - name: Verify Node compatibility with locked dependencies
+        run: pnpm run ci:node-engine-check
       - name: Install exact locked dependencies
         run: pnpm install --frozen-lockfile
       - name: Generate Prisma client
