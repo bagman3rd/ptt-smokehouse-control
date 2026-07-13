@@ -4,7 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 
 const read = (p) => readFileSync(p, 'utf8');
 const pkg = JSON.parse(read('package.json'));
-assert.equal(pkg.version, '7.2.2');
+assert.equal(pkg.version, '7.2.3');
 assert.ok(existsSync('pnpm-lock.yaml'), 'deterministic lockfile missing');
 
 const quick = read('app/end-of-day/QuickEndOfDayForm.tsx');
@@ -16,7 +16,7 @@ assert.ok(quick.includes('quick-eod-opened-${code}'), 'missing opened field test
 
 const api = read('app/api/end-of-day/route.ts');
 assert.ok(api.includes('!Number.isInteger(sealedUnopenedUnits)'), 'API must reject decimal sealed quantities');
-assert.ok(api.includes("proteinCode === 'PORK' || proteinCode === 'CHICKEN' || proteinCode === 'RIBS'"), 'carryover rule missing');
+assert.ok(api.includes('PROTEIN_CODE.PORK') && api.includes('PROTEIN_CODE.CHICKEN') && api.includes('PROTEIN_CODE.RIBS'), 'carryover rule missing');
 assert.ok(api.includes("? sealedUnopenedUnits : 0"), 'quick EOD next-load credit rule missing');
 
 const auth = read('lib/auth.ts');
@@ -35,4 +35,4 @@ assert.ok(ci.includes('pnpm run prisma:migrate') || ci.includes('prisma migrate 
 const health = read('app/api/health/db/route.ts');
 assert.ok(!health.includes('error.message'), 'database health endpoint must not expose raw errors');
 
-console.log('Build 7.2.2 comprehensive static acceptance checks passed.');
+console.log('Build 7.2.3 comprehensive static acceptance checks passed.');

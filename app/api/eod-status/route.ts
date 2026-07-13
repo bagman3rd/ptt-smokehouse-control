@@ -51,7 +51,7 @@ export async function GET(request: Request) {
     const missingProteins = proteins.filter((protein) => !proteinIdsWithRows.has(protein.id)).map((protein) => protein.name);
     const totalLeftoverUnits = log.proteinLogs.reduce((sum, row) => sum + row.usableLeftoverUnits, 0);
     const totalWasteLb = log.proteinLogs.reduce((sum, row) => sum + row.wasteLb, 0);
-    const hasAllZeros = log.proteinLogs.every((row) => row.cookedUnits === 0 && row.usableLeftoverUnits === 0 && row.usableLeftoverLb === 0 && row.wasteLb === 0 && row.soldCookedLb === 0);
+    const hasAllZeros = log.proteinLogs.every((row) => row.cookedUnits === 0 && row.usableLeftoverUnits === 0 && row.usableLeftoverLb === 0 && row.wasteLb === 0 && row.soldCookedLb === 0 && row.sealedUnopenedUnits === 0 && row.openedMeatLb === 0);
     const logStatus = log.status || 'DRAFT';
     const status = missingProteins.length > 0 || logStatus === 'DRAFT' || hasAllZeros ? 'INCOMPLETE' : 'FOUND';
     const message = missingProteins.length > 0

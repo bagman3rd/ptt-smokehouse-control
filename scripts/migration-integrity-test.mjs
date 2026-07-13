@@ -60,5 +60,5 @@ for (const name of migrations.filter((migrationName) => migrationName !== '20260
   assert(!hasConstraint || guardedConstraint, `${name} has an unguarded ADD CONSTRAINT statement that can fail on a fresh full-baseline rebuild`);
 }
 
-console.log('Build 7.2.2 migration integrity checks completed.');
+console.log('Build 7.2.3 migration integrity checks completed.');
 

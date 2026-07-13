@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * Build 7.2.2 compatibility shim.
+ * Build 7.2.3 compatibility shim.
  *
  * Older repository revisions included live POS-connection actions backed by a
  * Prisma `PosConnection` model. That model is not part of the current schema;

@@ -1,4 +1,4 @@
-# Migration History Policy — Build 7.2.2
+# Migration History Policy — Build 7.2.3
 
 Migration folder names are immutable after release. Three timestamp prefixes were historically reused. Those original folder names are preserved alongside the later renumbered aliases so databases that recorded either naming convention can migrate without editing `_prisma_migrations`.
 

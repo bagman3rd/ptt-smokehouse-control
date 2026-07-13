@@ -6,6 +6,7 @@ import { ensureDefaultData } from '@/lib/bootstrap';
 import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
 import { enforceRateLimit } from '@/lib/rateLimit';
 import { eodSchema } from '@/lib/validators';
+import { inferCoreProteinCode, PROTEIN_CODE } from '@/lib/domainCodes';
 
 const allowedStatuses = new Set(['DRAFT', 'COMPLETE', 'REVIEWED', 'LOCKED']);
 
@@ -67,7 +68,7 @@ export async function POST(request: Request) {
     const proteinRows = proteins.map((protein) => {
       const entry = byProteinId.get(protein.id) || { proteinId: protein.id, cookedUnits: 0, soldCookedLb: 0, usableLeftoverLb: 0, usableLeftoverUnits: 0, wasteLb: 0, eightySixed: false, wasteReason: '' };
       const previous = existingByProteinId.get(protein.id);
-      const proteinCode = String(protein.code || '').toUpperCase();
+      const proteinCode = inferCoreProteinCode(protein.code, protein.name);
       const sealedUnopenedUnits = numberValue(entry.sealedUnopenedUnits, previous?.sealedUnopenedUnits ?? 0, 0, 500);
       const openedMeatLb = numberValue(entry.openedMeatLb, previous?.openedMeatLb ?? 0, 0, 5000);
       if (isQuickMode && !Number.isInteger(sealedUnopenedUnits)) {
@@ -77,7 +78,7 @@ export async function POST(request: Request) {
       const soldCookedLb = isQuickMode ? (previous?.soldCookedLb ?? 0) : numberValue(entry.soldCookedLb);
       const wasteLb = isQuickMode ? (previous?.wasteLb ?? 0) : numberValue(entry.wasteLb);
       const usableLeftoverUnits = isQuickMode
-        ? (proteinCode === 'PORK' || proteinCode === 'CHICKEN' || proteinCode === 'RIBS' ? sealedUnopenedUnits : 0)
+        ? (proteinCode === PROTEIN_CODE.PORK || proteinCode === PROTEIN_CODE.CHICKEN || proteinCode === PROTEIN_CODE.RIBS ? sealedUnopenedUnits : 0)
         : numberValue(entry.usableLeftoverUnits);
       const usableLeftoverLb = isQuickMode ? 0 : numberValue(entry.usableLeftoverLb);
 

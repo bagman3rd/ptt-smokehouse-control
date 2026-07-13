@@ -39,6 +39,21 @@ export const PROTEIN_CODE = {
 } as const;
 export type ProteinCode = typeof PROTEIN_CODE[keyof typeof PROTEIN_CODE];
 
+export function inferCoreProteinCode(code: string | null | undefined, name: string | null | undefined): ProteinCode {
+  const explicit = String(code || '').trim().toUpperCase();
+  if (explicit === PROTEIN_CODE.BRISKET || explicit === PROTEIN_CODE.PORK || explicit === PROTEIN_CODE.RIBS || explicit === PROTEIN_CODE.CHICKEN) {
+    return explicit as ProteinCode;
+  }
+
+  const lower = String(name || '').trim().toLowerCase();
+  if (lower.includes('brisket')) return PROTEIN_CODE.BRISKET;
+  if (lower.includes('pork') || lower.includes('butt')) return PROTEIN_CODE.PORK;
+  if (lower.includes('chicken') || lower.includes('breast')) return PROTEIN_CODE.CHICKEN;
+  if (lower.includes('rib')) return PROTEIN_CODE.RIBS;
+  return PROTEIN_CODE.OTHER;
+}
+
+
 export function labelForCookWindow(value: string | null | undefined): string {
   return COOK_WINDOW_LABELS[value as CookWindowCode] || value || COOK_WINDOW_LABELS.FLEXIBLE;
 }

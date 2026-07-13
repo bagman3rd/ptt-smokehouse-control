@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { inferCoreProteinCode } from '@/lib/domainCodes';
 
 type CoreCode = 'BRISKET' | 'PORK' | 'CHICKEN' | 'RIBS';
 type Protein = { id: string; name: string; code?: string | null };
@@ -32,18 +33,10 @@ export function QuickEndOfDayForm({ proteins, initialLog }: { proteins: Protein[
   const proteinByCode = useMemo(() => {
     const mapped = new Map<CoreCode, Protein>();
     for (const protein of proteins) {
-      const explicitCode = String(protein.code || '').toUpperCase();
-      if (explicitCode === 'BRISKET' || explicitCode === 'PORK' || explicitCode === 'CHICKEN' || explicitCode === 'RIBS') {
-        mapped.set(explicitCode, protein);
-        continue;
+      const inferredCode = inferCoreProteinCode(protein.code, protein.name);
+      if (inferredCode === 'BRISKET' || inferredCode === 'PORK' || inferredCode === 'CHICKEN' || inferredCode === 'RIBS') {
+        mapped.set(inferredCode, protein);
       }
-
-      // Backward compatibility for restaurants created before protein codes were required.
-      const name = protein.name.trim().toLowerCase();
-      if (name.includes('brisket')) mapped.set('BRISKET', protein);
-      else if (name.includes('pork') || name.includes('butt')) mapped.set('PORK', protein);
-      else if (name.includes('chicken') || name.includes('breast')) mapped.set('CHICKEN', protein);
-      else if (name.includes('rib')) mapped.set('RIBS', protein);
     }
     return mapped;
   }, [proteins]);

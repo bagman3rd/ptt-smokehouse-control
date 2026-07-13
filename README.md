@@ -1,8 +1,13 @@
-# PTT Smokehouse Control — Build 7.2.2
+# PTT Smokehouse Control — Build 7.2.3
+
+
+## Build 7.2.3 Quick EOD carryover repair
+
+The Quick EOD server now recognizes both stable protein codes and legacy name-only protein records. A July 13 report therefore supplies the July 14 cook plan with sealed-unit credit for pork, chicken, and ribs. Sealed brisket and opened-meat pounds remain recorded but receive no load credit.
 
 Smokehouse Control is a multi-restaurant production-planning and kitchen closeout application for smoked-meat operations.
 
-## Build 7.2.2 reliability work
+## Build 7.2.3 reliability work
 
 - Admin and Owner administrative access requires TOTP in production.
 - Logins create durable device sessions with expiry, last-seen time, IP, user agent, and individual revocation.

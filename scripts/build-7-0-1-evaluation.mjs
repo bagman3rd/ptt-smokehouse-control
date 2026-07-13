@@ -2,7 +2,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import assert from 'node:assert/strict';
 const read = (p) => readFileSync(p, 'utf8');
 const pkg = JSON.parse(read('package.json'));
-assert.equal(pkg.version, '7.2.2');
+assert.equal(pkg.version, '7.2.3');
 assert.ok(existsSync('pnpm-lock.yaml'));
 assert.ok(existsSync('prisma/migrations/20260712001100_build_680_security_sessions/migration.sql'));
 const schema = read('prisma/schema.prisma');
@@ -30,4 +30,4 @@ for (const name of [
 ]) assert.ok(existsSync(`prisma/migrations/${name}/migration.sql`), `missing migration compatibility folder ${name}`);
 assert.ok(readdirSync('scripts').length < 30);
 assert.ok(existsSync('app/end-of-day/QuickEndOfDayForm.tsx'));
-console.log('Build 7.2.2 evaluation passed.');
+console.log('Build 7.2.3 evaluation passed.');
