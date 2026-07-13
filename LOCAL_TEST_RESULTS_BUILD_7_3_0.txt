@@ -1,0 +1,11 @@
+Build 7.3.0 local validation
+PASS preflight
+PASS comprehensive static acceptance
+PASS exact Quick EOD carryover regression source checks
+PASS Build 7.3.0 evaluation
+PASS migration integrity
+PASS unsupported Prisma delegate scan
+PASS 31-route parity against Build 7.0.1
+PASS GitHub Actions YAML parsing
+PASS Render YAML parsing
+NOT RUN locally: Prisma generation, TypeScript compilation, Next.js production build, PostgreSQL-backed Playwright execution, restore drill, and load testing because the npm registry was unavailable.

@@ -41,7 +41,7 @@ test('complete kitchen workflow uses reviewed smokers and stable selectors', asy
   await add.getByLabel(/Rib racks per cook/).fill('0');
   await add.getByLabel(/Chicken breasts per cook/).fill('0');
   await add.getByTestId('add-smoker-submit').click();
-  await expect(page.getByDisplayValue('CI Overnight Smoker')).toBeVisible();
+  await expect(page.locator('input[value="CI Overnight Smoker"]')).toBeVisible();
 
   await page.goto('/admin/smokers');
   const add2 = page.getByTestId('add-smoker-form');
@@ -53,16 +53,16 @@ test('complete kitchen workflow uses reviewed smokers and stable selectors', asy
   await add2.getByLabel(/Rib racks per cook/).fill('500');
   await add2.getByLabel(/Chicken breasts per cook/).fill('500');
   await add2.getByTestId('add-smoker-submit').click();
-  await expect(page.getByDisplayValue('CI Same-Day Smoker')).toBeVisible();
+  await expect(page.locator('input[value="CI Same-Day Smoker"]')).toBeVisible();
 
   const reviewedCount = await prisma.smoker.count({ where: { restaurantId: restaurant.id, configurationReviewedAt: { not: null } } });
   expect(reviewedCount).toBe(2);
 
   const tomorrow = new Date(Date.now() + 86400000 * 2).toISOString().slice(0, 10);
   await page.goto('/cook-plan');
-  await page.getByLabel('Load Date').fill(tomorrow);
-  await page.getByLabel('Event Multiplier').fill('1');
-  await page.getByRole('button', { name: 'Generate Plan' }).click();
+  await page.getByTestId('cook-plan-load-date').fill(tomorrow);
+  await page.getByTestId('cook-plan-event-multiplier').fill('1');
+  await page.getByTestId('generate-cook-plan').click();
   const brisketCard = page.getByTestId('protein-card-BRISKET').first();
   await expect(brisketCard).toBeVisible();
   const approved = brisketCard.locator('input[name^="approved-"]');
@@ -85,12 +85,76 @@ test('complete kitchen workflow uses reviewed smokers and stable selectors', asy
 
   const nextDay = new Date(new Date(`${tomorrow}T12:00:00Z`).getTime() + 86400000).toISOString().slice(0, 10);
   await page.goto('/cook-plan');
-  await page.getByLabel('Load Date').fill(nextDay);
-  await page.getByRole('button', { name: 'Generate Plan' }).click();
+  await page.getByTestId('cook-plan-load-date').fill(nextDay);
+  await page.getByTestId('generate-cook-plan').click();
   await expect(page.getByTestId('prior-eod-credit-BRISKET').first()).toBeVisible();
 
   const approvedPlan = await prisma.cookPlan.findFirst({ where: { restaurantId: restaurant.id, status: 'APPROVED' }, include: { items: { include: { protein: true } } } });
   expect(approvedPlan?.items.some(i => i.protein.code === 'BRISKET' && i.overrideReason === 'CI manager verification override')).toBeTruthy();
+});
+
+
+test('Quick EOD on July 13 applies exact credits to the July 14 cook plan', async ({ page }) => {
+  const restaurant = await prisma.restaurant.findFirstOrThrow({ where: { slug: 'pigeon-toed-tavern' } });
+  const eodDate = new Date('2031-07-13T00:00:00.000Z');
+  const loadDate = new Date('2031-07-14T00:00:00.000Z');
+
+  await prisma.cookPlanItem.deleteMany({ where: { restaurantId: restaurant.id, cookPlan: { serviceDate: loadDate } } });
+  await prisma.cookPlan.deleteMany({ where: { restaurantId: restaurant.id, serviceDate: loadDate } });
+  const oldLog = await prisma.endOfDayLog.findUnique({
+    where: { restaurantId_serviceDate: { restaurantId: restaurant.id, serviceDate: eodDate } }
+  });
+  if (oldLog) {
+    await prisma.endOfDayProteinLog.deleteMany({ where: { endOfDayLogId: oldLog.id } });
+    await prisma.endOfDayLog.delete({ where: { id: oldLog.id } });
+  }
+
+  await login(page);
+  await page.goto('/end-of-day?serviceDate=2031-07-13');
+  await page.getByTestId('quick-eod-date').fill('2031-07-13');
+  await page.getByTestId('quick-eod-sealed-BRISKET').fill('4');
+  await page.getByTestId('quick-eod-opened-BRISKET').fill('1.5');
+  await page.getByTestId('quick-eod-sealed-PORK').fill('3');
+  await page.getByTestId('quick-eod-opened-PORK').fill('2.5');
+  await page.getByTestId('quick-eod-sealed-CHICKEN').fill('5');
+  await page.getByTestId('quick-eod-opened-CHICKEN').fill('3.5');
+  await page.getByTestId('quick-eod-sealed-RIBS').fill('2');
+  await page.getByTestId('quick-eod-opened-RIBS').fill('4.5');
+  await page.getByTestId('submit-quick-eod').click();
+  await expect(page).toHaveURL(/serviceDate=2031-07-13/);
+
+  const saved = await prisma.endOfDayLog.findUniqueOrThrow({
+    where: { restaurantId_serviceDate: { restaurantId: restaurant.id, serviceDate: eodDate } },
+    include: { proteinLogs: { include: { protein: true } } }
+  });
+  const savedByCode = new Map(saved.proteinLogs.map((row) => [row.protein.code, row]));
+  expect(savedByCode.get('BRISKET')?.sealedUnopenedUnits).toBe(4);
+  expect(savedByCode.get('BRISKET')?.openedMeatLb).toBe(1.5);
+  expect(savedByCode.get('BRISKET')?.usableLeftoverUnits).toBe(0);
+  expect(savedByCode.get('PORK')?.usableLeftoverUnits).toBe(3);
+  expect(savedByCode.get('CHICKEN')?.usableLeftoverUnits).toBe(5);
+  expect(savedByCode.get('RIBS')?.usableLeftoverUnits).toBe(2);
+
+  await page.goto('/cook-plan');
+  await page.getByTestId('cook-plan-load-date').fill('2031-07-14');
+  await page.getByTestId('cook-plan-event-multiplier').fill('1');
+  await page.getByTestId('generate-cook-plan').click();
+  await expect(page).toHaveURL(/planId=/);
+
+  await expect(page.getByTestId('prior-eod-credit-value-BRISKET')).toHaveText('0');
+  await expect(page.getByTestId('prior-eod-credit-value-PORK')).toHaveText('3');
+  await expect(page.getByTestId('prior-eod-credit-value-CHICKEN')).toHaveText('5');
+  await expect(page.getByTestId('prior-eod-credit-value-RIBS')).toHaveText('2');
+
+  const plan = await prisma.cookPlan.findUniqueOrThrow({
+    where: { restaurantId_serviceDate: { restaurantId: restaurant.id, serviceDate: loadDate } },
+    include: { items: { include: { protein: true } } }
+  });
+  const planByCode = new Map(plan.items.map((item) => [item.protein.code, item]));
+  expect(planByCode.get('BRISKET')?.usableLeftoverUnits).toBe(0);
+  expect(planByCode.get('PORK')?.usableLeftoverUnits).toBe(3);
+  expect(planByCode.get('CHICKEN')?.usableLeftoverUnits).toBe(5);
+  expect(planByCode.get('RIBS')?.usableLeftoverUnits).toBe(2);
 });
 
 test('authenticated user cannot read another restaurant cook plan', async ({ browser }) => {

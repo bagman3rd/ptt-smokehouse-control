@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "7.2.3",
+  "version": "7.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,7 +16,7 @@
     "test:tenant": "tsx scripts/tenant-integration-test.mjs",
     "test:forecast": "tsx scripts/forecast-engine-test.ts",
     "test:backup": "pnpm run test:restore-drill",
-    "build:eval": "node scripts/build-7-0-1-evaluation.mjs",
+    "build:eval": "node scripts/build-7-3-0-evaluation.mjs",
     "migration:baseline:check": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
     "render-build:migrate-ready": "prisma generate && prisma migrate deploy && next build",
     "backup:weekly": "node scripts/run-weekly-backup-cron.mjs",
@@ -24,7 +24,7 @@
     "test:permissions": "node scripts/permission-boundary-test.mjs",
     "ci:schema-drift": "prisma migrate diff --from-url \"$DATABASE_URL\" --to-schema-datamodel prisma/schema.prisma --exit-code",
     "ci:migration-status": "prisma migrate status",
-    "ci:test": "pnpm run preflight && pnpm run test:comprehensive && pnpm run typecheck && pnpm run lint && pnpm run test:migration-integrity && pnpm run migration:smoke && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:auth-coverage && pnpm run test:failure-modes && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:tenant-guard && pnpm run test:orphan-records && pnpm run staging:verify && pnpm run test:pos-import && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run ci:migration-status && pnpm run ci:schema-drift",
+    "ci:test": "pnpm run preflight && pnpm run test:comprehensive && pnpm run typecheck && pnpm run lint && pnpm run test:migration-integrity && pnpm run migration:smoke && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:quick-eod-carryover && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:auth-coverage && pnpm run test:failure-modes && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:tenant-guard && pnpm run test:orphan-records && pnpm run staging:verify && pnpm run test:pos-import && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run ci:migration-status && pnpm run ci:schema-drift",
     "test:dead-code": "node scripts/dead-code-check.mjs",
     "test:cross-tenant": "tsx scripts/cross-tenant-regression-test.mjs",
     "test:account-security": "node scripts/account-security-test.mjs",
@@ -48,7 +48,7 @@
     "production:smoke": "node scripts/production-smoke-check.mjs",
     "test:load-smoke": "playwright test e2e/load-smoke.spec.ts --project=chromium",
     "test:restore-drill": "node scripts/database-restore-drill.mjs",
-    "test:comprehensive": "node scripts/build-7-0-1-comprehensive-test.mjs",
+    "test:comprehensive": "node scripts/build-7-3-0-comprehensive-test.mjs",
     "test:route-parity": "node scripts/build-7-2-2-route-parity-test.mjs",
     "test:quick-eod-carryover": "node scripts/quick-eod-carryover-test.mjs"
   },

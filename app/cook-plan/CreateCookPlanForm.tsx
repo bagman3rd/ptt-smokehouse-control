@@ -125,7 +125,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
     <form onSubmit={handleSubmit} className="mt-4 grid gap-4 md:grid-cols-5">
       <div>
         <label className="label">Load Date</label>
-        <input className="field mt-1" value={serviceDate} onChange={(event) => setServiceDate(event.target.value)} type="date" required />
+        <input data-testid="cook-plan-load-date" className="field mt-1" value={serviceDate} onChange={(event) => setServiceDate(event.target.value)} type="date" required />
         <div className="mt-1 text-xs font-bold text-slate-500">{formatDateWithDow(serviceDate)}</div>
       </div>
       <div>
@@ -145,7 +145,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
       </div>
       <div>
         <label className="label">Event Multiplier</label>
-        <input className="field mt-1" value={eventMultiplier} onChange={(event) => setEventMultiplier(event.target.value)} type="number" step="0.05" min="0.5" required />
+        <input data-testid="cook-plan-event-multiplier" className="field mt-1" value={eventMultiplier} onChange={(event) => setEventMultiplier(event.target.value)} type="number" step="0.05" min="0.5" required />
       </div>
       <div className="md:col-span-5">
         <div className={eodStatus?.status === 'FOUND' ? 'rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900' : 'rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950'}>
@@ -168,7 +168,7 @@ export function CreateCookPlanForm({ scenarios }: { scenarios: Scenario[] }) {
       </div>
 
       <div className="flex flex-col justify-end gap-2 md:col-span-5">
-        <button className="btn-primary w-full md:w-auto" type="submit" disabled={isGenerating || scenarios.length === 0}>
+        <button data-testid="generate-cook-plan" className="btn-primary w-full md:w-auto" type="submit" disabled={isGenerating || scenarios.length === 0}>
           {isGenerating ? 'Generating...' : 'Generate Plan'}
         </button>
         {message ? <div className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800">{message}</div> : null}
