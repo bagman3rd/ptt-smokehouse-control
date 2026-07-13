@@ -34,6 +34,10 @@ Build 7.8.0 fixes the top navigation dropdown controls and adds `docs/DETAILED_T
 Build 7.8.0 closes the guarded EOD revision defect. Existing EOD logs are updated through the tenant-scoped restaurant/date key, while child protein rows continue to use the tenant-scoped three-field unique key. CI now proves the complete draft, revision, completion, lock, and post-lock rejection lifecycle against PostgreSQL with the tenant guard active. The multi-restaurant report rollup is also protected by a permanent contract test.
 
 
-## Build 7.8.3 PostgreSQL Quick EOD write repair
+## Build 7.8.4 PostgreSQL Quick EOD write repair
 
-Build 7.8.3 preserves the Build 7.8.2 compile repair and Admin navigation fix, and replaces the compound-key Prisma upsert that produced PostgreSQL error 22P03 during Quick EOD saves.
+Build 7.8.4 preserves the Build 7.8.2 compile repair and Admin navigation fix, and replaces the compound-key Prisma upsert that produced PostgreSQL error 22P03 during Quick EOD saves.
+
+## Build 7.8.4 production EOD column repair
+
+Build 7.8.4 adds migration `20260712001400_build_784_eod_numeric_type_repair`, which explicitly converts all `EndOfDayProteinLog` quantity columns to PostgreSQL `DOUBLE PRECISION`. This resolves PostgreSQL error `22P03` caused by historical production column-type drift. Existing values are retained through explicit casts. The tenant-scoped two-step Quick EOD write remains unchanged.

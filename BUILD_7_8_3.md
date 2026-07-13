@@ -1,8 +1,8 @@
-# Build 7.8.3
+# Build 7.8.4
 
 ## PostgreSQL Quick EOD write correction
 
-Build 7.8.3 replaces the `EndOfDayProteinLog.upsert` compound-key write that produced PostgreSQL error `22P03: incorrect binary data format in bind parameter` on the deployed database.
+Build 7.8.4 replaces the `EndOfDayProteinLog.upsert` compound-key write that produced PostgreSQL error `22P03: incorrect binary data format in bind parameter` on the deployed database.
 
 The write path now:
 

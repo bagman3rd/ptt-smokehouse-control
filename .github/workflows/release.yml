@@ -1,7 +1,7 @@
-name: Build 7.8.2 audited release
+name: Build 7.8.4 audited release
 on:
   workflow_run:
-    workflows: ["Build 7.8.2 CI"]
+    workflows: ["Build 7.8.4 CI"]
     types: [completed]
 permissions:
   contents: read
