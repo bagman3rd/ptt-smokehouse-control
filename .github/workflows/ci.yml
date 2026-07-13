@@ -1,4 +1,4 @@
-name: Build 7.3.0 CI
+name: Build 7.4.0 CI
 
 env:
   ENFORCE_PRIVILEGED_2FA: "false"
@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 7.3.0 CI / quality-and-tests
+    name: Build 7.4.0 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
     services:

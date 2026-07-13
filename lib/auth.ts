@@ -37,9 +37,12 @@ export function authConfigErrors() {
 export function isAuthConfigured() { return authConfigErrors().length === 0; }
 
 export function normalizeRole(role: string | null | undefined): AppRole {
-  if (role === 'OWNER') return 'OWNER';
-  if (role === 'KITCHEN_MANAGER' || role === 'KM') return 'KITCHEN_MANAGER';
-  if (role === 'KITCHEN_CREW' || role === 'PITMASTER' || role === 'VIEWER') return 'KITCHEN_CREW';
+  const normalized = String(role || '').trim().toUpperCase().replace(/[\s-]+/g, '_');
+  if (normalized === 'ADMIN' || normalized === 'ADMINISTRATOR' || normalized === 'SUPER_ADMIN') return 'ADMIN';
+  if (normalized === 'OWNER') return 'OWNER';
+  if (normalized === 'KITCHEN_MANAGER' || normalized === 'KM' || normalized === 'MANAGER') return 'KITCHEN_MANAGER';
+  if (normalized === 'KITCHEN_CREW' || normalized === 'PITMASTER' || normalized === 'VIEWER' || normalized === 'CREW') return 'KITCHEN_CREW';
+  // Unknown roles fail closed without downgrading valid legacy/case-variant roles.
   return 'KITCHEN_CREW';
 }
 export function hasRole(user: Pick<User, 'role'> | null | undefined, allowed: AppRole[]) {

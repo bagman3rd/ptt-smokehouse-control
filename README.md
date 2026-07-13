@@ -1,44 +1,29 @@
-# PTT Smokehouse Control — Build 7.3.0
+# PTT Smokehouse Control — Build 7.4.0
 
-## Build 7.3.0 patch consolidation
+Build 7.4.0 is a full recovery release rebuilt from the last clean application baseline, Build 7.0.1.
 
-- Corrects invalid Playwright locators.
-- Adds a real database-backed July 13 Quick EOD → July 14 Cook Plan browser test.
-- Verifies exact displayed and stored carryover values: brisket 0, pork 3, chicken 5, ribs 2.
-- Preserves all 31 routes and all prior security and data-integrity fixes.
+## Recovery objective
 
+This release restores the complete application while retaining only verified later fixes. It does not use Build 7.2.3 or Build 7.3.0 as the source baseline.
 
-## Build 7.3.0 Quick EOD carryover repair
+## Preserved application areas
 
-The Quick EOD server now recognizes both stable protein codes and legacy name-only protein records. A July 13 report therefore supplies the July 14 cook plan with sealed-unit credit for pork, chicken, and ribs. Sealed brisket and opened-meat pounds remain recorded but receive no load credit.
+All 31 clean-baseline page routes are present, including Today, Dashboard, Cook Plan, End of Day, Sales, Reports, Learning, Forecast Proof, Settings, Billing, Support, Help, Account Security, restaurant setup, POS import, smokers, smoker catalog, smoker schedule, users, audit, data, system health, demo, tour, signup, login, privacy, and terms.
 
-Smokehouse Control is a multi-restaurant production-planning and kitchen closeout application for smoked-meat operations.
+## Key corrections retained
 
-## Build 7.3.0 reliability work
-
-- Admin and Owner administrative access requires TOTP in production.
-- Logins create durable device sessions with expiry, last-seen time, IP, user agent, and individual revocation.
-- Account Security lists active sessions and allows users to revoke unfamiliar devices.
-- Reports includes a 30-day multi-restaurant sales and waste rollup when the account has access to more than one restaurant.
-- CI executes a 200-request mixed authenticated kitchen load smoke test.
-- System Health records external security review, physical kitchen-device testing, live pilot forecast evidence, and operator-led restore rehearsal.
-- Existing migration compatibility aliases remain preserved. Do not rename migration folders already shipped.
-
-## Build 6.6 kitchen closeout retained
-
-The top of the EOD page provides the eight-number fast closeout: sealed units and opened pounds for brisket, pork, chicken, and ribs. Only sealed pork, chicken, and ribs reduce the next load.
+- Quick EOD sealed pork, chicken, and ribs reduce the next day's cook load.
+- Sealed brisket and all opened-meat pounds remain recorded but do not reduce the next load.
+- Legacy protein names are recognized by the EOD API.
+- Invalid and negative EOD values are rejected.
+- Concurrent EOD protein rows use transactional upserts and database uniqueness protection.
+- Unknown roles fail closed, while valid legacy and case-variant roles such as `admin`, `Administrator`, `manager`, and `crew` are normalized correctly.
+- Password and 2FA changes rotate sessions correctly.
+- Unsupported legacy Prisma delegates are blocked by regression testing.
+- The July 13 to July 14 carryover path has exact database-backed browser assertions in CI.
 
 ## Deployment
 
-```bash
-pnpm install --frozen-lockfile
-pnpm run prisma:generate
-pnpm run prisma:migrate
-pnpm run migration:smoke
-pnpm run build
-pnpm run start
-```
+Replace the repository contents with the complete extracted Build 7.4.0 tree. Do not merge only selected files into an older working directory. Commit deletions as well as additions so stale files cannot remain in GitHub.
 
-Required production variables include `DATABASE_URL`, `APP_SESSION_TOKEN` of at least 24 characters, `ADMIN_PASSWORD`, and `ENFORCE_PRIVILEGED_2FA=true`.
-
-See `BUILD_7_0_0.md`, `TEST_REPORT_BUILD_7_0_0.md`, `docs/MIGRATION_HISTORY.md`, and `docs/BUILD_700_READINESS.md`.
+Normal deployment uses frozen pnpm dependencies, Prisma migrations, migration smoke checks, a production Next.js build, desktop/mobile Playwright tests, restore testing, and load smoke testing.

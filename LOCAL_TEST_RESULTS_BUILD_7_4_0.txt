@@ -1,0 +1,8 @@
+Build 7.4.0 preflight checks completed.
+Build 7.4.0 comprehensive static acceptance checks passed.
+Build 7.4.0 full page, navigation, and legacy-role parity checks passed.
+Build 7.4.0 Quick EOD carryover and exact E2E regression checks passed.
+Unsupported Prisma delegate check passed (28 schema models).
+Build 7.4.0 migration integrity checks completed.
+Build 7.4.0 evaluation passed.
+Dependency installation not executed locally: npm registry DNS access unavailable. GitHub Actions is configured to perform frozen install, Prisma generation, typecheck, build, database replay, Playwright, restore, and load tests.
