@@ -74,6 +74,27 @@ async function main() {
   }
 
 
+  // CI role accounts used by the mandatory desktop/mobile interaction matrix.
+  if (process.env.CI === 'true') {
+    const roleAccounts = [
+      { id: 'ci-owner-user', username: 'owner', email: 'owner@smokehouse.local', name: 'CI Owner', role: Role.OWNER, password: process.env.CI_OWNER_PASSWORD || 'ci-owner-password' },
+      { id: 'ci-manager-user', username: 'manager', email: 'manager@smokehouse.local', name: 'CI Kitchen Manager', role: Role.KITCHEN_MANAGER, password: process.env.CI_MANAGER_PASSWORD || 'ci-manager-password' },
+      { id: 'ci-crew-user', username: 'crew', email: 'crew@smokehouse.local', name: 'CI Kitchen Crew', role: Role.KITCHEN_CREW, password: process.env.CI_CREW_PASSWORD || 'ci-crew-password' }
+    ];
+    for (const account of roleAccounts) {
+      const user = await prisma.user.upsert({
+        where: { id: account.id },
+        update: { username: account.username, email: account.email, name: account.name, passwordHash: hashPassword(account.password), role: account.role, active: true, restaurantId },
+        create: { id: account.id, username: account.username, email: account.email, name: account.name, passwordHash: hashPassword(account.password), role: account.role, active: true, createdBy: 'CI Seed', restaurantId }
+      });
+      await prisma.restaurantMembership.upsert({
+        where: { restaurantId_userId: { restaurantId, userId: user.id } },
+        update: { role: account.role, active: true },
+        create: { restaurantId, userId: user.id, role: account.role, active: true }
+      });
+    }
+  }
+
   // CI-only second tenant used by authenticated cross-tenant browser tests.
   if (process.env.CI === 'true') {
     const tenantB = await prisma.restaurant.upsert({

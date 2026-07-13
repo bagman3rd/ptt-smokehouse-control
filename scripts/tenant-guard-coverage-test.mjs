@@ -9,7 +9,7 @@ for (const model of ['CookPlanItem','EndOfDayProteinLog']) {
   assert.ok(block.includes('restaurantId'), `${model} requires restaurantId`);
   assert.ok(block.includes('@@index([restaurantId'), `${model} requires tenant index`);
 }
-assert.ok(guard.includes("process.env.TENANT_GUARD_ENABLED === '1'"), 'explicit guard enable is required');
-assert.ok(guard.includes("process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'"), 'guard must auto-run in dev/test');
-assert.ok(guard.includes("process.env.DISABLE_TENANT_GUARD === '1'"), 'maintenance bypass must be explicit');
-console.log('Build 9.7.0 tenant guard coverage passed.');
+assert.match(guard, /DISABLE_TENANT_GUARD === '1'/, 'maintenance bypass must be explicit');
+assert.match(guard, /TENANT_GUARD_ENABLED !== '0'/, 'guard must default on in every runtime');
+assert.doesNotMatch(guard, /NODE_ENV\s*===/, 'guard policy must not silently vary by NODE_ENV');
+console.log('Build 9.8.0 tenant guard coverage passed.');

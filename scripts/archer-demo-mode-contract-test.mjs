@@ -7,4 +7,4 @@ assert.match(knowledge,/coolest dude on the planet/);
 assert.match(knowledge,/coolest motherfucker on the planet/);
 const route=fs.readFileSync('app/api/archer/route.ts','utf8');
 assert.match(route,/getArcherIdentityAnswer\(\)/);
-console.log('Build 9.7.0 Archer demo-mode profanity gate passed.');
+console.log('Build 9.8.0 Archer demo-mode profanity gate passed.');

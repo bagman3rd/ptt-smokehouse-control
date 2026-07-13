@@ -1,25 +1,13 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
-
-const requiredScripts = [
-  'test:tenant',
-  'test:cross-tenant',
-  'test:forecast',
-  'test:backup',
-  'test:permissions',
-  'ci:schema-drift',
-  'migration:status'
-];
-
+import assert from 'node:assert/strict';
 const pkg = JSON.parse(fs.readFileSync('package.json','utf8'));
-const missing = requiredScripts.filter((name) => !pkg.scripts?.[name]);
-if (missing.length) {
-  throw new Error(`Missing staging verification scripts: ${missing.join(', ')}`);
-}
-const renderBuild = pkg.scripts?.['render-build'] || '';
-if (!renderBuild.includes('prisma migrate deploy')) throw new Error('render-build must use prisma migrate deploy.');
-if (renderBuild.includes('prisma db push')) throw new Error('render-build must not use prisma db push.');
-if (renderBuild.includes('--accept-data-loss')) throw new Error('render-build must not use --accept-data-loss.');
-if (!fs.existsSync('STAGING_VERIFICATION_BUILD_4_6_0.md')) throw new Error('Missing Build 4.6.0 staging verification doc.');
-if (!fs.existsSync('DATABASE_INTEGRITY_RUNBOOK_BUILD_4_6_0.md')) throw new Error('Missing Build 4.6.0 database integrity runbook.');
-console.log('Build 4.6.0 staging verification checks completed.');
+for (const name of ['test:tenant','test:cross-tenant','test:forecast','test:restore-drill','test:e2e:ci','ci:schema-drift','ci:migration-status']) assert.ok(pkg.scripts?.[name], `Missing staging verification script: ${name}`);
+const renderBuild=pkg.scripts['render-build']||'';
+assert.match(renderBuild,/prisma migrate deploy/);
+assert.doesNotMatch(renderBuild,/prisma db push|accept-data-loss/);
+for (const file of ['docs/DETAILED_TESTING_PLAN.md','docs/INCIDENT_RESPONSE.md','docs/MIGRATION_HISTORY.md','docs/RELEASE_GATE_9_8_0.md']) assert.ok(fs.existsSync(file), `Missing current staging/release document: ${file}`);
+const workflow=fs.readFileSync('.github/workflows/ci.yml','utf8');
+assert.match(workflow,/pnpm run test:e2e:ci/);
+assert.match(workflow,/pnpm run test:restore-drill/);
+console.log('Build 9.8.0 staging verification checks passed.');

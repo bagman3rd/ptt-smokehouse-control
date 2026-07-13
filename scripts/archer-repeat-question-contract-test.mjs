@@ -6,4 +6,4 @@ assert.match(api, /content: z\.string\(\)\.trim\(\)\.min\(1\)\.max\(2400\)/, 'hi
 assert.match(ui, /message\.content\.slice\(0, 2400\)/, 'client must cap history to the API contract');
 assert.match(ui, /requestSequenceRef/, 'repeat submissions must use a stable request lifecycle');
 assert.match(api, /could not continue the conversation history/, 'history validation must not blame the new question');
-console.log('Build 9.7.0 Archer repeat-question contract passed.');
+console.log('Build 9.8.0 Archer repeat-question contract passed.');

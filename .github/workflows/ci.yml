@@ -1,57 +1,93 @@
-name: Build 9.5.0 CI
-
+name: Build 9.8.0 CI
 on:
   push:
     branches: [main]
   pull_request:
-
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: build-9-8-0-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   quality-and-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     services:
       postgres:
         image: postgres:16
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: ptt_test
-        ports:
-          - 5432:5432
+          POSTGRES_DB: ptt_ci
+        ports: ['5432:5432']
         options: >-
-          --health-cmd "pg_isready -U postgres"
+          --health-cmd "pg_isready -U postgres -d ptt_ci"
           --health-interval 10s
           --health-timeout 5s
-          --health-retries 5
+          --health-retries 10
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ptt_test
-      APP_SESSION_TOKEN: ci-session-token-at-least-32-characters
+      CI: 'true'
+      NODE_ENV: test
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/ptt_ci?schema=public
+      RESTORE_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/ptt_restore?schema=public
+      RESTORE_EVIDENCE_PATH: restore-evidence.txt
       ADMIN_PASSWORD: ci-admin-password
-      TOTP_ENCRYPTION_KEY: ci-totp-key-at-least-32-characters-long
-      TENANT_GUARD_ENABLED: "1"
-      ENFORCE_PRIVILEGED_2FA: "false"
+      APP_SESSION_TOKEN: ci-session-token-at-least-32-characters
+      TOTP_ENCRYPTION_KEY: ci-totp-encryption-key-at-least-32-characters
+      CI_OWNER_PASSWORD: ci-owner-password
+      CI_MANAGER_PASSWORD: ci-manager-password
+      CI_CREW_PASSWORD: ci-crew-password
+      CI_TENANT_B_PASSWORD: ci-tenant-b-password
+      TENANT_GUARD_ENABLED: '1'
+      ENFORCE_PRIVILEGED_2FA: 'false'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22.16.0
           cache: pnpm
-      - run: corepack enable
-      - run: corepack prepare pnpm@9.15.0 --activate
-      - run: pnpm run ci:node-engine-check
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run prisma:generate
-      - run: pnpm run prisma:migrate
-      - run: pnpm run test:pos-upgrade-replay
-      - run: pnpm run ci:migration-status
-      - run: pnpm run ci:schema-drift
-      - run: pnpm run preflight
-      - run: pnpm run ci:test
-      - run: pnpm run build
-      - run: pnpm run test:e2e:install
-      - run: pnpm run test:e2e:accessibility
-      - run: pnpm run test:e2e:interactions
-      - run: pnpm run test:e2e:concurrency
-      - run: pnpm run test:e2e:eod-lifecycle
-      - run: pnpm run test:load-realistic
-      - run: pnpm run test:report-rollup
-      - run: pnpm run security:audit
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+          run_install: false
+      - name: Verify runtime compatibility
+        run: pnpm run ci:node-engine-check
+      - name: Install exact locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm run prisma:generate
+      - name: Build preflight
+        run: pnpm run preflight
+      - name: Fresh migration replay
+        run: pnpm run prisma:migrate
+      - name: Seed all four application roles
+        run: pnpm run db:seed
+      - name: Create restore target database
+        run: psql postgresql://postgres:postgres@127.0.0.1:5432/postgres -v ON_ERROR_STOP=1 -c 'CREATE DATABASE ptt_restore;'
+      - name: Static, contract, migration, and production-build checks
+        run: pnpm run ci:test
+      - name: Verify migration status
+        run: pnpm run ci:migration-status
+      - name: Verify schema drift
+        run: pnpm run ci:schema-drift
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Execute complete Playwright directory on desktop and mobile
+        run: pnpm run test:e2e:ci
+      - name: Mandatory database restore drill
+        run: pnpm run test:restore-drill
+      - name: Dependency vulnerability audit
+        run: pnpm run security:audit
+      - name: Upload browser and restore evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-9.8.0-test-evidence-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+            artifacts/interaction-manifest.json
+            restore-evidence.txt
+          if-no-files-found: warn
+          retention-days: 30

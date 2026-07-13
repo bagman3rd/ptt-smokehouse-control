@@ -1,0 +1,7106 @@
+{
+  "build": "9.8.0",
+  "generatedAt": "SOURCE_DETERMINISTIC",
+  "counts": {
+    "button": 68,
+    "link": 63,
+    "form": 56,
+    "select": 20,
+    "input": 181,
+    "textarea": 6
+  },
+  "controls": [
+    {
+      "id": "5124d2c7bae4",
+      "file": "app/account/security/page.tsx",
+      "line": 42,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5124d2c7bae4"
+    },
+    {
+      "id": "44b89f85abb3",
+      "file": "app/account/security/page.tsx",
+      "line": 51,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#44b89f85abb3"
+    },
+    {
+      "id": "7c61a7fc711b",
+      "file": "app/account/security/page.tsx",
+      "line": 59,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7c61a7fc711b"
+    },
+    {
+      "id": "5ef1293a4140",
+      "file": "app/account/security/page.tsx",
+      "line": 67,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5ef1293a4140"
+    },
+    {
+      "id": "e5f83bcd9c7a",
+      "file": "app/account/security/page.tsx",
+      "line": 72,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e5f83bcd9c7a"
+    },
+    {
+      "id": "cc689df43065",
+      "file": "app/account/security/page.tsx",
+      "line": 79,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#cc689df43065"
+    },
+    {
+      "id": "2b2e6d5f90b9",
+      "file": "app/account/security/page.tsx",
+      "line": 79,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2b2e6d5f90b9"
+    },
+    {
+      "id": "2dd4d6e441ab",
+      "file": "app/account/security/page.tsx",
+      "line": 92,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2dd4d6e441ab"
+    },
+    {
+      "id": "4106ec8af831",
+      "file": "app/account/security/page.tsx",
+      "line": 41,
+      "type": "form",
+      "snippet": "<form action={revokeOtherSessions} className=\"mt-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4106ec8af831"
+    },
+    {
+      "id": "4fb8293ca898",
+      "file": "app/account/security/page.tsx",
+      "line": 48,
+      "type": "form",
+      "snippet": "<form action={changeOwnPassword} className=\"mt-4 space-y-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4fb8293ca898"
+    },
+    {
+      "id": "26f3ba30f6b0",
+      "file": "app/account/security/page.tsx",
+      "line": 59,
+      "type": "form",
+      "snippet": "<form action={createTwoFactorSecret} className=\"mt-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#26f3ba30f6b0"
+    },
+    {
+      "id": "280797e89644",
+      "file": "app/account/security/page.tsx",
+      "line": 65,
+      "type": "form",
+      "snippet": "<form action={enableTwoFactor} className=\"mt-4 flex flex-wrap items-end gap-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#280797e89644"
+    },
+    {
+      "id": "d21287fb817d",
+      "file": "app/account/security/page.tsx",
+      "line": 70,
+      "type": "form",
+      "snippet": "<form action={disableTwoFactor} className=\"mt-4 flex flex-wrap items-end gap-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d21287fb817d"
+    },
+    {
+      "id": "b039c6917c4c",
+      "file": "app/account/security/page.tsx",
+      "line": 79,
+      "type": "form",
+      "snippet": "<form action={acknowledgeRecoveryCodes} className=\"mt-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b039c6917c4c"
+    },
+    {
+      "id": "88883422f083",
+      "file": "app/account/security/page.tsx",
+      "line": 79,
+      "type": "form",
+      "snippet": "<form action={regenerateRecoveryCodes} className=\"mt-4 flex flex-wrap items-end gap-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#88883422f083"
+    },
+    {
+      "id": "814c90e8676f",
+      "file": "app/account/security/page.tsx",
+      "line": 92,
+      "type": "form",
+      "snippet": "<form action={revokeSession}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#814c90e8676f"
+    },
+    {
+      "id": "e05715eea45e",
+      "file": "app/account/security/page.tsx",
+      "line": 49,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" type=\"password\" name=\"currentPassword\" required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e05715eea45e"
+    },
+    {
+      "id": "555e25792f31",
+      "file": "app/account/security/page.tsx",
+      "line": 50,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" type=\"password\" name=\"newPassword\" minLength={12} required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#555e25792f31"
+    },
+    {
+      "id": "279c71ed90dc",
+      "file": "app/account/security/page.tsx",
+      "line": 66,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1 max-w-44\" name=\"code\" inputMode=\"numeric\" required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#279c71ed90dc"
+    },
+    {
+      "id": "b2689bdfac24",
+      "file": "app/account/security/page.tsx",
+      "line": 71,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1 max-w-72\" type=\"password\" name=\"password\" required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b2689bdfac24"
+    },
+    {
+      "id": "521aec6e51ac",
+      "file": "app/account/security/page.tsx",
+      "line": 79,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" type=\"password\" name=\"password\" required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#521aec6e51ac"
+    },
+    {
+      "id": "8374b1c77d94",
+      "file": "app/account/security/page.tsx",
+      "line": 92,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"sessionId\" value={session.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#8374b1c77d94"
+    },
+    {
+      "id": "474d1044a94f",
+      "file": "app/admin/data/page.tsx",
+      "line": 27,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#474d1044a94f"
+    },
+    {
+      "id": "32a1667401ee",
+      "file": "app/admin/data/page.tsx",
+      "line": 20,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#32a1667401ee"
+    },
+    {
+      "id": "32a1667401ee",
+      "file": "app/admin/data/page.tsx",
+      "line": 20,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#32a1667401ee"
+    },
+    {
+      "id": "6aec1a200ef2",
+      "file": "app/admin/data/page.tsx",
+      "line": 24,
+      "type": "form",
+      "snippet": "<form action={createDataRequest} className=\"mt-4 grid gap-4 md:grid-cols-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6aec1a200ef2"
+    },
+    {
+      "id": "08275bcc93c0",
+      "file": "app/admin/data/page.tsx",
+      "line": 25,
+      "type": "select",
+      "snippet": "<select className=\"field mt-1\" name=\"type\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#08275bcc93c0"
+    },
+    {
+      "id": "5256039292da",
+      "file": "app/admin/data/page.tsx",
+      "line": 26,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"notes\" placeholder=\"Reason / customer request / retention note\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5256039292da"
+    },
+    {
+      "id": "91dafdbf5bd9",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 33,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#91dafdbf5bd9"
+    },
+    {
+      "id": "b3c4d0465a3b",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 44,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b3c4d0465a3b"
+    },
+    {
+      "id": "a3596650bbe5",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 58,
+      "type": "button",
+      "snippet": "<button className=\"mt-3 rounded-full bg-red-700 px-4 py-2 text-sm font-bold text-white hover:bg-red-800\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a3596650bbe5"
+    },
+    {
+      "id": "7a6569105499",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 22,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7a6569105499"
+    },
+    {
+      "id": "7a6569105499",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 22,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7a6569105499"
+    },
+    {
+      "id": "7a6569105499",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 22,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7a6569105499"
+    },
+    {
+      "id": "206742b72310",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 54,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#206742b72310"
+    },
+    {
+      "id": "42b9a62f60de",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 27,
+      "type": "form",
+      "snippet": "<form action={createRestaurant} className=\"mt-4 grid gap-3 md:grid-cols-5\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#42b9a62f60de"
+    },
+    {
+      "id": "cc0cbb4fe5c0",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 44,
+      "type": "form",
+      "snippet": "<form action={updateRestaurantStatus} className=\"flex items-center gap-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#cc0cbb4fe5c0"
+    },
+    {
+      "id": "17da6752d2f8",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 55,
+      "type": "form",
+      "snippet": "<form action=\"/api/admin/tenant/delete\" method=\"POST\" className=\"mt-4 rounded-2xl border border-red-200 bg-red-50 p-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#17da6752d2f8"
+    },
+    {
+      "id": "82d4882814e1",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 32,
+      "type": "select",
+      "snippet": "<select className=\"field mt-1\" name=\"role\" defaultValue=\"OWNER\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#82d4882814e1"
+    },
+    {
+      "id": "dff16e586d9a",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 28,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"name\" required placeholder=\"Smokehouse Control Demo\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#dff16e586d9a"
+    },
+    {
+      "id": "2bc239c1072c",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 29,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"city\" placeholder=\"Pigeon Forge\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2bc239c1072c"
+    },
+    {
+      "id": "c2d768846f62",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 30,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"state\" placeholder=\"TN\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c2d768846f62"
+    },
+    {
+      "id": "b812e14daecb",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 31,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"timezone\" defaultValue=\"America/New_York\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b812e14daecb"
+    },
+    {
+      "id": "ba7b3eaf2dba",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 44,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"restaurantId\" value={membership.restaurantId} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ba7b3eaf2dba"
+    },
+    {
+      "id": "d4bfaa7fb511",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 44,
+      "type": "input",
+      "snippet": "<input name=\"active\" type=\"checkbox\" defaultChecked={membership.restaurant.active} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d4bfaa7fb511"
+    },
+    {
+      "id": "f175ba692b5f",
+      "file": "app/admin/restaurants/page.tsx",
+      "line": 57,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"confirm\" placeholder=\"Exact restaurant name\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f175ba692b5f"
+    },
+    {
+      "id": "21e3f71f19a9",
+      "file": "app/admin/restaurants/pos/PosImportPreviewForm.tsx",
+      "line": 42,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\" disabled={!canImport}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#21e3f71f19a9"
+    },
+    {
+      "id": "b82a16d9eae2",
+      "file": "app/admin/restaurants/pos/PosImportPreviewForm.tsx",
+      "line": 21,
+      "type": "form",
+      "snippet": "<form action={importPosItemCsv} className=\"mt-4 grid gap-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b82a16d9eae2"
+    },
+    {
+      "id": "928b18c9a354",
+      "file": "app/admin/restaurants/pos/PosImportPreviewForm.tsx",
+      "line": 22,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"source\" value=\"CSV\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#928b18c9a354"
+    },
+    {
+      "id": "2849ef29d251",
+      "file": "app/admin/restaurants/pos/PosImportPreviewForm.tsx",
+      "line": 39,
+      "type": "input",
+      "snippet": "<input type=\"checkbox\" name=\"requireMapped\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2849ef29d251"
+    },
+    {
+      "id": "0c0d733e74fa",
+      "file": "app/admin/restaurants/pos/PosImportPreviewForm.tsx",
+      "line": 40,
+      "type": "input",
+      "snippet": "<input type=\"checkbox\" checked={confirmed} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0c0d733e74fa"
+    },
+    {
+      "id": "495f6d625dee",
+      "file": "app/admin/restaurants/pos/PosImportPreviewForm.tsx",
+      "line": 23,
+      "type": "textarea",
+      "snippet": "<textarea className=\"field min-h-56 font-mono text-xs\" name=\"posCsv\" value={csv} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#495f6d625dee"
+    },
+    {
+      "id": "3ac26e2228aa",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 39,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"button\" disabled>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#3ac26e2228aa"
+    },
+    {
+      "id": "44312ed89269",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 39,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\" data-testid={`sync-${p.provider.toLowerCase()}`}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#44312ed89269"
+    },
+    {
+      "id": "bbcbf6036143",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 39,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#bbcbf6036143"
+    },
+    {
+      "id": "c59b40671182",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 40,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c59b40671182"
+    },
+    {
+      "id": "dba0fa4aa9dc",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 42,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary mt-3\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#dba0fa4aa9dc"
+    },
+    {
+      "id": "781f19392677",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 47,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary md:col-span-4\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#781f19392677"
+    },
+    {
+      "id": "dd17aeb1df2b",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 39,
+      "type": "link",
+      "snippet": "<a className=\"btn-primary\" href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#dd17aeb1df2b"
+    },
+    {
+      "id": "a982b59c67e6",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 39,
+      "type": "form",
+      "snippet": "<form action={syncPosNow}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a982b59c67e6"
+    },
+    {
+      "id": "4df45ec9f3c1",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 39,
+      "type": "form",
+      "snippet": "<form action={disconnectPos}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4df45ec9f3c1"
+    },
+    {
+      "id": "4f7b7db8eeb4",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 40,
+      "type": "form",
+      "snippet": "<form action={savePosConnectionSettings} className=\"mt-4 grid gap-2 border-t pt-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4f7b7db8eeb4"
+    },
+    {
+      "id": "82198d8685b7",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 42,
+      "type": "form",
+      "snippet": "<form action={selectSquareLocation} className=\"mt-5 rounded-2xl border-2 border-amber-300 bg-amber-50 p-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#82198d8685b7"
+    },
+    {
+      "id": "f21aa9bb395a",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 47,
+      "type": "form",
+      "snippet": "<form action={saveMenuItemMapping} className=\"mt-4 grid gap-3 md:grid-cols-5\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f21aa9bb395a"
+    },
+    {
+      "id": "6261590c8430",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 42,
+      "type": "select",
+      "snippet": "<select className=\"field mt-3\" name=\"locationId\" required>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6261590c8430"
+    },
+    {
+      "id": "756f150b4931",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 47,
+      "type": "select",
+      "snippet": "<select className=\"field\" name=\"proteinId\" defaultValue=\"\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#756f150b4931"
+    },
+    {
+      "id": "900740a296a4",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 39,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"connectionId\" value={c.id}/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#900740a296a4"
+    },
+    {
+      "id": "900740a296a4",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 39,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"connectionId\" value={c.id}/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#900740a296a4"
+    },
+    {
+      "id": "ad840b5c7571",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 40,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"connectionId\" value={c.id}/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ad840b5c7571"
+    },
+    {
+      "id": "b195096cc43f",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 40,
+      "type": "input",
+      "snippet": "<input type=\"checkbox\" name=\"automaticSyncEnabled\" defaultChecked={c.automaticSyncEnabled}/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b195096cc43f"
+    },
+    {
+      "id": "ee22372292d3",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 40,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"dailySyncTime\" type=\"time\" defaultValue={c.dailySyncTime}/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ee22372292d3"
+    },
+    {
+      "id": "9cb55e819433",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 40,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"syncTimezone\" defaultValue={c.syncTimezone}/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9cb55e819433"
+    },
+    {
+      "id": "ff733e01ba39",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 42,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"connectionId\" value={square.id}/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ff733e01ba39"
+    },
+    {
+      "id": "93e004cfcca9",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 42,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"locationName\" value={squareLocations[0]?.name||''}/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#93e004cfcca9"
+    },
+    {
+      "id": "fbb20477211b",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 47,
+      "type": "input",
+      "snippet": "<input className=\"field md:col-span-2\" name=\"posItemName\" placeholder=\"Brisket Plate\" required/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#fbb20477211b"
+    },
+    {
+      "id": "4d30432d8057",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 47,
+      "type": "input",
+      "snippet": "<input className=\"field\" name=\"portionSizeLb\" type=\"number\" step=\"0.0001\" min=\"0\" placeholder=\"0.4375\"/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4d30432d8057"
+    },
+    {
+      "id": "8dc6f23c9207",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 47,
+      "type": "input",
+      "snippet": "<input className=\"field\" name=\"yieldFactor\" type=\"number\" step=\"0.01\" min=\"0.1\" defaultValue=\"1\"/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#8dc6f23c9207"
+    },
+    {
+      "id": "064d41b09a34",
+      "file": "app/admin/restaurants/pos/page.tsx",
+      "line": 47,
+      "type": "input",
+      "snippet": "<input type=\"checkbox\" name=\"active\" defaultChecked/>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#064d41b09a34"
+    },
+    {
+      "id": "7d357fdb41d0",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 85,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7d357fdb41d0"
+    },
+    {
+      "id": "045663717e44",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 112,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#045663717e44"
+    },
+    {
+      "id": "e9cc2b71c084",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 123,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e9cc2b71c084"
+    },
+    {
+      "id": "9d648ef1cc4b",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 143,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary mt-4\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9d648ef1cc4b"
+    },
+    {
+      "id": "a6d05dca244b",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 164,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a6d05dca244b"
+    },
+    {
+      "id": "25b5104b736e",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 96,
+      "type": "link",
+      "snippet": "<Link href=\"/admin/users\" className=\"btn-secondary mt-4 inline-flex\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#25b5104b736e"
+    },
+    {
+      "id": "86854c1dd1e0",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 172,
+      "type": "link",
+      "snippet": "<Link href=\"/cook-plan\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#86854c1dd1e0"
+    },
+    {
+      "id": "ed0a0901455a",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 172,
+      "type": "link",
+      "snippet": "<Link href=\"/end-of-day\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ed0a0901455a"
+    },
+    {
+      "id": "43dff83400db",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 172,
+      "type": "link",
+      "snippet": "<Link href=\"/learning\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#43dff83400db"
+    },
+    {
+      "id": "721a720c94e1",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 172,
+      "type": "link",
+      "snippet": "<Link href=\"/reports\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#721a720c94e1"
+    },
+    {
+      "id": "bec99958d505",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 80,
+      "type": "form",
+      "snippet": "<form action={saveRestaurantProfile} className=\"mt-4 grid gap-3 md:grid-cols-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#bec99958d505"
+    },
+    {
+      "id": "d0977877b159",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 102,
+      "type": "form",
+      "snippet": "<form action={saveSetupForecast} className=\"mt-4 grid gap-3 md:grid-cols-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d0977877b159"
+    },
+    {
+      "id": "45296cca3ad0",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 121,
+      "type": "form",
+      "snippet": "<form action={importSalesHistoryCsv} className=\"mt-4 grid gap-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#45296cca3ad0"
+    },
+    {
+      "id": "cc50d3b4143e",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 131,
+      "type": "form",
+      "snippet": "<form key={protein.id} action={saveSetupProtein} className=\"rounded-2xl border border-slate-200 p-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#cc50d3b4143e"
+    },
+    {
+      "id": "0c5593d4157f",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 151,
+      "type": "form",
+      "snippet": "<form action={saveSetupCurve} className=\"mt-4 grid gap-6 lg:grid-cols-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0c5593d4157f"
+    },
+    {
+      "id": "d2c7fe6060a2",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 81,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"name\" required defaultValue={restaurant.name} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d2c7fe6060a2"
+    },
+    {
+      "id": "f635fd8c5a97",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 82,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"city\" defaultValue={restaurant.city || ''} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f635fd8c5a97"
+    },
+    {
+      "id": "0a80b619e8f1",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 83,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"state\" defaultValue={restaurant.state || ''} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0a80b619e8f1"
+    },
+    {
+      "id": "30522a86e359",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 84,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"timezone\" defaultValue={restaurant.timezone} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#30522a86e359"
+    },
+    {
+      "id": "e463a9180662",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 103,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"scenarioId\" value={scenario.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e463a9180662"
+    },
+    {
+      "id": "8b5b1a796e75",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 104,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" disabled value={scenario.name} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#8b5b1a796e75"
+    },
+    {
+      "id": "d2cfb51c15d4",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 105,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"annualSales\" type=\"number\" defaultValue={scenario.annualSales} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d2cfb51c15d4"
+    },
+    {
+      "id": "eba0e6c8de34",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 106,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"bbqSalesPercent\" type=\"number\" step=\"0.1\" defaultValue={scenario.bbqSalesPercent} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#eba0e6c8de34"
+    },
+    {
+      "id": "d09899e71089",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 107,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"safetyFactorPct\" type=\"number\" step=\"0.1\" defaultValue={scenario.safetyFactorPct} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d09899e71089"
+    },
+    {
+      "id": "8d7b38748b1b",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 108,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"brisketMixPct\" type=\"number\" step=\"0.1\" defaultValue={scenario.brisketMixPct} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#8d7b38748b1b"
+    },
+    {
+      "id": "57258521732d",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 109,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"porkMixPct\" type=\"number\" step=\"0.1\" defaultValue={scenario.porkMixPct} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#57258521732d"
+    },
+    {
+      "id": "b95840fc89ca",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 110,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"ribsMixPct\" type=\"number\" step=\"0.1\" defaultValue={scenario.ribsMixPct} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b95840fc89ca"
+    },
+    {
+      "id": "ed587497d00a",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 111,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"chickenMixPct\" type=\"number\" step=\"0.1\" defaultValue={scenario.chickenMixPct} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ed587497d00a"
+    },
+    {
+      "id": "70d716252807",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 132,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"proteinId\" value={protein.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#70d716252807"
+    },
+    {
+      "id": "96ab8a17f2e2",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 135,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"rawWeightEachLb\" type=\"number\" step=\"0.1\" defaultValue={protein.rawWeightEachLb} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#96ab8a17f2e2"
+    },
+    {
+      "id": "832ed78eefaf",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 136,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"cookedWeightEachLb\" type=\"number\" step=\"0.1\" defaultValue={protein.cookedWeightEachLb} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#832ed78eefaf"
+    },
+    {
+      "id": "43eb462f553a",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 137,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"cookedYieldPercent\" type=\"number\" step=\"0.1\" defaultValue={protein.cookedYieldPercent} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#43eb462f553a"
+    },
+    {
+      "id": "1f1c615b9c84",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 138,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"avgSalesPerCookedLb\" type=\"number\" step=\"0.1\" defaultValue={protein.avgSalesPerCookedLb} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#1f1c615b9c84"
+    },
+    {
+      "id": "6f6cfaa3b9b0",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 139,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"minCookUnits\" type=\"number\" step=\"1\" defaultValue={protein.minCookUnits} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6f6cfaa3b9b0"
+    },
+    {
+      "id": "3844ba3d4e33",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 140,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"maxCookUnits\" type=\"number\" step=\"1\" defaultValue={protein.maxCookUnits} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#3844ba3d4e33"
+    },
+    {
+      "id": "e383c4eebf19",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 141,
+      "type": "input",
+      "snippet": "<input name=\"reusableLeftover\" type=\"checkbox\" className=\"h-5 w-5\" defaultChecked={protein.reusableLeftover} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e383c4eebf19"
+    },
+    {
+      "id": "424fb7a3ba9e",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 155,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name={`day-${day.id}`} type=\"number\" step=\"0.01\" min=\"0.1\" max=\"3\" defaultValue={day.multiplier} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#424fb7a3ba9e"
+    },
+    {
+      "id": "7b1bce80288b",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 161,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name={`month-${month.id}`} type=\"number\" step=\"0.01\" min=\"0.1\" max=\"3\" defaultValue={month.multiplier} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7b1bce80288b"
+    },
+    {
+      "id": "abde43b44313",
+      "file": "app/admin/restaurants/setup/page.tsx",
+      "line": 122,
+      "type": "textarea",
+      "snippet": "<textarea className=\"field min-h-40 font-mono text-xs\" name=\"salesCsv\" placeholder={'date,totalSales,bbqSales\\n2026-07-01,8750,3325\\n2026-07-02,9220,3504'} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#abde43b44313"
+    },
+    {
+      "id": "d5e38b7f684a",
+      "file": "app/admin/smokers/catalog/page.tsx",
+      "line": 34,
+      "type": "link",
+      "snippet": "<Link href=\"/admin/smokers\" className=\"rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d5e38b7f684a"
+    },
+    {
+      "id": "0d6d81b08a97",
+      "file": "app/admin/smokers/page.tsx",
+      "line": 35,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0d6d81b08a97"
+    },
+    {
+      "id": "0d6d81b08a97",
+      "file": "app/admin/smokers/page.tsx",
+      "line": 35,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0d6d81b08a97"
+    },
+    {
+      "id": "daee0c122764",
+      "file": "app/admin/smokers/page.tsx",
+      "line": 50,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#daee0c122764"
+    },
+    {
+      "id": "06eff83d4993",
+      "file": "app/admin/smokers/schedule/page.tsx",
+      "line": 43,
+      "type": "link",
+      "snippet": "<Link href=\"/admin/smokers\" className=\"rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#06eff83d4993"
+    },
+    {
+      "id": "0bda7bbf5f38",
+      "file": "app/admin/smokers/schedule/page.tsx",
+      "line": 44,
+      "type": "link",
+      "snippet": "<Link href=\"/today\" className=\"rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0bda7bbf5f38"
+    },
+    {
+      "id": "205b267ebb7d",
+      "file": "app/admin/smokers/schedule/page.tsx",
+      "line": 45,
+      "type": "link",
+      "snippet": "<Link href=\"/cook-plan\" className=\"rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#205b267ebb7d"
+    },
+    {
+      "id": "094c7fdb84b9",
+      "file": "app/admin/system/page.tsx",
+      "line": 130,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary mt-3\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#094c7fdb84b9"
+    },
+    {
+      "id": "a5396f5c6272",
+      "file": "app/admin/system/page.tsx",
+      "line": 118,
+      "type": "form",
+      "snippet": "<form key={type} action={recordSystemCheck} className=\"rounded-2xl border border-slate-200 p-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a5396f5c6272"
+    },
+    {
+      "id": "b976032f033d",
+      "file": "app/admin/system/page.tsx",
+      "line": 123,
+      "type": "select",
+      "snippet": "<select name=\"status\" className=\"field mt-1\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b976032f033d"
+    },
+    {
+      "id": "0747c79b6dd4",
+      "file": "app/admin/system/page.tsx",
+      "line": 119,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"type\" value={type} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0747c79b6dd4"
+    },
+    {
+      "id": "9d0bb866b00d",
+      "file": "app/admin/system/page.tsx",
+      "line": 129,
+      "type": "textarea",
+      "snippet": "<textarea name=\"notes\" className=\"field mt-1 min-h-20\" placeholder=\"What was tested, where, and what happened?\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9d0bb866b00d"
+    },
+    {
+      "id": "a5a35c21382f",
+      "file": "app/admin/users/page.tsx",
+      "line": 54,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a5a35c21382f"
+    },
+    {
+      "id": "d86a450a43a3",
+      "file": "app/admin/users/page.tsx",
+      "line": 76,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d86a450a43a3"
+    },
+    {
+      "id": "eb08ba5ba4a5",
+      "file": "app/admin/users/page.tsx",
+      "line": 80,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#eb08ba5ba4a5"
+    },
+    {
+      "id": "856b4bb961bd",
+      "file": "app/admin/users/page.tsx",
+      "line": 84,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#856b4bb961bd"
+    },
+    {
+      "id": "2e77c6df97a0",
+      "file": "app/admin/users/page.tsx",
+      "line": 30,
+      "type": "form",
+      "snippet": "<form action={createUser} className=\"mt-4 grid gap-3 md:grid-cols-5\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2e77c6df97a0"
+    },
+    {
+      "id": "4036c540971e",
+      "file": "app/admin/users/page.tsx",
+      "line": 72,
+      "type": "form",
+      "snippet": "<form action={updateUserAccess} className=\"flex flex-wrap items-end gap-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4036c540971e"
+    },
+    {
+      "id": "580918dcd257",
+      "file": "app/admin/users/page.tsx",
+      "line": 80,
+      "type": "form",
+      "snippet": "<form action={unlockUser} className=\"mb-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#580918dcd257"
+    },
+    {
+      "id": "711fae79a80f",
+      "file": "app/admin/users/page.tsx",
+      "line": 81,
+      "type": "form",
+      "snippet": "<form action={resetUserPassword} className=\"flex flex-wrap items-end gap-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#711fae79a80f"
+    },
+    {
+      "id": "10e6a78fe210",
+      "file": "app/admin/users/page.tsx",
+      "line": 45,
+      "type": "select",
+      "snippet": "<select className=\"field mt-1\" name=\"role\" defaultValue=\"KITCHEN_CREW\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#10e6a78fe210"
+    },
+    {
+      "id": "5bf84b72e48b",
+      "file": "app/admin/users/page.tsx",
+      "line": 74,
+      "type": "select",
+      "snippet": "<select className=\"field max-w-48\" name=\"role\" defaultValue={role}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5bf84b72e48b"
+    },
+    {
+      "id": "454259f22dda",
+      "file": "app/admin/users/page.tsx",
+      "line": 33,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"name\" required placeholder=\"Jane Smith\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#454259f22dda"
+    },
+    {
+      "id": "1f287ac9311b",
+      "file": "app/admin/users/page.tsx",
+      "line": 37,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"username\" required placeholder=\"jane\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#1f287ac9311b"
+    },
+    {
+      "id": "5d7924355b7e",
+      "file": "app/admin/users/page.tsx",
+      "line": 41,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"email\" type=\"email\" placeholder=\"optional\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5d7924355b7e"
+    },
+    {
+      "id": "2557ebcf7b40",
+      "file": "app/admin/users/page.tsx",
+      "line": 51,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"password\" type=\"password\" minLength={12} required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2557ebcf7b40"
+    },
+    {
+      "id": "b2623ea8ec32",
+      "file": "app/admin/users/page.tsx",
+      "line": 73,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={user.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b2623ea8ec32"
+    },
+    {
+      "id": "f4feb64d64d4",
+      "file": "app/admin/users/page.tsx",
+      "line": 75,
+      "type": "input",
+      "snippet": "<input type=\"checkbox\" name=\"active\" defaultChecked={membership.active} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f4feb64d64d4"
+    },
+    {
+      "id": "284b87ac7d77",
+      "file": "app/admin/users/page.tsx",
+      "line": 80,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={user.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#284b87ac7d77"
+    },
+    {
+      "id": "6b1175dbcd3f",
+      "file": "app/admin/users/page.tsx",
+      "line": 82,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={user.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6b1175dbcd3f"
+    },
+    {
+      "id": "baf4651e21b5",
+      "file": "app/admin/users/page.tsx",
+      "line": 83,
+      "type": "input",
+      "snippet": "<input className=\"field max-w-56\" name=\"password\" type=\"password\" minLength={12} placeholder=\"new password\" required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#baf4651e21b5"
+    },
+    {
+      "id": "c332ad2eb172",
+      "file": "app/billing/page.tsx",
+      "line": 49,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c332ad2eb172"
+    },
+    {
+      "id": "7575f50cb34e",
+      "file": "app/billing/page.tsx",
+      "line": 58,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7575f50cb34e"
+    },
+    {
+      "id": "59303286e246",
+      "file": "app/billing/page.tsx",
+      "line": 47,
+      "type": "form",
+      "snippet": "<form action=\"/api/billing/checkout\" method=\"POST\" className=\"mt-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#59303286e246"
+    },
+    {
+      "id": "b192dc10e5bc",
+      "file": "app/billing/page.tsx",
+      "line": 58,
+      "type": "form",
+      "snippet": "<form action=\"/api/billing/portal\" method=\"POST\" className=\"mt-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b192dc10e5bc"
+    },
+    {
+      "id": "8f7712f2ae03",
+      "file": "app/billing/page.tsx",
+      "line": 48,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"plan\" value={plan} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#8f7712f2ae03"
+    },
+    {
+      "id": "3eaebaec772a",
+      "file": "app/cook-plan/CreateCookPlanForm.tsx",
+      "line": 171,
+      "type": "button",
+      "snippet": "<button data-testid=\"generate-cook-plan\" className=\"btn-primary w-full md:w-auto\" type=\"submit\" disabled={isGenerating || scenarios.length === 0}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#3eaebaec772a"
+    },
+    {
+      "id": "b143c9b6185e",
+      "file": "app/cook-plan/CreateCookPlanForm.tsx",
+      "line": 125,
+      "type": "form",
+      "snippet": "<form onSubmit={handleSubmit} className=\"mt-4 grid gap-4 md:grid-cols-5\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b143c9b6185e"
+    },
+    {
+      "id": "2e226a93efd5",
+      "file": "app/cook-plan/CreateCookPlanForm.tsx",
+      "line": 133,
+      "type": "select",
+      "snippet": "<select className=\"field mt-1\" value={scenarioId} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2e226a93efd5"
+    },
+    {
+      "id": "d8dd96244d26",
+      "file": "app/cook-plan/CreateCookPlanForm.tsx",
+      "line": 141,
+      "type": "select",
+      "snippet": "<select className=\"field mt-1\" value={dayPatternKey} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d8dd96244d26"
+    },
+    {
+      "id": "d4b9392d23c0",
+      "file": "app/cook-plan/CreateCookPlanForm.tsx",
+      "line": 128,
+      "type": "input",
+      "snippet": "<input data-testid=\"cook-plan-load-date\" className=\"field mt-1\" value={serviceDate} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d4b9392d23c0"
+    },
+    {
+      "id": "e11afa95b1f9",
+      "file": "app/cook-plan/CreateCookPlanForm.tsx",
+      "line": 148,
+      "type": "input",
+      "snippet": "<input data-testid=\"cook-plan-event-multiplier\" className=\"field mt-1\" value={eventMultiplier} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e11afa95b1f9"
+    },
+    {
+      "id": "abbb8faa9fe7",
+      "file": "app/cook-plan/page.tsx",
+      "line": 146,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary w-full md:w-auto\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#abbb8faa9fe7"
+    },
+    {
+      "id": "942e63b96b8a",
+      "file": "app/cook-plan/page.tsx",
+      "line": 112,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#942e63b96b8a"
+    },
+    {
+      "id": "63a926142982",
+      "file": "app/cook-plan/page.tsx",
+      "line": 114,
+      "type": "form",
+      "snippet": "<form action={approveCookPlan} className=\"mt-5 space-y-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#63a926142982"
+    },
+    {
+      "id": "64daa099810d",
+      "file": "app/cook-plan/page.tsx",
+      "line": 115,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"cookPlanId\" value={plan.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#64daa099810d"
+    },
+    {
+      "id": "c37c955e6c78",
+      "file": "app/cook-plan/page.tsx",
+      "line": 120,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"itemId\" value={item.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c37c955e6c78"
+    },
+    {
+      "id": "7a51cfc4b146",
+      "file": "app/cook-plan/page.tsx",
+      "line": 138,
+      "type": "input",
+      "snippet": "<input className=\"field\" name={`approved-${item.id}`} type=\"number\" step=\"1\" defaultValue={item.approvedCookUnits ?? item.recommendedCookUnits} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7a51cfc4b146"
+    },
+    {
+      "id": "e9a8392bdbf4",
+      "file": "app/cook-plan/page.tsx",
+      "line": 140,
+      "type": "input",
+      "snippet": "<input className=\"field\" name={`hotBoxAdjustment-${item.id}`} type=\"number\" step=\"1\" defaultValue={0} placeholder=\"-1, 0, +2\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e9a8392bdbf4"
+    },
+    {
+      "id": "76fb1c5a99e3",
+      "file": "app/cook-plan/page.tsx",
+      "line": 142,
+      "type": "input",
+      "snippet": "<input className=\"field\" name={`reason-${item.id}`} placeholder=\"Required if approved units differ or hot-box adjustment is used\" defaultValue={item.overrideReason ?? ''} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#76fb1c5a99e3"
+    },
+    {
+      "id": "42341ac22245",
+      "file": "app/cook-plan/print/PrintButton.tsx",
+      "line": 4,
+      "type": "button",
+      "snippet": "<button onClick={() =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#42341ac22245"
+    },
+    {
+      "id": "2577c87d6710",
+      "file": "app/cook-plan/print/page.tsx",
+      "line": 44,
+      "type": "link",
+      "snippet": "<a href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2577c87d6710"
+    },
+    {
+      "id": "88953212351a",
+      "file": "app/dashboard/page.tsx",
+      "line": 117,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#88953212351a"
+    },
+    {
+      "id": "d22af2abf73a",
+      "file": "app/dashboard/page.tsx",
+      "line": 75,
+      "type": "link",
+      "snippet": "<Link href=\"/cook-plan\" className=\"btn-primary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d22af2abf73a"
+    },
+    {
+      "id": "232e5c085e18",
+      "file": "app/dashboard/page.tsx",
+      "line": 75,
+      "type": "link",
+      "snippet": "<Link href=\"/end-of-day\" className=\"btn-primary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#232e5c085e18"
+    },
+    {
+      "id": "5872b79256d2",
+      "file": "app/dashboard/page.tsx",
+      "line": 116,
+      "type": "form",
+      "snippet": "<form action={deleteFutureCookPlans}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5872b79256d2"
+    },
+    {
+      "id": "5bf5b9908e3d",
+      "file": "app/demo/page.tsx",
+      "line": 23,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5bf5b9908e3d"
+    },
+    {
+      "id": "a6c9316572c4",
+      "file": "app/demo/page.tsx",
+      "line": 24,
+      "type": "link",
+      "snippet": "<Link href=\"/tour\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a6c9316572c4"
+    },
+    {
+      "id": "994b35aec00c",
+      "file": "app/demo/page.tsx",
+      "line": 25,
+      "type": "link",
+      "snippet": "<Link href=\"/sales\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#994b35aec00c"
+    },
+    {
+      "id": "7c1516f24de4",
+      "file": "app/demo/page.tsx",
+      "line": 26,
+      "type": "link",
+      "snippet": "<Link href=\"/signup\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7c1516f24de4"
+    },
+    {
+      "id": "4327f26a9f2f",
+      "file": "app/demo/page.tsx",
+      "line": 23,
+      "type": "form",
+      "snippet": "<form action=\"/api/demo/start\" method=\"POST\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4327f26a9f2f"
+    },
+    {
+      "id": "e7a17f7a289a",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 264,
+      "type": "button",
+      "snippet": "<button type=\"button\" className=\"rounded-full border border-blue-300 bg-white px-3 py-2 text-xs font-black\" onClick={() =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e7a17f7a289a"
+    },
+    {
+      "id": "16cd926ff98a",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 265,
+      "type": "button",
+      "snippet": "<button type=\"button\" className=\"rounded-full border border-blue-300 bg-white px-3 py-2 text-xs font-black\" onClick={restoreDraftFromBrowser}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#16cd926ff98a"
+    },
+    {
+      "id": "78d983a4ac3a",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 266,
+      "type": "button",
+      "snippet": "<button type=\"button\" className=\"rounded-full border border-blue-300 bg-white px-3 py-2 text-xs font-black\" onClick={clearLocalDraft}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#78d983a4ac3a"
+    },
+    {
+      "id": "cc6dbe75aed3",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 317,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary w-full md:w-auto\" data-testid=\"save-eod\" type=\"submit\" disabled={isSaving || isLocked}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#cc6dbe75aed3"
+    },
+    {
+      "id": "6848e7afc5b0",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 246,
+      "type": "form",
+      "snippet": "<form data-testid=\"end-of-day-form\" ref={formRef} onSubmit={handleSubmit} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6848e7afc5b0"
+    },
+    {
+      "id": "5fdf27b93939",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 281,
+      "type": "select",
+      "snippet": "<select className=\"field mt-1\" name=\"status\" value={status} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5fdf27b93939"
+    },
+    {
+      "id": "de8948df53c2",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 310,
+      "type": "select",
+      "snippet": "<select className=\"field mt-1\" name={`wasteReason-${protein.id}`} defaultValue={saved?.wasteReason || ''} disabled={isLocked}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#de8948df53c2"
+    },
+    {
+      "id": "4a4858059ab3",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 253,
+      "type": "input",
+      "snippet": "<input type=\"checkbox\" className=\"h-4 w-4\" disabled={isLocked} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4a4858059ab3"
+    },
+    {
+      "id": "b270eefec9a6",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 274,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" type=\"date\" value={serviceDate} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b270eefec9a6"
+    },
+    {
+      "id": "9496e4a1d152",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 277,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" type=\"number\" step=\"1\" name=\"totalSales\" defaultValue={initialLog?.totalSales ?? ''} placeholder=\"0\" disabled={isLocked} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9496e4a1d152"
+    },
+    {
+      "id": "5409baa5113d",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 278,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" type=\"number\" step=\"1\" name=\"bbqSales\" defaultValue={initialLog?.bbqSales ?? ''} placeholder=\"0\" disabled={isLocked} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5409baa5113d"
+    },
+    {
+      "id": "40fd71736a13",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 287,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"notes\" defaultValue={initialLog?.notes ?? ''} placeholder=\"Weather, events, service issues\" disabled={isLocked} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#40fd71736a13"
+    },
+    {
+      "id": "5782f06a3d53",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 290,
+      "type": "input",
+      "snippet": "<input type=\"checkbox\" className=\"h-5 w-5\" checked={lockLog} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5782f06a3d53"
+    },
+    {
+      "id": "92fb59185286",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 305,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name={`cookedUnits-${protein.id}`} type=\"number\" step=\"0.1\" defaultValue={saved?.cookedUnits ?? ''} disabled={isLocked} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#92fb59185286"
+    },
+    {
+      "id": "df76c5a3c9bd",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 306,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name={`soldCookedLb-${protein.id}`} type=\"number\" step=\"0.1\" defaultValue={saved?.soldCookedLb ?? ''} disabled={isLocked} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#df76c5a3c9bd"
+    },
+    {
+      "id": "b4b29f7bf21f",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 307,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name={`usableLeftoverUnits-${protein.id}`} type=\"number\" step=\"0.1\" defaultValue={saved?.usableLeftoverUnits ?? ''} placeholder={displayUnit(protein.name, protein.inputUnit)} disabled={isLoc",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b4b29f7bf21f"
+    },
+    {
+      "id": "714c8fc2bb6b",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 308,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name={`usableLeftoverLb-${protein.id}`} type=\"number\" step=\"0.1\" defaultValue={saved?.usableLeftoverLb ?? ''} disabled={isLocked} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#714c8fc2bb6b"
+    },
+    {
+      "id": "aa68e599b830",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 309,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name={`wasteLb-${protein.id}`} type=\"number\" step=\"0.1\" defaultValue={saved?.wasteLb ?? ''} disabled={isLocked} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#aa68e599b830"
+    },
+    {
+      "id": "4f5bf6ccd0ff",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 311,
+      "type": "input",
+      "snippet": "<input name={`eightySixed-${protein.id}`} type=\"checkbox\" defaultChecked={saved?.eightySixed ?? false} className=\"h-5 w-5\" disabled={isLocked} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4f5bf6ccd0ff"
+    },
+    {
+      "id": "af6076ed1381",
+      "file": "app/end-of-day/EndOfDayForm.tsx",
+      "line": 269,
+      "type": "textarea",
+      "snippet": "<textarea readOnly className=\"mt-3 h-24 w-full rounded-xl border border-blue-200 bg-white p-2 text-xs font-mono\" value={pendingRetryPayload} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#af6076ed1381"
+    },
+    {
+      "id": "1117593c0ecf",
+      "file": "app/end-of-day/QuickEndOfDayForm.tsx",
+      "line": 125,
+      "type": "button",
+      "snippet": "<button data-testid=\"submit-quick-eod\" className=\"btn-primary w-full py-4 text-lg md:w-auto\" type=\"submit\" disabled={saving || isLocked}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#1117593c0ecf"
+    },
+    {
+      "id": "e43cfe6b3c88",
+      "file": "app/end-of-day/QuickEndOfDayForm.tsx",
+      "line": 98,
+      "type": "form",
+      "snippet": "<form onSubmit={submit} className=\"space-y-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e43cfe6b3c88"
+    },
+    {
+      "id": "8286f55ff4c9",
+      "file": "app/end-of-day/QuickEndOfDayForm.tsx",
+      "line": 101,
+      "type": "input",
+      "snippet": "<input id=\"quick-service-date\" data-testid=\"quick-eod-date\" className=\"field mt-1\" type=\"date\" value={serviceDate} onChange={(e) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#8286f55ff4c9"
+    },
+    {
+      "id": "0aefadfdd261",
+      "file": "app/end-of-day/QuickEndOfDayForm.tsx",
+      "line": 113,
+      "type": "input",
+      "snippet": "<input id={`sealed-${code}`} data-testid={`quick-eod-sealed-${code}`} className=\"field mt-1 text-lg font-black\" name={`sealed-${code}`} type=\"number\" min=\"0\" step=\"1\" inputMode=\"numeric\" defaultValue={saved?.sealedUnopen",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0aefadfdd261"
+    },
+    {
+      "id": "e42f82ab10c2",
+      "file": "app/end-of-day/QuickEndOfDayForm.tsx",
+      "line": 117,
+      "type": "input",
+      "snippet": "<input id={`opened-${code}`} data-testid={`quick-eod-opened-${code}`} className=\"field mt-1 text-lg font-black\" name={`opened-${code}`} type=\"number\" min=\"0\" step=\"0.1\" defaultValue={saved?.openedMeatLb ?? 0} required di",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e42f82ab10c2"
+    },
+    {
+      "id": "a71fd15873f6",
+      "file": "app/help/page.tsx",
+      "line": 25,
+      "type": "link",
+      "snippet": "<Link href=\"/tour\" className=\"btn-primary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a71fd15873f6"
+    },
+    {
+      "id": "08056a9a5ec1",
+      "file": "app/help/page.tsx",
+      "line": 26,
+      "type": "link",
+      "snippet": "<Link href=\"/support\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#08056a9a5ec1"
+    },
+    {
+      "id": "7c323c73a723",
+      "file": "app/help/page.tsx",
+      "line": 27,
+      "type": "link",
+      "snippet": "<Link href=\"/sales\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7c323c73a723"
+    },
+    {
+      "id": "4b7f3bcd35ca",
+      "file": "app/help/page.tsx",
+      "line": 33,
+      "type": "link",
+      "snippet": "<a className=\"font-black text-slate-900 underline\" href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4b7f3bcd35ca"
+    },
+    {
+      "id": "6e44c73a1e80",
+      "file": "app/help/page.tsx",
+      "line": 53,
+      "type": "link",
+      "snippet": "<a className=\"underline\" href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6e44c73a1e80"
+    },
+    {
+      "id": "6e44c73a1e80",
+      "file": "app/help/page.tsx",
+      "line": 53,
+      "type": "link",
+      "snippet": "<a className=\"underline\" href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6e44c73a1e80"
+    },
+    {
+      "id": "6f7654d6d6d9",
+      "file": "app/learning/page.tsx",
+      "line": 222,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary mt-3\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6f7654d6d6d9"
+    },
+    {
+      "id": "70d0f7a23a4c",
+      "file": "app/learning/page.tsx",
+      "line": 226,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary mt-3\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#70d0f7a23a4c"
+    },
+    {
+      "id": "2703257fa461",
+      "file": "app/learning/page.tsx",
+      "line": 233,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2703257fa461"
+    },
+    {
+      "id": "c856453411f0",
+      "file": "app/learning/page.tsx",
+      "line": 233,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c856453411f0"
+    },
+    {
+      "id": "21307f07144d",
+      "file": "app/learning/page.tsx",
+      "line": 242,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#21307f07144d"
+    },
+    {
+      "id": "f6342ed2f3f9",
+      "file": "app/learning/page.tsx",
+      "line": 172,
+      "type": "link",
+      "snippet": "<Link className=\"btn-secondary\" href=\"/learning/proof\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f6342ed2f3f9"
+    },
+    {
+      "id": "59abcfa53cff",
+      "file": "app/learning/page.tsx",
+      "line": 220,
+      "type": "form",
+      "snippet": "<form key={row.protein.id} action={saveLearningRecommendation} className=\"rounded-xl bg-slate-50 p-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#59abcfa53cff"
+    },
+    {
+      "id": "c3e689868421",
+      "file": "app/learning/page.tsx",
+      "line": 224,
+      "type": "form",
+      "snippet": "<form key={row.day} action={saveLearningRecommendation} className=\"rounded-xl bg-slate-50 p-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c3e689868421"
+    },
+    {
+      "id": "eeac7d14b62a",
+      "file": "app/learning/page.tsx",
+      "line": 233,
+      "type": "form",
+      "snippet": "<form action={decideLearningRecommendation}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#eeac7d14b62a"
+    },
+    {
+      "id": "eeac7d14b62a",
+      "file": "app/learning/page.tsx",
+      "line": 233,
+      "type": "form",
+      "snippet": "<form action={decideLearningRecommendation}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#eeac7d14b62a"
+    },
+    {
+      "id": "82f43a1122ea",
+      "file": "app/learning/page.tsx",
+      "line": 242,
+      "type": "form",
+      "snippet": "<form className=\"mt-2\" action={rollbackLearningRecommendation}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#82f43a1122ea"
+    },
+    {
+      "id": "d2f278dcbf4f",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"type\" value=\"PROTEIN_MIX_OR_SAFETY_CHANGE\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d2f278dcbf4f"
+    },
+    {
+      "id": "672614a25a9b",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"title\" value={`${row.protein.name} forecast setting adjustment`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#672614a25a9b"
+    },
+    {
+      "id": "0d9d8d9d6359",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"recommendation\" value={row.action} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0d9d8d9d6359"
+    },
+    {
+      "id": "0edc7fb4c80d",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"targetEntity\" value=\"ForecastScenario\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0edc7fb4c80d"
+    },
+    {
+      "id": "0071cce002b3",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"targetId\" value={primaryScenario?.id || ''} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0071cce002b3"
+    },
+    {
+      "id": "64f5c90c3751",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"settingKey\" value={row.mixKey || 'safetyFactorPct'} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#64f5c90c3751"
+    },
+    {
+      "id": "df91f43f4d8a",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"beforeJson\" value={JSON.stringify(row.beforeScenario)} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#df91f43f4d8a"
+    },
+    {
+      "id": "23e82edfbfa1",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"afterJson\" value={JSON.stringify(row.afterScenario)} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#23e82edfbfa1"
+    },
+    {
+      "id": "9b09730b5139",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"confidence\" value={row.confidence} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9b09730b5139"
+    },
+    {
+      "id": "8faf871891d2",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"sampleCount\" value={row.sampleCount} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#8faf871891d2"
+    },
+    {
+      "id": "2f6b52adbff3",
+      "file": "app/learning/page.tsx",
+      "line": 221,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"minimumSampleCount\" value={row.minimum} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2f6b52adbff3"
+    },
+    {
+      "id": "4d83ea2a9a8b",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"type\" value=\"DAY_MULTIPLIER_CHANGE\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4d83ea2a9a8b"
+    },
+    {
+      "id": "d0f29edd8a4f",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"title\" value={`${row.label} day multiplier adjustment`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d0f29edd8a4f"
+    },
+    {
+      "id": "35e7b87dc35a",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"recommendation\" value={row.suggestion} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#35e7b87dc35a"
+    },
+    {
+      "id": "61222ea4dd19",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"targetEntity\" value=\"DayMultiplier\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#61222ea4dd19"
+    },
+    {
+      "id": "28ddac783bad",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"targetId\" value={row.daySetting?.id || ''} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#28ddac783bad"
+    },
+    {
+      "id": "a2f9f79c961e",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"settingKey\" value=\"multiplier\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a2f9f79c961e"
+    },
+    {
+      "id": "e56ca7a8f478",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"beforeJson\" value={JSON.stringify({ id: row.daySetting?.id, dayOfWeek: row.day, label: row.label, multiplier: row.currentMultiplier })} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e56ca7a8f478"
+    },
+    {
+      "id": "b974a8bce65a",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"afterJson\" value={JSON.stringify({ id: row.daySetting?.id, multiplier: row.proposedMultiplier })} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b974a8bce65a"
+    },
+    {
+      "id": "c22aa0cecd15",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"confidence\" value={row.confidence} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c22aa0cecd15"
+    },
+    {
+      "id": "a005086c9820",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"sampleCount\" value={row.count} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a005086c9820"
+    },
+    {
+      "id": "ac8c070c33dc",
+      "file": "app/learning/page.tsx",
+      "line": 225,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"minimumSampleCount\" value={row.minimum} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ac8c070c33dc"
+    },
+    {
+      "id": "bd85f22d7242",
+      "file": "app/learning/page.tsx",
+      "line": 233,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={item.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#bd85f22d7242"
+    },
+    {
+      "id": "fce6b4205f34",
+      "file": "app/learning/page.tsx",
+      "line": 233,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"decision\" value=\"ACCEPTED\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#fce6b4205f34"
+    },
+    {
+      "id": "bd85f22d7242",
+      "file": "app/learning/page.tsx",
+      "line": 233,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={item.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#bd85f22d7242"
+    },
+    {
+      "id": "0d72b09ae869",
+      "file": "app/learning/page.tsx",
+      "line": 233,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"decision\" value=\"REJECTED\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0d72b09ae869"
+    },
+    {
+      "id": "1b3c92aab9b2",
+      "file": "app/learning/page.tsx",
+      "line": 242,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={item.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#1b3c92aab9b2"
+    },
+    {
+      "id": "11a265f81cf1",
+      "file": "app/learning/proof/page.tsx",
+      "line": 65,
+      "type": "link",
+      "snippet": "<Link className=\"btn-secondary\" href=\"/learning\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#11a265f81cf1"
+    },
+    {
+      "id": "c6e3356beab8",
+      "file": "app/login/page.tsx",
+      "line": 32,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50\" type=\"submit\" disabled={hasConfigError}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c6e3356beab8"
+    },
+    {
+      "id": "7673dd5bab9e",
+      "file": "app/login/page.tsx",
+      "line": 34,
+      "type": "link",
+      "snippet": "<Link href=\"/signup\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7673dd5bab9e"
+    },
+    {
+      "id": "aef46bb33345",
+      "file": "app/login/page.tsx",
+      "line": 34,
+      "type": "link",
+      "snippet": "<Link href=\"/demo\" className=\"btn-secondary\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#aef46bb33345"
+    },
+    {
+      "id": "d91b672e25ad",
+      "file": "app/login/page.tsx",
+      "line": 19,
+      "type": "form",
+      "snippet": "<form action=\"/api/login\" method=\"POST\" className=\"space-y-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d91b672e25ad"
+    },
+    {
+      "id": "fb8e7160ffe4",
+      "file": "app/login/page.tsx",
+      "line": 22,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"username\" type=\"text\" required autoFocus autoComplete=\"username\" disabled={hasConfigError} placeholder=\"admin\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#fb8e7160ffe4"
+    },
+    {
+      "id": "dfeccf86a3c6",
+      "file": "app/login/page.tsx",
+      "line": 26,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"password\" type=\"password\" required autoComplete=\"current-password\" disabled={hasConfigError} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#dfeccf86a3c6"
+    },
+    {
+      "id": "c198e8cc0f29",
+      "file": "app/login/page.tsx",
+      "line": 30,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"otp\" type=\"text\" inputMode=\"numeric\" autoComplete=\"one-time-code\" placeholder=\"optional\" disabled={hasConfigError} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c198e8cc0f29"
+    },
+    {
+      "id": "7b50753dffe5",
+      "file": "app/reports/page.tsx",
+      "line": 132,
+      "type": "button",
+      "snippet": "<button className=\"w-full rounded-xl bg-orange-600 px-4 py-2 font-black text-white hover:bg-orange-700\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7b50753dffe5"
+    },
+    {
+      "id": "d2858a2a79d5",
+      "file": "app/reports/page.tsx",
+      "line": 151,
+      "type": "button",
+      "snippet": "<button className=\"w-full rounded-xl border border-slate-300 bg-white px-4 py-2 font-black hover:bg-slate-100\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d2858a2a79d5"
+    },
+    {
+      "id": "c83b39f07ea8",
+      "file": "app/reports/page.tsx",
+      "line": 166,
+      "type": "button",
+      "snippet": "<button className=\"text-xs font-black text-red-700 hover:underline\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c83b39f07ea8"
+    },
+    {
+      "id": "ab32756268e4",
+      "file": "app/reports/page.tsx",
+      "line": 75,
+      "type": "link",
+      "snippet": "<Link href={csvHref} className=\"rounded-xl bg-slate-900 px-4 py-2 text-center text-sm font-black text-white hover:bg-slate-700\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ab32756268e4"
+    },
+    {
+      "id": "db414c0d3cbb",
+      "file": "app/reports/page.tsx",
+      "line": 163,
+      "type": "link",
+      "snippet": "<Link href={href} className=\"font-black text-slate-900 hover:underline\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#db414c0d3cbb"
+    },
+    {
+      "id": "11e20ece5edb",
+      "file": "app/reports/page.tsx",
+      "line": 212,
+      "type": "link",
+      "snippet": "<Link className=\"rounded-xl border border-slate-300 px-4 py-2 text-center font-bold hover:bg-slate-50\" href={`/api/reports/export?${queryString({ ...params, range: selectedRange, dataset: 'eodRaw' })}`}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#11e20ece5edb"
+    },
+    {
+      "id": "211f8bc7ae90",
+      "file": "app/reports/page.tsx",
+      "line": 213,
+      "type": "link",
+      "snippet": "<Link className=\"rounded-xl border border-slate-300 px-4 py-2 text-center font-bold hover:bg-slate-50\" href={`/api/reports/export?${queryString({ ...params, range: selectedRange, dataset: 'cookPlanRaw' })}`}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#211f8bc7ae90"
+    },
+    {
+      "id": "9ddf138b5bf4",
+      "file": "app/reports/page.tsx",
+      "line": 214,
+      "type": "link",
+      "snippet": "<Link className=\"rounded-xl bg-slate-900 px-4 py-2 text-center font-bold text-white hover:bg-slate-700\" href=\"/api/reports/backup\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9ddf138b5bf4"
+    },
+    {
+      "id": "f742093ef364",
+      "file": "app/reports/page.tsx",
+      "line": 232,
+      "type": "link",
+      "snippet": "<Link className=\"rounded-xl bg-white p-3 text-sm font-bold shadow-sm hover:bg-amber-100\" href=\"/reports?source=eod&metric=wasteLb&groupBy=dayOfWeekProtein&protein=all&range=lastMonth\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f742093ef364"
+    },
+    {
+      "id": "71baa13ca967",
+      "file": "app/reports/page.tsx",
+      "line": 233,
+      "type": "link",
+      "snippet": "<Link className=\"rounded-xl bg-white p-3 text-sm font-bold shadow-sm hover:bg-amber-100\" href=\"/reports?source=cookPlan&metric=loadedUnits&groupBy=dateProtein&protein=all&range=lastWeek\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#71baa13ca967"
+    },
+    {
+      "id": "101a4e1e8506",
+      "file": "app/reports/page.tsx",
+      "line": 234,
+      "type": "link",
+      "snippet": "<Link className=\"rounded-xl bg-white p-3 text-sm font-bold shadow-sm hover:bg-amber-100\" href=\"/reports?source=eod&metric=eightySixed&groupBy=protein&protein=all&range=last30\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#101a4e1e8506"
+    },
+    {
+      "id": "ce53d0838b12",
+      "file": "app/reports/page.tsx",
+      "line": 78,
+      "type": "form",
+      "snippet": "<form className=\"grid gap-4 md:grid-cols-3 lg:grid-cols-6\" action=\"/reports\" method=\"GET\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ce53d0838b12"
+    },
+    {
+      "id": "a643f4c7105b",
+      "file": "app/reports/page.tsx",
+      "line": 136,
+      "type": "form",
+      "snippet": "<form className=\"mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4\" action=\"/api/reports/saved\" method=\"POST\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a643f4c7105b"
+    },
+    {
+      "id": "443b05a54d75",
+      "file": "app/reports/page.tsx",
+      "line": 166,
+      "type": "form",
+      "snippet": "<form className=\"mt-3\" action=\"/api/reports/saved/delete\" method=\"POST\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#443b05a54d75"
+    },
+    {
+      "id": "0f7dfcb5ba00",
+      "file": "app/reports/page.tsx",
+      "line": 80,
+      "type": "select",
+      "snippet": "<select name=\"source\" defaultValue={params.source} className=\"mt-1 w-full rounded-xl border border-slate-300 p-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0f7dfcb5ba00"
+    },
+    {
+      "id": "4e44bc659bbf",
+      "file": "app/reports/page.tsx",
+      "line": 86,
+      "type": "select",
+      "snippet": "<select name=\"metric\" defaultValue={params.metric} className=\"mt-1 w-full rounded-xl border border-slate-300 p-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4e44bc659bbf"
+    },
+    {
+      "id": "df1eb9f4b1bc",
+      "file": "app/reports/page.tsx",
+      "line": 104,
+      "type": "select",
+      "snippet": "<select name=\"groupBy\" defaultValue={params.groupBy} className=\"mt-1 w-full rounded-xl border border-slate-300 p-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#df1eb9f4b1bc"
+    },
+    {
+      "id": "5aa8a7007570",
+      "file": "app/reports/page.tsx",
+      "line": 113,
+      "type": "select",
+      "snippet": "<select name=\"protein\" defaultValue={params.protein} className=\"mt-1 w-full rounded-xl border border-slate-300 p-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5aa8a7007570"
+    },
+    {
+      "id": "03c1583aebe9",
+      "file": "app/reports/page.tsx",
+      "line": 119,
+      "type": "select",
+      "snippet": "<select name=\"range\" defaultValue={selectedRange} className=\"mt-1 w-full rounded-xl border border-slate-300 p-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#03c1583aebe9"
+    },
+    {
+      "id": "f895ea7ca994",
+      "file": "app/reports/page.tsx",
+      "line": 125,
+      "type": "input",
+      "snippet": "<input type=\"date\" name=\"start\" defaultValue={params.start} className=\"mt-1 w-full rounded-xl border border-slate-300 p-2\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f895ea7ca994"
+    },
+    {
+      "id": "f443dc3222b7",
+      "file": "app/reports/page.tsx",
+      "line": 128,
+      "type": "input",
+      "snippet": "<input type=\"date\" name=\"end\" defaultValue={params.end} className=\"mt-1 w-full rounded-xl border border-slate-300 p-2\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f443dc3222b7"
+    },
+    {
+      "id": "c4ee2d5a0a97",
+      "file": "app/reports/page.tsx",
+      "line": 138,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"source\" value={params.source} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c4ee2d5a0a97"
+    },
+    {
+      "id": "d67ad2d93e8e",
+      "file": "app/reports/page.tsx",
+      "line": 139,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"metric\" value={params.metric} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d67ad2d93e8e"
+    },
+    {
+      "id": "7c5e1bd8f23b",
+      "file": "app/reports/page.tsx",
+      "line": 140,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"groupBy\" value={params.groupBy} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7c5e1bd8f23b"
+    },
+    {
+      "id": "91167951298c",
+      "file": "app/reports/page.tsx",
+      "line": 141,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"protein\" value={params.protein} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#91167951298c"
+    },
+    {
+      "id": "994f55987ffe",
+      "file": "app/reports/page.tsx",
+      "line": 142,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"range\" value={selectedRange} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#994f55987ffe"
+    },
+    {
+      "id": "736abde33a70",
+      "file": "app/reports/page.tsx",
+      "line": 143,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"start\" value={params.start} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#736abde33a70"
+    },
+    {
+      "id": "2a8293c1eb89",
+      "file": "app/reports/page.tsx",
+      "line": 144,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"end\" value={params.end} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2a8293c1eb89"
+    },
+    {
+      "id": "17435c4d5813",
+      "file": "app/reports/page.tsx",
+      "line": 146,
+      "type": "input",
+      "snippet": "<input name=\"name\" className=\"mt-1 w-full rounded-xl border border-slate-300 p-2\" placeholder=\"Weekly waste by day of week\" required maxLength={80} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#17435c4d5813"
+    },
+    {
+      "id": "51884d6fe9f0",
+      "file": "app/reports/page.tsx",
+      "line": 149,
+      "type": "input",
+      "snippet": "<input name=\"description\" className=\"mt-1 w-full rounded-xl border border-slate-300 p-2\" placeholder=\"Optional\" maxLength={240} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#51884d6fe9f0"
+    },
+    {
+      "id": "168b27c7d727",
+      "file": "app/reports/page.tsx",
+      "line": 166,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={report.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#168b27c7d727"
+    },
+    {
+      "id": "0c183fb9b625",
+      "file": "app/sales/page.tsx",
+      "line": 19,
+      "type": "link",
+      "snippet": "<Link className=\"btn-primary bg-white text-slate-900 hover:bg-slate-100\" href=\"/demo\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0c183fb9b625"
+    },
+    {
+      "id": "55a905a9b291",
+      "file": "app/sales/page.tsx",
+      "line": 20,
+      "type": "link",
+      "snippet": "<Link className=\"btn-secondary border-white/30 text-white hover:bg-white/10\" href=\"/tour\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#55a905a9b291"
+    },
+    {
+      "id": "ed957a0e66fb",
+      "file": "app/sales/page.tsx",
+      "line": 21,
+      "type": "link",
+      "snippet": "<Link className=\"btn-secondary border-white/30 text-white hover:bg-white/10\" href=\"/signup\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ed957a0e66fb"
+    },
+    {
+      "id": "867226e3aa7f",
+      "file": "app/settings/page.tsx",
+      "line": 66,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary mt-4\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#867226e3aa7f"
+    },
+    {
+      "id": "ac8bdea6e6ee",
+      "file": "app/settings/page.tsx",
+      "line": 102,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary mt-4\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ac8bdea6e6ee"
+    },
+    {
+      "id": "de2797479abc",
+      "file": "app/settings/page.tsx",
+      "line": 136,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#de2797479abc"
+    },
+    {
+      "id": "bed4cf3ab0c2",
+      "file": "app/settings/page.tsx",
+      "line": 150,
+      "type": "button",
+      "snippet": "<button className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#bed4cf3ab0c2"
+    },
+    {
+      "id": "e386e756fa1b",
+      "file": "app/settings/page.tsx",
+      "line": 45,
+      "type": "form",
+      "snippet": "<form key={scenario.id} action={updateScenario} className=\"rounded-2xl border border-slate-200 p-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e386e756fa1b"
+    },
+    {
+      "id": "b72329848aee",
+      "file": "app/settings/page.tsx",
+      "line": 82,
+      "type": "form",
+      "snippet": "<form key={protein.id} action={updateProtein} className=\"rounded-2xl border border-slate-200 p-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b72329848aee"
+    },
+    {
+      "id": "e42c60307e12",
+      "file": "app/settings/page.tsx",
+      "line": 133,
+      "type": "form",
+      "snippet": "<form key={day.id} action={updateDayMultiplier} className=\"flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e42c60307e12"
+    },
+    {
+      "id": "73e1290ecc5b",
+      "file": "app/settings/page.tsx",
+      "line": 147,
+      "type": "form",
+      "snippet": "<form key={month.id} action={updateMonthMultiplier} className=\"flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#73e1290ecc5b"
+    },
+    {
+      "id": "807fb54d010e",
+      "file": "app/settings/page.tsx",
+      "line": 46,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={scenario.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#807fb54d010e"
+    },
+    {
+      "id": "9950355edcc6",
+      "file": "app/settings/page.tsx",
+      "line": 58,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"annualSales\" type=\"number\" defaultValue={scenario.annualSales} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9950355edcc6"
+    },
+    {
+      "id": "1e28e4fd7fdb",
+      "file": "app/settings/page.tsx",
+      "line": 59,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"bbqSalesPercent\" type=\"number\" step=\"0.1\" defaultValue={scenario.bbqSalesPercent} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#1e28e4fd7fdb"
+    },
+    {
+      "id": "6a2bc3e820c0",
+      "file": "app/settings/page.tsx",
+      "line": 60,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"safetyFactorPct\" type=\"number\" step=\"0.1\" defaultValue={scenario.safetyFactorPct} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6a2bc3e820c0"
+    },
+    {
+      "id": "f655258558ce",
+      "file": "app/settings/page.tsx",
+      "line": 61,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"brisketMixPct\" type=\"number\" step=\"0.1\" defaultValue={scenario.brisketMixPct} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f655258558ce"
+    },
+    {
+      "id": "04e0fb01f03c",
+      "file": "app/settings/page.tsx",
+      "line": 62,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"porkMixPct\" type=\"number\" step=\"0.1\" defaultValue={scenario.porkMixPct} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#04e0fb01f03c"
+    },
+    {
+      "id": "271f245b8597",
+      "file": "app/settings/page.tsx",
+      "line": 63,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"ribsMixPct\" type=\"number\" step=\"0.1\" defaultValue={scenario.ribsMixPct} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#271f245b8597"
+    },
+    {
+      "id": "a087ca507695",
+      "file": "app/settings/page.tsx",
+      "line": 64,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"chickenMixPct\" type=\"number\" step=\"0.1\" defaultValue={scenario.chickenMixPct} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a087ca507695"
+    },
+    {
+      "id": "6068e0158fdf",
+      "file": "app/settings/page.tsx",
+      "line": 83,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={protein.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6068e0158fdf"
+    },
+    {
+      "id": "bbd007b477a4",
+      "file": "app/settings/page.tsx",
+      "line": 89,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"rawWeightEachLb\" type=\"number\" step=\"0.1\" defaultValue={protein.rawWeightEachLb} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#bbd007b477a4"
+    },
+    {
+      "id": "447c89a5a3a1",
+      "file": "app/settings/page.tsx",
+      "line": 90,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"cookedWeightEachLb\" type=\"number\" step=\"0.1\" defaultValue={protein.cookedWeightEachLb} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#447c89a5a3a1"
+    },
+    {
+      "id": "27e8b520a0d1",
+      "file": "app/settings/page.tsx",
+      "line": 91,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"cookedYieldPercent\" type=\"number\" step=\"0.1\" defaultValue={protein.cookedYieldPercent} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#27e8b520a0d1"
+    },
+    {
+      "id": "547bddd7aec9",
+      "file": "app/settings/page.tsx",
+      "line": 92,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"avgSalesPerCookedLb\" type=\"number\" step=\"0.1\" defaultValue={protein.avgSalesPerCookedLb} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#547bddd7aec9"
+    },
+    {
+      "id": "e36ecdf817a6",
+      "file": "app/settings/page.tsx",
+      "line": 93,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"purchaseCostEach\" type=\"number\" step=\"0.01\" defaultValue={protein.purchaseCostEach} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e36ecdf817a6"
+    },
+    {
+      "id": "027bd4fd6a49",
+      "file": "app/settings/page.tsx",
+      "line": 94,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"salesPriceEach\" type=\"number\" step=\"0.01\" defaultValue={protein.salesPriceEach} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#027bd4fd6a49"
+    },
+    {
+      "id": "f223ea46902e",
+      "file": "app/settings/page.tsx",
+      "line": 95,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"sandwichOz\" type=\"number\" step=\"0.1\" defaultValue={protein.sandwichOz} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f223ea46902e"
+    },
+    {
+      "id": "f003bcd25a1e",
+      "file": "app/settings/page.tsx",
+      "line": 96,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"plateOz\" type=\"number\" step=\"0.1\" defaultValue={protein.plateOz} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f003bcd25a1e"
+    },
+    {
+      "id": "9dfbd4a39c9d",
+      "file": "app/settings/page.tsx",
+      "line": 97,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"minCookUnits\" type=\"number\" step=\"1\" defaultValue={protein.minCookUnits} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9dfbd4a39c9d"
+    },
+    {
+      "id": "8c7ddec70bd9",
+      "file": "app/settings/page.tsx",
+      "line": 98,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"maxCookUnits\" type=\"number\" step=\"1\" defaultValue={protein.maxCookUnits} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#8c7ddec70bd9"
+    },
+    {
+      "id": "2b43f461b0b8",
+      "file": "app/settings/page.tsx",
+      "line": 99,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"maxReuseHours\" type=\"number\" step=\"1\" defaultValue={protein.maxReuseHours} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2b43f461b0b8"
+    },
+    {
+      "id": "cf440cd26cad",
+      "file": "app/settings/page.tsx",
+      "line": 100,
+      "type": "input",
+      "snippet": "<input name=\"reusableLeftover\" type=\"checkbox\" className=\"h-5 w-5\" defaultChecked={protein.reusableLeftover} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#cf440cd26cad"
+    },
+    {
+      "id": "d1bd83023f1c",
+      "file": "app/settings/page.tsx",
+      "line": 134,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={day.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#d1bd83023f1c"
+    },
+    {
+      "id": "a7b9280901d4",
+      "file": "app/settings/page.tsx",
+      "line": 136,
+      "type": "input",
+      "snippet": "<input className=\"field w-24\" name=\"multiplier\" type=\"number\" min=\"0.1\" max=\"3\" step=\"0.01\" defaultValue={day.multiplier} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#a7b9280901d4"
+    },
+    {
+      "id": "1d1c08e899ec",
+      "file": "app/settings/page.tsx",
+      "line": 148,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={month.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#1d1c08e899ec"
+    },
+    {
+      "id": "c0854e2c146e",
+      "file": "app/settings/page.tsx",
+      "line": 150,
+      "type": "input",
+      "snippet": "<input className=\"field w-24\" name=\"multiplier\" type=\"number\" min=\"0.1\" max=\"3\" step=\"0.01\" defaultValue={month.multiplier} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c0854e2c146e"
+    },
+    {
+      "id": "bb6c33c9d6e5",
+      "file": "app/signup/page.tsx",
+      "line": 27,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#bb6c33c9d6e5"
+    },
+    {
+      "id": "c8c7e504720c",
+      "file": "app/signup/page.tsx",
+      "line": 27,
+      "type": "link",
+      "snippet": "<Link className=\"btn-secondary\" href=\"/demo\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c8c7e504720c"
+    },
+    {
+      "id": "0e7ed659fed4",
+      "file": "app/signup/page.tsx",
+      "line": 27,
+      "type": "link",
+      "snippet": "<Link className=\"btn-secondary\" href=\"/login\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0e7ed659fed4"
+    },
+    {
+      "id": "24b60b56edeb",
+      "file": "app/signup/page.tsx",
+      "line": 18,
+      "type": "form",
+      "snippet": "<form action=\"/api/signup\" method=\"POST\" className=\"grid gap-4 md:grid-cols-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#24b60b56edeb"
+    },
+    {
+      "id": "9b2a317f9f49",
+      "file": "app/signup/page.tsx",
+      "line": 19,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"restaurantName\" required placeholder=\"Example Smokehouse\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9b2a317f9f49"
+    },
+    {
+      "id": "c62a10751b90",
+      "file": "app/signup/page.tsx",
+      "line": 20,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"city\" placeholder=\"Knoxville\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c62a10751b90"
+    },
+    {
+      "id": "7f72251129a9",
+      "file": "app/signup/page.tsx",
+      "line": 21,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"state\" placeholder=\"TN\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7f72251129a9"
+    },
+    {
+      "id": "4f4d6ae2a870",
+      "file": "app/signup/page.tsx",
+      "line": 22,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"timezone\" defaultValue=\"America/New_York\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4f4d6ae2a870"
+    },
+    {
+      "id": "ceea30420b54",
+      "file": "app/signup/page.tsx",
+      "line": 23,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"ownerName\" required placeholder=\"Jane Owner\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ceea30420b54"
+    },
+    {
+      "id": "7a0f2751001b",
+      "file": "app/signup/page.tsx",
+      "line": 24,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"email\" type=\"email\" required placeholder=\"owner@example.com\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#7a0f2751001b"
+    },
+    {
+      "id": "78c7337f78d3",
+      "file": "app/signup/page.tsx",
+      "line": 25,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"username\" required placeholder=\"jane-owner\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#78c7337f78d3"
+    },
+    {
+      "id": "68c38a58b9eb",
+      "file": "app/signup/page.tsx",
+      "line": 26,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"password\" type=\"password\" required minLength={12} placeholder=\"12+ characters\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#68c38a58b9eb"
+    },
+    {
+      "id": "f64322186038",
+      "file": "app/support/page.tsx",
+      "line": 28,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f64322186038"
+    },
+    {
+      "id": "dddc313fc9e7",
+      "file": "app/support/page.tsx",
+      "line": 31,
+      "type": "link",
+      "snippet": "<a className=\"font-black underline\" href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#dddc313fc9e7"
+    },
+    {
+      "id": "c65b3411d4a0",
+      "file": "app/support/page.tsx",
+      "line": 22,
+      "type": "form",
+      "snippet": "<form action=\"/api/support\" method=\"POST\" className=\"mt-4 grid gap-4 md:grid-cols-2\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#c65b3411d4a0"
+    },
+    {
+      "id": "3f884b2acd2b",
+      "file": "app/support/page.tsx",
+      "line": 25,
+      "type": "select",
+      "snippet": "<select className=\"field mt-1\" name=\"priority\" defaultValue=\"NORMAL\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#3f884b2acd2b"
+    },
+    {
+      "id": "48fe7beb6d50",
+      "file": "app/support/page.tsx",
+      "line": 23,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"name\" defaultValue={defaultName} required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#48fe7beb6d50"
+    },
+    {
+      "id": "68ef237c5dd7",
+      "file": "app/support/page.tsx",
+      "line": 24,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"email\" type=\"email\" defaultValue={defaultEmail} required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#68ef237c5dd7"
+    },
+    {
+      "id": "0f47c55a7b4a",
+      "file": "app/support/page.tsx",
+      "line": 26,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"subject\" required placeholder=\"EOD log issue / forecast question / billing\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0f47c55a7b4a"
+    },
+    {
+      "id": "f3072c7e43af",
+      "file": "app/support/page.tsx",
+      "line": 27,
+      "type": "textarea",
+      "snippet": "<textarea className=\"field mt-1 min-h-36\" name=\"message\" required placeholder=\"Tell us what page you were on, what you expected, and what happened.\" />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#f3072c7e43af"
+    },
+    {
+      "id": "911a154d5c26",
+      "file": "app/today/page.tsx",
+      "line": 83,
+      "type": "link",
+      "snippet": "<Link href={kitchenMode ? '/today' : '/today?kitchen=1'} className=\"rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#911a154d5c26"
+    },
+    {
+      "id": "fc401ed8b970",
+      "file": "app/today/page.tsx",
+      "line": 84,
+      "type": "link",
+      "snippet": "<Link href=\"/cook-plan\" className=\"rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#fc401ed8b970"
+    },
+    {
+      "id": "3960854962b2",
+      "file": "app/today/page.tsx",
+      "line": 85,
+      "type": "link",
+      "snippet": "<Link href={`/end-of-day?serviceDate=${today.toISOString().slice(0,10)}`} className=\"rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#3960854962b2"
+    },
+    {
+      "id": "faad5e7b945f",
+      "file": "app/today/page.tsx",
+      "line": 86,
+      "type": "link",
+      "snippet": "<Link href={`/cook-plan/print?planId=${operationalPlan.id}`} className=\"rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#faad5e7b945f"
+    },
+    {
+      "id": "3dfd99640b3f",
+      "file": "app/today/page.tsx",
+      "line": 138,
+      "type": "link",
+      "snippet": "<Link href=\"/admin/smokers/schedule\" className=\"rounded-full border border-slate-200 px-4 py-2 text-sm font-black hover:bg-slate-100\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#3dfd99640b3f"
+    },
+    {
+      "id": "6d5122aab1fc",
+      "file": "app/tour/page.tsx",
+      "line": 23,
+      "type": "link",
+      "snippet": "<Link className=\"btn-primary bg-white text-slate-900 hover:bg-slate-100\" href=\"/today\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6d5122aab1fc"
+    },
+    {
+      "id": "2b2009e2d6be",
+      "file": "app/tour/page.tsx",
+      "line": 24,
+      "type": "link",
+      "snippet": "<Link className=\"btn-secondary border-white/30 text-white hover:bg-white/10\" href=\"/demo\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2b2009e2d6be"
+    },
+    {
+      "id": "33376b6b71d5",
+      "file": "app/tour/page.tsx",
+      "line": 25,
+      "type": "link",
+      "snippet": "<Link className=\"btn-secondary border-white/30 text-white hover:bg-white/10\" href=\"/help\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#33376b6b71d5"
+    },
+    {
+      "id": "0954161b2f97",
+      "file": "app/tour/page.tsx",
+      "line": 36,
+      "type": "link",
+      "snippet": "<Link href={step.href} className=\"whitespace-nowrap rounded-full border border-slate-200 px-3 py-2 text-sm font-black hover:bg-slate-100\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0954161b2f97"
+    },
+    {
+      "id": "795e9490f7a1",
+      "file": "components/ArcherChat.tsx",
+      "line": 137,
+      "type": "button",
+      "snippet": "<button type=\"button\" onClick={() =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#795e9490f7a1"
+    },
+    {
+      "id": "65ad6e0f4f4a",
+      "file": "components/ArcherChat.tsx",
+      "line": 138,
+      "type": "button",
+      "snippet": "<button type=\"button\" onClick={() =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#65ad6e0f4f4a"
+    },
+    {
+      "id": "910f5006321c",
+      "file": "components/ArcherChat.tsx",
+      "line": 148,
+      "type": "button",
+      "snippet": "<button type=\"button\" className={listening ? 'archer-mic listening' : 'archer-mic'} onClick={toggleListening} aria-label={listening ? 'Stop recording voice question' : 'Record voice question'} aria-pressed={listening} da",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#910f5006321c"
+    },
+    {
+      "id": "9fa6c46be207",
+      "file": "components/ArcherChat.tsx",
+      "line": 149,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary px-4 py-2\" disabled={busy || input.trim().length<2}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9fa6c46be207"
+    },
+    {
+      "id": "146b08f8b39a",
+      "file": "components/ArcherChat.tsx",
+      "line": 156,
+      "type": "button",
+      "snippet": "<button type=\"button\" className=\"archer-launcher\" onClick={()=>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#146b08f8b39a"
+    },
+    {
+      "id": "42ae88da820c",
+      "file": "components/ArcherChat.tsx",
+      "line": 142,
+      "type": "form",
+      "snippet": "<form onSubmit={submit} className=\"archer-form\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#42ae88da820c"
+    },
+    {
+      "id": "6181a8927874",
+      "file": "components/ArcherChat.tsx",
+      "line": 144,
+      "type": "textarea",
+      "snippet": "<textarea id=\"archer-question\" value={input} onChange={e=>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6181a8927874"
+    },
+    {
+      "id": "2e52e660725c",
+      "file": "components/BillingBanner.tsx",
+      "line": 14,
+      "type": "link",
+      "snippet": "<a className=\"font-black underline\" href=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2e52e660725c"
+    },
+    {
+      "id": "398b28d1060a",
+      "file": "components/Nav.tsx",
+      "line": 60,
+      "type": "link",
+      "snippet": "<Link href=\"/today\" className=\"text-xl font-black tracking-tight\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#398b28d1060a"
+    },
+    {
+      "id": "fcba15ca568c",
+      "file": "components/NavMenu.tsx",
+      "line": 53,
+      "type": "button",
+      "snippet": "<button className=\"whitespace-nowrap rounded-full border border-slate-200 px-3 py-2 text-sm font-black hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400\" type=\"submit\" data-testid=\"restaurant-switch",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#fcba15ca568c"
+    },
+    {
+      "id": "70f5cd4de0d3",
+      "file": "components/NavMenu.tsx",
+      "line": 65,
+      "type": "button",
+      "snippet": "<button type=\"button\" className=\"whitespace-nowrap rounded-full border border-slate-200 px-3 py-2 text-sm font-black hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400\" data-testid={`nav-menu-button-",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#70f5cd4de0d3"
+    },
+    {
+      "id": "e388d74453e1",
+      "file": "components/NavMenu.tsx",
+      "line": 103,
+      "type": "button",
+      "snippet": "<button className=\"whitespace-nowrap rounded-full border border-slate-200 px-3 py-2 text-sm font-black hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400\" type=\"submit\" data-testid=\"logout-button\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e388d74453e1"
+    },
+    {
+      "id": "02b69ac9e2bd",
+      "file": "components/NavMenu.tsx",
+      "line": 57,
+      "type": "link",
+      "snippet": "<Link href=\"/today\" className=\"whitespace-nowrap rounded-full bg-slate-950 px-3 py-2 text-sm font-black text-white focus:outline-none focus:ring-2 focus:ring-slate-400\" data-testid=\"nav-link-today\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#02b69ac9e2bd"
+    },
+    {
+      "id": "825f43db3ebd",
+      "file": "components/NavMenu.tsx",
+      "line": 85,
+      "type": "link",
+      "snippet": "<Link key={href} href={href} role=\"menuitem\" className=\"block rounded-xl px-3 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100 focus:bg-slate-100 focus:outline-none\" data-testid={`nav-link-${slug(itemLabel)}`} on",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#825f43db3ebd"
+    },
+    {
+      "id": "eb8455383f86",
+      "file": "components/NavMenu.tsx",
+      "line": 48,
+      "type": "form",
+      "snippet": "<form action=\"/api/restaurants/switch\" method=\"POST\" className=\"flex items-center gap-2\" data-testid=\"restaurant-switch-form\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#eb8455383f86"
+    },
+    {
+      "id": "5d1efc2dcf28",
+      "file": "components/NavMenu.tsx",
+      "line": 102,
+      "type": "form",
+      "snippet": "<form action=\"/api/logout\" method=\"POST\" data-testid=\"logout-form\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#5d1efc2dcf28"
+    },
+    {
+      "id": "b81ab8585d5d",
+      "file": "components/NavMenu.tsx",
+      "line": 50,
+      "type": "select",
+      "snippet": "<select id=\"restaurant-switcher\" name=\"restaurantId\" defaultValue={currentRestaurantId} className=\"rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold\" data-testid=\"restaurant-switcher\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b81ab8585d5d"
+    },
+    {
+      "id": "8b6ae0eed9a3",
+      "file": "components/SubmitButton.tsx",
+      "line": 9,
+      "type": "button",
+      "snippet": "<button className=\"btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60\" type=\"submit\" disabled={pending}>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#8b6ae0eed9a3"
+    },
+    {
+      "id": "9e2a43779d6d",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 114,
+      "type": "button",
+      "snippet": "<button data-testid=\"add-smoker-submit\" className=\"btn-primary md:col-span-4\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#9e2a43779d6d"
+    },
+    {
+      "id": "e24d8713e318",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 140,
+      "type": "button",
+      "snippet": "<button data-testid={`save-smoker-${smoker.id}`} className=\"btn-secondary\" type=\"submit\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e24d8713e318"
+    },
+    {
+      "id": "0f5eb48c45a8",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 141,
+      "type": "button",
+      "snippet": "<button data-testid={`delete-smoker-${smoker.id}`} className=\"rounded-full bg-red-700 px-4 py-2 text-sm font-black text-white hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2\" type=",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0f5eb48c45a8"
+    },
+    {
+      "id": "e65132e839cf",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 101,
+      "type": "form",
+      "snippet": "<form action={action} data-testid=\"add-smoker-form\" className=\"mt-4 grid gap-3 md:grid-cols-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#e65132e839cf"
+    },
+    {
+      "id": "3f6b635372ac",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 124,
+      "type": "form",
+      "snippet": "<form action={action} data-testid={`edit-smoker-${smoker.id}`} className=\"card grid gap-3 p-5 md:grid-cols-4\">",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#3f6b635372ac"
+    },
+    {
+      "id": "b88992961224",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 49,
+      "type": "select",
+      "snippet": "<select className=\"field mt-1\" name={name} defaultValue={options.some((option) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#b88992961224"
+    },
+    {
+      "id": "2ff0cf5b14f0",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 79,
+      "type": "select",
+      "snippet": "<select className=\"field\" name=\"catalogId\" defaultValue={defaultValue} onChange={(event) =>",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2ff0cf5b14f0"
+    },
+    {
+      "id": "903fcb28d546",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 102,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"name\" placeholder=\"Example: Southern Pride outdoor\" required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#903fcb28d546"
+    },
+    {
+      "id": "ea9d8d17e598",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 104,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"brand\" placeholder=\"Manufacturer\" defaultValue={selected?.brand || ''} key={`brand-${selectedId}`} readOnly={Boolean(selected)} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#ea9d8d17e598"
+    },
+    {
+      "id": "86296867c6f3",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 105,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"model\" placeholder=\"Model\" defaultValue={selected?.model || ''} key={`model-${selectedId}`} readOnly={Boolean(selected)} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#86296867c6f3"
+    },
+    {
+      "id": "43a0e81d7740",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 108,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"rackCount\" type=\"number\" min=\"0\" step=\"1\" placeholder=\"Rack count\" defaultValue={inputValue(selected?.rackCount)} key={`r-${selectedId}`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#43a0e81d7740"
+    },
+    {
+      "id": "73c711adabbc",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 109,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"brisketCapacity\" type=\"number\" min=\"0\" step=\"0.1\" placeholder=\"Brisket count\" defaultValue={inputValue(selected?.brisketCapacity)} key={`b-${selectedId}`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#73c711adabbc"
+    },
+    {
+      "id": "95d38ad4505c",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 110,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"porkCapacity\" type=\"number\" min=\"0\" step=\"0.1\" placeholder=\"Pork butt count\" defaultValue={inputValue(selected?.porkCapacity)} key={`p-${selectedId}`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#95d38ad4505c"
+    },
+    {
+      "id": "41d820e69794",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 111,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"ribCapacity\" type=\"number\" min=\"0\" step=\"0.1\" placeholder=\"Rib rack count\" defaultValue={inputValue(selected?.ribCapacity)} key={`rb-${selectedId}`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#41d820e69794"
+    },
+    {
+      "id": "1bf8e6edb9c5",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 112,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"chickenCapacity\" type=\"number\" min=\"0\" step=\"0.1\" placeholder=\"Chicken breast count\" defaultValue={inputValue(selected?.chickenCapacity)} key={`c-${selectedId}`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#1bf8e6edb9c5"
+    },
+    {
+      "id": "4e63f0b5b3ab",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 125,
+      "type": "input",
+      "snippet": "<input type=\"hidden\" name=\"id\" value={smoker.id} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#4e63f0b5b3ab"
+    },
+    {
+      "id": "cb5951046b72",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 126,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"name\" defaultValue={smoker.name} required />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#cb5951046b72"
+    },
+    {
+      "id": "462c3c0d07a3",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 128,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"brand\" placeholder=\"Manufacturer\" defaultValue={brand} key={`brand-${smoker.id}-${selectedId}`} readOnly={Boolean(selected)} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#462c3c0d07a3"
+    },
+    {
+      "id": "de07cf511a25",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 129,
+      "type": "input",
+      "snippet": "<input className=\"field\" name=\"model\" placeholder=\"Model\" defaultValue={model} key={`model-${smoker.id}-${selectedId}`} readOnly={Boolean(selected)} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#de07cf511a25"
+    },
+    {
+      "id": "2b36f988a538",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 132,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"rackCount\" type=\"number\" min=\"0\" step=\"1\" defaultValue={preferredNumberInput(selected?.rackCount, smoker.rackCount)} key={`r-${smoker.id}-${selectedId}`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2b36f988a538"
+    },
+    {
+      "id": "0e45294f5968",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 133,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"brisketCapacity\" type=\"number\" min=\"0\" step=\"0.1\" defaultValue={preferredNumberInput(selected?.brisketCapacity, smoker.brisketCapacity)} key={`b-${smoker.id}-${selectedId}`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#0e45294f5968"
+    },
+    {
+      "id": "1d7234a68ae3",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 134,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"porkCapacity\" type=\"number\" min=\"0\" step=\"0.1\" defaultValue={preferredNumberInput(selected?.porkCapacity, smoker.porkCapacity)} key={`p-${smoker.id}-${selectedId}`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#1d7234a68ae3"
+    },
+    {
+      "id": "eaf64340c159",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 135,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"ribCapacity\" type=\"number\" min=\"0\" step=\"0.1\" defaultValue={preferredNumberInput(selected?.ribCapacity, smoker.ribCapacity)} key={`rb-${smoker.id}-${selectedId}`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#eaf64340c159"
+    },
+    {
+      "id": "2e44e78ed812",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 136,
+      "type": "input",
+      "snippet": "<input className=\"field mt-1\" name=\"chickenCapacity\" type=\"number\" min=\"0\" step=\"0.1\" defaultValue={preferredNumberInput(selected?.chickenCapacity, smoker.chickenCapacity)} key={`c-${smoker.id}-${selectedId}`} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#2e44e78ed812"
+    },
+    {
+      "id": "6b8f45171a01",
+      "file": "components/smokers/SmokerCatalogForms.tsx",
+      "line": 137,
+      "type": "input",
+      "snippet": "<input type=\"checkbox\" name=\"active\" defaultChecked={smoker.active} />",
+      "requiredCoverage": [
+        "desktop",
+        "mobile"
+      ],
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "test": "e2e/interaction-manifest.spec.ts#6b8f45171a01"
+    }
+  ]
+}

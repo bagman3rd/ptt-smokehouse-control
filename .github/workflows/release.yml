@@ -1,40 +1,38 @@
-name: Build 7.9.0 audited release
+name: Package Build 9.8.0
 on:
   workflow_run:
-    workflows: ["Build 7.9.0 CI"]
+    workflows: ['Build 9.8.0 CI']
     types: [completed]
 permissions:
   contents: read
 jobs:
-  stage-and-package:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  package-exact-green-commit:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      CI: "true"
-      GITHUB_RUN_ID: ${{ github.event.workflow_run.id }}
-      GITHUB_SHA: ${{ github.event.workflow_run.head_sha }}
-      STAGING_URL: ${{ vars.STAGING_URL }}
-      STAGING_SMOKE_USERNAME: ${{ secrets.STAGING_SMOKE_USERNAME }}
-      STAGING_SMOKE_PASSWORD: ${{ secrets.STAGING_SMOKE_PASSWORD }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact green commit
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22.16.0
-      - name: Require staging configuration
-        run: test -n "$STAGING_URL" && test -n "$STAGING_SMOKE_USERNAME" && test -n "$STAGING_SMOKE_PASSWORD"
-      - name: Run authenticated staging four-flow smoke
-        run: node scripts/staging-four-flow-smoke.mjs
-      - name: Create auditable release evidence
-        run: node scripts/release-gate-check.mjs
-      - name: Package exact successful commit
-        run: zip -qr ptt-smokehouse-control-build-7.8.2-ci-${GITHUB_RUN_ID}.zip . -x '.git/*'
+      - name: Verify exact commit
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.workflow_run.head_sha }}"
+      - name: Write release evidence
+        run: |
+          cat > RELEASE_EVIDENCE.json <<JSON
+          {
+            "build": "9.8.0",
+            "commitSha": "${{ github.event.workflow_run.head_sha }}",
+            "ciRunId": "${{ github.event.workflow_run.id }}",
+            "ciConclusion": "${{ github.event.workflow_run.conclusion }}",
+            "packagedByRunId": "${{ github.run_id }}"
+          }
+          JSON
+      - name: Package audited source ZIP
+        run: |
+          zip -qr ptt-smokehouse-control-build-9.8.0-audited-flat.zip . \
+            -x '.git/*' 'node_modules/*' '.next/*' 'playwright-report/*' 'test-results/*'
       - uses: actions/upload-artifact@v4
         with:
-          name: ptt-smokehouse-control-build-7.8.2-ci-${{ github.event.workflow_run.id }}
-          path: ptt-smokehouse-control-build-7.8.2-ci-${{ github.event.workflow_run.id }}.zip
-          if-no-files-found: error
-          retention-days: 30
+          name: ptt-smokehouse-control-build-9.8.0-${{ github.event.workflow_run.head_sha }}
+          path: ptt-smokehouse-control-build-9.8.0-audited-flat.zip
+          retention-days: 90

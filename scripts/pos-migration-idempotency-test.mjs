@@ -6,4 +6,4 @@ const adds=[...sql.matchAll(/ALTER TABLE\s+"[^"]+"\s+ADD COLUMN[^;]+;/g)].map(m=
 assert.ok(adds.length>50,'expected comprehensive POS schema repair statements');
 for(const statement of adds) assert.match(statement,/ADD COLUMN IF NOT EXISTS/,'non-idempotent ADD COLUMN found: '+statement);
 assert.match(sql,/ADD COLUMN IF NOT EXISTS "lastError" TEXT/);
-console.log(`Build 9.7.0 POS migration idempotency passed for ${adds.length} ADD COLUMN statements.`);
+console.log(`Build 9.8.0 POS migration idempotency passed for ${adds.length} ADD COLUMN statements.`);
