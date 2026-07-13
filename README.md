@@ -34,17 +34,17 @@ Build 7.8.0 fixes the top navigation dropdown controls and adds `docs/DETAILED_T
 Build 7.8.0 closes the guarded EOD revision defect. Existing EOD logs are updated through the tenant-scoped restaurant/date key, while child protein rows continue to use the tenant-scoped three-field unique key. CI now proves the complete draft, revision, completion, lock, and post-lock rejection lifecycle against PostgreSQL with the tenant guard active. The multi-restaurant report rollup is also protected by a permanent contract test.
 
 
-## Build 8.0.2 PostgreSQL Quick EOD write repair
+## Build 8.0.3 PostgreSQL Quick EOD write repair
 
-Build 8.0.2 preserves the Build 7.8.2 compile repair and Admin navigation fix, and replaces the compound-key Prisma upsert that produced PostgreSQL error 22P03 during Quick EOD saves.
+Build 8.0.3 preserves the Build 7.8.2 compile repair and Admin navigation fix, and replaces the compound-key Prisma upsert that produced PostgreSQL error 22P03 during Quick EOD saves.
 
-## Build 8.0.2 production EOD column repair
+## Build 8.0.3 production EOD column repair
 
-Build 8.0.2 adds migration `20260712001400_build_784_eod_numeric_type_repair`, which explicitly converts all `EndOfDayProteinLog` quantity columns to PostgreSQL `DOUBLE PRECISION`. This resolves PostgreSQL error `22P03` caused by historical production column-type drift. Existing values are retained through explicit casts. The tenant-scoped two-step Quick EOD write remains unchanged.
+Build 8.0.3 adds migration `20260712001400_build_784_eod_numeric_type_repair`, which explicitly converts all `EndOfDayProteinLog` quantity columns to PostgreSQL `DOUBLE PRECISION`. This resolves PostgreSQL error `22P03` caused by historical production column-type drift. Existing values are retained through explicit casts. The tenant-scoped two-step Quick EOD write remains unchanged.
 
-## Build 8.0.2
+## Build 8.0.3
 
 Admin and Owner users can delete a smoker from **Admin → Smokers**. The action requires confirmation, is restricted to the active restaurant, records a DELETE audit event, and refreshes smoker-capacity and schedule pages. No database migration is required.
 
-## Build 8.0.2 live POS integrations
-Build 8.0.2 replaces the old live-POS placeholder with a shared integration platform and an enabled Square connector. See `BUILD_8_0_0.md`. Toast, Clover, Lightspeed, TouchBistro, SpotOn, Revel, Oracle Simphony, NCR Aloha and PAR Brink are registered but intentionally disabled pending provider access; the UI does not falsely claim they are connected.
+## Build 8.0.3 live POS integrations
+Build 8.0.3 replaces the old live-POS placeholder with a shared integration platform and an enabled Square connector. See `BUILD_8_0_0.md`. Toast, Clover, Lightspeed, TouchBistro, SpotOn, Revel, Oracle Simphony, NCR Aloha and PAR Brink are registered but intentionally disabled pending provider access; the UI does not falsely claim they are connected.

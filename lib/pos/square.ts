@@ -8,17 +8,17 @@ export function squareBase() { return env() === 'production' ? 'https://connect.
 export function squareAppId() { return process.env.SQUARE_APPLICATION_ID || ''; }
 export function squareAppSecret() { return process.env.SQUARE_APPLICATION_SECRET || ''; }
 export function squareWebhookKey() { return process.env.SQUARE_WEBHOOK_SIGNATURE_KEY || ''; }
-export function squareRedirectUri() { return process.env.SQUARE_REDIRECT_URI || `${process.env.APP_URL || ''}/api/pos/square/callback`; }
-export function squareOAuthUrl(state: string) {
+export function squareOAuthUrl(state: string, redirectUri: string) {
   const u = new URL(`${squareBase()}/oauth2/authorize`);
   u.searchParams.set('client_id', squareAppId());
   u.searchParams.set('scope', 'MERCHANT_PROFILE_READ ITEMS_READ ORDERS_READ PAYMENTS_READ');
   u.searchParams.set('session', 'false');
   u.searchParams.set('state', state);
+  u.searchParams.set('redirect_uri', redirectUri);
   return u.toString();
 }
-export async function exchangeSquareCode(code: string) {
-  const r = await fetch(`${squareBase()}/oauth2/token`, { method:'POST', headers:{'Content-Type':'application/json','Square-Version':'2025-04-16'}, body:JSON.stringify({client_id:squareAppId(),client_secret:squareAppSecret(),code,grant_type:'authorization_code',redirect_uri:squareRedirectUri()}) });
+export async function exchangeSquareCode(code: string, redirectUri: string) {
+  const r = await fetch(`${squareBase()}/oauth2/token`, { method:'POST', headers:{'Content-Type':'application/json','Square-Version':'2025-04-16'}, body:JSON.stringify({client_id:squareAppId(),client_secret:squareAppSecret(),code,grant_type:'authorization_code',redirect_uri:redirectUri}) });
   if (!r.ok) throw new Error('Square authorization could not be completed.');
   return r.json() as Promise<{access_token:string;refresh_token?:string;expires_at?:string;merchant_id?:string}>;
 }

@@ -12,4 +12,4 @@ for (const model of ['CookPlanItem','EndOfDayProteinLog']) {
 assert.ok(guard.includes("process.env.TENANT_GUARD_ENABLED === '1'"), 'explicit guard enable is required');
 assert.ok(guard.includes("process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'"), 'guard must auto-run in dev/test');
 assert.ok(guard.includes("process.env.DISABLE_TENANT_GUARD === '1'"), 'maintenance bypass must be explicit');
-console.log('Build 8.0.2 tenant guard coverage passed.');
+console.log('Build 8.0.3 tenant guard coverage passed.');
