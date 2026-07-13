@@ -68,16 +68,6 @@ export async function POST(request: Request) {
       const entry = byProteinId.get(protein.id) || { proteinId: protein.id, cookedUnits: 0, soldCookedLb: 0, usableLeftoverLb: 0, usableLeftoverUnits: 0, wasteLb: 0, eightySixed: false, wasteReason: '' };
       const previous = existingByProteinId.get(protein.id);
       const proteinCode = String(protein.code || '').toUpperCase();
-      const proteinName = protein.name.trim().toLowerCase();
-      const coreProteinCode = proteinCode === 'BRISKET' || proteinName.includes('brisket')
-        ? 'BRISKET'
-        : proteinCode === 'PORK' || proteinName.includes('pork') || proteinName.includes('butt')
-          ? 'PORK'
-          : proteinCode === 'CHICKEN' || proteinName.includes('chicken') || proteinName.includes('breast')
-            ? 'CHICKEN'
-            : proteinCode === 'RIBS' || proteinName.includes('rib')
-              ? 'RIBS'
-              : 'OTHER';
       const sealedUnopenedUnits = numberValue(entry.sealedUnopenedUnits, previous?.sealedUnopenedUnits ?? 0, 0, 500);
       const openedMeatLb = numberValue(entry.openedMeatLb, previous?.openedMeatLb ?? 0, 0, 5000);
       if (isQuickMode && !Number.isInteger(sealedUnopenedUnits)) {
@@ -87,9 +77,9 @@ export async function POST(request: Request) {
       const soldCookedLb = isQuickMode ? (previous?.soldCookedLb ?? 0) : numberValue(entry.soldCookedLb);
       const wasteLb = isQuickMode ? (previous?.wasteLb ?? 0) : numberValue(entry.wasteLb);
       const usableLeftoverUnits = isQuickMode
-        ? (coreProteinCode === 'OTHER' ? (previous?.usableLeftoverUnits ?? 0) : sealedUnopenedUnits)
+        ? (proteinCode === 'PORK' || proteinCode === 'CHICKEN' || proteinCode === 'RIBS' ? sealedUnopenedUnits : 0)
         : numberValue(entry.usableLeftoverUnits);
-      const usableLeftoverLb = isQuickMode ? openedMeatLb : numberValue(entry.usableLeftoverLb);
+      const usableLeftoverLb = isQuickMode ? 0 : numberValue(entry.usableLeftoverLb);
 
       if ([cookedUnits, soldCookedLb, wasteLb, usableLeftoverUnits, usableLeftoverLb].some((n) => n < 0)) {
         errors.push(`${protein.name}: negative values are not allowed.`);

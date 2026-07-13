@@ -9,4 +9,4 @@ if (!eod.includes('endOfDayLogId_proteinId') || eod.includes('deleteMany({ where
 const login=read('app/api/login/route.ts');
 if (!login.includes('securityEvent(') || login.includes('(user as any)') || read('app/account/security/actions.ts').includes('as any')) throw new Error('Login security audit/type cleanup incomplete.');
 if (!read('app/account/security/actions.ts').includes('await setSessionCookie(current.id, updated.sessionVersion)')) throw new Error('Security changes must rotate the current session cleanly.');
-console.log('Build 7.2.0 evaluation passed.');
+console.log('Build 7.2.1 evaluation passed.');

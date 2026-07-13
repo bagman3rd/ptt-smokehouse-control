@@ -99,11 +99,8 @@ export async function POST(request: Request) {
       const targetForecastBbqSales = isPriorDayProtein ? nextDayForecastBbqSales : sameDayForecastBbqSales;
       const leftoverLog = priorEodLog;
       const prior = leftoverLog?.proteinLogs.find((log) => log.proteinId === protein.id);
-      // Backward-compatible credit: Build 7.2.0 quick EOD records may have
-      // saved the visible values only in sealedUnopenedUnits/openedMeatLb.
-      // Use the larger matching value to avoid losing credit without double-counting.
-      const usableLeftoverLb = prior ? Math.max(prior.usableLeftoverLb ?? 0, prior.openedMeatLb ?? 0) : 0;
-      const usableLeftoverUnits = prior ? Math.max(prior.usableLeftoverUnits ?? 0, prior.sealedUnopenedUnits ?? 0) : 0;
+      const usableLeftoverLb = prior?.usableLeftoverLb ?? 0;
+      const usableLeftoverUnits = prior?.usableLeftoverUnits ?? 0;
       const missingPriorEod = !leftoverLog;
       const missingProteinData = !!leftoverLog && !prior;
       const incompletePriorEod = !!leftoverLog && (leftoverLog.status === 'DRAFT' || leftoverLog.proteinLogs.length === 0);
