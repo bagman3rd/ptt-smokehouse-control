@@ -1,6 +1,6 @@
-# Build 8.0.1 — Recoverable POS Foundation Migration
+# Build 8.0.2 — Recoverable POS Foundation Migration
 
-Build 8.0.1 fixes the Render deployment failure caused by a partially existing `PosConnection` relation.
+Build 8.0.2 fixes the Render deployment failure caused by a partially existing `PosConnection` relation.
 
 ## Root cause
 

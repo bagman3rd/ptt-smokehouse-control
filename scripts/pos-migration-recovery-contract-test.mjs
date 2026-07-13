@@ -13,8 +13,12 @@ for (const type of ['PosProvider','PosConnectionStatus','PosSyncStatus']) {
 for (const table of ['PosConnection','PosSyncRun','PosRawRecord','PosMenuItem','PosOrder','PosLineItem','PosWebhookEvent']) {
   assert.ok(migration.includes(`CREATE TABLE IF NOT EXISTS "${table}"`), `${table} must be idempotent`);
 }
+for (const column of ['externalLocationId','externalMerchantId','encryptedAccessToken','automaticSyncEnabled','syncTimezone']) {
+  assert.ok(migration.includes(`ALTER TABLE "PosConnection" ADD COLUMN IF NOT EXISTS "${column}"`), `partial PosConnection must repair missing ${column}`);
+}
+assert.ok(migration.indexOf('ADD COLUMN IF NOT EXISTS "externalLocationId"') < migration.indexOf('PosConnection_restaurantId_provider_externalLocationId_key'), 'missing columns must be repaired before indexes are created');
 assert.ok(migration.includes('CREATE UNIQUE INDEX IF NOT EXISTS'), 'unique indexes must be idempotent');
 assert.ok(migration.includes('CREATE INDEX IF NOT EXISTS'), 'indexes must be idempotent');
 assert.ok(recovery.includes('migrate\', \'resolve\', \'--rolled-back\''), 'recovery must resolve only the failed POS migration');
 assert.ok(pkg.scripts['render-build'].includes('prepare-pos-migration-recovery.mjs'), 'Render must run migration recovery before migrate deploy');
-console.log('Build 8.0.1 POS partial-migration recovery contract passed.');
+console.log('Build 8.0.2 POS partial-migration recovery contract passed.');

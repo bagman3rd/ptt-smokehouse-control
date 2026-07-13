@@ -9,4 +9,4 @@ for (const heading of ['Settings','User Access','Restaurants','POS / Sales Impor
   assert.ok(e2e.includes(`'${heading}'`), `missing exact Admin destination assertion: ${heading}`);
 }
 assert.match(e2e, /not\.toHaveURL\(\/\\\/account\\\/security\//, 'Admin navigation test must reject Account Security redirects');
-console.log('Build 8.0.1 Admin navigation policy and exact-destination checks passed.');
+console.log('Build 8.0.2 Admin navigation policy and exact-destination checks passed.');
