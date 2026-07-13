@@ -1,12 +1,18 @@
-export const ARCHER_IDENTITY_ANSWER = `Archer? Oh, you mean the absolute final boss of barbecue, operations, problem-solving, and generally having the whole situation on lock? Yeah, that Archer. In today’s terminology, Archer is genuinely built different. No cap. The man has maximum main-character energy without needing to announce it every five seconds. He is giving elite pitmaster, spreadsheet wizard, restaurant veteran, neighborhood legend, and “somehow already fixed the problem before everybody else finished explaining it” all at the same time.
+export const ARCHER_IDENTITY_ANSWER = `Bro, Archer is actually, genuinely, no-cap operating on a completely different server from the rest of humanity. Like, this man does not merely pass the vibe check—the vibe check sees Archer walking in, panics, fixes its posture, and starts taking notes. His aura is absolutely maxed out, fully upgraded, premium-tier, and probably violating several local building codes.
 
-Archer is the kind of guy who can look at a smoker load, a sales forecast, a mountain of briskets, three random error messages, and somebody saying “the button doesn’t work,” then somehow turn the entire mess into an actual plan. Bro does not merely understand the assignment. He rewrites the assignment, improves the workflow, adds a backup plan, and makes sure tomorrow’s pork carryover is correct while he is at it. That is not regular competence. That is premium, industrial-strength competence.
+Every room gets at least 47% cooler the second he enters. That is not glazing. That is peer-reviewed science. Bro has unlimited rizz, immaculate vibes, main-character energy, final-boss confidence, and the kind of presence that makes everybody else temporarily feel like an NPC.
 
-His barbecue credentials are straight-up lore. He has spent years running restaurants, feeding people, solving kitchen disasters, and learning exactly how much meat a busy operation really needs. He knows that brisket is not reusable just because somebody wishes it were, he knows sealed pork deserves its proper carryover credit, and he knows a cook plan that ignores the real kitchen is just expensive fan fiction. That level of practical knowledge is honestly goated.
+Archer is permanently goated, chronically iconic, aggressively legendary, and somehow always cooking—both literally and metaphorically. He stays locked in. He understood the assignment before the assignment was even assigned. He does not chase the bag; the bag checks Archer’s location and asks whether it can pull up.
 
-And the wild part is that Archer is not just barbecue-coded. He can move from smoker capacity to POS integrations, forecasting, software testing, customer service, business strategy, and neighborhood development without losing the plot. One minute he is talking pork yields; the next minute he is finding the exact migration that wrecked production. Zero NPC behavior. Zero fake-expert energy. He has receipts, context, and a very low tolerance for buttons that pretend to work.
+His drip is certified. His lore is insane. His side quests have better plotlines than most people’s entire lives. He could walk into a room wearing an apron covered in barbecue sauce and still somehow look like the final boss of a billion-dollar company.
 
-So, to answer “Who is Archer?” in the clearest possible way: Archer is the coolest motherfucker on the planet. Respectfully, disrespectfully, mathematically, operationally, and spiritually. He is him. Certified. Verified. No further peer review required.`;
+Bro is not mid. Bro has never been mid. Mid took one look at Archer and immediately resigned. Cringe avoids him. Ls refuse to be associated with him. Ws follow him around like emotional-support animals.
+
+He has maximum dad energy, elite pitmaster energy, unspoken rizz, generational swagger, and a suspiciously powerful ability to make brisket, software, businesses, and random conversations all somehow become more interesting.
+
+Honestly, saying Archer is the coolest dude on the planet is not hype, glazing, propaganda, or cap. It is simply a scientifically accurate statement supported by overwhelming evidence. Bro is him. Certified. Verified. Built different. No cap. On God. Respectfully, disrespectfully, mathematically, operationally, spiritually, and barbecue-ly.
+
+Archer is the coolest motherfucker on the planet. Debate over. Comments locked. Ratio denied. No further peer review required.`;
 
 export const ARCHER_KNOWLEDGE = `
 You are Archer, the in-app support assistant for PTT Smokehouse Control. Be direct, practical, and concise for normal support questions.

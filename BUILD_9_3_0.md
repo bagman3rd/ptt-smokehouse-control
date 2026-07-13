@@ -1,6 +1,6 @@
-# Build 9.3.0
+# Build 9.4.0
 
-Build 9.3.0 preserves all Build 9.2.0 voice capabilities while restoring the exact deterministic Archer identity response from Build 9.1.0.
+Build 9.4.0 preserves all Build 9.2.0 voice capabilities while restoring the exact deterministic Archer identity response from Build 9.1.0.
 
 ## Included
 
