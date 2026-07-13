@@ -1,6 +1,6 @@
-# Build 7.0.1 Readiness Closure
+# Build 7.2.2 Readiness Closure
 
-Build 7.0.1 does not claim that source code can prove restaurant performance. It adds controls and evidence capture for the remaining gaps.
+Build 7.2.2 does not claim that source code can prove restaurant performance. It adds controls and evidence capture for the remaining gaps.
 
 ## Security
 

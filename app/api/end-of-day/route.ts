@@ -15,9 +15,11 @@ function toDateOnly(value: string) {
 }
 
 function numberValue(value: unknown, fallback = 0, min = 0, max = Number.MAX_SAFE_INTEGER) {
-  const n = value === null || value === undefined || value === '' ? fallback : Number(value);
-  if (!Number.isFinite(n)) return fallback;
-  return Math.min(max, Math.max(min, n));
+  if (value === null || value === undefined || value === '') return fallback;
+  const n = Number(value);
+  if (!Number.isFinite(n)) throw new Error('A numeric field contains an invalid value.');
+  if (n < min || n > max) throw new Error(`Numeric value must be between ${min} and ${max}.`);
+  return n;
 }
 
 function hasBlank(value: unknown) {
@@ -58,19 +60,19 @@ export async function POST(request: Request) {
     const proteins = await prisma.protein.findMany({ where: { restaurantId, active: true }, orderBy: { name: 'asc' } });
     if (proteins.length === 0) throw new Error('No active proteins exist. Seed data was not created.');
 
-    const byProteinId = new Map(entries.map((entry: any) => [String(entry.proteinId), entry]));
+    const byProteinId = new Map(entries.map((entry) => [String(entry.proteinId), entry]));
     const existingByProteinId = new Map((existing?.proteinLogs || []).map((entry) => [entry.proteinId, entry]));
     const errors: string[] = [];
     let allProteinValuesZero = true;
     const proteinRows = proteins.map((protein) => {
-      const entry: any = byProteinId.get(protein.id) || {};
+      const entry = byProteinId.get(protein.id) || { proteinId: protein.id, cookedUnits: 0, soldCookedLb: 0, usableLeftoverLb: 0, usableLeftoverUnits: 0, wasteLb: 0, eightySixed: false, wasteReason: '' };
       const previous = existingByProteinId.get(protein.id);
       const proteinCode = String(protein.code || '').toUpperCase();
-      const sealedUnopenedUnits = numberValue(entry.sealedUnopenedUnits, previous?.sealedUnopenedUnits ?? 0);
-      if (!Number.isInteger(sealedUnopenedUnits)) {
-        errors.push(`${protein.name}: sealed, unopened count must be a whole number with no decimal points.`);
+      const sealedUnopenedUnits = numberValue(entry.sealedUnopenedUnits, previous?.sealedUnopenedUnits ?? 0, 0, 500);
+      const openedMeatLb = numberValue(entry.openedMeatLb, previous?.openedMeatLb ?? 0, 0, 5000);
+      if (isQuickMode && !Number.isInteger(sealedUnopenedUnits)) {
+        errors.push(`${protein.name}: sealed, unopened quantity must be a whole number.`);
       }
-      const openedMeatLb = numberValue(entry.openedMeatLb, previous?.openedMeatLb ?? 0);
       const cookedUnits = isQuickMode ? (previous?.cookedUnits ?? 0) : numberValue(entry.cookedUnits);
       const soldCookedLb = isQuickMode ? (previous?.soldCookedLb ?? 0) : numberValue(entry.soldCookedLb);
       const wasteLb = isQuickMode ? (previous?.wasteLb ?? 0) : numberValue(entry.wasteLb);
@@ -136,8 +138,13 @@ export async function POST(request: Request) {
             }
           });
 
-      await tx.endOfDayProteinLog.deleteMany({ where: { restaurantId, endOfDayLogId: parent.id } });
-      await tx.endOfDayProteinLog.createMany({ data: proteinRows.map((row) => ({ restaurantId, endOfDayLogId: parent.id, ...row })) });
+      for (const row of proteinRows) {
+        await tx.endOfDayProteinLog.upsert({
+          where: { endOfDayLogId_proteinId: { endOfDayLogId: parent.id, proteinId: row.proteinId } },
+          update: row,
+          create: { restaurantId, endOfDayLogId: parent.id, ...row }
+        });
+      }
 
       return tx.endOfDayLog.findUniqueOrThrow({
         where: { id: parent.id },

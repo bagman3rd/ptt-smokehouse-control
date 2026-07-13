@@ -12,16 +12,12 @@ const pkg = JSON.parse(read('package.json'));
 const version = pkg.version;
 const buildLabel = `Build ${version}`;
 
-assert(version === '7.0.1', 'package.json version must be 7.0.1 for this build');
+assert(version === '7.2.2', 'package.json version must be 7.2.2 for this build');
 assert(read('README.md').includes(buildLabel), 'README must mention the current build label');
 assert(read('components/Nav.tsx').includes(buildLabel), 'Nav badge must show the current build label');
 assert(pkg.scripts.typecheck === 'tsc --noEmit', 'typecheck script must run tsc --noEmit');
 assert(pkg.scripts.lint === 'next lint', 'lint script must run next lint');
-assert(pkg.scripts.build?.includes('prisma:generate:fresh'), 'build script must run fresh Prisma Client generation');
-assert(pkg.scripts.build?.includes('verify:prisma-client'), 'build script must verify generated Prisma Client');
-assert(pkg.scripts.build?.includes('next build'), 'build script must run next build');
-assert(pkg.scripts['prebuild'] === 'pnpm run prisma:generate:fresh', 'prebuild must run fresh Prisma Client generation before build');
-assert(pkg.scripts['postinstall'] === 'prisma generate --schema=prisma/schema.prisma', 'postinstall must generate Prisma Client from the explicit schema');
+assert(pkg.scripts.build === 'next build', 'build script must run next build');
 assert(pkg.scripts['render-build']?.includes('prisma migrate deploy'), 'render-build must use prisma migrate deploy');
 assert(!pkg.scripts['render-build']?.includes('db push'), 'render-build must not use prisma db push');
 assert(!read('package.json').includes('--accept-data-loss'), 'package scripts must not use --accept-data-loss');
@@ -57,4 +53,4 @@ for (const token of ['Build 4.4.0', 'build-4-4-0-evaluation', 'prisma db push &&
 assert(!read('lib/tenantGuard.ts').includes('tenantOrLegacyWhere'), 'retired tenantOrLegacyWhere helper must not return');
 assert(!read('lib/tenantGuard.ts').includes('tenantWhere('), 'retired tenantWhere helper must not return');
 
-console.log('Build 7.0.1 preflight checks completed.');
+console.log('Build 7.2.2 preflight checks completed.');

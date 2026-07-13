@@ -95,3 +95,7 @@ export async function auditLog(args: {
     }
   }).catch(() => null);
 }
+
+export async function securityEvent(args: { userId?: string | null; identifier?: string | null; action: string; reason?: string | null; ipAddress?: string | null; userAgent?: string | null; }) {
+  await prisma.securityEvent.create({ data: { userId: args.userId || null, identifier: args.identifier || null, action: args.action, reason: args.reason || null, ipAddress: args.ipAddress || null, userAgent: args.userAgent || null } }).catch(() => null);
+}
