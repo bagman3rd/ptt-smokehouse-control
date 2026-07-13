@@ -1,0 +1,16 @@
+import { existsSync, readFileSync } from 'node:fs';
+import assert from 'node:assert/strict';
+const read=(p)=>readFileSync(p,'utf8');
+const pkg=JSON.parse(read('package.json'));
+assert.equal(pkg.version,'7.6.0');
+assert.ok(existsSync('pnpm-lock.yaml'));
+assert.ok(read('components/NavMenu.tsx').includes('<details'));
+assert.ok(!read('components/NavMenu.tsx').includes("'use client'"));
+assert.ok(read('render.yaml').includes('TOTP_ENCRYPTION_KEY'));
+assert.ok(read('app/api/cook-plan/route.ts').includes('error instanceof ZodError'));
+assert.ok(read('.github/workflows/ci.yml').includes('test:load-realistic'));
+assert.ok(read('.github/workflows/ci.yml').includes('test:e2e:concurrency'));
+assert.ok(read('.github/workflows/ci.yml').includes('test:e2e:accessibility'));
+assert.ok(existsSync('e2e/concurrency-and-tenant-mutation.spec.ts'));
+assert.ok(existsSync('e2e/realistic-load.spec.ts'));
+console.log('Build 7.6.0 evaluation passed.');

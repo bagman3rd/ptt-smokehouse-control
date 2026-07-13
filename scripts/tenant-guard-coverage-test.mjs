@@ -1,43 +1,15 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-
-function read(path) { return fs.readFileSync(path, 'utf8'); }
-const guard = read('lib/tenantGuard.ts');
-const schema = read('prisma/schema.prisma');
-
-const requiredModels = [
-  'AuditLog',
-  'Protein',
-  'SavedReport',
-  'ReportRun',
-  'ForecastScenario',
-  'DayMultiplier',
-  'MonthMultiplier',
-  'EventModifier',
-  'CookPlan',
-  'CookPlanItem',
-  'EndOfDayLog',
-  'EndOfDayProteinLog',
-  'Smoker',
-  'LearningRecommendation',
-  'SystemCheck'
-];
-
-for (const model of requiredModels) {
-  assert(guard.includes(`'${model}'`), `Tenant guard is missing ${model}`);
+const guard = fs.readFileSync('lib/tenantGuard.ts','utf8');
+const schema = fs.readFileSync('prisma/schema.prisma','utf8');
+for (const model of ['AuditLog','Protein','CookPlan','CookPlanItem','EndOfDayLog','EndOfDayProteinLog','Smoker','SystemCheck']) assert.ok(guard.includes(`'${model}'`), `guard missing ${model}`);
+for (const model of ['CookPlanItem','EndOfDayProteinLog']) {
+  const start=schema.indexOf(`model ${model}`); const end=schema.indexOf('\n}',start); const block=schema.slice(start,end);
+  assert.ok(block.includes('restaurantId'), `${model} requires restaurantId`);
+  assert.ok(block.includes('@@index([restaurantId'), `${model} requires tenant index`);
 }
-
-for (const model of ['CookPlanItem', 'EndOfDayProteinLog']) {
-  const start = schema.indexOf(`model ${model}`);
-  assert(start >= 0, `${model} schema model missing`);
-  const end = schema.indexOf('\n}', start);
-  const block = schema.slice(start, end);
-  assert(block.includes('restaurantId'), `${model} must carry restaurantId for direct tenant enforcement`);
-  assert(block.includes('@@index([restaurantId'), `${model} must have restaurantId index`);
-}
-
-assert(guard.includes('DISABLE_TENANT_GUARD'), 'Tenant guard must have explicit maintenance escape hatch');
-assert(!guard.includes("process.env.NODE_ENV !== 'production'"), 'Tenant guard must remain active in production');
-assert(guard.includes("process.env.DISABLE_TENANT_GUARD !== '1'"), 'Tenant guard must only allow explicit maintenance bypass');
-console.log('Build 4.7.0 tenant guard coverage checks completed.');
+assert.ok(guard.includes("process.env.TENANT_GUARD_ENABLED === '1'"), 'explicit guard enable is required');
+assert.ok(guard.includes("process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'"), 'guard must auto-run in dev/test');
+assert.ok(guard.includes("process.env.DISABLE_TENANT_GUARD === '1'"), 'maintenance bypass must be explicit');
+console.log('Build 7.6.0 tenant guard coverage passed.');

@@ -16,6 +16,8 @@ services:
         sync: false
       - key: APP_SESSION_TOKEN
         sync: false
+      - key: TOTP_ENCRYPTION_KEY
+        sync: false
       - key: NEXT_PUBLIC_APP_NAME
         value: PTT Smokehouse Control
       - key: BILLING_MODE

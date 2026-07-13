@@ -1,4 +1,4 @@
-name: Build 7.5.2 CI
+name: Build 7.6.0 CI
 
 env:
   ENFORCE_PRIVILEGED_2FA: "false"
@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 7.5.2 CI / quality-and-tests
+    name: Build 7.6.0 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
     services:
@@ -87,7 +87,12 @@ jobs:
           pnpm run lint
       - name: Regression tests
         run: |
-          pnpm run test:defects-7-5-0
+          pnpm run test:comprehensive
+          pnpm run test:page-parity
+          pnpm run test:navigation
+          pnpm run test:quick-eod-carryover
+          pnpm run test:auth-coverage
+          pnpm run test:failure-modes
           pnpm run test:forecast
           pnpm run test:generate-plan
           pnpm run test:smoker-catalog
@@ -96,27 +101,42 @@ jobs:
           pnpm run test:tenant
           pnpm run test:cross-tenant
           pnpm run test:tenant-guard
+          pnpm run test:tenant-guard-policy
+          pnpm run test:accessibility
+          pnpm run test:api-roles
+          pnpm run test:security-static
           pnpm run test:orphan-records
           pnpm run test:dead-code
           pnpm run staging:verify
           pnpm run test:pos-import
+          pnpm run test:unsupported-prisma
           pnpm run test:demo-docs
           pnpm run build:eval
+      - name: Dependency vulnerability audit
+        run: pnpm audit --audit-level=high
       - name: Build production application
         run: pnpm run build
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
       - name: Run desktop and mobile browser tests
         run: pnpm run test:e2e:ci
+      - name: Run keyboard and accessibility browser checks
+        run: pnpm run test:e2e:accessibility
+      - name: Run concurrent EOD and cross-tenant mutation checks
+        run: pnpm run test:e2e:concurrency
       - name: Run tenant-guard contract tests against next dev
         env:
           DISABLE_TENANT_GUARD: "0"
           TENANT_GUARD_ENABLED: "1"
         run: pnpm run test:e2e:guard
-      - name: Run 200-request mixed kitchen load smoke test
+      - name: Run 200-request read burst smoke test
         env:
           LOAD_SMOKE_CONCURRENCY: 200
         run: pnpm run test:load-smoke
+      - name: Run separate-session mixed read/write load test
+        env:
+          LOAD_USERS: 25
+        run: pnpm run test:load-realistic
       - name: Upload restore-drill evidence
         uses: actions/upload-artifact@v4
         with:

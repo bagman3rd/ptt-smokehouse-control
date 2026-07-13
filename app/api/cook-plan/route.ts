@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { requireApiUserRole } from '@/lib/auth';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
@@ -188,8 +189,16 @@ export async function POST(request: Request) {
       message: 'Load plan generated.'
     });
   } catch (error) {
-    console.error('Generate cook plan failed:', error);
+    if (error instanceof ZodError) {
+      return NextResponse.json({ ok: false, message: 'Invalid cook-plan request.', issues: error.issues }, { status: 400 });
+    }
+    if (error instanceof SyntaxError) {
+      return NextResponse.json({ ok: false, message: 'Malformed JSON request.' }, { status: 400 });
+    }
     const message = error instanceof Error ? error.message : 'Unknown error while generating cook plan.';
-    return NextResponse.json({ ok: false, message }, { status: 500 });
+    const clientError = message === 'Invalid load plan date' || message.startsWith('No active proteins') || message.startsWith('No forecast scenarios');
+    if (clientError) return NextResponse.json({ ok: false, message }, { status: 400 });
+    console.error('Generate cook plan failed:', error);
+    return NextResponse.json({ ok: false, message: 'Unable to generate cook plan.' }, { status: 500 });
   }
 }

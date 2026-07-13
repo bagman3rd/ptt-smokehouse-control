@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+const nav=readFileSync('components/NavMenu.tsx','utf8');
+const shell=readFileSync('components/Nav.tsx','utf8');
+assert.ok(nav.includes('<details'), 'navigation must use native dropdowns');
+assert.ok(nav.includes('<summary'), 'navigation must expose keyboard-focusable summaries');
+assert.ok(!nav.includes("'use client'"), 'navigation must not depend on hydration');
+for (const label of ['Operations','Insights','Admin','Help']) assert.ok(shell.includes(`label: '${label}'`));
+assert.ok(shell.includes('Build 7.6.0'));
+console.log('Build 7.6.0 hydration-independent dropdown navigation passed.');
