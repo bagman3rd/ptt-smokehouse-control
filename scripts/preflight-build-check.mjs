@@ -17,7 +17,11 @@ assert(read('README.md').includes(buildLabel), 'README must mention the current 
 assert(read('components/Nav.tsx').includes(buildLabel), 'Nav badge must show the current build label');
 assert(pkg.scripts.typecheck === 'tsc --noEmit', 'typecheck script must run tsc --noEmit');
 assert(pkg.scripts.lint === 'next lint', 'lint script must run next lint');
-assert(pkg.scripts.build === 'next build', 'build script must run next build');
+assert(pkg.scripts.build?.includes('prisma generate'), 'build script must regenerate Prisma Client');
+assert(pkg.scripts.build?.includes('verify:prisma-client'), 'build script must verify generated Prisma Client');
+assert(pkg.scripts.build?.includes('next build'), 'build script must run next build');
+assert(pkg.scripts['prebuild'] === 'prisma generate', 'prebuild must regenerate Prisma Client before build');
+assert(pkg.scripts['postinstall'] === 'prisma generate', 'postinstall must regenerate Prisma Client after dependency installation');
 assert(pkg.scripts['render-build']?.includes('prisma migrate deploy'), 'render-build must use prisma migrate deploy');
 assert(!pkg.scripts['render-build']?.includes('db push'), 'render-build must not use prisma db push');
 assert(!read('package.json').includes('--accept-data-loss'), 'package scripts must not use --accept-data-loss');

@@ -15,4 +15,4 @@ for (const required of ['savePosConnection','syncPosConnection','disconnectPosCo
 }
 if (!page.includes('Top 10 POS Connections')) throw new Error('POS connection dashboard missing.');
 if (!actions.includes('connectionId_externalOrderId_externalLineId')) throw new Error('Duplicate-safe order-line key missing.');
-console.log('PASS: Build 6.7.1 top-10 POS provider registry, persistence, UI, and duplicate-safe sync are present.');
+console.log('PASS: Build 7.0.0 top-10 POS provider registry, persistence, UI, and duplicate-safe sync are present.');

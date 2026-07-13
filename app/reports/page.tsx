@@ -30,19 +30,6 @@ export default async function ReportsPage({ searchParams }: { searchParams: Reco
   const params = parseReportParams(searchParams);
   const selectedRange = valueOf(searchParams.range) || 'last30';
   const { rows, total, proteins } = await getReportData(params, restaurantId);
-  const rollupRestaurants = await prisma.restaurant.findMany({
-    where: { memberships: { some: { userId: user.id, active: true } }, active: true },
-    orderBy: { name: 'asc' }
-  });
-  const rollupIds = rollupRestaurants.map((item) => item.id);
-  const rollupLogs = rollupIds.length > 1 ? await prisma.endOfDayLog.findMany({
-    where: { restaurantId: { in: rollupIds }, serviceDate: { gte: new Date(Date.now() - 30 * 86400000) } },
-    include: { proteinLogs: true }
-  }) : [];
-  const rollup = rollupRestaurants.map((item) => {
-    const logs = rollupLogs.filter((log) => log.restaurantId === item.id);
-    return { name: item.name, sales: logs.reduce((sum, log) => sum + log.totalSales, 0), waste: logs.reduce((sum, log) => sum + log.proteinLogs.reduce((inner, row) => inner + row.wasteLb, 0), 0), days: logs.length };
-  });
   const [savedReports, recentRuns] = await Promise.all([
     prisma.savedReport.findMany({ where: { restaurantId }, orderBy: { updatedAt: 'desc' }, take: 12 }),
     prisma.reportRun.findMany({ where: { restaurantId }, orderBy: { createdAt: 'desc' }, take: 8 })
@@ -60,11 +47,6 @@ export default async function ReportsPage({ searchParams }: { searchParams: Reco
     </div>
 
     {(savedMessage || error) ? <div className={`mb-4 rounded-xl px-4 py-3 text-sm font-black ${error ? 'bg-red-50 text-red-800' : 'bg-emerald-50 text-emerald-800'}`}>{error || savedMessage}</div> : null}
-
-    {rollup.length > 1 ? <section className="card mb-6 overflow-hidden" data-testid="multi-store-rollup">
-      <div className="border-b border-slate-200 p-5"><h2 className="text-xl font-black">Multi-Restaurant Rollup</h2><p className="mt-1 text-sm text-slate-500">Last 30 days across restaurants this account can access.</p></div>
-      <div className="overflow-x-auto"><table className="w-full min-w-[640px] text-left text-sm"><thead className="bg-slate-50"><tr><th className="p-3">Restaurant</th><th className="p-3 text-right">EOD days</th><th className="p-3 text-right">Total sales</th><th className="p-3 text-right">Waste lb</th></tr></thead><tbody>{rollup.map((row) => <tr key={row.name} className="border-t border-slate-100"><td className="p-3 font-black">{row.name}</td><td className="p-3 text-right">{row.days}</td><td className="p-3 text-right font-black">${Math.round(row.sales).toLocaleString()}</td><td className="p-3 text-right">{row.waste.toFixed(1)}</td></tr>)}</tbody></table></div>
-    </section> : null}
 
     <section className="card p-5">
       <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">

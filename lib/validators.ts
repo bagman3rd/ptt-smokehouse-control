@@ -36,7 +36,7 @@ export const eodProteinEntrySchema = z.object({
   wasteLb: z.coerce.number().min(0).default(0),
   eightySixed: z.boolean().optional().default(false),
   wasteReason: z.string().max(240).optional().default(''),
-  sealedUnopenedUnits: z.coerce.number().min(0).optional(),
+  sealedUnopenedUnits: z.coerce.number().int().min(0).optional(),
   openedMeatLb: z.coerce.number().min(0).optional()
 });
 

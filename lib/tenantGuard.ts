@@ -29,7 +29,12 @@ const TENANT_SCOPED_MODELS = new Set([
   'CustomerDataRequest',
   'MenuItemMapping',
   'PosImportBatch',
-  'PosImportRow'
+  'PosImportRow',
+  'PosConnection',
+  'PosLocation',
+  'PosCatalogItem',
+  'PosSyncRun',
+  'PosOrderLine'
 ]);
 
 const READ_OR_WRITE_OPERATIONS = new Set([

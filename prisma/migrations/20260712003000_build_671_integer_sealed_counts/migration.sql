@@ -1,4 +1,4 @@
--- Build 6.7.1: sealed/unopened meat inventory is counted in whole units.
+-- Build 6.7.2: sealed/unopened meat inventory is counted in whole units.
 UPDATE "EndOfDayProteinLog"
 SET "sealedUnopenedUnits" = ROUND("sealedUnopenedUnits")
 WHERE "sealedUnopenedUnits" <> ROUND("sealedUnopenedUnits");

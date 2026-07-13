@@ -1,6 +1,6 @@
-# Smokehouse Control — Build 6.7.1
+# Smokehouse Control — Build 6.7.2
 
-Build 6.7.1 makes all four sealed/unopened meat quantities whole-unit counts.
+Build 6.7.2 makes all four sealed/unopened meat quantities whole-unit counts.
 
 ## Changes
 

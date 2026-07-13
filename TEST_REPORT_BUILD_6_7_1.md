@@ -1,4 +1,4 @@
-# Test Report — Build 6.7.1
+# Test Report — Build 6.7.2
 
 ## Acceptance criteria
 

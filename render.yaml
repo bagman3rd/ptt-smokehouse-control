@@ -20,8 +20,6 @@ services:
         value: PTT Smokehouse Control
       - key: BILLING_MODE
         value: MANUAL_INVOICE
-      - key: ENFORCE_PRIVILEGED_2FA
-        value: "true"
       - key: BILLING_CONTACT_EMAIL
         sync: false
       - key: CRON_SECRET

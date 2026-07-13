@@ -67,6 +67,9 @@ export async function POST(request: Request) {
       const previous = existingByProteinId.get(protein.id);
       const proteinCode = String(protein.code || '').toUpperCase();
       const sealedUnopenedUnits = numberValue(entry.sealedUnopenedUnits, previous?.sealedUnopenedUnits ?? 0);
+      if (!Number.isInteger(sealedUnopenedUnits)) {
+        errors.push(`${protein.name}: sealed, unopened count must be a whole number with no decimal points.`);
+      }
       const openedMeatLb = numberValue(entry.openedMeatLb, previous?.openedMeatLb ?? 0);
       const cookedUnits = isQuickMode ? (previous?.cookedUnits ?? 0) : numberValue(entry.cookedUnits);
       const soldCookedLb = isQuickMode ? (previous?.soldCookedLb ?? 0) : numberValue(entry.soldCookedLb);
