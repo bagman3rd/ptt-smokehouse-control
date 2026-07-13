@@ -3,7 +3,8 @@ import { requireAuth, ROLE_LABELS, normalizeRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { currentRestaurantForUser } from '@/lib/tenant';
 import { otpauthUrl } from '@/lib/totp';
-import { changeOwnPassword, createTwoFactorSecret, disableTwoFactor, enableTwoFactor, revokeOtherSessions, revokeSession } from './actions';
+import { decryptSecret } from '@/lib/secretEncryption';
+import { changeOwnPassword, createTwoFactorSecret, disableTwoFactor, enableTwoFactor, revokeOtherSessions, revokeSession, regenerateRecoveryCodes, acknowledgeRecoveryCodes } from './actions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -14,8 +15,10 @@ export default async function AccountSecurityPage() {
   const user = await prisma.user.findUnique({ where: { id: current.id } });
   const sessions = await prisma.userSession.findMany({ where: { userId: current.id, revokedAt: null, expiresAt: { gt: new Date() } }, orderBy: { lastSeenAt: 'desc' } });
   const role = normalizeRole(String(current.role));
-  const secret = (user as any)?.twoFactorSecret || '';
+  const secret = decryptSecret((user as any)?.twoFactorSecret || '');
   const twoFactorEnabled = Boolean((user as any)?.twoFactorEnabled);
+  let recoveryCodes: string[] = [];
+  try { recoveryCodes = JSON.parse(decryptSecret((user as any)?.twoFactorRecoveryDisplay || '') || '[]'); } catch { recoveryCodes = []; }
   const accountLabel = user?.email || user?.username || user?.name || 'account';
   const url = secret ? otpauthUrl({ issuer: 'Smokehouse Control', account: accountLabel, secret }) : '';
 
@@ -69,6 +72,12 @@ export default async function AccountSecurityPage() {
           <button className="btn-secondary" type="submit">Disable 2FA</button>
         </form> : null}
       </section>
+
+      {twoFactorEnabled ? <section className="card p-5 lg:col-span-2" data-testid="recovery-codes">
+        <h2 className="text-xl font-black">Two-Factor Recovery Codes</h2>
+        <p className="mt-2 text-sm text-slate-600">Store these offline. Each code works once. They are shown only until you acknowledge them.</p>
+        {recoveryCodes.length ? <><div className="mt-4 grid gap-2 sm:grid-cols-2">{recoveryCodes.map(code => <code key={code} className="rounded-lg bg-slate-100 p-2 font-black">{code}</code>)}</div><form action={acknowledgeRecoveryCodes} className="mt-4"><button className="btn-primary">I saved these codes</button></form></> : <form action={regenerateRecoveryCodes} className="mt-4 flex flex-wrap items-end gap-3"><div><label className="label">Current password</label><input className="field mt-1" type="password" name="password" required /></div><button className="btn-secondary">Generate new recovery codes</button></form>}
+      </section> : null}
 
       <section className="card p-5 lg:col-span-2">
         <h2 className="text-xl font-black">Active Sessions and Devices</h2>

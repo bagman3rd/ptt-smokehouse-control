@@ -7,6 +7,8 @@ import { enforceRateLimit } from '@/lib/rateLimit';
 import { auditLog } from '@/lib/tenant';
 import { loginSchema } from '@/lib/validators';
 import { verifyTotp } from '@/lib/totp';
+import { decryptSecret, encryptSecret } from '@/lib/secretEncryption';
+import { consumeRecoveryCode } from '@/lib/recoveryCodes';
 
 const MAX_FAILED_LOGINS = 6;
 const LOCKOUT_MS = 30 * 60_000;
@@ -85,15 +87,25 @@ export async function POST(request: Request) {
   }
 
   if ((user as any).twoFactorEnabled) {
-    const secret = (user as any).twoFactorSecret || '';
+    const storedSecret = (user as any).twoFactorSecret || '';
+    const secret = decryptSecret(storedSecret);
     if (!otp) {
       await auditLog({ restaurantId: user.restaurantId || null, actorUserId: user.id, actorName: user.name, action: 'LOGIN_2FA_REQUIRED', entity: 'Auth', entityId: user.id, afterJson: { identifier, ...requestMeta(request) } });
       return NextResponse.redirect(`${baseUrl}/login?otp=1`, 303);
     }
     if (!verifyTotp(otp, secret)) {
+      const remaining = consumeRecoveryCode((user as any).twoFactorRecoveryCodes, otp);
+      if (remaining !== null) {
+        await prisma.user.update({ where: { id: user.id }, data: { twoFactorRecoveryCodes: remaining } as any });
+      } else {
       await recordFailedLogin(user, identifier, request, 'bad two-factor code');
       return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
+      }
     }
+  }
+
+  if ((user as any).twoFactorEnabled && (user as any).twoFactorSecret && !(user as any).twoFactorSecret.startsWith('enc:v1:')) {
+    await prisma.user.update({ where: { id: user.id }, data: { twoFactorSecret: encryptSecret((user as any).twoFactorSecret) } as any });
   }
 
   const activeMembership = await prisma.restaurantMembership.findFirst({ where: { userId: user.id, active: true, restaurant: { active: true } } });
