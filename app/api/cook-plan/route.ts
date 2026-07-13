@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { requireApiRole, currentUser } from '@/lib/auth';
+import { requireApiUserRole } from '@/lib/auth';
 import { dailySalesForecast, forecastProteinLoad, confidenceForHistory } from '@/lib/forecast';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { getDayPatternByKey, getDayPatternMultiplier, inferDayPatternKey } from '@/lib/dayProfiles';
 import { addUtcDays, fmtDateWithDow } from '@/lib/date';
-import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
+import { auditLog } from '@/lib/tenant';
 import { enforceRateLimit } from '@/lib/rateLimit';
 import { cookPlanSchema } from '@/lib/validators';
 import { FOOD_SALES_PERCENT, LIQUOR_SALES_PERCENT } from '@/lib/salesModel';
@@ -32,13 +32,11 @@ export async function POST(request: Request) {
   const limited = await enforceRateLimit(request, 'api:cook-plan', 40, 60_000);
   if (limited) return limited;
   try {
-    const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
-    if (authError) return authError;
+    const auth = await requireApiUserRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
+    if (!auth.ok) return auth.response;
+    const user = auth.user;
     await ensureDefaultData(prisma);
-    const user = await currentUser();
-    if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401 });
-    const restaurant = await currentRestaurantForUser(user);
-    const restaurantId = restaurant.id;
+    const restaurantId = user.restaurantId;
 
     const rawBody = await request.json().catch(() => ({}));
     const parsedBody = cookPlanSchema.parse(rawBody);

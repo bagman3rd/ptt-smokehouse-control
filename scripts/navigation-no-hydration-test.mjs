@@ -13,4 +13,4 @@ if (!source.includes('<details')) fail('Navigation groups must use native <detai
 if (!source.includes('<summary')) fail('Navigation groups must use native <summary> controls.');
 if (!source.includes('action="/api/logout"')) fail('Logout must remain a native POST form.');
 if (!source.includes('href="/today"')) fail('Today must remain a standard link.');
-console.log('Build 7.4.1 hydration-independent navigation checks passed.');
+console.log('Build 7.5.0 hydration-independent navigation checks passed.');

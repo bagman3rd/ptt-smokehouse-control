@@ -38,5 +38,6 @@ for (const model of ['CookPlanItem', 'EndOfDayProteinLog']) {
 }
 
 assert(guard.includes('DISABLE_TENANT_GUARD'), 'Tenant guard must have explicit maintenance escape hatch');
-assert(guard.includes("process.env.NODE_ENV !== 'production'"), 'Tenant guard should fail loudly in dev/CI without blocking production maintenance');
+assert(!guard.includes("process.env.NODE_ENV !== 'production'"), 'Tenant guard must remain active in production');
+assert(guard.includes("process.env.DISABLE_TENANT_GUARD !== '1'"), 'Tenant guard must only allow explicit maintenance bypass');
 console.log('Build 4.7.0 tenant guard coverage checks completed.');

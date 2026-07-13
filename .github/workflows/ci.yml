@@ -1,4 +1,4 @@
-name: Build 7.4.1 CI
+name: Build 7.5.0 CI
 
 env:
   ENFORCE_PRIVILEGED_2FA: "false"
@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 7.4.1 CI / quality-and-tests
+    name: Build 7.5.0 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
     services:
@@ -87,6 +87,7 @@ jobs:
           pnpm run lint
       - name: Regression tests
         run: |
+          pnpm run test:defects-7-5-0
           pnpm run test:forecast
           pnpm run test:generate-plan
           pnpm run test:smoker-catalog
@@ -107,6 +108,10 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Run desktop and mobile browser tests
         run: pnpm run test:e2e:ci
+      - name: Run tenant-guard contract tests against next dev
+        env:
+          DISABLE_TENANT_GUARD: "0"
+        run: pnpm run test:e2e:guard
       - name: Run 200-request mixed kitchen load smoke test
         env:
           LOAD_SMOKE_CONCURRENCY: 200

@@ -108,6 +108,21 @@ export async function requireApiRole(allowed: AppRole[]) {
   return null;
 }
 
+export async function requireApiUserRole(allowed: AppRole[]) {
+  const user = await currentUser();
+  if (!user) {
+    return { ok: false as const, response: NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401, headers: { 'X-Auth-Denial': 'unauthenticated' } }) };
+  }
+  const role = normalizeRole(String(user.role));
+  if (!allowed.includes(role)) {
+    return { ok: false as const, response: NextResponse.json({ ok: false, message: 'Forbidden for this access level.' }, { status: 403, headers: { 'X-Auth-Denial': 'role' } }) };
+  }
+  if (privilegedTwoFactorRequired() && (role === 'ADMIN' || role === 'OWNER') && !user.twoFactorEnabled) {
+    return { ok: false as const, response: NextResponse.json({ ok: false, message: 'Two-factor authentication is required for privileged access.' }, { status: 403, headers: { 'X-Auth-Denial': 'two-factor' } }) };
+  }
+  return { ok: true as const, user };
+}
+
 export async function setSessionCookie(userId: string, sessionVersion = 1, request?: Request) {
   const sessionId = randomUUID().replace(/-/g, '');
   const expiresAt = new Date(Date.now() + SESSION_DAYS * 24 * 60 * 60_000);

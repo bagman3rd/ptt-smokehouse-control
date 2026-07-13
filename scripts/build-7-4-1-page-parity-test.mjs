@@ -23,4 +23,4 @@ for (const legacy of ['ADMINISTRATOR','SUPER_ADMIN','MANAGER','CREW']) assert.ok
 assert.ok(auth.includes("toUpperCase()"), 'Role normalization must be case-insensitive');
 assert.ok(auth.includes("return 'KITCHEN_CREW'"), 'Unknown roles must fail closed');
 
-console.log('Build 7.4.1 full page, navigation, and legacy-role parity checks passed.');
+console.log('Build 7.5.0 full page, navigation, and legacy-role parity checks passed.');

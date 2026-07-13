@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
-import { requireApiRole, currentUser } from '@/lib/auth';
+import { requireApiUserRole } from '@/lib/auth';
 import { ensureDefaultData } from '@/lib/bootstrap';
-import { currentRestaurantForUser, auditLog } from '@/lib/tenant';
+import { auditLog } from '@/lib/tenant';
 import { enforceRateLimit } from '@/lib/rateLimit';
 import { eodSchema } from '@/lib/validators';
 import { inferCoreProteinCode, PROTEIN_CODE } from '@/lib/domainCodes';
@@ -31,13 +31,11 @@ export async function POST(request: Request) {
   const limited = await enforceRateLimit(request, 'api:end-of-day', 80, 60_000);
   if (limited) return limited;
   try {
-    const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
-    if (authError) return authError;
+    const auth = await requireApiUserRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']);
+    if (!auth.ok) return auth.response;
+    const user = auth.user;
     await ensureDefaultData(prisma);
-    const user = await currentUser();
-    if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized. Please log in again.' }, { status: 401 });
-    const restaurant = await currentRestaurantForUser(user);
-    const restaurantId = restaurant.id;
+    const restaurantId = user.restaurantId;
     const body = eodSchema.parse(await request.json().catch(() => ({})));
     const isQuickMode = body.mode === 'QUICK';
     const serviceDateStr = body.serviceDate;
@@ -142,7 +140,7 @@ export async function POST(request: Request) {
       for (const row of proteinRows) {
         await tx.endOfDayProteinLog.upsert({
           where: { endOfDayLogId_proteinId: { endOfDayLogId: parent.id, proteinId: row.proteinId } },
-          update: row,
+          update: { ...row, restaurantId },
           create: { restaurantId, endOfDayLogId: parent.id, ...row }
         });
       }

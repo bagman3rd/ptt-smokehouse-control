@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { requireApiRole, currentUser } from '@/lib/auth';
+import { requireApiUserRole } from '@/lib/auth';
 import { ensureDefaultData, activeScenarioWhere } from '@/lib/bootstrap';
 import { addUtcDays } from '@/lib/date';
-import { currentRestaurantForUser } from '@/lib/tenant';
+
 import { enforceRateLimit } from '@/lib/rateLimit';
 import { dateOnlySchema } from '@/lib/validators';
 import { dailySalesForecast, forecastProteinLoad } from '@/lib/forecast';
@@ -33,13 +33,11 @@ export async function GET(request: Request) {
   const limited = await enforceRateLimit(request, 'api:cook-plan-preview', 80, 60_000);
   if (limited) return limited;
   try {
-    const authError = await requireApiRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
-    if (authError) return authError;
+    const auth = await requireApiUserRole(['ADMIN', 'OWNER', 'KITCHEN_MANAGER']);
+    if (!auth.ok) return auth.response;
+    const user = auth.user;
     await ensureDefaultData(prisma);
-    const user = await currentUser();
-    if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized.' }, { status: 401 });
-    const restaurant = await currentRestaurantForUser(user);
-    const restaurantId = restaurant.id;
+    const restaurantId = user.restaurantId;
 
     const url = new URL(request.url);
     const loadDateValue = dateOnlySchema.parse(String(url.searchParams.get('loadDate') || ''));
