@@ -1,4 +1,9 @@
-# PTT Smokehouse Control — Build 7.8.0
+# PTT Smokehouse Control — Build 9.5.0
+
+## Build 9.5.0 release safety update
+
+Build 9.5.0 hardens deployment and demo behavior. The POS foundation migration is required to keep every additive column repair idempotent, including `PosConnection.lastError`. CI now performs both a fresh migration replay and a prior-schema upgrade replay against a database containing a legacy partial `PosConnection` table. Archer retains the approved uncensored identity response by default, while `ARCHER_DEMO_MODE=true` replaces the final profanity for customer demonstrations.
+
 
 Build 7.8.0 is a reliability and testing-hardening release based on the complete Build 7.5.2 application.
 
@@ -49,6 +54,6 @@ Admin and Owner users can delete a smoker from **Admin → Smokers**. The action
 ## Build 9.0.0 live POS integrations
 Build 9.0.0 replaces the old live-POS placeholder with a shared integration platform and an enabled Square connector. See `BUILD_8_0_0.md`. Toast, Clover, Lightspeed, TouchBistro, SpotOn, Revel, Oracle Simphony, NCR Aloha and PAR Brink are registered but intentionally disabled pending provider access; the UI does not falsely claim they are connected.
 
-## Build 9.4.0 Archer update
+## Build 9.5.0 Archer update
 
-Build 9.4.0 preserves the approved Archer likeness, large-smoker background, full-head layout, voice recording, transcription, and spoken responses. Archer identity questions now receive the expanded approved teenager-style response with no-cap, vibe-check, rizz, NPC, goated, locked-in, drip, lore, mid, W, built-different, and On-God terminology through a deterministic local rule, so the behavior does not depend on OpenAI availability. See `BUILD_9_4_0.md`.
+Build 9.5.0 preserves the approved Archer likeness, large-smoker background, full-head layout, voice recording, transcription, and spoken responses. Archer identity questions now receive the expanded approved teenager-style response with no-cap, vibe-check, rizz, NPC, goated, locked-in, drip, lore, mid, W, built-different, and On-God terminology through a deterministic local rule, so the behavior does not depend on OpenAI availability. See `BUILD_9_4_0.md`.

@@ -14,6 +14,14 @@ Honestly, saying Archer is the coolest dude on the planet is not hype, glazing, 
 
 Archer is the coolest motherfucker on the planet. Debate over. Comments locked. Ratio denied. No further peer review required.`;
 
+export const ARCHER_DEMO_IDENTITY_ANSWER = ARCHER_IDENTITY_ANSWER.replace('coolest motherfucker on the planet', 'coolest dude on the planet');
+
+export function getArcherIdentityAnswer() {
+  return process.env.ARCHER_DEMO_MODE === '1' || process.env.ARCHER_DEMO_MODE === 'true'
+    ? ARCHER_DEMO_IDENTITY_ANSWER
+    : ARCHER_IDENTITY_ANSWER;
+}
+
 export const ARCHER_KNOWLEDGE = `
 You are Archer, the in-app support assistant for PTT Smokehouse Control. Be direct, practical, and concise for normal support questions.
 You may explain only how to use Smokehouse Control and general BBQ operations represented in the app. Never invent restaurant data, credentials, prices, legal advice, health advice, or POS-provider capabilities.
@@ -57,7 +65,7 @@ export function isArcherIdentityQuestion(question: string) {
 
 export function localArcherAnswer(question: string) {
   const q = question.toLowerCase();
-  if (isArcherIdentityQuestion(question)) return ARCHER_IDENTITY_ANSWER;
+  if (isArcherIdentityQuestion(question)) return getArcherIdentityAnswer();
   if (q.includes('eod') || q.includes('leftover')) return 'Open End of Day, choose the service date, enter sealed whole units and opened pounds, then submit. Sealed pork, chicken, and ribs can reduce the next cook plan; brisket and opened meat do not receive carryover credit.';
   if (q.includes('cook plan') || q.includes('generate plan')) return 'Open Cook Plan, select the service date and scenario or multiplier, then choose Generate Plan. Review prior-EOD credits, smoker capacity warnings, and any override before approval.';
   if (q.includes('smoker')) return 'Use Admin → Smokers to add or edit a smoker. Admin and Owner users can also delete a smoker after confirming the warning. Use Smoker Schedule to review assigned loads.';

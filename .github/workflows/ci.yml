@@ -1,4 +1,4 @@
-name: Build 9.4.0 CI
+name: Build 9.5.0 CI
 
 on:
   push:
@@ -41,6 +41,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run prisma:generate
       - run: pnpm run prisma:migrate
+      - run: pnpm run test:pos-upgrade-replay
       - run: pnpm run ci:migration-status
       - run: pnpm run ci:schema-drift
       - run: pnpm run preflight

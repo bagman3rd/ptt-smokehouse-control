@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const knowledge=fs.readFileSync('lib/archerKnowledge.ts','utf8');
+assert.match(knowledge,/ARCHER_DEMO_MODE/);
+assert.match(knowledge,/ARCHER_DEMO_IDENTITY_ANSWER/);
+assert.match(knowledge,/coolest dude on the planet/);
+assert.match(knowledge,/coolest motherfucker on the planet/);
+const route=fs.readFileSync('app/api/archer/route.ts','utf8');
+assert.match(route,/getArcherIdentityAnswer\(\)/);
+console.log('Build 9.5.0 Archer demo-mode profanity gate passed.');

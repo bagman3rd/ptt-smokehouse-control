@@ -10,4 +10,4 @@ for(const text of ['Connect Square','Sync Now','Automatic daily sync','Sync Hist
 for(const text of ['createMany','posRawRecord.upsert','posOrder.upsert','posLineItem.upsert']) if(!sync.includes(text) && text!=='createMany') throw new Error(`Missing sync behavior: ${text}`);
 for(const text of ['oauth2/authorize','oauth2/token','/orders/search','/catalog/list']) if(!square.includes(text)) throw new Error(`Missing Square integration: ${text}`);
 if(!migration.includes('PosConnection_restaurantId_provider_externalLocationId_key')) throw new Error('Missing tenant-scoped POS connection key');
-console.log('Build 9.4.0 live POS integration contract passed.');
+console.log('Build 9.5.0 live POS integration contract passed.');

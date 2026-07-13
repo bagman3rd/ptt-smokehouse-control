@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { currentUser, normalizeRole } from '@/lib/auth';
 import { enforceRateLimit } from '@/lib/rateLimit';
-import { ARCHER_IDENTITY_ANSWER, ARCHER_KNOWLEDGE, isArcherIdentityQuestion, localArcherAnswer } from '@/lib/archerKnowledge';
+import { ARCHER_KNOWLEDGE, getArcherIdentityAnswer, isArcherIdentityQuestion, localArcherAnswer } from '@/lib/archerKnowledge';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
   catch { return NextResponse.json({ ok: false, message: 'Enter a question between 2 and 500 characters.' }, { status: 400 }); }
 
   if (isArcherIdentityQuestion(parsed.message)) {
-    return NextResponse.json({ ok: true, answer: ARCHER_IDENTITY_ANSWER, mode: 'approved-identity' });
+    return NextResponse.json({ ok: true, answer: getArcherIdentityAnswer(), mode: 'approved-identity' });
   }
 
   const fallback = localArcherAnswer(parsed.message);

@@ -28,4 +28,4 @@ assert.match(e2e, /expect\(planByCode\.get\('RIBS'\)\?\.usableLeftoverUnits\)\.t
 assert.match(e2e, /expect\(planByCode\.get\('BRISKET'\)\?\.usableLeftoverUnits\)\.toBe\(0\)/);
 assert.match(planPage, /prior-eod-credit-value-/);
 
-console.log('Build 9.4.0 Quick EOD carryover and exact E2E regression checks passed.');
+console.log('Build 9.5.0 Quick EOD carryover and exact E2E regression checks passed.');

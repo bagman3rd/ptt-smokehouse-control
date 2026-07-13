@@ -26,4 +26,4 @@ assert.match(component, /large commercial smokers/);
 assert.match(css, /Build 9\.1\.1 Archer support assistant/);
 assert.match(css, /top: 12px/);
 assert.match(css, /object-position:center center/);
-console.log('Archer Build 9.4.0 identity and layout contract passed.');
+console.log('Archer Build 9.5.0 identity and layout contract passed.');

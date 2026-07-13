@@ -33,6 +33,8 @@ services:
         sync: false
       - key: TOTP_ENCRYPTION_KEY
         sync: false
+      - key: ARCHER_DEMO_MODE
+        value: "false"
       - key: TENANT_GUARD_ENABLED
         value: "1"
       - key: ENFORCE_PRIVILEGED_2FA

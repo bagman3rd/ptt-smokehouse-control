@@ -15,4 +15,4 @@ assert.ok(quick.includes('<label'));
 const plan = readFileSync('docs/DETAILED_TESTING_PLAN.md', 'utf8');
 assert.ok(plan.includes('Every visible place where a user can click'));
 assert.ok(plan.includes('Release gate'));
-console.log('Build 9.4.0 structural accessibility and interaction-plan checks passed.');
+console.log('Build 9.5.0 structural accessibility and interaction-plan checks passed.');
