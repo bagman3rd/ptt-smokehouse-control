@@ -11,4 +11,4 @@ for (const [file,allowed,denied] of cases) {
  for (const role of allowed) assert.ok(s.includes(`'${role}'`),`${file} missing ${role}`);
  for (const role of denied) assert.ok(!s.includes(`'${role}'`),`${file} incorrectly allows ${role}`);
 }
-console.log('Build 7.9.0 API role contracts passed.');
+console.log('Build 8.0.0 API role contracts passed.');

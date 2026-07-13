@@ -17,6 +17,20 @@ services:
         sync: false
       - key: APP_SESSION_TOKEN
         sync: false
+      - key: SQUARE_APPLICATION_ID
+        sync: false
+      - key: SQUARE_APPLICATION_SECRET
+        sync: false
+      - key: SQUARE_REDIRECT_URI
+        sync: false
+      - key: SQUARE_WEBHOOK_SIGNATURE_KEY
+        sync: false
+      - key: SQUARE_WEBHOOK_NOTIFICATION_URL
+        sync: false
+      - key: POS_SQUARE_ENV
+        value: sandbox
+      - key: POS_CRON_SECRET
+        sync: false
       - key: TOTP_ENCRYPTION_KEY
         sync: false
       - key: TENANT_GUARD_ENABLED

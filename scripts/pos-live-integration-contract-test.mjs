@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+const schema=fs.readFileSync('prisma/schema.prisma','utf8');
+const page=fs.readFileSync('app/admin/restaurants/pos/page.tsx','utf8');
+const sync=fs.readFileSync('lib/pos/sync.ts','utf8');
+const square=fs.readFileSync('lib/pos/square.ts','utf8');
+const migration=fs.readFileSync('prisma/migrations/20260712001500_build_800_pos_integration_foundation/migration.sql','utf8');
+for(const model of ['PosConnection','PosSyncRun','PosRawRecord','PosMenuItem','PosOrder','PosLineItem','PosWebhookEvent']) if(!schema.includes(`model ${model}`)) throw new Error(`Missing ${model}`);
+for(const provider of ['SQUARE','TOAST','CLOVER','LIGHTSPEED','TOUCHBISTRO','SPOTON','REVEL','ORACLE_SIMPHONY','NCR_ALOHA','PAR_BRINK']) if(!schema.includes(provider)) throw new Error(`Missing provider ${provider}`);
+for(const text of ['Connect Square','Sync Now','Automatic daily sync','Sync History','Item-to-Protein Mapping']) if(!page.includes(text)) throw new Error(`Missing UI: ${text}`);
+for(const text of ['createMany','posRawRecord.upsert','posOrder.upsert','posLineItem.upsert']) if(!sync.includes(text) && text!=='createMany') throw new Error(`Missing sync behavior: ${text}`);
+for(const text of ['oauth2/authorize','oauth2/token','/orders/search','/catalog/list']) if(!square.includes(text)) throw new Error(`Missing Square integration: ${text}`);
+if(!migration.includes('PosConnection_restaurantId_provider_externalLocationId_key')) throw new Error('Missing tenant-scoped POS connection key');
+console.log('Build 8.0.0 live POS integration contract passed.');

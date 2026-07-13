@@ -37,4 +37,4 @@ assert.equal(tenantGuardEnabled(), false, 'controlled maintenance can explicitly
 if (oldEnabled === undefined) delete process.env.TENANT_GUARD_ENABLED; else process.env.TENANT_GUARD_ENABLED = oldEnabled;
 if (oldDisabled === undefined) delete process.env.DISABLE_TENANT_GUARD; else process.env.DISABLE_TENANT_GUARD = oldDisabled;
 
-console.log('Build 7.9.0 EOD parent/child tenant-guard contract passed.');
+console.log('Build 8.0.0 EOD parent/child tenant-guard contract passed.');

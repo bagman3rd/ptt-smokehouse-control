@@ -32,6 +32,37 @@ enum ProteinUnit {
   LB_COOKED
 }
 
+enum PosProvider {
+  SQUARE
+  TOAST
+  CLOVER
+  LIGHTSPEED
+  TOUCHBISTRO
+  SPOTON
+  REVEL
+  ORACLE_SIMPHONY
+  NCR_ALOHA
+  PAR_BRINK
+}
+
+enum PosConnectionStatus {
+  NOT_CONNECTED
+  CONNECTING
+  CONNECTED
+  DEGRADED
+  REAUTH_REQUIRED
+  DISCONNECTED
+}
+
+enum PosSyncStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  PARTIAL
+  FAILED
+  SKIPPED
+}
+
 model Restaurant {
   id          String   @id @default(cuid())
   name        String
@@ -65,6 +96,13 @@ model Restaurant {
   menuItemMappings MenuItemMapping[]
   posImportBatches PosImportBatch[]
   posImportRows PosImportRow[]
+  posConnections PosConnection[]
+  posSyncRuns PosSyncRun[]
+  posRawRecords PosRawRecord[]
+  posMenuItems PosMenuItem[]
+  posOrders PosOrder[]
+  posLineItems PosLineItem[]
+  posWebhookEvents PosWebhookEvent[]
 }
 
 model RestaurantMembership {
@@ -545,6 +583,181 @@ model MenuItemMapping {
   @@unique([restaurantId, normalizedName])
   @@index([restaurantId, active])
   @@index([restaurantId, proteinId])
+}
+
+
+model PosConnection {
+  id                    String              @id @default(cuid())
+  restaurantId          String
+  restaurant            Restaurant          @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  provider              PosProvider
+  status                PosConnectionStatus @default(NOT_CONNECTED)
+  externalMerchantId    String?
+  externalLocationId    String?
+  externalLocationName  String?
+  encryptedAccessToken  String?
+  encryptedRefreshToken String?
+  tokenExpiresAt        DateTime?
+  automaticSyncEnabled  Boolean             @default(false)
+  dailySyncTime         String              @default("03:00")
+  syncTimezone          String              @default("America/New_York")
+  syncCursor             String?
+  lastSuccessfulSyncAt  DateTime?
+  lastAttemptedSyncAt   DateTime?
+  lastError              String?
+  lastErrorAt            DateTime?
+  createdBy              String              @default("System")
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @default(now()) @updatedAt
+  syncRuns               PosSyncRun[]
+  rawRecords             PosRawRecord[]
+  menuItems              PosMenuItem[]
+  orders                 PosOrder[]
+  webhookEvents          PosWebhookEvent[]
+  @@unique([restaurantId, provider, externalLocationId])
+  @@index([restaurantId, status])
+  @@index([automaticSyncEnabled, status, lastSuccessfulSyncAt])
+}
+
+model PosSyncRun {
+  id              String        @id @default(cuid())
+  restaurantId    String
+  restaurant      Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  connectionId    String
+  connection      PosConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  status          PosSyncStatus @default(QUEUED)
+  trigger         String        @default("MANUAL")
+  startedAt       DateTime?
+  completedAt     DateTime?
+  rangeStart      DateTime?
+  rangeEnd        DateTime?
+  cursorBefore    String?
+  cursorAfter     String?
+  ordersRead      Int           @default(0)
+  lineItemsRead   Int           @default(0)
+  rawRecordsSaved Int           @default(0)
+  unmappedItems   Int           @default(0)
+  errorMessage    String?
+  createdAt       DateTime      @default(now())
+  @@index([restaurantId, createdAt])
+  @@index([connectionId, status, createdAt])
+}
+
+model PosRawRecord {
+  id               String        @id @default(cuid())
+  restaurantId     String
+  restaurant       Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  connectionId     String
+  connection       PosConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  provider         PosProvider
+  externalRecordId String
+  recordType       String
+  businessDate     DateTime?
+  payload          Json
+  payloadHash      String
+  receivedAt       DateTime      @default(now())
+  processedAt      DateTime?
+  processingError  String?
+  @@unique([connectionId, recordType, externalRecordId])
+  @@index([restaurantId, businessDate])
+  @@index([connectionId, processedAt])
+}
+
+model PosMenuItem {
+  id               String        @id @default(cuid())
+  restaurantId     String
+  restaurant       Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  connectionId     String
+  connection       PosConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  provider         PosProvider
+  externalItemId   String
+  externalName     String
+  normalizedName   String
+  categoryName     String?
+  active           Boolean       @default(true)
+  lastSeenAt       DateTime      @default(now())
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now()) @updatedAt
+  @@unique([connectionId, externalItemId])
+  @@index([restaurantId, active])
+  @@index([restaurantId, normalizedName])
+}
+
+model PosOrder {
+  id               String        @id @default(cuid())
+  restaurantId     String
+  restaurant       Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  connectionId     String
+  connection       PosConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  provider         PosProvider
+  externalOrderId  String
+  externalCheckId  String?
+  businessDate     DateTime
+  openedAt         DateTime?
+  closedAt         DateTime?
+  grossSalesCents  Int           @default(0)
+  discountCents    Int           @default(0)
+  netSalesCents    Int           @default(0)
+  taxCents         Int           @default(0)
+  tipCents         Int           @default(0)
+  refundCents      Int           @default(0)
+  serviceChargeCents Int         @default(0)
+  voided           Boolean       @default(false)
+  diningOption     String?
+  revenueCenter    String?
+  rawUpdatedAt     DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now()) @updatedAt
+  lineItems        PosLineItem[]
+  @@unique([connectionId, externalOrderId])
+  @@index([restaurantId, businessDate])
+  @@index([connectionId, rawUpdatedAt])
+}
+
+model PosLineItem {
+  id                 String     @id @default(cuid())
+  restaurantId       String
+  restaurant         Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  orderId            String
+  order              PosOrder   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  externalLineItemId String
+  externalItemId     String?
+  itemName           String
+  categoryName       String?
+  quantity           Float      @default(0)
+  grossSalesCents    Int        @default(0)
+  discountCents      Int        @default(0)
+  netSalesCents      Int        @default(0)
+  taxCents           Int        @default(0)
+  refundCents        Int        @default(0)
+  voided             Boolean    @default(false)
+  modifierNames      Json?
+  mappedProteinId    String?
+  estimatedCookedLb  Float      @default(0)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @default(now()) @updatedAt
+  @@unique([orderId, externalLineItemId])
+  @@index([restaurantId, createdAt])
+  @@index([restaurantId, externalItemId])
+}
+
+model PosWebhookEvent {
+  id               String        @id @default(cuid())
+  restaurantId     String
+  restaurant       Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  connectionId     String
+  connection       PosConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  provider         PosProvider
+  externalEventId  String
+  eventType        String
+  payload          Json
+  signatureValid   Boolean       @default(false)
+  receivedAt       DateTime      @default(now())
+  processedAt      DateTime?
+  processingError  String?
+  @@unique([connectionId, externalEventId])
+  @@index([restaurantId, receivedAt])
+  @@index([connectionId, processedAt])
 }
 
 model PosImportBatch {

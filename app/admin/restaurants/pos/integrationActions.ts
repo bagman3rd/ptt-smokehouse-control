@@ -1,24 +1,12 @@
 'use server';
+import { revalidatePath } from 'next/cache';
+import { prisma } from '@/lib/prisma';
+import { requireRole } from '@/lib/auth';
+import { auditLog, currentRestaurantForUser } from '@/lib/tenant';
+import { syncPosConnection } from '@/lib/pos/sync';
 
-/**
- * Build 7.5.0 compatibility shim.
- *
- * Older repository revisions included live POS-connection actions backed by a
- * Prisma `PosConnection` model. That model is not part of the current schema;
- * the supported POS workflow is the CSV import and menu-item mapping flow in
- * ./actions.ts. This file intentionally remains as a harmless module so stale
- * copies in Git-based deployments are overwritten rather than compiled against
- * a nonexistent Prisma delegate.
- */
-
-export async function savePosConnection(): Promise<never> {
-  throw new Error('Live POS connections are not enabled. Use the POS CSV import workflow.');
-}
-
-export async function testPosConnection(): Promise<never> {
-  throw new Error('Live POS connections are not enabled. Use the POS CSV import workflow.');
-}
-
-export async function disconnectPosConnection(): Promise<never> {
-  throw new Error('Live POS connections are not enabled. Use the POS CSV import workflow.');
-}
+async function ownedConnection(id:string){ const user=await requireRole(['ADMIN','OWNER']); const restaurant=await currentRestaurantForUser(user); const connection=await prisma.posConnection.findFirst({where:{id,restaurantId:restaurant.id}}); if(!connection) throw new Error('POS connection not found for this restaurant.'); return {user,restaurant,connection}; }
+export async function savePosConnectionSettings(formData:FormData){ const {user,restaurant,connection}=await ownedConnection(String(formData.get('connectionId')||'')); const time=String(formData.get('dailySyncTime')||'03:00'); if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) throw new Error('Sync time must use HH:MM.'); const updated=await prisma.posConnection.update({where:{id:connection.id},data:{automaticSyncEnabled:formData.get('automaticSyncEnabled')==='on',dailySyncTime:time,syncTimezone:String(formData.get('syncTimezone')||restaurant.timezone)}}); await auditLog({restaurantId:restaurant.id,actorUserId:user.id,actorName:user.name,action:'UPDATE_POS_CONNECTION',entity:'PosConnection',entityId:connection.id,beforeJson:connection,afterJson:{automaticSyncEnabled:updated.automaticSyncEnabled,dailySyncTime:updated.dailySyncTime,syncTimezone:updated.syncTimezone}}); revalidatePath('/admin/restaurants/pos'); }
+export async function syncPosNow(formData:FormData){ const {user,restaurant,connection}=await ownedConnection(String(formData.get('connectionId')||'')); await syncPosConnection(connection.id,'MANUAL'); await auditLog({restaurantId:restaurant.id,actorUserId:user.id,actorName:user.name,action:'SYNC_POS_NOW',entity:'PosConnection',entityId:connection.id}); revalidatePath('/admin/restaurants/pos'); revalidatePath('/sales'); revalidatePath('/reports'); }
+export async function selectSquareLocation(formData:FormData){ const {user,restaurant,connection}=await ownedConnection(String(formData.get('connectionId')||'')); const id=String(formData.get('locationId')||''); const name=String(formData.get('locationName')||id); if(!id) throw new Error('Choose a Square location.'); await prisma.posConnection.update({where:{id:connection.id},data:{externalLocationId:id,externalLocationName:name,status:'CONNECTED',syncTimezone:restaurant.timezone}}); await auditLog({restaurantId:restaurant.id,actorUserId:user.id,actorName:user.name,action:'SELECT_POS_LOCATION',entity:'PosConnection',entityId:connection.id,afterJson:{locationId:id,locationName:name}}); revalidatePath('/admin/restaurants/pos'); }
+export async function disconnectPos(formData:FormData){ const {user,restaurant,connection}=await ownedConnection(String(formData.get('connectionId')||'')); await prisma.posConnection.update({where:{id:connection.id},data:{status:'DISCONNECTED',encryptedAccessToken:null,encryptedRefreshToken:null,tokenExpiresAt:null,automaticSyncEnabled:false,lastError:null}}); await auditLog({restaurantId:restaurant.id,actorUserId:user.id,actorName:user.name,action:'DISCONNECT_POS',entity:'PosConnection',entityId:connection.id,beforeJson:{provider:connection.provider,location:connection.externalLocationName}}); revalidatePath('/admin/restaurants/pos'); }
