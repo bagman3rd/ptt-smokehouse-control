@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "9.1.0",
+  "version": "9.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -24,7 +24,7 @@
     "test:permissions": "node scripts/permission-boundary-test.mjs",
     "ci:schema-drift": "prisma migrate diff --from-url \"$DATABASE_URL\" --to-schema-datamodel prisma/schema.prisma --exit-code",
     "ci:migration-status": "prisma migrate status",
-    "ci:test": "pnpm run preflight && pnpm run test:comprehensive && pnpm run test:page-parity && pnpm run test:navigation && pnpm run test:admin-navigation && pnpm run test:tenant-guard-policy && pnpm run test:accessibility && pnpm run test:api-roles && pnpm run test:security-static && pnpm run typecheck && pnpm run lint && pnpm run test:migration-integrity && pnpm run test:pos-migration-recovery && pnpm run migration:smoke && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:quick-eod-carryover && pnpm run test:eod-postgres-write && pnpm run test:eod-column-types && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:auth-coverage && pnpm run test:failure-modes && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:tenant-guard && pnpm run test:orphan-records && pnpm run staging:verify && pnpm run test:pos-import && pnpm run test:pos-live && pnpm run test:pos-oauth-origin && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run test:smoker-delete && pnpm run test:unsupported-prisma && pnpm run ci:migration-status && pnpm run ci:schema-drift && pnpm run test:archer && pnpm run test:archer-identity",
+    "ci:test": "pnpm run preflight && pnpm run test:comprehensive && pnpm run test:page-parity && pnpm run test:navigation && pnpm run test:admin-navigation && pnpm run test:tenant-guard-policy && pnpm run test:accessibility && pnpm run test:api-roles && pnpm run test:security-static && pnpm run typecheck && pnpm run lint && pnpm run test:migration-integrity && pnpm run test:pos-migration-recovery && pnpm run migration:smoke && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:quick-eod-carryover && pnpm run test:eod-postgres-write && pnpm run test:eod-column-types && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:auth-coverage && pnpm run test:failure-modes && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:tenant-guard && pnpm run test:orphan-records && pnpm run staging:verify && pnpm run test:pos-import && pnpm run test:pos-live && pnpm run test:pos-oauth-origin && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run test:smoker-delete && pnpm run test:unsupported-prisma && pnpm run ci:migration-status && pnpm run ci:schema-drift && pnpm run test:archer && pnpm run test:archer-identity && pnpm run test:archer-voice",
     "test:dead-code": "node scripts/dead-code-check.mjs",
     "test:cross-tenant": "tsx scripts/cross-tenant-regression-test.mjs",
     "test:account-security": "node scripts/account-security-test.mjs",
@@ -80,7 +80,8 @@
     "test:pos-migration-recovery": "node scripts/pos-migration-recovery-contract-test.mjs",
     "test:pos-oauth-origin": "node scripts/pos-oauth-origin-contract-test.mjs",
     "test:archer": "node scripts/archer-chat-contract-test.mjs",
-    "test:archer-identity": "node scripts/archer-identity-contract-test.mjs"
+    "test:archer-identity": "node scripts/archer-identity-contract-test.mjs",
+    "test:archer-voice": "node scripts/archer-voice-contract-test.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

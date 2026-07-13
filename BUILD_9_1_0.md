@@ -1,6 +1,6 @@
-# Build 9.1.0 — Archer visual and identity update
+# Build 9.2.0 — Archer visual and identity update
 
-Build 9.1.0 updates the Archer assistant without changing the operational database schema.
+Build 9.2.0 updates the Archer assistant without changing the operational database schema.
 
 ## Visual changes
 

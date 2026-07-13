@@ -20,7 +20,7 @@ async function main() {
     const count = Number(rows[0]?.count ?? 0);
     assert.equal(count, 0, `${table} has ${count} orphan records with restaurantId=null`);
   }
-  console.log('Build 9.1.0 orphan record check completed. No tenant-scoped orphan records found.');
+  console.log('Build 9.2.0 orphan record check completed. No tenant-scoped orphan records found.');
 }
 
 main().finally(() => prisma.$disconnect()).catch(async (error) => {

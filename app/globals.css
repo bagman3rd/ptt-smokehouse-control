@@ -83,7 +83,7 @@ details[open] > summary { @apply bg-slate-100; }
   details.relative > div { left: 1rem; right: 1rem; width: auto; }
 }
 
-/* Build 9.1.0 Archer support assistant */
+/* Build 9.1.1 Archer support assistant */
 .archer-root { position: fixed; right: 18px; top: 12px; bottom: 14px; z-index: 60; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; gap: 10px; pointer-events: none; }
 .archer-root > * { pointer-events: auto; }
 .archer-launcher { display:flex; align-items:center; gap:.65rem; border-radius:999px; background:#c75b12; color:white; padding:.65rem 1rem .65rem .65rem; font-weight:900; box-shadow:0 12px 30px rgba(15,23,42,.25); border:1px solid #9a410d; }
@@ -103,3 +103,11 @@ details[open] > summary { @apply bg-slate-100; }
   .archer-messages { min-height:140px; padding:12px; }
   .archer-portrait { flex-basis:150px; }
 }
+.archer-icon-button { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:999px; border:1px solid #ead8c4; background:white; font-size:1rem; }
+.archer-icon-button:hover { background:#fff0dc; }
+.archer-form-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.archer-mic { border:1px solid #b45309; color:#7c2d12; background:#fff7ed; border-radius:10px; padding:.55rem .75rem; font-weight:800; }
+.archer-mic:hover { background:#ffedd5; }
+.archer-mic.listening { color:white; background:#b91c1c; border-color:#7f1d1d; animation:archer-pulse 1.15s ease-in-out infinite; }
+.archer-voice-note { margin:0; font-size:.72rem; line-height:1.35; color:#64748b; }
+@keyframes archer-pulse { 0%,100% { box-shadow:0 0 0 0 rgba(185,28,28,.35); } 50% { box-shadow:0 0 0 7px rgba(185,28,28,0); } }

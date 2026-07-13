@@ -49,6 +49,6 @@ Admin and Owner users can delete a smoker from **Admin → Smokers**. The action
 ## Build 9.0.0 live POS integrations
 Build 9.0.0 replaces the old live-POS placeholder with a shared integration platform and an enabled Square connector. See `BUILD_8_0_0.md`. Toast, Clover, Lightspeed, TouchBistro, SpotOn, Revel, Oracle Simphony, NCR Aloha and PAR Brink are registered but intentionally disabled pending provider access; the UI does not falsely claim they are connected.
 
-## Build 9.1.0 Archer update
+## Build 9.2.0 Archer update
 
-Build 9.1.0 uses the approved Archer likeness in front of large commercial smokers, keeps the full head visible, and restructures the panel so the conversation remains at the top of the screen while the portrait stays below the composer. Archer identity questions receive the approved extended teenager-style response through a deterministic local rule, so the behavior does not depend on OpenAI availability. See `BUILD_9_1_0.md`.
+Build 9.2.0 uses the approved Archer likeness in front of large commercial smokers, keeps the full head visible, and restructures the panel so the conversation remains at the top of the screen while the portrait stays below the composer. Archer identity questions receive the approved extended teenager-style response through a deterministic local rule, so the behavior does not depend on OpenAI availability. See `BUILD_9_1_0.md`.
