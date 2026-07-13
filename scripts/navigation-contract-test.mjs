@@ -9,5 +9,5 @@ assert.ok(nav.includes("document.addEventListener('pointerdown'"), 'dropdowns mu
 assert.ok(nav.includes('aria-expanded={isOpen}'), 'dropdown buttons must expose state');
 assert.ok(nav.includes('role="menu"') && nav.includes('role="menuitem"'), 'dropdown semantics must be present');
 for (const label of ['Operations', 'Insights', 'Admin', 'Help']) assert.ok(shell.includes(`label: '${label}'`));
-assert.ok(shell.includes('Build 9.2.0'));
-console.log('Build 9.2.0 interactive dropdown navigation checks passed.');
+assert.ok(shell.includes('Build 9.3.0'));
+console.log('Build 9.3.0 interactive dropdown navigation checks passed.');

@@ -9,4 +9,4 @@ assert.match(route, /endOfDayProteinLog\.createMany\([\s\S]*?skipDuplicates:\s*t
 assert.match(route, /endOfDayProteinLog\.updateMany\([\s\S]*?where:\s*\{[\s\S]*?restaurantId[\s\S]*?endOfDayLogId[\s\S]*?proteinId/, 'Quick EOD updates must be explicitly tenant scoped');
 assert.match(schema, /@@unique\(\[restaurantId, endOfDayLogId, proteinId\]\)/, 'Tenant-scoped EOD uniqueness must remain enforced by the database');
 
-console.log('Build 9.2.0 PostgreSQL-safe Quick EOD write strategy passed.');
+console.log('Build 9.3.0 PostgreSQL-safe Quick EOD write strategy passed.');
