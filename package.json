@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "7.5.1",
+  "version": "7.5.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -52,10 +52,10 @@
     "test:route-parity": "node scripts/build-7-2-2-route-parity-test.mjs",
     "test:quick-eod-carryover": "node scripts/quick-eod-carryover-test.mjs",
     "test:page-parity": "node scripts/build-7-4-1-page-parity-test.mjs",
-    "test:navigation": "node scripts/navigation-no-hydration-test.mjs",
+    "test:navigation": "node scripts/build-7-5-2-navigation-test.mjs",
     "test:e2e:guard": "playwright test --config=playwright.guard.config.ts",
     "test:defects-7-5-0": "node scripts/build-7-5-0-defect-test.mjs",
-    "test:build-7-5-1": "node scripts/build-7-5-1-defect-test.mjs && node scripts/navigation-no-hydration-test.mjs"
+    "test:build-7-5-2": "node scripts/build-7-5-2-navigation-test.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

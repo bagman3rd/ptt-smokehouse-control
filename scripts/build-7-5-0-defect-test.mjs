@@ -9,4 +9,4 @@ assert(!guard.includes("process.env.NODE_ENV !== 'production'"), 'Tenant guard m
 assert(guard.includes("process.env.DISABLE_TENANT_GUARD !== '1'"), 'Tenant guard maintenance bypass must be explicit');
 assert(auth.includes('requireApiUserRole'), 'Single-pass API auth context is required');
 assert(ci.includes('test:e2e:guard'), 'CI must run dev-mode tenant-guard E2E');
-console.log('Build 7.5.0 defect regression checks passed.');
+console.log('Build 7.5.2 defect regression checks passed.');
