@@ -1,4 +1,11 @@
-# PTT Smokehouse Control — Build 7.0.0
+# PTT Smokehouse Control — Build 7.0.1
+
+## Build 7.0.1 — Prisma verifier correction
+
+- Replaces declaration-file text matching with runtime Prisma DMMF validation.
+- Removes the cached generated client before regeneration.
+- Explicitly generates from `prisma/schema.prisma`.
+- Confirms all POS models and the `prisma.posConnection` delegate exist before Next.js compilation.
 
 ## Build 7.0.0 — Render POS deployment fix
 
