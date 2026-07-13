@@ -1,32 +1,62 @@
-# PTT Smokehouse Control — Build 7.2.1
+# PTT Smokehouse Control — Build 7.0.1
 
-Smokehouse Control is a multi-restaurant production-planning and kitchen closeout application for smoked-meat operations.
+## Build 7.0.1 — Prisma verifier correction
 
-## Build 7.2.1 reliability work
+- Replaces declaration-file text matching with runtime Prisma DMMF validation.
+- Removes the cached generated client before regeneration.
+- Explicitly generates from `prisma/schema.prisma`.
+- Confirms all POS models and the `prisma.posConnection` delegate exist before Next.js compilation.
 
-- Admin and Owner administrative access requires TOTP in production.
-- Logins create durable device sessions with expiry, last-seen time, IP, user agent, and individual revocation.
-- Account Security lists active sessions and allows users to revoke unfamiliar devices.
-- Reports includes a 30-day multi-restaurant sales and waste rollup when the account has access to more than one restaurant.
-- CI executes a 200-request mixed authenticated kitchen load smoke test.
-- System Health records external security review, physical kitchen-device testing, live pilot forecast evidence, and operator-led restore rehearsal.
-- Existing migration compatibility aliases remain preserved. Do not rename migration folders already shipped.
+## Build 7.0.0 — Render POS deployment fix
 
-## Build 6.6 kitchen closeout retained
+- Forces `prisma generate` during install and immediately before every production build.
+- Verifies the generated Prisma Client contains `PosConnection` before Next.js compilation.
+- Prevents Render from compiling POS routes against a stale cached Prisma Client.
+- Use `pnpm run render-build` and clear the Render build cache for the first deployment.
 
-The top of the EOD page provides the eight-number fast closeout: sealed units and opened pounds for brisket, pork, chicken, and ribs. Only sealed pork, chicken, and ribs reduce the next load.
+Restaurant smokehouse forecasting, cook planning, smoker allocation, EOD reconciliation, reporting, tenant controls, and operational auditability.
 
-## Deployment
+## Build 7.0.0 — Whole-number sealed inventory
+
+The Quick EOD sealed/unopened brisket, pork, chicken, and rib fields now accept and store whole units only. Opened-meat quantities remain decimal pounds.
+
+## Build 6.7.0 kitchen closeout
+
+The End-of-Day page now begins with an eight-number quick report for sealed unopened units and opened-meat pounds across brisket, pork, chicken, and ribs. Only sealed pork, chicken, and ribs become next-load credits. Sealed brisket and all opened-meat pounds are recorded for repurposed menu use but are not carried into the next smoker load. The original detailed EOD form remains available below it.
+
+## Build 6.7.0 reliability focus
+
+- Preserves original and renumbered migration history without rewriting `_prisma_migrations`
+- Replays the complete migration chain on fresh PostgreSQL
+- Executes a database dump-and-restore drill in CI and retains evidence
+- Runs desktop, mobile, cross-tenant, kitchen-workflow, and 50-session load smoke tests
+- Uses a committed pnpm lockfile with frozen installs in CI and Render
+- Defaults founding-customer billing to documented manual invoicing
+- Tracks external pilot gates for live PTT data and physical-device testing
+
+## Local setup
 
 ```bash
 pnpm install --frozen-lockfile
 pnpm run prisma:generate
 pnpm run prisma:migrate
-pnpm run migration:smoke
-pnpm run build
-pnpm run start
+pnpm run db:seed
+pnpm run dev
 ```
 
-Required production variables include `DATABASE_URL`, `APP_SESSION_TOKEN` of at least 24 characters, `ADMIN_PASSWORD`, and `ENFORCE_PRIVILEGED_2FA=true`.
+## Production build
 
-See `BUILD_7_0_0.md`, `TEST_REPORT_BUILD_7_0_0.md`, `docs/MIGRATION_HISTORY.md`, and `docs/BUILD_700_READINESS.md`.
+```bash
+pnpm run render-build
+```
+
+## Current policy documents
+
+- `docs/MIGRATION_HISTORY.md`
+- `docs/BILLING_POLICY.md`
+- `docs/PILOT_EVIDENCE_CHECKLIST.md`
+- `docs/SUPPORT_OPERATIONS.md`
+
+
+## Build 6.7.0 — Top-10 POS integration
+See `BUILD_6_7_0.md` for provider coverage, credential requirements, demo validation, and deployment steps.

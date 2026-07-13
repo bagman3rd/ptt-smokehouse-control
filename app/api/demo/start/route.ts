@@ -24,6 +24,6 @@ export async function POST(request: Request) {
   await createDemoHistory(prisma, restaurant.id);
   await auditLog({ restaurantId: restaurant.id, actorUserId: user.id, actorName: user.name, action: 'CREATE_DEMO_DATA', entity: 'Restaurant', entityId: restaurant.id, afterJson: { demo: true } });
   setCurrentRestaurantCookie(restaurant.id);
-  await setSessionCookie(user.id, user.sessionVersion || 1, request);
+  setSessionCookie(user.id, user.sessionVersion || 1);
   return NextResponse.redirect(`${baseUrl(request)}/dashboard?demo=1`, 303);
 }

@@ -65,6 +65,11 @@ model Restaurant {
   menuItemMappings MenuItemMapping[]
   posImportBatches PosImportBatch[]
   posImportRows PosImportRow[]
+  posConnections PosConnection[]
+  posLocations PosLocation[]
+  posCatalogItems PosCatalogItem[]
+  posSyncRuns PosSyncRun[]
+  posOrderLines PosOrderLine[]
 }
 
 model RestaurantMembership {
@@ -103,7 +108,6 @@ model User {
   restaurantId String?
   restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
   memberships  RestaurantMembership[]
-  sessions     UserSession[]
   name         String
   username     String?
   email        String
@@ -111,9 +115,6 @@ model User {
   sessionVersion Int    @default(1)
   twoFactorEnabled Boolean @default(false)
   twoFactorSecret String?
-  twoFactorRecoveryCodes String?
-  twoFactorRecoveryDisplay String?
-  twoFactorKeyVersion Int @default(1)
   passwordResetRequired Boolean @default(false)
   failedLoginCount Int  @default(0)
   lockedUntil  DateTime?
@@ -127,22 +128,6 @@ model User {
   @@index([active])
   @@index([username])
   @@index([email])
-}
-
-
-model UserSession {
-  id           String   @id @default(cuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tokenHash    String   @unique
-  userAgent    String?
-  ipAddress    String?
-  createdAt    DateTime @default(now())
-  lastSeenAt   DateTime @default(now())
-  expiresAt    DateTime
-  revokedAt    DateTime?
-  @@index([userId, revokedAt])
-  @@index([expiresAt])
 }
 
 model Protein {
@@ -172,6 +157,7 @@ model Protein {
   logs                EndOfDayProteinLog[]
   menuItemMappings    MenuItemMapping[]
   posImportRows       PosImportRow[]
+  posOrderLines       PosOrderLine[]
   @@unique([restaurantId, name])
   @@index([restaurantId, active])
 }
@@ -346,28 +332,15 @@ model EndOfDayProteinLog {
   soldCookedLb    Float    @default(0)
   usableLeftoverLb Float   @default(0)
   usableLeftoverUnits Float @default(0)
-  sealedUnopenedUnits Float @default(0)
+  sealedUnopenedUnits Int @default(0)
   openedMeatLb     Float    @default(0)
   wasteLb         Float    @default(0)
   eightySixed     Boolean  @default(false)
   wasteReason     String?
   @@index([restaurantId, endOfDayLogId])
   @@index([restaurantId, proteinId])
-  @@unique([endOfDayLogId, proteinId])
 }
 
-model SecurityEvent {
-  id         String   @id @default(cuid())
-  userId     String?
-  identifier String?
-  action     String
-  reason     String?
-  ipAddress  String?
-  userAgent  String?
-  createdAt  DateTime @default(now())
-  @@index([userId, createdAt])
-  @@index([action, createdAt])
-}
 
 model Smoker {
   id           String   @id @default(cuid())
@@ -589,3 +562,122 @@ model PosImportRow {
   @@index([restaurantId, mappedProteinId])
 }
 
+
+
+model PosConnection {
+  id                    String   @id @default(cuid())
+  restaurantId          String
+  restaurant            Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  provider              String
+  displayName           String
+  status                String   @default("DISCONNECTED")
+  mode                  String   @default("DEMO")
+  merchantExternalId    String?
+  encryptedAccessToken  String?
+  encryptedRefreshToken String?
+  credentialHint        String?
+  syncFrequencyMinutes  Int      @default(15)
+  lastSuccessfulSyncAt  DateTime?
+  lastAttemptAt         DateTime?
+  lastError              String?
+  active                 Boolean  @default(true)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @default(now()) @updatedAt
+  locations              PosLocation[]
+  catalogItems           PosCatalogItem[]
+  syncRuns               PosSyncRun[]
+  orderLines             PosOrderLine[]
+  @@unique([restaurantId, provider])
+  @@index([restaurantId, status, active])
+}
+
+model PosLocation {
+  id                 String   @id @default(cuid())
+  restaurantId       String
+  restaurant         Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  connectionId       String
+  connection         PosConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  externalLocationId String
+  name               String
+  timezone           String?
+  active             Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
+  @@unique([connectionId, externalLocationId])
+  @@index([restaurantId, active])
+}
+
+model PosCatalogItem {
+  id                  String   @id @default(cuid())
+  restaurantId        String
+  restaurant          Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  connectionId        String
+  connection          PosConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  externalItemId      String
+  externalVariationId String   @default("")
+  name                String
+  category             String?
+  modifierJson         String?
+  active               Boolean @default(true)
+  lastSyncedAt         DateTime @default(now())
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now()) @updatedAt
+  @@unique([connectionId, externalItemId, externalVariationId])
+  @@index([restaurantId, active])
+}
+
+model PosSyncRun {
+  id             String   @id @default(cuid())
+  restaurantId   String
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  connectionId   String
+  connection     PosConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  syncType       String
+  status         String   @default("RUNNING")
+  startedAt      DateTime @default(now())
+  completedAt    DateTime?
+  recordsRead    Int      @default(0)
+  recordsWritten Int      @default(0)
+  duplicateCount Int      @default(0)
+  unmappedCount  Int      @default(0)
+  grossSales     Float    @default(0)
+  netSales       Float    @default(0)
+  errorMessage   String?
+  notes          String?
+  @@index([restaurantId, startedAt])
+  @@index([restaurantId, connectionId, status])
+}
+
+model PosOrderLine {
+  id                   String   @id @default(cuid())
+  restaurantId         String
+  restaurant           Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  connectionId         String
+  connection           PosConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  externalLocationId   String?
+  externalOrderId      String
+  externalLineId       String
+  externalItemId       String?
+  businessDate         DateTime
+  orderedAt            DateTime
+  itemName             String
+  category             String?
+  quantity             Float    @default(0)
+  grossSales           Float    @default(0)
+  discounts            Float    @default(0)
+  refunds              Float    @default(0)
+  netSales             Float    @default(0)
+  voided                Boolean  @default(false)
+  orderChannel          String?
+  modifiersJson         String?
+  mappedProteinId      String?
+  mappedProtein        Protein? @relation(fields: [mappedProteinId], references: [id], onDelete: SetNull)
+  portionSizeLb        Float    @default(0)
+  estimatedCookedLb    Float    @default(0)
+  sourceUpdatedAt      DateTime?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now()) @updatedAt
+  @@unique([connectionId, externalOrderId, externalLineId])
+  @@index([restaurantId, businessDate])
+  @@index([restaurantId, mappedProteinId, businessDate])
+}

@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 try {
-  const requiredTables = ['Restaurant','Protein','CookPlan','CookPlanItem','EndOfDayLog','EndOfDayProteinLog','Smoker','AuditLog','UserSession', 'SecurityEvent'];
+  const requiredTables = ['Restaurant','Protein','CookPlan','CookPlanItem','EndOfDayLog','EndOfDayProteinLog','Smoker','AuditLog'];
   const tables = await prisma.$queryRaw`SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'`;
   const names = new Set(tables.map((row) => row.table_name));
   for (const table of requiredTables) {

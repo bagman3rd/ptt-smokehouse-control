@@ -4,12 +4,9 @@ import { verifyPassword } from '@/lib/password';
 import { prisma } from '@/lib/prisma';
 import { ensureDefaultData } from '@/lib/bootstrap';
 import { enforceRateLimit } from '@/lib/rateLimit';
-import { auditLog, securityEvent } from '@/lib/tenant';
-import type { User } from '@prisma/client';
+import { auditLog } from '@/lib/tenant';
 import { loginSchema } from '@/lib/validators';
 import { verifyTotp } from '@/lib/totp';
-import { decryptSecret, encryptSecret } from '@/lib/secretEncryption';
-import { consumeRecoveryCode } from '@/lib/recoveryCodes';
 
 const MAX_FAILED_LOGINS = 6;
 const LOCKOUT_MS = 30 * 60_000;
@@ -27,10 +24,12 @@ function requestMeta(request: Request) {
   return { ip, userAgent };
 }
 
-async function recordFailedLogin(user: User | null, identifier: string, request: Request, reason: string) {
+async function recordFailedLogin(user: any, identifier: string, request: Request, reason: string) {
   const meta = requestMeta(request);
-  await securityEvent({ userId: user?.id || null, identifier, action: user ? 'LOGIN_FAILURE' : 'LOGIN_FAILURE_UNKNOWN_USER', reason, ipAddress: meta.ip, userAgent: meta.userAgent });
-  if (!user) return;
+  if (!user) {
+    await auditLog({ action: 'LOGIN_FAILURE', entity: 'Auth', actorName: identifier || 'Unknown', afterJson: { reason, identifier, ...meta } });
+    return;
+  }
 
   const failedLoginCount = (user.failedLoginCount || 0) + 1;
   const lockedUntil = failedLoginCount >= MAX_FAILED_LOGINS ? new Date(Date.now() + LOCKOUT_MS) : null;
@@ -85,26 +84,16 @@ export async function POST(request: Request) {
     return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
   }
 
-  if (user.twoFactorEnabled) {
-    const storedSecret = user.twoFactorSecret || '';
-    const secret = decryptSecret(storedSecret);
+  if ((user as any).twoFactorEnabled) {
+    const secret = (user as any).twoFactorSecret || '';
     if (!otp) {
       await auditLog({ restaurantId: user.restaurantId || null, actorUserId: user.id, actorName: user.name, action: 'LOGIN_2FA_REQUIRED', entity: 'Auth', entityId: user.id, afterJson: { identifier, ...requestMeta(request) } });
       return NextResponse.redirect(`${baseUrl}/login?otp=1`, 303);
     }
     if (!verifyTotp(otp, secret)) {
-      const remaining = consumeRecoveryCode(user.twoFactorRecoveryCodes, otp);
-      if (remaining !== null) {
-        await prisma.user.update({ where: { id: user.id }, data: { twoFactorRecoveryCodes: remaining } });
-      } else {
       await recordFailedLogin(user, identifier, request, 'bad two-factor code');
       return NextResponse.redirect(`${baseUrl}/login?error=1`, 303);
-      }
     }
-  }
-
-  if (user.twoFactorEnabled && user.twoFactorSecret && !user.twoFactorSecret.startsWith('enc:v1:')) {
-    await prisma.user.update({ where: { id: user.id }, data: { twoFactorSecret: encryptSecret(user.twoFactorSecret) } });
   }
 
   const activeMembership = await prisma.restaurantMembership.findFirst({ where: { userId: user.id, active: true, restaurant: { active: true } } });
@@ -114,7 +103,7 @@ export async function POST(request: Request) {
   }
 
   const sessionVersion = user.sessionVersion || 1;
-  await setSessionCookie(user.id, sessionVersion, request);
+  setSessionCookie(user.id, sessionVersion);
   await prisma.user.update({ where: { id: user.id }, data: { failedLoginCount: 0, lockedUntil: null, lastFailedLoginAt: null } }).catch(() => null);
   await auditLog({ restaurantId: activeMembership.restaurantId, actorUserId: user.id, actorName: user.name, action: 'LOGIN_SUCCESS', entity: 'Auth', afterJson: { username: user.username, email: user.email, ...requestMeta(request) } });
   return NextResponse.redirect(`${baseUrl}/dashboard`, 303);

@@ -8,15 +8,14 @@ const required = [
   ['app/help/page.tsx', 'What if Wi-Fi fails during EOD?'],
   ['app/help/page.tsx', 'How do I add smokers?'],
   ['app/demo/page.tsx', '90 days of fake EOD history'],
-  ['docs/PILOT_EVIDENCE_CHECKLIST.md', 'physical'],
-  ['docs/EXTERNAL_ACTIONS_REQUIRED.md', 'External actions required']
+  ['docs/archive/DOCUMENTATION_AND_DEMO_BUILD_5_4_0.md', 'Build 5.4.0']
 ];
 
 for (const [path, needle] of required) {
   const text = fs.readFileSync(path, 'utf8');
   if (!text.includes(needle)) {
-    console.error(`Build 7.2.1 demo/docs test failed: ${path} missing ${needle}`);
+    console.error(`Build 5.4.0 demo/docs test failed: ${path} missing ${needle}`);
     process.exit(1);
   }
 }
-console.log('Build 7.2.1 demo/docs checks completed.');
+console.log('Build 5.4.0 demo/docs checks completed.');

@@ -1,7 +1,4 @@
-name: Build 7.2.1 CI
-
-env:
-  ENFORCE_PRIVILEGED_2FA: "false"
+name: Build 6.7.0 CI
 
 on:
   push:
@@ -19,7 +16,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 7.2.1 CI / quality-and-tests
+    name: Build 6.7.0 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
     services:
@@ -41,7 +38,6 @@ jobs:
       CI_TENANT_B_PASSWORD: ci-tenant-b-password
       APP_SESSION_TOKEN: ci-session-token-long-value-for-tests-only
       CRON_SECRET: ci-cron-secret-long-value-for-tests-only
-      TOTP_ENCRYPTION_KEY: ci-totp-encryption-key-long-value-for-tests-only
       NEXT_PUBLIC_APP_NAME: Smokehouse Control CI
       NEXT_PUBLIC_SUPPORT_EMAIL: support@smokehousecontrol.com
       CI: true
@@ -107,9 +103,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Run desktop and mobile browser tests
         run: pnpm run test:e2e:ci
-      - name: Run 200-request mixed kitchen load smoke test
-        env:
-          LOAD_SMOKE_CONCURRENCY: 200
+      - name: Run 50-session load smoke test
         run: pnpm run test:load-smoke
       - name: Upload restore-drill evidence
         uses: actions/upload-artifact@v4
