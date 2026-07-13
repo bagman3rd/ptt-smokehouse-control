@@ -70,7 +70,7 @@ export function QuickEndOfDayForm({ proteins, initialLog }: { proteins: Protein[
         throw new Error('Negative numbers are not allowed. Enter 0 when none remains.');
       }
       if (rows.some((row) => !Number.isInteger(row.sealedUnopenedUnits))) {
-        throw new Error('Sealed, unopened meat counts must be whole numbers with no decimal points.');
+        throw new Error('Sealed, unopened quantities must be whole numbers with no decimals.');
       }
       const response = await fetch('/api/end-of-day', {
         method: 'POST',
@@ -117,7 +117,7 @@ export function QuickEndOfDayForm({ proteins, initialLog }: { proteins: Protein[
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="label" htmlFor={`sealed-${code}`}>Number of {sealedLabel}</label>
-                <input id={`sealed-${code}`} data-testid={`quick-eod-sealed-${code}`} className="field mt-1 text-lg font-black" name={`sealed-${code}`} type="number" min="0" step="1" inputMode="numeric" defaultValue={Math.trunc(saved?.sealedUnopenedUnits ?? 0)} required disabled={isLocked} />
+                <input id={`sealed-${code}`} data-testid={`quick-eod-sealed-${code}`} className="field mt-1 text-lg font-black" name={`sealed-${code}`} type="number" min="0" step="1" inputMode="numeric" defaultValue={saved?.sealedUnopenedUnits ?? 0} required disabled={isLocked} />
               </div>
               <div>
                 <label className="label" htmlFor={`opened-${code}`}>Pounds from opened {label.toLowerCase()}</label>

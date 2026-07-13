@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   if (!user) return NextResponse.json({ ok: false, message: 'Unauthorized' }, { status: 401 });
   const restaurant = await currentRestaurantForUser(user);
   const restaurantId = restaurant.id;
-  const [memberships, users, proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks, subscriptions, supportTickets, dataRequests, menuItemMappings, posImportBatches, posImportRows, posConnections, posLocations, posCatalogItems, posSyncRuns, posOrderLines] = await Promise.all([
+  const [memberships, users, proteins, scenarios, days, months, cookPlans, eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks, subscriptions, supportTickets, dataRequests, menuItemMappings, posImportBatches, posImportRows] = await Promise.all([
     prisma.restaurantMembership.findMany({ where: { restaurantId }, include: { user: true } }),
     prisma.user.findMany({ where: { memberships: { some: { restaurantId } } }, select: { id: true, name: true, username: true, email: true, active: true, createdAt: true, updatedAt: true } }),
     prisma.protein.findMany({ where: { restaurantId } }),
@@ -33,15 +33,10 @@ export async function GET(request: Request) {
     prisma.customerDataRequest.findMany({ where: { restaurantId } }).catch(() => []),
     prisma.menuItemMapping.findMany({ where: { restaurantId }, include: { protein: true } }).catch(() => []),
     prisma.posImportBatch.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }).catch(() => []),
-    prisma.posImportRow.findMany({ where: { restaurantId }, orderBy: { serviceDate: 'asc' } }).catch(() => []),
-    prisma.posConnection.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }).catch(() => []),
-    prisma.posLocation.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }).catch(() => []),
-    prisma.posCatalogItem.findMany({ where: { restaurantId }, orderBy: { createdAt: 'asc' } }).catch(() => []),
-    prisma.posSyncRun.findMany({ where: { restaurantId }, orderBy: { startedAt: 'asc' } }).catch(() => []),
-    prisma.posOrderLine.findMany({ where: { restaurantId }, orderBy: { businessDate: 'asc' } }).catch(() => [])
+    prisma.posImportRow.findMany({ where: { restaurantId }, orderBy: { serviceDate: 'asc' } }).catch(() => [])
   ]);
   await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'EXPORT_TENANT_DATA', entity: 'Restaurant', entityId: restaurantId, afterJson: { counts: { users: users.length, cookPlans: cookPlans.length, eodLogs: eodLogs.length, smokers: smokers.length, learningRecommendations: learningRecommendations.length, systemChecks: systemChecks.length, subscriptions: subscriptions.length, supportTickets: supportTickets.length, dataRequests: dataRequests.length, menuItemMappings: menuItemMappings.length, posImportBatches: posImportBatches.length, posImportRows: posImportRows.length } } });
   const exportedAt = new Date().toISOString();
-  const body = JSON.stringify({ app: 'Smokehouse Control', build: '7.0.1', exportedAt, restaurant, memberships, users, proteins, scenarios, dayMultipliers: days, monthMultipliers: months, cookPlans, endOfDayLogs: eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks, subscriptions, supportTickets, dataRequests, menuItemMappings, posImportBatches, posImportRows, posConnections: posConnections.map(({ encryptedAccessToken, encryptedRefreshToken, ...connection }) => connection), posLocations, posCatalogItems, posSyncRuns, posOrderLines }, null, 2);
+  const body = JSON.stringify({ app: 'Smokehouse Control', build: '5.3.0', exportedAt, restaurant, memberships, users, proteins, scenarios, dayMultipliers: days, monthMultipliers: months, cookPlans, endOfDayLogs: eodLogs, savedReports, reportRuns, auditLogs, smokers, learningRecommendations, systemChecks, subscriptions, supportTickets, dataRequests, menuItemMappings, posImportBatches, posImportRows }, null, 2);
   return new NextResponse(body, { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Content-Disposition': `attachment; filename="tenant-export-${restaurant.slug || restaurant.id}-${exportedAt.slice(0,10)}.json"` } });
 }

@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+const read=(f)=>fs.readFileSync(f,'utf8');
+const auth=read('lib/auth.ts');
+if (!auth.includes("return 'KITCHEN_CREW'")) throw new Error('Unknown roles must fail closed.');
+const schema=read('prisma/schema.prisma');
+if (!schema.includes('model SecurityEvent') || !schema.includes('@@unique([endOfDayLogId, proteinId])')) throw new Error('Required integrity models missing.');
+const eod=read('app/api/end-of-day/route.ts');
+if (!eod.includes('endOfDayLogId_proteinId') || eod.includes('deleteMany({ where: { restaurantId, endOfDayLogId')) throw new Error('EOD writes are not concurrency-safe.');
+const login=read('app/api/login/route.ts');
+if (!login.includes('securityEvent(') || login.includes('(user as any)') || read('app/account/security/actions.ts').includes('as any')) throw new Error('Login security audit/type cleanup incomplete.');
+if (!read('app/account/security/actions.ts').includes('await setSessionCookie(current.id, updated.sessionVersion)')) throw new Error('Security changes must rotate the current session cleanly.');
+console.log('Build 7.2.0 evaluation passed.');

@@ -1,4 +1,4 @@
-# Migration History Policy — Build 6.5.0
+# Migration History Policy — Build 7.0.1
 
 Migration folder names are immutable after release. Three timestamp prefixes were historically reused. Those original folder names are preserved alongside the later renumbered aliases so databases that recorded either naming convention can migrate without editing `_prisma_migrations`.
 
@@ -19,6 +19,13 @@ Migration folder names are immutable after release. Three timestamp prefixes wer
 - `20260712000600_build_580_smoker_catalog_units`
 - compatibility alias: `20260712000650_build_580_smoker_catalog_units`
 
+
+### `20260712001100`
+- `20260712001100_build_680_security_sessions`
+- `20260712001100_build_700_security_observability`
+
+These two released migrations share a historical timestamp prefix but have distinct folder names and distinct responsibilities. Both are preserved unchanged because production may already have recorded either or both folder names.
+
 The paired original/alias SQL is byte-identical and idempotent. Fresh databases replay both safely. Existing databases apply only the name they have not recorded. No deploy script rewrites Prisma's private migration table.
 
 Policy:
@@ -29,3 +36,5 @@ Policy:
 4. CI replays the complete chain on a fresh PostgreSQL database.
 5. CI performs a dump-and-restore drill and a post-migration smoke check.
 6. Any future compatibility alias must be documented here and use idempotent SQL.
+
+- `20260712001200_build_720_defect_remediation` — global security-event audit and EOD concurrency integrity.

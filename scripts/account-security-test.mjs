@@ -12,8 +12,8 @@ assert.ok(schema.includes('failedLoginCount Int'), 'User.failedLoginCount must e
 assert.ok(schema.includes('lockedUntil  DateTime?'), 'User.lockedUntil must exist for lockout windows.');
 
 const auth = read('lib/auth.ts');
-assert.ok(auth.includes('signSession(userId: string, sessionVersion: number)'), 'Session signature must include sessionVersion.');
-assert.ok(auth.includes('sessionVersion') && auth.includes('parsedSession.sessionVersion'), 'currentUser must validate sessionVersion.');
+assert.ok(auth.includes('signSession(userId: string, sessionVersion: number, sessionId: string)'), 'Session signature must include sessionVersion.');
+assert.ok(auth.includes('sessionVersion') && auth.includes('parsed.sessionVersion'), 'currentUser must validate sessionVersion.');
 
 const login = read('app/api/login/route.ts');
 assert.ok(login.includes('MAX_FAILED_LOGINS'), 'Login route must define failed-login lockout threshold.');
@@ -31,4 +31,4 @@ const rate = read('lib/rateLimit.ts');
 assert.ok(rate.includes('rateLimitBucket'), 'Rate limiter must use the RateLimitBucket table.');
 assert.ok(rate.includes('upsert'), 'Rate limiter should use durable upsert semantics.');
 
-console.log('Build 4.3.3 account-security checks completed. Durable rate limiting, lockout, and session revocation are present.');
+console.log('Build 7.2.0 account-security checks completed. Durable sessions, lockout, revocation, and sessionVersion signing are present.');

@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     await prisma.restaurantMembership.create({ data: { restaurantId: restaurant.id, userId: user.id, role: Role.OWNER, active: true } });
     await auditLog({ restaurantId: restaurant.id, actorUserId: user.id, actorName: user.name, action: 'SELF_SERVICE_SIGNUP', entity: 'Restaurant', entityId: restaurant.id, afterJson: { restaurantName: restaurant.name, owner: user.username } });
     setCurrentRestaurantCookie(restaurant.id);
-    setSessionCookie(user.id, user.sessionVersion || 1);
+    await setSessionCookie(user.id, user.sessionVersion || 1, request);
     return NextResponse.redirect(`${root}/admin/restaurants/setup?welcome=1`, 303);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Signup failed.';
