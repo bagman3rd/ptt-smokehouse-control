@@ -1,0 +1,40 @@
+name: Build 7.7.0 audited release
+on:
+  workflow_run:
+    workflows: ["Build 7.7.0 CI"]
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  stage-and-package:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CI: "true"
+      GITHUB_RUN_ID: ${{ github.event.workflow_run.id }}
+      GITHUB_SHA: ${{ github.event.workflow_run.head_sha }}
+      STAGING_URL: ${{ vars.STAGING_URL }}
+      STAGING_SMOKE_USERNAME: ${{ secrets.STAGING_SMOKE_USERNAME }}
+      STAGING_SMOKE_PASSWORD: ${{ secrets.STAGING_SMOKE_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.18.1
+      - name: Require staging configuration
+        run: test -n "$STAGING_URL" && test -n "$STAGING_SMOKE_USERNAME" && test -n "$STAGING_SMOKE_PASSWORD"
+      - name: Run authenticated staging four-flow smoke
+        run: node scripts/staging-four-flow-smoke.mjs
+      - name: Create auditable release evidence
+        run: node scripts/release-gate-check.mjs
+      - name: Package exact successful commit
+        run: zip -qr ptt-smokehouse-control-build-7.7.0-ci-${GITHUB_RUN_ID}.zip . -x '.git/*'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ptt-smokehouse-control-build-7.7.0-ci-${{ github.event.workflow_run.id }}
+          path: ptt-smokehouse-control-build-7.7.0-ci-${{ github.event.workflow_run.id }}.zip
+          if-no-files-found: error
+          retention-days: 30

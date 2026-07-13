@@ -47,7 +47,7 @@ const READ_OR_WRITE_OPERATIONS = new Set([
 
 const CREATE_OPERATIONS = new Set(['create', 'createMany']);
 
-function hasTenantScope(value: unknown): boolean {
+export function hasTenantScope(value: unknown): boolean {
   if (!value || typeof value !== 'object') return false;
   const record = value as Record<string, unknown>;
   if (Object.prototype.hasOwnProperty.call(record, 'restaurantId')) return true;

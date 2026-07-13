@@ -139,7 +139,7 @@ export async function POST(request: Request) {
 
       for (const row of proteinRows) {
         await tx.endOfDayProteinLog.upsert({
-          where: { endOfDayLogId_proteinId: { endOfDayLogId: parent.id, proteinId: row.proteinId } },
+          where: { restaurantId_endOfDayLogId_proteinId: { restaurantId, endOfDayLogId: parent.id, proteinId: row.proteinId } },
           update: { ...row, restaurantId },
           create: { restaurantId, endOfDayLogId: parent.id, ...row }
         });

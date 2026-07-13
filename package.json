@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "7.6.1",
+  "version": "7.7.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,7 +16,7 @@
     "test:tenant": "tsx scripts/tenant-integration-test.mjs",
     "test:forecast": "tsx scripts/forecast-engine-test.ts",
     "test:backup": "pnpm run test:restore-drill",
-    "build:eval": "node scripts/build-7-6-0-evaluation.mjs",
+    "build:eval": "node scripts/release-evaluation.mjs",
     "migration:baseline:check": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
     "render-build:migrate-ready": "prisma generate && prisma migrate deploy && next build",
     "backup:weekly": "node scripts/run-weekly-backup-cron.mjs",
@@ -48,11 +48,11 @@
     "production:smoke": "node scripts/production-smoke-check.mjs",
     "test:load-smoke": "playwright test e2e/load-smoke.spec.ts --project=chromium",
     "test:restore-drill": "node scripts/database-restore-drill.mjs",
-    "test:comprehensive": "node scripts/build-7-6-0-comprehensive-test.mjs",
+    "test:comprehensive": "node scripts/comprehensive-regression-test.mjs",
     "test:route-parity": "node scripts/build-7-6-0-page-parity-test.mjs",
     "test:quick-eod-carryover": "node scripts/quick-eod-carryover-test.mjs",
-    "test:page-parity": "node scripts/build-7-6-0-page-parity-test.mjs",
-    "test:navigation": "node scripts/build-7-6-0-navigation-test.mjs",
+    "test:page-parity": "node scripts/page-parity-test.mjs",
+    "test:navigation": "node scripts/navigation-contract-test.mjs",
     "test:e2e:guard": "playwright test --config=playwright.guard.config.ts",
     "test:tenant-guard-policy": "node scripts/tenant-guard-policy-test.mjs",
     "test:accessibility": "node scripts/accessibility-structure-test.mjs",
@@ -63,7 +63,10 @@
     "test:load-realistic": "playwright test e2e/realistic-load.spec.ts --project=chromium",
     "security:audit": "pnpm audit --audit-level=high",
     "test:unsupported-prisma": "node scripts/unsupported-prisma-delegate-test.mjs",
-    "test:e2e:interactions": "playwright test e2e/all-interactions.spec.ts"
+    "test:e2e:interactions": "playwright test e2e/all-interactions.spec.ts",
+    "test:eod-guard-contract": "tsx scripts/eod-tenant-guard-contract-test.ts",
+    "test:release-gate": "node scripts/release-gate-check.mjs",
+    "test:staging-four-flow": "node scripts/staging-four-flow-smoke.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

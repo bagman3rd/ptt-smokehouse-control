@@ -1,6 +1,6 @@
-# Build 7.6.1
+# Build 7.7.0
 
-Build 7.6.1 fixes the non-responsive Admin and other top navigation dropdowns and expands the release testing standard to require interaction-completeness testing.
+Build 7.7.0 fixes the non-responsive Admin and other top navigation dropdowns and expands the release testing standard to require interaction-completeness testing.
 
 ## Navigation correction
 

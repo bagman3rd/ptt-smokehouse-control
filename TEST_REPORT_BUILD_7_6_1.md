@@ -1,8 +1,8 @@
-# Test Report — Build 7.6.1
+# Test Report — Build 7.7.0
 
 ## Defect addressed
 
-The Admin and other top dropdown controls rendered but did not consistently respond to user clicks. Build 7.6.1 replaces that implementation with an explicit state-controlled client component and adds direct browser tests for the behavior.
+The Admin and other top dropdown controls rendered but did not consistently respond to user clicks. Build 7.7.0 replaces that implementation with an explicit state-controlled client component and adds direct browser tests for the behavior.
 
 ## Static checks completed locally
 
@@ -12,7 +12,7 @@ The Admin and other top dropdown controls rendered but did not consistently resp
 - Operations, Insights, Admin, and Help groups remain defined.
 - All existing page and role mappings remain unchanged.
 - The interaction-completeness testing plan is present.
-- Package and workflow references identify Build 7.6.1.
+- Package and workflow references identify Build 7.7.0.
 
 ## Runtime tests configured for CI
 

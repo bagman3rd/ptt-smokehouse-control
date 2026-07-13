@@ -146,10 +146,14 @@ test('Quick EOD on July 13 applies exact credits to the July 14 cook plan', asyn
   await expect(page.getByTestId('prior-eod-credit-value-CHICKEN')).toHaveText('5');
   await expect(page.getByTestId('prior-eod-credit-value-RIBS')).toHaveText('2');
 
+  const planId = new URL(page.url()).searchParams.get('planId');
+  expect(planId).toBeTruthy();
   const plan = await prisma.cookPlan.findUniqueOrThrow({
-    where: { restaurantId_serviceDate: { restaurantId: restaurant.id, serviceDate: loadDate } },
+    where: { id: planId! },
     include: { items: { include: { protein: true } } }
   });
+  expect(plan.restaurantId).toBe(restaurant.id);
+  expect(plan.serviceDate.toISOString()).toBe(loadDate.toISOString());
   const planByCode = new Map(plan.items.map((item) => [item.protein.code, item]));
   expect(planByCode.get('BRISKET')?.usableLeftoverUnits).toBe(0);
   expect(planByCode.get('PORK')?.usableLeftoverUnits).toBe(3);

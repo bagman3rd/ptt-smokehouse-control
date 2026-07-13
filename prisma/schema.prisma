@@ -354,6 +354,7 @@ model EndOfDayProteinLog {
   @@index([restaurantId, endOfDayLogId])
   @@index([restaurantId, proteinId])
   @@unique([endOfDayLogId, proteinId])
+  @@unique([restaurantId, endOfDayLogId, proteinId])
 }
 
 model SecurityEvent {

@@ -1,4 +1,4 @@
-name: Build 7.6.1 CI
+name: Build 7.7.0 CI
 
 env:
   ENFORCE_PRIVILEGED_2FA: "false"
@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   quality-and-tests:
-    name: Build 7.6.1 CI / quality-and-tests
+    name: Build 7.7.0 CI / quality-and-tests
     runs-on: ubuntu-latest
     timeout-minutes: 40
     services:
@@ -91,6 +91,7 @@ jobs:
           pnpm run test:page-parity
           pnpm run test:navigation
           pnpm run test:quick-eod-carryover
+          pnpm run test:eod-guard-contract
           pnpm run test:auth-coverage
           pnpm run test:failure-modes
           pnpm run test:forecast

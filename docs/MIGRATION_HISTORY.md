@@ -1,4 +1,4 @@
-# Migration History Policy — Build 7.4.1
+# Migration History Policy — Build 7.7.0
 
 Migration folder names are immutable after release. Three timestamp prefixes were historically reused. Those original folder names are preserved alongside the later renumbered aliases so databases that recorded either naming convention can migrate without editing `_prisma_migrations`.
 
@@ -36,3 +36,7 @@ Policy:
 4. CI replays the complete chain on a fresh PostgreSQL database.
 5. CI performs a dump-and-restore drill and a post-migration smoke check.
 6. Any future compatibility alias must be documented here and use idempotent SQL.
+
+## Abandoned release lineage
+
+Builds 7.2.3 and 7.3.0 are not approved deployment baselines. They contained incomplete recovery work and must never be deployed to production. Build 7.0.1 was the clean recovery baseline; later verified fixes were reapplied from that baseline. Migration folders already released remain immutable even when an application ZIP is abandoned.
