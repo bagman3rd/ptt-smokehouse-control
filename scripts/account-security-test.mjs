@@ -31,4 +31,4 @@ const rate = read('lib/rateLimit.ts');
 assert.ok(rate.includes('rateLimitBucket'), 'Rate limiter must use the RateLimitBucket table.');
 assert.ok(rate.includes('upsert'), 'Rate limiter should use durable upsert semantics.');
 
-console.log('Build 7.8.4 account-security checks completed. Durable sessions, lockout, revocation, and sessionVersion signing are present.');
+console.log('Build 7.9.0 account-security checks completed. Durable sessions, lockout, revocation, and sessionVersion signing are present.');

@@ -54,3 +54,34 @@ export async function updateSmoker(formData: FormData) {
   await auditLog({ restaurantId, actorUserId: user.id, actorName: user.name, action: 'UPDATE', entity: 'Smoker', entityId: id, beforeJson: before, afterJson: data });
   revalidatePath('/admin/smokers'); revalidatePath('/admin/system');
 }
+
+
+export async function deleteSmoker(formData: FormData) {
+  const user = await requireRole(['ADMIN', 'OWNER']);
+  const restaurant = await currentRestaurantForUser(user);
+  const restaurantId = restaurant.id;
+  const id = text(formData, 'id');
+  if (!id) throw new Error('Smoker id is required.');
+
+  const before = await prisma.smoker.findFirst({ where: { id, restaurantId } });
+  if (!before) throw new Error('Smoker not found for this restaurant.');
+
+  const deleted = await prisma.smoker.deleteMany({ where: { id, restaurantId } });
+  if (deleted.count !== 1) throw new Error('Smoker could not be deleted.');
+
+  await auditLog({
+    restaurantId,
+    actorUserId: user.id,
+    actorName: user.name,
+    action: 'DELETE',
+    entity: 'Smoker',
+    entityId: id,
+    beforeJson: before
+  });
+
+  revalidatePath('/admin/smokers');
+  revalidatePath('/admin/smokers/schedule');
+  revalidatePath('/admin/system');
+  revalidatePath('/today');
+  revalidatePath('/dashboard');
+}

@@ -3,7 +3,7 @@ import { Shell } from '@/components/Shell';
 import { requireRole } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { currentRestaurantForUser } from '@/lib/tenant';
-import { createSmoker, updateSmoker } from './actions';
+import { createSmoker, deleteSmoker, updateSmoker } from './actions';
 import { AddSmokerForm, EditSmokerForm } from '@/components/smokers/SmokerCatalogForms';
 
 export const dynamic = 'force-dynamic';
@@ -53,7 +53,7 @@ export default async function SmokersPage() {
     </section>
 
     <section className="mt-6 space-y-4">
-      {smokers.map((smoker) => <EditSmokerForm key={smoker.id} smoker={smoker} catalog={catalog} action={updateSmoker} />)}
+      {smokers.map((smoker) => <EditSmokerForm key={smoker.id} smoker={smoker} catalog={catalog} action={updateSmoker} deleteAction={deleteSmoker} />)}
     </section>
   </Shell>;
 }

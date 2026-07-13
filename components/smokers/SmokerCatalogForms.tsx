@@ -115,7 +115,7 @@ export function AddSmokerForm({ catalog, action }: { catalog: CatalogItem[]; act
   </form>;
 }
 
-export function EditSmokerForm({ smoker, catalog, action }: { smoker: SmokerItem; catalog: CatalogItem[]; action: FormAction }) {
+export function EditSmokerForm({ smoker, catalog, action, deleteAction }: { smoker: SmokerItem; catalog: CatalogItem[]; action: FormAction; deleteAction: FormAction }) {
   const map = useMemo(() => buildCatalogMap(catalog), [catalog]);
   const [selectedId, setSelectedId] = useState(smoker.catalogId || '');
   const selected = selectedId ? map.get(selectedId) || null : null;
@@ -136,6 +136,20 @@ export function EditSmokerForm({ smoker, catalog, action }: { smoker: SmokerItem
     <label className="text-sm font-bold">Chicken breasts <span className="text-xs text-slate-500">whole chicken = one double breast</span><input className="field mt-1" name="chickenCapacity" type="number" min="0" step="0.1" defaultValue={preferredNumberInput(selected?.chickenCapacity, smoker.chickenCapacity)} key={`c-${smoker.id}-${selectedId}`} /></label>
     <label className="flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-sm font-bold"><input type="checkbox" name="active" defaultChecked={smoker.active} /> Active</label>
     <SourceNote selected={selected} />
-    <button data-testid={`save-smoker-${smoker.id}`} className="btn-secondary md:col-span-4" type="submit">Save smoker</button>
+    <div className="flex flex-col gap-3 md:col-span-4 sm:flex-row sm:items-center sm:justify-between">
+      <button data-testid={`save-smoker-${smoker.id}`} className="btn-secondary" type="submit">Save smoker</button>
+      <button
+        data-testid={`delete-smoker-${smoker.id}`}
+        className="rounded-full bg-red-700 px-4 py-2 text-sm font-black text-white hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+        type="submit"
+        formAction={deleteAction}
+        formNoValidate
+        onClick={(event) => {
+          if (!window.confirm(`Delete ${smoker.name}? This removes it from smoker capacity and schedules. This cannot be undone.`)) event.preventDefault();
+        }}
+      >
+        Delete smoker
+      </button>
+    </div>
   </form>;
 }
