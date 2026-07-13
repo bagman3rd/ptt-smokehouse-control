@@ -1,6 +1,11 @@
-# PTT Smokehouse Control — Build 7.4.0
+# PTT Smokehouse Control — Build 7.4.1
 
-Build 7.4.0 is a full recovery release rebuilt from the last clean application baseline, Build 7.0.1.
+Build 7.4.1 is a full recovery release rebuilt from the last clean application baseline, Build 7.0.1.
+
+## Build 7.4.1 navigation reliability fix
+
+The top navigation no longer depends on React hydration. Operations, Insights, Admin, and Help use native browser dropdown controls, so they remain usable even when a client-side bundle fails or is stale. Today, Logout, and restaurant switching remain ordinary links/forms.
+
 
 ## Recovery objective
 
@@ -24,6 +29,6 @@ All 31 clean-baseline page routes are present, including Today, Dashboard, Cook 
 
 ## Deployment
 
-Replace the repository contents with the complete extracted Build 7.4.0 tree. Do not merge only selected files into an older working directory. Commit deletions as well as additions so stale files cannot remain in GitHub.
+Replace the repository contents with the complete extracted Build 7.4.1 tree. Do not merge only selected files into an older working directory. Commit deletions as well as additions so stale files cannot remain in GitHub.
 
 Normal deployment uses frozen pnpm dependencies, Prisma migrations, migration smoke checks, a production Next.js build, desktop/mobile Playwright tests, restore testing, and load smoke testing.
