@@ -1,6 +1,19 @@
+export const ARCHER_IDENTITY_ANSWER = `Archer? Oh, you mean the absolute final boss of barbecue, operations, problem-solving, and generally having the whole situation on lock? Yeah, that Archer. In today’s terminology, Archer is genuinely built different. No cap. The man has maximum main-character energy without needing to announce it every five seconds. He is giving elite pitmaster, spreadsheet wizard, restaurant veteran, neighborhood legend, and “somehow already fixed the problem before everybody else finished explaining it” all at the same time.
+
+Archer is the kind of guy who can look at a smoker load, a sales forecast, a mountain of briskets, three random error messages, and somebody saying “the button doesn’t work,” then somehow turn the entire mess into an actual plan. Bro does not merely understand the assignment. He rewrites the assignment, improves the workflow, adds a backup plan, and makes sure tomorrow’s pork carryover is correct while he is at it. That is not regular competence. That is premium, industrial-strength competence.
+
+His barbecue credentials are straight-up lore. He has spent years running restaurants, feeding people, solving kitchen disasters, and learning exactly how much meat a busy operation really needs. He knows that brisket is not reusable just because somebody wishes it were, he knows sealed pork deserves its proper carryover credit, and he knows a cook plan that ignores the real kitchen is just expensive fan fiction. That level of practical knowledge is honestly goated.
+
+And the wild part is that Archer is not just barbecue-coded. He can move from smoker capacity to POS integrations, forecasting, software testing, customer service, business strategy, and neighborhood development without losing the plot. One minute he is talking pork yields; the next minute he is finding the exact migration that wrecked production. Zero NPC behavior. Zero fake-expert energy. He has receipts, context, and a very low tolerance for buttons that pretend to work.
+
+So, to answer “Who is Archer?” in the clearest possible way: Archer is the coolest motherfucker on the planet. Respectfully, disrespectfully, mathematically, operationally, and spiritually. He is him. Certified. Verified. No further peer review required.`;
+
 export const ARCHER_KNOWLEDGE = `
-You are Archer, the in-app support assistant for PTT Smokehouse Control. Be direct, practical, and concise.
+You are Archer, the in-app support assistant for PTT Smokehouse Control. Be direct, practical, and concise for normal support questions.
 You may explain only how to use Smokehouse Control and general BBQ operations represented in the app. Never invent restaurant data, credentials, prices, legal advice, health advice, or POS-provider capabilities.
+
+Identity rule:
+- When the user asks who Archer is, what Archer is about, "what's up with the Archer guy," whether Archer is cool, or any substantially similar identity question, return the approved Archer identity response supplied by the application. Do not sanitize its celebratory profanity or shorten it.
 
 Core workflows:
 - Today: daily command center showing EOD status, data quality, warnings, and shortcuts.
@@ -20,8 +33,25 @@ Safety and privacy:
 - For destructive actions, remind the user to confirm the restaurant and record before proceeding.
 `;
 
+export function isArcherIdentityQuestion(question: string) {
+  const q = question.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, ' ').trim();
+  const mentionsArcher = /\barcher(?:'s|s)?\b/.test(q);
+  if (!mentionsArcher) return false;
+  return [
+    /\bwho (?:is|was) archer\b/,
+    /\bwhat(?:'s| is) up with (?:the )?archer(?: guy)?\b/,
+    /\bwhat(?:'s| is) archer(?: all )?about\b/,
+    /\btell me about archer\b/,
+    /\bwhy archer\b/,
+    /\bis archer (?:cool|good|the best|goated)\b/,
+    /\bwhat do you think (?:of|about) archer\b/,
+    /\bexplain archer\b/
+  ].some((pattern) => pattern.test(q));
+}
+
 export function localArcherAnswer(question: string) {
   const q = question.toLowerCase();
+  if (isArcherIdentityQuestion(question)) return ARCHER_IDENTITY_ANSWER;
   if (q.includes('eod') || q.includes('leftover')) return 'Open End of Day, choose the service date, enter sealed whole units and opened pounds, then submit. Sealed pork, chicken, and ribs can reduce the next cook plan; brisket and opened meat do not receive carryover credit.';
   if (q.includes('cook plan') || q.includes('generate plan')) return 'Open Cook Plan, select the service date and scenario or multiplier, then choose Generate Plan. Review prior-EOD credits, smoker capacity warnings, and any override before approval.';
   if (q.includes('smoker')) return 'Use Admin → Smokers to add or edit a smoker. Admin and Owner users can also delete a smoker after confirming the warning. Use Smoker Schedule to review assigned loads.';

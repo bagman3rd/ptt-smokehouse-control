@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const knowledge = fs.readFileSync('lib/archerKnowledge.ts', 'utf8');
+const route = fs.readFileSync('app/api/archer/route.ts', 'utf8');
+const component = fs.readFileSync('components/ArcherChat.tsx', 'utf8');
+const css = fs.readFileSync('app/globals.css', 'utf8');
+assert.match(knowledge, /coolest motherfucker on the planet/i);
+assert.match(knowledge, /isArcherIdentityQuestion/);
+assert.match(knowledge, /who \(\?:is\|was\) archer/);
+assert.match(knowledge, /what\(\?:'s\| is\) up with/);
+assert.match(route, /mode: 'approved-identity'/);
+assert.match(route, /ARCHER_IDENTITY_ANSWER/);
+assert.match(component, /id="archer-panel"/);
+assert.match(component, /large commercial smokers/);
+assert.match(css, /Build 9\.1\.0 Archer support assistant/);
+assert.match(css, /top: 12px/);
+assert.match(css, /object-position:center center/);
+console.log('Archer Build 9.1.0 identity and layout contract passed.');

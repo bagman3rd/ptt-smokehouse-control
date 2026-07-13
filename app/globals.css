@@ -83,17 +83,23 @@ details[open] > summary { @apply bg-slate-100; }
   details.relative > div { left: 1rem; right: 1rem; width: auto; }
 }
 
-/* Build 9.0.0 Archer support assistant */
-.archer-root { position: fixed; right: 18px; bottom: 16px; z-index: 60; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+/* Build 9.1.0 Archer support assistant */
+.archer-root { position: fixed; right: 18px; top: 12px; bottom: 14px; z-index: 60; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; gap: 10px; pointer-events: none; }
+.archer-root > * { pointer-events: auto; }
 .archer-launcher { display:flex; align-items:center; gap:.65rem; border-radius:999px; background:#c75b12; color:white; padding:.65rem 1rem .65rem .65rem; font-weight:900; box-shadow:0 12px 30px rgba(15,23,42,.25); border:1px solid #9a410d; }
-.archer-launcher img { width:42px; height:42px; border-radius:999px; object-fit:cover; border:2px solid white; }
-.archer-panel { width:min(390px, calc(100vw - 24px)); max-height:min(680px, calc(100vh - 100px)); overflow:hidden; display:flex; flex-direction:column; border:1px solid #e8b27a; border-radius:22px; background:#fffaf3; box-shadow:0 24px 60px rgba(15,23,42,.28); }
-.archer-header { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid #ead8c4; background:#fff6e9; }
-.archer-messages { min-height:190px; max-height:330px; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; }
+.archer-launcher img { width:42px; height:42px; border-radius:999px; object-fit:cover; object-position:center 32%; border:2px solid white; }
+.archer-panel { width:min(420px, calc(100vw - 24px)); max-height:calc(100vh - 92px); overflow:hidden; display:flex; flex-direction:column; border:1px solid #e8b27a; border-radius:22px; background:#fffaf3; box-shadow:0 24px 60px rgba(15,23,42,.28); }
+.archer-header { flex:0 0 auto; display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid #ead8c4; background:#fff6e9; }
+.archer-messages { flex:1 1 auto; min-height:170px; max-height:none; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; }
 .archer-message { max-width:88%; padding:10px 12px; border-radius:14px; white-space:pre-wrap; font-size:.94rem; line-height:1.45; }
 .archer-message.assistant { background:white; border:1px solid #ead8c4; align-self:flex-start; }
 .archer-message.user { background:#172033; color:white; align-self:flex-end; }
-.archer-form { padding:12px 16px; border-top:1px solid #ead8c4; display:grid; gap:8px; background:white; }
-.archer-portrait { height:170px; overflow:hidden; background:#fff2df; }
-.archer-portrait img { width:100%; height:100%; object-fit:cover; object-position:center 24%; }
-@media (max-width: 640px) { .archer-root { right:10px; bottom:10px; } .archer-panel { max-height:calc(100vh - 82px); } .archer-portrait { height:120px; } }
+.archer-form { flex:0 0 auto; padding:12px 16px; border-top:1px solid #ead8c4; display:grid; gap:8px; background:white; }
+.archer-portrait { flex:0 0 clamp(170px, 25vh, 230px); overflow:hidden; background:#fff2df; border-top:1px solid #ead8c4; }
+.archer-portrait img { width:100%; height:100%; object-fit:cover; object-position:center center; }
+@media (max-width: 640px) {
+  .archer-root { right:8px; top:8px; bottom:8px; }
+  .archer-panel { width:min(400px, calc(100vw - 16px)); max-height:calc(100vh - 78px); border-radius:18px; }
+  .archer-messages { min-height:140px; padding:12px; }
+  .archer-portrait { flex-basis:150px; }
+}

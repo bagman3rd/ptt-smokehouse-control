@@ -21,4 +21,4 @@ assert.ok(migration.includes('CREATE UNIQUE INDEX IF NOT EXISTS'), 'unique index
 assert.ok(migration.includes('CREATE INDEX IF NOT EXISTS'), 'indexes must be idempotent');
 assert.ok(recovery.includes('migrate\', \'resolve\', \'--rolled-back\''), 'recovery must resolve only the failed POS migration');
 assert.ok(pkg.scripts['render-build'].includes('prepare-pos-migration-recovery.mjs'), 'Render must run migration recovery before migrate deploy');
-console.log('Build 8.0.3 POS partial-migration recovery contract passed.');
+console.log('Build 9.1.0 POS partial-migration recovery contract passed.');

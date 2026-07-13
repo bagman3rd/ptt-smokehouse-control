@@ -22,4 +22,4 @@ for (const file of ['app/api/reports/backup/route.ts','app/api/admin/tenant/expo
   const source = roleGuard(file, ['ADMIN','OWNER']);
   assert.ok(!source.includes("'KITCHEN_MANAGER'") && !source.includes("'KITCHEN_CREW'"), `${file} must remain privileged`);
 }
-console.log('Build 8.0.3 permission contracts passed.');
+console.log('Build 9.1.0 permission contracts passed.');

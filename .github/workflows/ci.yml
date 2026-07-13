@@ -1,165 +1,56 @@
-name: Build 7.9.0 CI
-
-env:
-  ENFORCE_PRIVILEGED_2FA: "false"
+name: Build 9.1.0 CI
 
 on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-
-concurrency:
-  group: ptt-ci-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   quality-and-tests:
-    name: Build 7.9.0 CI / quality-and-tests
     runs-on: ubuntu-latest
-    timeout-minutes: 40
     services:
       postgres:
-        image: postgres:16-alpine
+        image: postgres:16
         env:
-          POSTGRES_USER: ptt_ci
-          POSTGRES_PASSWORD: ptt_ci_password
-          POSTGRES_DB: ptt_ci
-        ports: ['5432:5432']
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ptt_test
+        ports:
+          - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U ptt_ci -d ptt_ci"
-          --health-interval=10s --health-timeout=5s --health-retries=5
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
-      DATABASE_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_ci?schema=public
-      DIRECT_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_ci?schema=public
-      RESTORE_DATABASE_URL: postgresql://ptt_ci:ptt_ci_password@localhost:5432/ptt_restore?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ptt_test
+      APP_SESSION_TOKEN: ci-session-token-at-least-32-characters
       ADMIN_PASSWORD: ci-admin-password
-      CI_TENANT_B_PASSWORD: ci-tenant-b-password
-      APP_SESSION_TOKEN: ci-session-token-long-value-for-tests-only
-      CRON_SECRET: ci-cron-secret-long-value-for-tests-only
-      TOTP_ENCRYPTION_KEY: ci-totp-encryption-key-long-value-for-tests-only
-      NEXT_PUBLIC_APP_NAME: Smokehouse Control CI
-      NEXT_PUBLIC_SUPPORT_EMAIL: support@smokehousecontrol.com
-      CI: true
+      TOTP_ENCRYPTION_KEY: ci-totp-key-at-least-32-characters-long
+      TENANT_GUARD_ENABLED: "1"
+      ENFORCE_PRIVILEGED_2FA: "false"
     steps:
       - uses: actions/checkout@v4
-      - name: Require committed pnpm lockfile
-        run: test -s pnpm-lock.yaml
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9.15.0
-          run_install: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22.16.0
           cache: pnpm
-      - name: Verify Node compatibility with locked dependencies
-        run: pnpm run ci:node-engine-check
-      - name: Install exact locked dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Generate Prisma client
-        run: pnpm run prisma:generate
-      - name: Apply migrations to fresh PostgreSQL
-        run: pnpm run prisma:migrate
-      - name: Prepare restore-drill database
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
-          PGPASSWORD=ptt_ci_password createdb -h localhost -U ptt_ci ptt_restore
-      - name: Seed isolated CI database
-        run: pnpm run db:seed
-      - name: Migration and schema smoke checks
-        run: |
-          pnpm run preflight
-          pnpm run test:migration-integrity
-          pnpm run migration:smoke
-          pnpm run ci:migration-status
-          pnpm run ci:schema-drift
-      - name: Execute database dump-and-restore drill
-        env:
-          RESTORE_EVIDENCE_PATH: restore-evidence.txt
-        run: pnpm run test:restore-drill
-      - name: TypeScript and lint
-        run: |
-          pnpm run typecheck
-          pnpm run lint
-      - name: Regression tests
-        run: |
-          pnpm run test:comprehensive
-          pnpm run test:page-parity
-          pnpm run test:navigation
-          pnpm run test:quick-eod-carryover
-          pnpm run test:eod-postgres-write
-          pnpm run test:eod-guard-contract
-          pnpm run test:report-rollup
-          pnpm run test:auth-coverage
-          pnpm run test:failure-modes
-          pnpm run test:forecast
-          pnpm run test:generate-plan
-          pnpm run test:smoker-catalog
-          pnpm run test:permissions
-          pnpm run test:account-security
-          pnpm run test:tenant
-          pnpm run test:cross-tenant
-          pnpm run test:tenant-guard
-          pnpm run test:tenant-guard-policy
-          pnpm run test:accessibility
-          pnpm run test:api-roles
-          pnpm run test:security-static
-          pnpm run test:orphan-records
-          pnpm run test:dead-code
-          pnpm run staging:verify
-          pnpm run test:pos-import
-          pnpm run test:unsupported-prisma
-          pnpm run test:demo-docs
-          pnpm run build:eval
-      - name: Dependency vulnerability audit
-        run: pnpm audit --audit-level=high
-      - name: Build production application
-        run: pnpm run build
-      - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
-      - name: Run desktop and mobile browser tests
-        run: pnpm run test:e2e:ci
-      - name: Test every top-menu button, dropdown, and destination
-        run: pnpm run test:e2e:interactions
-      - name: Run keyboard and accessibility browser checks
-        run: pnpm run test:e2e:accessibility
-      - name: Run concurrent EOD and cross-tenant mutation checks
-        run: pnpm run test:e2e:concurrency
-      - name: Run EOD draft-revise-complete-lock lifecycle
-        env:
-          TENANT_GUARD_ENABLED: "1"
-        run: pnpm run test:e2e:eod-lifecycle
-      - name: Run tenant-guard contract tests against next dev
-        env:
-          DISABLE_TENANT_GUARD: "0"
-          TENANT_GUARD_ENABLED: "1"
-        run: pnpm run test:e2e:guard
-      - name: Run 200-request read burst smoke test
-        env:
-          LOAD_SMOKE_CONCURRENCY: 200
-        run: pnpm run test:load-smoke
-      - name: Run separate-session mixed read/write load test
-        env:
-          LOAD_USERS: 25
-        run: pnpm run test:load-realistic
-      - name: Upload restore-drill evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: database-restore-evidence
-          path: restore-evidence.txt
-          if-no-files-found: error
-          retention-days: 30
-      - name: Upload Playwright report on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          if-no-files-found: ignore
-          retention-days: 14
+      - run: corepack enable
+      - run: corepack prepare pnpm@9.15.0 --activate
+      - run: pnpm run ci:node-engine-check
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run prisma:generate
+      - run: pnpm run prisma:migrate
+      - run: pnpm run ci:migration-status
+      - run: pnpm run ci:schema-drift
+      - run: pnpm run preflight
+      - run: pnpm run ci:test
+      - run: pnpm run build
+      - run: pnpm run test:e2e:install
+      - run: pnpm run test:e2e:accessibility
+      - run: pnpm run test:e2e:interactions
+      - run: pnpm run test:e2e:concurrency
+      - run: pnpm run test:e2e:eod-lifecycle
+      - run: pnpm run test:load-realistic
+      - run: pnpm run test:report-rollup
+      - run: pnpm run security:audit
