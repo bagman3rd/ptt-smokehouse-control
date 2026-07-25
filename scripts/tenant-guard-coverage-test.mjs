@@ -12,4 +12,4 @@ for (const model of ['CookPlanItem','EndOfDayProteinLog']) {
 assert.match(guard, /DISABLE_TENANT_GUARD === '1'/, 'maintenance bypass must be explicit');
 assert.match(guard, /TENANT_GUARD_ENABLED !== '0'/, 'guard must default on in every runtime');
 assert.doesNotMatch(guard, /NODE_ENV\s*===/, 'guard policy must not silently vary by NODE_ENV');
-console.log('Build 9.8.0 tenant guard coverage passed.');
+console.log('Build 10.0.0 tenant guard coverage passed.');

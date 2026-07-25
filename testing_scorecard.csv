@@ -1,0 +1,31 @@
+Category #,Category Name,Score,Max,Assessment Summary,Priority,Effort (hours),Impact at 1000 customers
+1,Static Analysis & Code Quality,9,10,"Excellent TypeScript typing, ESLint coverage, gitleaks in CI",P3,20,Prevents production bugs; reduces technical debt
+2,Unit & Component Testing,8,10,"Strong business logic coverage (forecast, payroll); component library mature",P3,30,Catches regressions; enables refactoring confidence
+3,API Testing & Contract Validation,9,10,"All endpoints tested, auth boundary verified, status codes correct",P2,25,Prevents API contract breaks; critical for mobile apps
+4,Database Integration & Migrations,9,10,"Migrations idempotent, schema drift detected in CI, restore drills automated",P2,40,Zero data loss; enables safe schema evolution at scale
+5,End-to-End Workflows (E2E),7,10,Core journeys tested (login→cook→EOD→report); mobile E2E gaps,P1,80,Validates entire customer journey; early defect detection
+6,Regression Test Suite,8,10,"40+ tagged tests, historical defect protection strong",P2,35,Prevents old bugs resurfacing; confidence in updates
+7,Role-Based Access Control (RBAC),9,10,8 roles with boundary testing; permission matrix complete,P2,30,Protects data; prevents unauthorized access at scale
+8,Multi-Tenant Isolation,9,10,Database constraints + query-scoped guards; cross-tenant mutation tested,P1,40,Revenue-critical; prevents data leakage between restaurants
+9,Data Validation & Boundary Testing,8,10,"Standard validation matrix, date/time boundary testing excellent",P2,40,Prevents invalid data; improves data quality
+10,Mobile Responsiveness,6,10,CSS breakpoints exist; no Playwright mobile profiles; physical device untested,P1,50,Kitchen crews use phones/tablets; impacts adoption
+11,Browser Compatibility,7,10,Chrome/Edge tested; Safari and Firefox not explicit; PDF printing untested,P2,30,Ensures accessibility across customer base
+12,Accessibility (WCAG 2.1 AA),5,10,Keyboard nav added; axe-core not in CI; screen reader testing absent,P1,60,ADA compliance; enables staff with disabilities
+13,Security: Authentication,9,10,"Session rotation, TOTP optional, logout all tabs, deletion tested",P2,25,Protects customer accounts; prevents account takeover
+14,Security: Input & Injection,9,10,"Parameterized queries (Prisma), no SQL injection surface, gitleaks in CI",P2,20,Prevents data breach; protects customer data
+15,Security: Secrets & Dependencies,9,10,"Env-based secrets, no hardcoded credentials, npm audit in CI",P2,20,Prevents credential leaks; reduces supply-chain risk
+16,Payment Processing,8,10,"Stripe test mode verified, SAQ-A compliant; production payment not live-tested",P1,40,Revenue-critical; prevents payment failures
+17,Notification Testing (Email/SMS),6,10,Support email configured; no delivery testing; SMS TCPA untested,P1,60,Improves customer engagement; impacts retention
+18,Compliance: TCPA & CAN-SPAM,4,10,"No SMS opt-in/opt-out, no quiet-hours, no unsubscribe links",P0,40,Regulatory risk ($500-$1500/message fine); CRITICAL
+19,Compliance: PCI & Payment,9,10,"Stripe Elements only, no card storage, HTTPS, webhook signature verified",P2,15,Maintains PCI DSS compliance; prevents chargebacks
+20,Compliance: Privacy & GDPR,5,10,"No privacy policy, no cookie consent, no retention policy, no data deletion",P0,60,Regulatory risk (GDPR fines); blocks EU customers
+21,Performance: Load & Stress,7,10,"Baseline 25 concurrent, p95 thresholds not enforced; spike/endurance untested",P1,100,"Prevents degradation at peak usage (lunch rush, holidays)"
+22,Performance: Web Vitals,6,10,Lighthouse referenced; LCP/CLS/INP not in CI; bundle size not tracked,P1,80,Improves user experience; impacts adoption rates
+23,Reliability & Resilience,8,10,"Database failure tested, external timeout handled, idempotent retry strong",P2,40,Prevents data corruption; improves customer trust
+24,"Backup, Restore & DR",9,10,"Weekly automated, restore drill scripted, tested against prod data",P2,20,Zero data loss RTO; enables customer confidence
+25,Deployment & Rollback,8,10,"Render platform configured, health-check exists; rollback not live-tested",P2,35,Enables safe deployments; reduces outage duration
+26,Production Observability,7,10,"Sentry installed, uptime monitoring, Stripe alerts; log review manual",P2,80,Reduces MTTR (mean time to resolution); prevents silent failures
+27,AI Assistant (Archer),7,10,"Identity management working, demo mode togglable; prompt-injection tests absent",P1,70,Prevents runaway costs; protects against abuse
+28,Import/Export & Reporting,8,10,"POS import mapped, export working, reconciliation framework; large export untested",P2,60,Enables data portability; supports customer analytics
+29,Audit Logging & Trails,9,10,"All mutations logged, table protected, tenant/user/timestamp captured",P2,15,Enables compliance audits; prevents fraud
+30,Release Process & Gates,8,10,30-min pre-deploy checklist defined; 2-hour release pass complete,P2,25,Enables confident deployments; reduces manual errors

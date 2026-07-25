@@ -24,6 +24,16 @@ export default function SignupPage({ searchParams }: { searchParams?: Record<str
         <div><label className="label">Email</label><input className="field mt-1" name="email" type="email" required placeholder="owner@example.com" /></div>
         <div><label className="label">Username</label><input className="field mt-1" name="username" required placeholder="jane-owner" /></div>
         <div><label className="label">Password</label><input className="field mt-1" name="password" type="password" required minLength={12} placeholder="12+ characters" /></div>
+        <div className="md:col-span-2 space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+          <label className="flex items-start gap-2">
+            <input type="checkbox" name="termsAgree" required className="mt-1" />
+            <span>I agree to the <Link href="/terms" className="font-semibold underline">Terms of Service</Link> and <Link href="/privacy" className="font-semibold underline">Privacy Policy</Link>.</span>
+          </label>
+          <label className="flex items-start gap-2">
+            <input type="checkbox" name="marketingConsent" className="mt-1" />
+            <span>Send me product news and offers by email. (Optional — you can unsubscribe anytime.)</span>
+          </label>
+        </div>
         <div className="md:col-span-2 flex flex-wrap gap-3"><button className="btn-primary" type="submit">Create Restaurant</button><Link className="btn-secondary" href="/demo">Try Demo Data</Link><Link className="btn-secondary" href="/login">Back to Login</Link></div>
       </form>
     </div>

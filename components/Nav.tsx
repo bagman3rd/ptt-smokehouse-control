@@ -36,6 +36,7 @@ const groups: Array<{ label: string; links: NavLink[] }> = [
       ['Smoker Catalog', '/admin/smokers/catalog', ['ADMIN', 'OWNER']],
       ['Audit Log', '/admin/audit', ['ADMIN', 'OWNER']],
       ['System', '/admin/system', ['ADMIN', 'OWNER']],
+      ['Observability', '/admin/observability', ['ADMIN']],
       ['Billing', '/billing', ['ADMIN', 'OWNER']],
       ['Data', '/admin/data', ['ADMIN', 'OWNER']]
     ]
@@ -46,7 +47,8 @@ const groups: Array<{ label: string; links: NavLink[] }> = [
       ['Support', '/support', ['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']],
       ['Help Docs', '/help', ['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']],
       ['Demo', '/demo', ['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']],
-      ['Account', '/account/security', ['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']]
+      ['Account', '/account/security', ['ADMIN', 'OWNER', 'KITCHEN_MANAGER', 'KITCHEN_CREW']],
+      ['Privacy & Data', '/account/privacy', ['ADMIN', 'OWNER']]
     ]
   }
 ];
@@ -57,7 +59,7 @@ export async function Nav({ user }: { user: User }) {
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
-        <Link href="/today" className="text-xl font-black tracking-tight">Smokehouse Control <span className="ml-2 rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">Build 9.8.0</span></Link>
+        <Link href="/today" className="text-xl font-black tracking-tight">Smokehouse Control <span className="ml-2 rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">Build 10.0.0</span></Link>
         <NavMenu
           groups={groups.map((group) => ({
             label: group.label,

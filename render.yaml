@@ -50,6 +50,35 @@ services:
         sync: false
       - key: BACKUP_APP_URL
         sync: false
+      # Build 10.0.0 — compliance, notifications, cost, observability
+      - key: APP_BASE_URL
+        sync: false
+      - key: COMPANY_POSTAL_ADDRESS
+        sync: false
+      - key: NEXT_PUBLIC_SUPPORT_EMAIL
+        value: support@smokehousecontrol.com
+      - key: NOTIFY_FROM_EMAIL
+        value: no-reply@smokehousecontrol.com
+      - key: SENDGRID_API_KEY
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM_NUMBER
+        sync: false
+      - key: TWILIO_INBOUND_WEBHOOK_URL
+        sync: false
+      - key: OPS_ALERT_EMAIL
+        sync: false
+      - key: OPS_TIMEZONE
+        value: America/New_York
+      - key: AI_DAILY_CENTS_CAP
+        value: "200"
+      - key: AI_DAILY_ALERT_CENTS
+        value: "1000"
+      - key: AI_MAX_TOKENS_PER_CONVERSATION
+        value: "8000"
 
   - type: cron
     name: ptt-smokehouse-control-weekly-backup
@@ -65,6 +94,38 @@ services:
       - key: BACKUP_APP_URL
         sync: false
       - key: BACKUP_POST_URL
+        sync: false
+
+  - type: cron
+    name: ptt-smokehouse-control-daily-retention
+    env: node
+    schedule: "0 7 * * *"
+    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && test -s pnpm-lock.yaml && pnpm install --prod=false --frozen-lockfile
+    startCommand: pnpm run cron:retention
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: CRON_SECRET
+        sync: false
+      - key: BACKUP_APP_URL
+        sync: false
+      - key: APP_BASE_URL
+        sync: false
+
+  - type: cron
+    name: ptt-smokehouse-control-daily-digest
+    env: node
+    schedule: "0 11 * * 1-5"
+    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && test -s pnpm-lock.yaml && pnpm install --prod=false --frozen-lockfile
+    startCommand: pnpm run cron:daily-digest
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: CRON_SECRET
+        sync: false
+      - key: BACKUP_APP_URL
+        sync: false
+      - key: APP_BASE_URL
         sync: false
 
 databases:

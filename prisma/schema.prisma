@@ -103,6 +103,12 @@ model Restaurant {
   posOrders PosOrder[]
   posLineItems PosLineItem[]
   posWebhookEvents PosWebhookEvent[]
+  communicationConsents CommunicationConsent[]
+  notificationLogs NotificationLog[]
+  costEvents CostEvent[]
+  aiUsageDaily AiUsageDaily[]
+  dataRetentionSetting DataRetentionSetting?
+  archerConversationLogs ArcherConversationLog[]
 }
 
 model RestaurantMembership {
@@ -803,3 +809,235 @@ model PosImportRow {
   @@index([restaurantId, mappedProteinId])
 }
 
+
+// ============================================================================
+// BUILD 10.0.0 — COMPLIANCE, NOTIFICATIONS & OBSERVABILITY
+// ============================================================================
+
+// ---- Communication consent (TCPA / CAN-SPAM) ------------------------------
+
+enum ConsentChannel {
+  SMS
+  EMAIL
+}
+
+enum ConsentState {
+  OPTED_IN
+  OPTED_OUT
+  UNSET
+}
+
+// One row per (contact, channel). Immutable audit rows are stored separately in ConsentEvent.
+model CommunicationConsent {
+  id            String   @id @default(cuid())
+  restaurantId  String?
+  restaurant    Restaurant? @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  channel       ConsentChannel
+  // Normalized destination: E.164 phone for SMS, lowercased email for EMAIL.
+  destination   String
+  marketingState    ConsentState @default(UNSET)
+  transactionalState ConsentState @default(OPTED_IN) // transactional cannot be revoked, but tracked
+  consentSource String?  // e.g. "signup_checkbox", "sms_START", "settings_toggle"
+  consentText   String?  // exact wording shown at opt-in time
+  ipAddress     String?
+  userAgent     String?
+  lastOptInAt   DateTime?
+  lastOptOutAt  DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+  events        ConsentEvent[]
+  @@unique([channel, destination])
+  @@index([restaurantId, channel])
+  @@index([destination])
+}
+
+// Immutable audit trail — retained a minimum of 4 years for TCPA defense.
+model ConsentEvent {
+  id            String   @id @default(cuid())
+  consentId     String
+  consent       CommunicationConsent @relation(fields: [consentId], references: [id], onDelete: Cascade)
+  channel       ConsentChannel
+  destination   String
+  action        String   // OPT_IN | OPT_OUT | RESUBSCRIBE | TRANSACTIONAL_ACK
+  category      String   // MARKETING | TRANSACTIONAL
+  source        String?  // signup_checkbox | sms_STOP | sms_START | unsubscribe_link | admin
+  consentText   String?
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime @default(now())
+  @@index([destination, createdAt])
+  @@index([channel, action, createdAt])
+}
+
+// ---- Notification delivery log (email + SMS) ------------------------------
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+}
+
+enum NotificationCategory {
+  TRANSACTIONAL
+  MARKETING
+  SYSTEM_ALERT
+}
+
+enum NotificationStatus {
+  QUEUED
+  SUPPRESSED_CONSENT
+  SUPPRESSED_QUIET_HOURS
+  SENDING
+  SENT
+  DELIVERED
+  FAILED
+  BOUNCED
+}
+
+model NotificationLog {
+  id            String   @id @default(cuid())
+  restaurantId  String?
+  restaurant    Restaurant? @relation(fields: [restaurantId], references: [id], onDelete: SetNull)
+  channel       NotificationChannel
+  category      NotificationCategory
+  templateKey   String
+  destination   String
+  subject       String?
+  status        NotificationStatus @default(QUEUED)
+  providerId    String?  // provider message id (SendGrid/Twilio)
+  errorMessage  String?
+  suppressionReason String?
+  scheduledFor  DateTime?  // for quiet-hours deferral
+  sentAt        DateTime?
+  deliveredAt   DateTime?
+  retryCount    Int      @default(0)
+  // Idempotency key prevents the same logical message being sent twice.
+  idempotencyKey String? @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+  @@index([restaurantId, channel, createdAt])
+  @@index([status, scheduledFor])
+  @@index([destination, createdAt])
+}
+
+// ---- Cost & usage tracking (unit economics at scale) ----------------------
+
+enum CostService {
+  STRIPE
+  ARCHER_AI
+  DATABASE
+  STORAGE
+  SMS
+  EMAIL
+  HOSTING
+  OTHER
+}
+
+model CostEvent {
+  id            String   @id @default(cuid())
+  restaurantId  String?
+  restaurant    Restaurant? @relation(fields: [restaurantId], references: [id], onDelete: SetNull)
+  service       CostService
+  // Cost in USD cents to preserve integer precision.
+  amountCents   Int      @default(0)
+  quantity      Float    @default(0) // tokens, messages, GB, etc.
+  unit          String?  // "tokens" | "messages" | "gb" | "requests"
+  occurredOn    DateTime @default(now())
+  notes         String?
+  createdAt     DateTime @default(now())
+  @@index([service, occurredOn])
+  @@index([restaurantId, service, occurredOn])
+}
+
+// Aggregated per-restaurant per-day AI usage for cost-cap enforcement.
+model AiUsageDaily {
+  id            String   @id @default(cuid())
+  restaurantId  String
+  restaurant    Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  usageDate     DateTime // date-only (midnight UTC)
+  conversations Int      @default(0)
+  promptTokens  Int      @default(0)
+  completionTokens Int   @default(0)
+  estimatedCents Int     @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+  @@unique([restaurantId, usageDate])
+  @@index([usageDate])
+}
+
+// ---- Data retention & GDPR erasure ----------------------------------------
+
+model DataRetentionSetting {
+  id            String   @id @default(cuid())
+  restaurantId  String   @unique
+  restaurant    Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  // Days to keep AI conversation logs. 0 = never store; -1 = never delete.
+  aiLogRetentionDays Int @default(90)
+  // Days to keep notification logs.
+  notificationRetentionDays Int @default(365)
+  updatedAt     DateTime @default(now()) @updatedAt
+  createdAt     DateTime @default(now())
+}
+
+model RetentionJobRun {
+  id            String   @id @default(cuid())
+  jobType       String   // AI_LOGS | NOTIFICATIONS | TRIAL_CLEANUP | ERROR_LOGS
+  recordsDeleted Int     @default(0)
+  startedAt     DateTime @default(now())
+  finishedAt    DateTime?
+  status        String   @default("RUNNING") // RUNNING | SUCCEEDED | FAILED
+  errorMessage  String?
+  @@index([jobType, startedAt])
+}
+
+// ---- Archer AI conversation logs (retention-gated) ------------------------
+
+model ArcherConversationLog {
+  id            String   @id @default(cuid())
+  restaurantId  String
+  restaurant    Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  userId        String?
+  sessionId     String
+  role          String   // user | assistant
+  // Content is redacted of PII before storage per Section 35.4.
+  content       String
+  promptTokens  Int      @default(0)
+  completionTokens Int   @default(0)
+  flagged       Boolean  @default(false) // prompt-injection / abuse heuristic hit
+  createdAt     DateTime @default(now())
+  @@index([restaurantId, sessionId, createdAt])
+  @@index([restaurantId, createdAt])
+  @@index([flagged, createdAt])
+}
+
+// ---- Cookie consent -------------------------------------------------------
+
+model CookieConsent {
+  id            String   @id @default(cuid())
+  // Anonymous visitor id (cookie) — not tied to account until login.
+  visitorId     String
+  essential     Boolean  @default(true)
+  functional    Boolean  @default(false)
+  analytics     Boolean  @default(false)
+  marketing     Boolean  @default(false)
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+  @@unique([visitorId])
+  @@index([createdAt])
+}
+
+// ---- Production observability: incident & error threshold tracking --------
+
+model DeployRecord {
+  id            String   @id @default(cuid())
+  version       String
+  commitSha     String?
+  deployedAt    DateTime @default(now())
+  healthyAt     DateTime?
+  rolledBackAt  DateTime?
+  errorCountAfterDeploy Int @default(0)
+  status        String   @default("DEPLOYING") // DEPLOYING | HEALTHY | ROLLED_BACK
+  notes         String?
+  @@index([deployedAt])
+}

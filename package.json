@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "9.8.0",
+  "version": "10.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -24,7 +24,7 @@
     "test:permissions": "node scripts/permission-boundary-test.mjs",
     "ci:schema-drift": "prisma migrate diff --from-url \"$DATABASE_URL\" --to-schema-datamodel prisma/schema.prisma --exit-code",
     "ci:migration-status": "prisma migrate status",
-    "ci:test": "pnpm run preflight && pnpm run test:comprehensive && pnpm run test:page-parity && pnpm run test:navigation && pnpm run test:admin-navigation && pnpm run test:tenant-guard-policy && pnpm run test:tenant-guard && pnpm run staging:verify && pnpm run test:archer-identity && pnpm run test:interaction-manifest && pnpm run test:ci-contracts && pnpm run typecheck && pnpm run lint && pnpm run test:migration-integrity && pnpm run test:pos-migration-recovery && pnpm run test:pos-migration-idempotency && pnpm run test:pos-upgrade-replay && pnpm run migration:smoke && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:quick-eod-carryover && pnpm run test:eod-postgres-write && pnpm run test:eod-column-types && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:auth-coverage && pnpm run test:failure-modes && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:orphan-records && pnpm run test:pos-import && pnpm run test:pos-live && pnpm run test:pos-oauth-origin && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run test:smoker-delete && pnpm run test:unsupported-prisma && pnpm run ci:migration-status && pnpm run ci:schema-drift && pnpm run test:archer && pnpm run test:archer-demo-mode && pnpm run test:archer-voice && pnpm run test:archer-repeat && pnpm run build",
+    "ci:test": "pnpm run preflight && pnpm run test:comprehensive && pnpm run test:page-parity && pnpm run test:navigation && pnpm run test:admin-navigation && pnpm run test:tenant-guard-policy && pnpm run test:tenant-guard && pnpm run staging:verify && pnpm run test:archer-identity && pnpm run test:interaction-manifest && pnpm run test:ci-contracts && pnpm run test:compliance && pnpm run typecheck && pnpm run lint && pnpm run test:migration-integrity && pnpm run test:pos-migration-recovery && pnpm run test:pos-migration-idempotency && pnpm run test:pos-upgrade-replay && pnpm run migration:smoke && pnpm run test:forecast && pnpm run test:generate-plan && pnpm run test:quick-eod-carryover && pnpm run test:eod-postgres-write && pnpm run test:eod-column-types && pnpm run test:permissions && pnpm run test:account-security && pnpm run test:auth-coverage && pnpm run test:failure-modes && pnpm run test:dead-code && pnpm run test:tenant && pnpm run test:cross-tenant && pnpm run test:orphan-records && pnpm run test:pos-import && pnpm run test:pos-live && pnpm run test:pos-oauth-origin && pnpm run test:demo-docs && pnpm run test:smoker-catalog && pnpm run test:smoker-delete && pnpm run test:unsupported-prisma && pnpm run ci:migration-status && pnpm run ci:schema-drift && pnpm run test:archer && pnpm run test:archer-demo-mode && pnpm run test:archer-voice && pnpm run test:archer-repeat && pnpm run build",
     "test:dead-code": "node scripts/dead-code-check.mjs",
     "test:cross-tenant": "tsx scripts/cross-tenant-regression-test.mjs",
     "test:account-security": "node scripts/account-security-test.mjs",
@@ -88,7 +88,14 @@
     "test:archer-repeat": "node scripts/archer-repeat-question-contract-test.mjs",
     "test:interaction-manifest": "node scripts/generate-interaction-manifest.mjs --check",
     "interaction:manifest": "node scripts/generate-interaction-manifest.mjs",
-    "test:ci-contracts": "node scripts/ci-release-contract-test.mjs"
+    "test:ci-contracts": "node scripts/ci-release-contract-test.mjs",
+    "test:compliance-logic": "tsx scripts/compliance-logic-test.ts",
+    "test:notification-contract": "tsx scripts/notification-contract-test.ts",
+    "test:hardening-contract": "tsx scripts/hardening-contract-test.ts",
+    "test:compliance": "pnpm run test:compliance-logic && pnpm run test:notification-contract && pnpm run test:hardening-contract && pnpm run test:migration-drift-1000",
+    "cron:retention": "node scripts/run-retention-cron.mjs",
+    "cron:daily-digest": "node scripts/run-daily-digest-cron.mjs",
+    "test:migration-drift-1000": "node scripts/build-1000-migration-drift-test.mjs"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

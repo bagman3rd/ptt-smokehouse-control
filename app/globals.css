@@ -111,3 +111,66 @@ details[open] > summary { @apply bg-slate-100; }
 .archer-mic.listening { color:white; background:#b91c1c; border-color:#7f1d1d; animation:archer-pulse 1.15s ease-in-out infinite; }
 .archer-voice-note { margin:0; font-size:.72rem; line-height:1.35; color:#64748b; }
 @keyframes archer-pulse { 0%,100% { box-shadow:0 0 0 0 rgba(185,28,28,.35); } 50% { box-shadow:0 0 0 7px rgba(185,28,28,0); } }
+
+/* ============================================================ */
+/* Build 10.0.0 — accessibility (WCAG 2.1 AA) support           */
+/* ============================================================ */
+
+/* Skip link: visible only when focused (WCAG 2.4.1 Bypass Blocks) */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  z-index: 100;
+  background: #b91c1c;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 0 0 8px 0;
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* Visible focus indicator for keyboard users (WCAG 2.4.7 Focus Visible) */
+:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Respect reduced-motion preference (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Screen-reader-only utility for labels/announcements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Ensure minimum touch target size on mobile (WCAG 2.5.5) */
+@media (max-width: 640px) {
+  button,
+  a.btn,
+  input[type='submit'],
+  .archer-icon-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

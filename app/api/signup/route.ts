@@ -8,6 +8,8 @@ import { createDefaultRestaurantData, slugifyRestaurant } from '@/lib/starterDat
 import { signupSchema } from '@/lib/validators';
 import { enforceRateLimit } from '@/lib/rateLimit';
 import { ensureTrialSubscription } from '@/lib/billing';
+import { recordOptIn } from '@/lib/consent';
+import { sendNotification } from '@/lib/notifications/dispatch';
 
 function baseUrl(request: Request) {
   const proto = request.headers.get('x-forwarded-proto') || 'https';
@@ -32,6 +34,32 @@ export async function POST(request: Request) {
     const user = await prisma.user.create({ data: { name: parsed.ownerName, username: parsed.username, email: parsed.email, passwordHash: hashPassword(parsed.password), role: Role.OWNER, active: true, createdBy: 'Self-Service Signup', restaurantId: restaurant.id } });
     await prisma.restaurantMembership.create({ data: { restaurantId: restaurant.id, userId: user.id, role: Role.OWNER, active: true } });
     await auditLog({ restaurantId: restaurant.id, actorUserId: user.id, actorName: user.name, action: 'SELF_SERVICE_SIGNUP', entity: 'Restaurant', entityId: restaurant.id, afterJson: { restaurantName: restaurant.name, owner: user.username } });
+
+    // Build 10.0.0 — capture communication consent (TCPA/CAN-SPAM).
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null;
+    const userAgent = request.headers.get('user-agent');
+    const wantsMarketing = String(form.get('marketingConsent') || '') === 'on';
+    if (wantsMarketing) {
+      await recordOptIn('EMAIL', parsed.email, {
+        restaurantId: restaurant.id,
+        source: 'signup_checkbox',
+        consentText: 'I agree to receive product news and offers by email.',
+        ipAddress: ip,
+        userAgent
+      }).catch(() => {});
+    }
+
+    // Send the welcome email (transactional; always allowed).
+    await sendNotification({
+      channel: 'EMAIL',
+      category: 'TRANSACTIONAL',
+      templateKey: 'welcome',
+      to: parsed.email,
+      restaurantId: restaurant.id,
+      data: { name: parsed.ownerName, appUrl: `${root}/today` },
+      idempotencyKey: `welcome-${user.id}`
+    }).catch(() => {});
+
     setCurrentRestaurantCookie(restaurant.id);
     await setSessionCookie(user.id, user.sessionVersion || 1, request);
     return NextResponse.redirect(`${root}/admin/restaurants/setup?welcome=1`, 303);

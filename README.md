@@ -1,4 +1,8 @@
-# PTT Smokehouse Control — Build 9.8.0
+# PTT Smokehouse Control — Build 10.0.0
+
+## Build 10.0.0 commercial hardening
+
+Build 10.0.0 makes Smokehouse Control commercially sellable ($99/restaurant/month, designed for 1,000 restaurants). It adds TCPA/CAN-SPAM communication compliance (consent model, quiet hours, STOP/START handling, unsubscribe, immutable consent audit), a consent- and idempotency-gated notification system (SendGrid/Twilio with test-safe console fallback), GDPR privacy tooling (data export, signed-confirmation account deletion with anonymizing erasure, configurable retention with a daily purge job, cookie consent), AI cost caps and prompt-injection/PII safeguards for Archer, a cost/observability ledger with an admin dashboard and daily digest cron, full security headers, and expanded accessibility and mobile Playwright coverage. See `BUILD_10_0_0.md` and `docs/RELEASE_GATE_10_0_0.md`.
 
 ## Build 9.8.0 release safety update
 

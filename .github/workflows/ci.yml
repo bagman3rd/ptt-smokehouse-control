@@ -1,4 +1,4 @@
-name: Build 9.8.0 CI
+name: Build 10.0.0 CI
 on:
   push:
     branches: [main]
@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: build-9-8-0-${{ github.ref }}
+  group: build-10-0-0-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   quality-and-tests:
@@ -83,7 +83,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-9.8.0-test-evidence-${{ github.sha }}
+          name: build-10.0.0-test-evidence-${{ github.sha }}
           path: |
             playwright-report/
             test-results/

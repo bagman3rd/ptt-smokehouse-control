@@ -27,7 +27,14 @@ const TENANT_SCOPED_MODELS = new Set([
   'CustomerDataRequest',
   'MenuItemMapping',
   'PosImportBatch',
-  'PosImportRow'
+  'PosImportRow',
+  // Build 10.0.0 tenant-scoped models.
+  // NotificationLog and CommunicationConsent are intentionally NOT in this set:
+  // they support nullable restaurantId (system-level alerts, pre-signup consent)
+  // and are guarded at the call site instead.
+  'AiUsageDaily',
+  'DataRetentionSetting',
+  'ArcherConversationLog'
 ]);
 
 const READ_OR_WRITE_OPERATIONS = new Set([
