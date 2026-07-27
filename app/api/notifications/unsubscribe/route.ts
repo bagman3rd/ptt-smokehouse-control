@@ -1,4 +1,4 @@
-// Build 11.0.0 — CAN-SPAM unsubscribe endpoint.
+// Build 11.0.1 — CAN-SPAM unsubscribe endpoint.
 // GET  renders a one-click confirmation (email clients pre-fetch links, so we
 //      confirm on POST to avoid accidental unsubscribes from scanners).
 // POST records the opt-out immediately and suppresses future marketing sends.

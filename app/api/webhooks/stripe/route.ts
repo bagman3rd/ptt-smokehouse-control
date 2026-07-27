@@ -1,4 +1,4 @@
-// Build 11.0.0 — Stripe webhook handler (v3.0 §30 payments, §50.2 stop-conditions).
+// Build 11.0.1 — Stripe webhook handler (v3.0 §30 payments, §50.2 stop-conditions).
 //
 // Guarantees enforced here (directly answering the v3.0 payment stop-conditions):
 //   * NO DOUBLE-APPLY: PaymentEvent.stripeEventId is unique; a replayed or

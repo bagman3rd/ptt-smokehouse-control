@@ -1,6 +1,6 @@
 'use server';
 
-// Build 11.0.0 — customer data-rights actions (GDPR Articles 15, 17, 20).
+// Build 11.0.1 — customer data-rights actions (GDPR Articles 15, 17, 20).
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';

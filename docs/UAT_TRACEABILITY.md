@@ -1,6 +1,6 @@
 # Smokehouse Control — Tier 1 UAT Traceability Matrix
 
-**Build:** 11.0.0 · **Standard:** Master Testing Plan v3.0 Part V (Part V)
+**Build:** 11.0.1 · **Standard:** Master Testing Plan v3.0 Part V (Part V)
 
 Disposition legend: `PASSED_AUTOMATED` (in-repo automated evidence, green in CI) · `PENDING` (needs execution/evidence) · `PENDING_EXTERNAL` (requires staging run or human session) · `NOT_APPLICABLE` · `BLOCKED` · `FAILED`. Per §50.3, "not tested" is not acceptable for release — every item below carries a disposition.
 

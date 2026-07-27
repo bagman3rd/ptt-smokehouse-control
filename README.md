@@ -1,4 +1,8 @@
-# PTT Smokehouse Control — Build 11.0.0
+# PTT Smokehouse Control — Build 11.0.1
+
+## Build 11.0.1 — deploy hotfix
+
+Fixes the `next build` failure that blocked deployment ("Module not found: Can't resolve './actions'" in `app/account/privacy/confirm-delete/page.tsx` — corrected `./actions` → `../actions`). Adds `scripts/import-resolution-check.mjs` (`pnpm run test:imports`, wired into `ci:test` and `test:compliance`) which statically catches unresolved imports, missing page/route exports, and client/server boundary violations before deploy. See `BUILD_11_0_1.md`.
 
 ## Build 11.0.0 — Tier 1 UAT, scale, performance, payments & observability
 

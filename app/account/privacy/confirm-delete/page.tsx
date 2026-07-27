@@ -1,5 +1,5 @@
 import { verifyToken } from '@/lib/signedToken';
-import { confirmAccountDeletion } from './actions';
+import { confirmAccountDeletion } from '../actions';
 
 export const dynamic = 'force-dynamic';
 

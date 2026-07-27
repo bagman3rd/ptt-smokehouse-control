@@ -1,4 +1,4 @@
-// Build 11.0.0 — static contract test for the notification dispatcher.
+// Build 11.0.1 — static contract test for the notification dispatcher.
 // Verifies the critical safety guarantees are actually wired in source:
 //   * consent is checked before send
 //   * quiet hours gate marketing
