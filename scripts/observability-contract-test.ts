@@ -1,4 +1,4 @@
-// Build 11.0.1 — observability contract test (v3.0 §41).
+// Build 11.0.2 — observability contract test (v3.0 §41).
 // Verifies real error tracking exists (not just a comment) and the deploy
 // health / rollback workflow is wired.
 // Run: pnpm exec tsx scripts/observability-contract-test.ts

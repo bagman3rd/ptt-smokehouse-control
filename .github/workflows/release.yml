@@ -1,7 +1,7 @@
-name: Package Build 11.0.1
+name: Package Build 11.0.2
 on:
   workflow_run:
-    workflows: ['Build 11.0.1 CI']
+    workflows: ['Build 11.0.2 CI']
     types: [completed]
 permissions:
   contents: read
@@ -20,7 +20,7 @@ jobs:
         run: |
           cat > RELEASE_EVIDENCE.json <<JSON
           {
-            "build": "11.0.1",
+            "build": "11.0.2",
             "commitSha": "${{ github.event.workflow_run.head_sha }}",
             "ciRunId": "${{ github.event.workflow_run.id }}",
             "ciConclusion": "${{ github.event.workflow_run.conclusion }}",
@@ -29,10 +29,10 @@ jobs:
           JSON
       - name: Package audited source ZIP
         run: |
-          zip -qr ptt-smokehouse-control-build-11.0.1-audited-flat.zip . \
+          zip -qr ptt-smokehouse-control-build-11.0.2-audited-flat.zip . \
             -x '.git/*' 'node_modules/*' '.next/*' 'playwright-report/*' 'test-results/*'
       - uses: actions/upload-artifact@v4
         with:
-          name: ptt-smokehouse-control-build-11.0.1-${{ github.event.workflow_run.head_sha }}
-          path: ptt-smokehouse-control-build-11.0.1-audited-flat.zip
+          name: ptt-smokehouse-control-build-11.0.2-${{ github.event.workflow_run.head_sha }}
+          path: ptt-smokehouse-control-build-11.0.2-audited-flat.zip
           retention-days: 90

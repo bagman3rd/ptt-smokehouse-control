@@ -1,4 +1,4 @@
-// Build 11.0.1 — server-side cookie-consent audit record.
+// Build 11.0.2 — server-side cookie-consent audit record.
 // Stores an anonymous visitor's choices so we can demonstrate consent if asked.
 
 import { NextRequest, NextResponse } from 'next/server';

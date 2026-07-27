@@ -1,6 +1,6 @@
 'use client';
 
-// Build 11.0.1 — cookie consent banner (GDPR / ePrivacy).
+// Build 11.0.2 — cookie consent banner (GDPR / ePrivacy).
 // Essential cookies are always on. Analytics/marketing are opt-in.
 // Consent is stored client-side (cookie) and mirrored server-side for audit.
 

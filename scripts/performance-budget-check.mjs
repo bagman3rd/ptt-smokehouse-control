@@ -1,4 +1,4 @@
-// Build 11.0.1 — bundle-size performance gate (v3.0 §27.1).
+// Build 11.0.2 — bundle-size performance gate (v3.0 §27.1).
 // Fails the build if the gzipped client JS bundle exceeds the budget.
 // Run after `next build`: node scripts/performance-budget-check.mjs
 //

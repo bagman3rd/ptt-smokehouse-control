@@ -1,8 +1,12 @@
-# PTT Smokehouse Control — Build 11.0.1
+# PTT Smokehouse Control — Build 11.0.2
 
-## Build 11.0.1 — deploy hotfix
+## Build 11.0.2 — deploy hotfix (TypeScript `as const` type error)
 
-Fixes the `next build` failure that blocked deployment ("Module not found: Can't resolve './actions'" in `app/account/privacy/confirm-delete/page.tsx` — corrected `./actions` → `../actions`). Adds `scripts/import-resolution-check.mjs` (`pnpm run test:imports`, wired into `ci:test` and `test:compliance`) which statically catches unresolved imports, missing page/route exports, and client/server boundary violations before deploy. See `BUILD_11_0_1.md`.
+Fixes the `next build` type-check failure in `lib/notifications/dispatch.ts` — `as const` was applied to a ternary expression (TS1355; `as const` is only valid on literals/arrays/objects). Corrected `mapCategory` to use an explicit return type. Adds `scripts/typescript-antipattern-check.mjs` (`pnpm run test:ts-antipatterns`, wired into `ci:test` and `test:compliance`) which catches this class of build-breaking TS syntax error offline. See `BUILD_11_0_2.md`.
+
+## Build 11.0.1 — deploy hotfix (broken relative import)
+
+Fixed the `next build` failure "Module not found: Can't resolve './actions'" in `app/account/privacy/confirm-delete/page.tsx` (corrected `./actions` → `../actions`). Added `scripts/import-resolution-check.mjs` (`pnpm run test:imports`) which statically catches unresolved imports, missing page/route exports, and client/server boundary violations before deploy. See `BUILD_11_0_1.md`.
 
 ## Build 11.0.0 — Tier 1 UAT, scale, performance, payments & observability
 

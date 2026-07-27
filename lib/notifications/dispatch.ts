@@ -43,7 +43,8 @@ export interface DispatchResult {
   reason?: string;
 }
 
-const mapCategory = (c: Category) => (c === 'MARKETING' ? 'MARKETING' : 'TRANSACTIONAL') as const;
+const mapCategory = (c: Category): 'MARKETING' | 'TRANSACTIONAL' =>
+  c === 'MARKETING' ? 'MARKETING' : 'TRANSACTIONAL';
 
 export async function sendNotification(input: DispatchInput): Promise<DispatchResult> {
   const data = input.data ?? {};

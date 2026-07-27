@@ -1,4 +1,4 @@
-// Build 11.0.1 — Stripe webhook contract test (v3.0 §30, §50.2 stop-conditions).
+// Build 11.0.2 — Stripe webhook contract test (v3.0 §30, §50.2 stop-conditions).
 // Verifies the guarantees in source: signature verified before parse, unique
 // idempotency key, deterministic status mapping, refund handling.
 // Run: pnpm exec tsx scripts/payment-webhook-contract-test.ts
