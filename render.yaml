@@ -79,6 +79,17 @@ services:
         value: "1000"
       - key: AI_MAX_TOKENS_PER_CONVERSATION
         value: "8000"
+      # Build 11.0.0 — payments, observability, performance/scale
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: DEPLOY_ERROR_ROLLBACK_THRESHOLD
+        value: "5"
+      - key: ERROR_ALERT_THRESHOLD_24H
+        value: "25"
+      - key: APP_BUILD_VERSION
+        value: "11.0.0"
 
   - type: cron
     name: ptt-smokehouse-control-weekly-backup

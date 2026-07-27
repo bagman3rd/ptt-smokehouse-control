@@ -1,6 +1,6 @@
 {
   "name": "ptt-smokehouse-control",
-  "version": "10.0.0",
+  "version": "11.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -92,10 +92,18 @@
     "test:compliance-logic": "tsx scripts/compliance-logic-test.ts",
     "test:notification-contract": "tsx scripts/notification-contract-test.ts",
     "test:hardening-contract": "tsx scripts/hardening-contract-test.ts",
-    "test:compliance": "pnpm run test:compliance-logic && pnpm run test:notification-contract && pnpm run test:hardening-contract && pnpm run test:migration-drift-1000",
+    "test:compliance": "pnpm run test:compliance-logic && pnpm run test:notification-contract && pnpm run test:hardening-contract && pnpm run test:migration-drift-1000 && pnpm run test:migration-drift-1100 && pnpm run test:payment-webhook && pnpm run test:observability-contract && pnpm run test:uat-traceability",
     "cron:retention": "node scripts/run-retention-cron.mjs",
     "cron:daily-digest": "node scripts/run-daily-digest-cron.mjs",
-    "test:migration-drift-1000": "node scripts/build-1000-migration-drift-test.mjs"
+    "test:migration-drift-1000": "node scripts/build-1000-migration-drift-test.mjs",
+    "test:payment-webhook": "tsx scripts/payment-webhook-contract-test.ts",
+    "test:observability-contract": "tsx scripts/observability-contract-test.ts",
+    "test:uat-traceability": "node scripts/generate-uat-traceability.mjs --check",
+    "uat:traceability": "node scripts/generate-uat-traceability.mjs",
+    "test:performance-budget": "node scripts/performance-budget-check.mjs",
+    "test:migration-drift-1100": "node scripts/build-1100-migration-drift-test.mjs",
+    "test:e2e:axe": "playwright test e2e/axe-accessibility.spec.ts --project=chromium",
+    "load:capacity": "k6 run load/k6-capacity-model.js"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",

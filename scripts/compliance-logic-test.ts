@@ -1,4 +1,4 @@
-// Build 10.0.0 — TCPA/CAN-SPAM + AI-safety unit tests.
+// Build 11.0.0 — TCPA/CAN-SPAM + AI-safety unit tests.
 // Run: pnpm exec tsx scripts/compliance-logic-test.ts
 import assert from 'node:assert/strict';
 import { normalizePhone, normalizeEmail, maskPhone, maskEmail } from '../lib/contact';

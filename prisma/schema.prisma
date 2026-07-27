@@ -1041,3 +1041,51 @@ model DeployRecord {
   notes         String?
   @@index([deployedAt])
 }
+
+// ============================================================================
+// BUILD 11.0.0 — REAL ERROR TRACKING & OBSERVABILITY (v3.0 §41)
+// ============================================================================
+
+model ErrorEvent {
+  id            String   @id @default(cuid())
+  severity      String   @default("error") // fatal | error | warning | info
+  name          String
+  message       String
+  stack         String?
+  fingerprint   String
+  route         String?
+  restaurantId  String?
+  userId        String?
+  release       String?
+  tagsJson      String?
+  createdAt     DateTime @default(now())
+  @@index([createdAt])
+  @@index([severity, createdAt])
+  @@index([fingerprint, createdAt])
+  @@index([restaurantId, createdAt])
+}
+
+// ============================================================================
+// BUILD 11.0.0 — STRIPE PAYMENT WEBHOOK IDEMPOTENCY & AUDIT (v3.0 §30, §50.2)
+// ============================================================================
+
+model PaymentEvent {
+  id             String   @id @default(cuid())
+  // Stripe event id (evt_...). Unique => idempotent webhook processing:
+  // the same event can never be applied twice (no double-charge / double-apply).
+  stripeEventId  String   @unique
+  eventType      String
+  restaurantId   String?
+  subscriptionId String?
+  stripeObjectId String?  // pi_..., in_..., sub_...
+  amountCents    Int      @default(0)
+  currency       String?
+  status         String   @default("RECEIVED") // RECEIVED | PROCESSED | IGNORED | FAILED
+  outcome        String?  // human-readable result of applying the event
+  payloadHash    String?
+  processedAt    DateTime?
+  createdAt      DateTime @default(now())
+  @@index([eventType, createdAt])
+  @@index([restaurantId, createdAt])
+  @@index([stripeObjectId])
+}

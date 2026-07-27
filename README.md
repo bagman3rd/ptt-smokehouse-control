@@ -1,8 +1,12 @@
-# PTT Smokehouse Control — Build 10.0.0
+# PTT Smokehouse Control — Build 11.0.0
+
+## Build 11.0.0 — Tier 1 UAT, scale, performance, payments & observability
+
+Build 11.0.0 closes the five release-blocking gaps found when Build 10.0.0 was assessed against Master Testing Plan **v3.0** (which added the Part V Tier 1 SaaS User Acceptance Testing program). It adds: (1) a **Tier 1 UAT program** — a generated requirements-traceability matrix and route/control/journey inventory with dispositions (`docs/UAT_TRACEABILITY.md`), a novice-user protocol (`docs/UAT_NOVICE_PROTOCOL.md`), and the Appendix E sign-off (`docs/UAT_SIGNOFF_APPENDIX_E.md`); (2) a **100,000-user capacity model** (`docs/CAPACITY_MODEL.md`) with a **k6 load harness** implementing the §64 normal/peak/spike/endurance/volume profiles (`load/k6-capacity-model.js`); (3) **performance gating** — `performance-budget.json` of §27.1 thresholds plus a CI bundle-size gate; (4) **Stripe payment webhooks** with signature verification and **idempotency** that clears the §50.2 double-charge / success-shown-as-failed / refund-status stop-conditions; and (5) **real observability** — an error-tracking pipeline with a Sentry transport and deploy-health/rollback logic (`lib/observability.ts`, `instrumentation.ts`), plus **gitleaks** in CI and an **axe-core** accessibility scan. See `BUILD_11_0_0.md` and `docs/RELEASE_GATE_11_0_0.md`.
 
 ## Build 10.0.0 commercial hardening
 
-Build 10.0.0 makes Smokehouse Control commercially sellable ($99/restaurant/month, designed for 1,000 restaurants). It adds TCPA/CAN-SPAM communication compliance (consent model, quiet hours, STOP/START handling, unsubscribe, immutable consent audit), a consent- and idempotency-gated notification system (SendGrid/Twilio with test-safe console fallback), GDPR privacy tooling (data export, signed-confirmation account deletion with anonymizing erasure, configurable retention with a daily purge job, cookie consent), AI cost caps and prompt-injection/PII safeguards for Archer, a cost/observability ledger with an admin dashboard and daily digest cron, full security headers, and expanded accessibility and mobile Playwright coverage. See `BUILD_10_0_0.md` and `docs/RELEASE_GATE_10_0_0.md`.
+Build 10.0.0 made Smokehouse Control commercially sellable ($99/restaurant/month). It added TCPA/CAN-SPAM compliance (consent model, quiet hours, STOP/START, unsubscribe, immutable consent audit), a consent- and idempotency-gated notification system, GDPR privacy tooling (export, signed-confirmation deletion with anonymizing erasure, retention purge, cookie consent), AI cost caps and prompt-injection/PII safeguards, a cost ledger with admin dashboard and daily digest, full security headers, and expanded accessibility/mobile Playwright coverage. See `BUILD_10_0_0.md` and `docs/RELEASE_GATE_10_0_0.md`.
 
 ## Build 9.8.0 release safety update
 

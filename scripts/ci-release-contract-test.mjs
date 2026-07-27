@@ -6,4 +6,4 @@ assert.match(ci,/pnpm run test:e2e:ci/,'CI must execute entire Playwright direct
 assert.match(ci,/pnpm run test:restore-drill/,'restore drill must be mandatory');
 const pkg=JSON.parse(fs.readFileSync('package.json','utf8')); assert.match(pkg.scripts['ci:test'],/test:interaction-manifest/,'manifest must be checked in mandatory CI');
 assert.match(release,/workflow_run:/); assert.match(release,/conclusion == 'success'/); assert.match(release,/github\.event\.workflow_run\.head_sha/); assert.match(release,/RELEASE_EVIDENCE\.json/);
-console.log('Build 10.0.0 CI and release contracts passed.');
+console.log('Build 11.0.0 CI and release contracts passed.');

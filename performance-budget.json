@@ -1,0 +1,19 @@
+{
+  "$comment": "Build 11.0.0 — performance thresholds (v3.0 §27.1) as release gates. Values in the units shown. Adjust deliberately and record in Document Control.",
+  "webVitals": {
+    "LCP_ms": { "threshold": 2500, "tool": "Lighthouse / Web Vitals" },
+    "CLS": { "threshold": 0.1, "tool": "Lighthouse / Web Vitals" },
+    "INP_ms": { "threshold": 200, "tool": "Web Vitals" },
+    "initialPageLoad_ms": { "threshold": 3000, "tool": "Lighthouse mobile (4G, mid-tier phone)" }
+  },
+  "timings": {
+    "apiP95_ms": { "threshold": 500, "tool": "k6 / server logs" },
+    "dashboardLoad_ms": { "threshold": 2000, "tool": "Playwright timing" },
+    "reportGeneration_ms": { "threshold": 5000, "tool": "Playwright timing" },
+    "searchResults_ms": { "threshold": 1000, "tool": "Playwright timing" },
+    "paymentCompletion_ms": { "threshold": 6000, "tool": "Playwright timing (excl 3DS)" }
+  },
+  "bundle": {
+    "maxGzippedKB": { "threshold": 300, "tool": "Build output (.next gzip)" }
+  }
+}

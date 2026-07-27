@@ -1,0 +1,423 @@
+{
+  "build": "11.0.0",
+  "standard": "v3.0 Part V",
+  "routes": [
+    {
+      "route": "/",
+      "file": "app/page.tsx"
+    },
+    {
+      "route": "/account/privacy",
+      "file": "app/account/privacy/page.tsx"
+    },
+    {
+      "route": "/account/privacy/confirm-delete",
+      "file": "app/account/privacy/confirm-delete/page.tsx"
+    },
+    {
+      "route": "/account/security",
+      "file": "app/account/security/page.tsx"
+    },
+    {
+      "route": "/admin/audit",
+      "file": "app/admin/audit/page.tsx"
+    },
+    {
+      "route": "/admin/data",
+      "file": "app/admin/data/page.tsx"
+    },
+    {
+      "route": "/admin/observability",
+      "file": "app/admin/observability/page.tsx"
+    },
+    {
+      "route": "/admin/restaurants",
+      "file": "app/admin/restaurants/page.tsx"
+    },
+    {
+      "route": "/admin/restaurants/pos",
+      "file": "app/admin/restaurants/pos/page.tsx"
+    },
+    {
+      "route": "/admin/restaurants/setup",
+      "file": "app/admin/restaurants/setup/page.tsx"
+    },
+    {
+      "route": "/admin/smokers",
+      "file": "app/admin/smokers/page.tsx"
+    },
+    {
+      "route": "/admin/smokers/catalog",
+      "file": "app/admin/smokers/catalog/page.tsx"
+    },
+    {
+      "route": "/admin/smokers/schedule",
+      "file": "app/admin/smokers/schedule/page.tsx"
+    },
+    {
+      "route": "/admin/system",
+      "file": "app/admin/system/page.tsx"
+    },
+    {
+      "route": "/admin/users",
+      "file": "app/admin/users/page.tsx"
+    },
+    {
+      "route": "/billing",
+      "file": "app/billing/page.tsx"
+    },
+    {
+      "route": "/cook-plan",
+      "file": "app/cook-plan/page.tsx"
+    },
+    {
+      "route": "/cook-plan/print",
+      "file": "app/cook-plan/print/page.tsx"
+    },
+    {
+      "route": "/dashboard",
+      "file": "app/dashboard/page.tsx"
+    },
+    {
+      "route": "/demo",
+      "file": "app/demo/page.tsx"
+    },
+    {
+      "route": "/end-of-day",
+      "file": "app/end-of-day/page.tsx"
+    },
+    {
+      "route": "/help",
+      "file": "app/help/page.tsx"
+    },
+    {
+      "route": "/learning",
+      "file": "app/learning/page.tsx"
+    },
+    {
+      "route": "/learning/proof",
+      "file": "app/learning/proof/page.tsx"
+    },
+    {
+      "route": "/login",
+      "file": "app/login/page.tsx"
+    },
+    {
+      "route": "/privacy",
+      "file": "app/privacy/page.tsx"
+    },
+    {
+      "route": "/reports",
+      "file": "app/reports/page.tsx"
+    },
+    {
+      "route": "/sales",
+      "file": "app/sales/page.tsx"
+    },
+    {
+      "route": "/settings",
+      "file": "app/settings/page.tsx"
+    },
+    {
+      "route": "/signup",
+      "file": "app/signup/page.tsx"
+    },
+    {
+      "route": "/support",
+      "file": "app/support/page.tsx"
+    },
+    {
+      "route": "/terms",
+      "file": "app/terms/page.tsx"
+    },
+    {
+      "route": "/today",
+      "file": "app/today/page.tsx"
+    },
+    {
+      "route": "/tour",
+      "file": "app/tour/page.tsx"
+    }
+  ],
+  "journeys": [
+    {
+      "id": "J1",
+      "name": "Owner signup → trial → first cook plan",
+      "roles": [
+        "OWNER"
+      ],
+      "evidence": [
+        "e2e/core-workflow.spec.ts",
+        "app/api/signup/route.ts"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J2",
+      "name": "Create & publish cook plan",
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KITCHEN_MANAGER"
+      ],
+      "evidence": [
+        "e2e/core-workflow.spec.ts",
+        "scripts/generate-plan-regression-test.mjs"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J3",
+      "name": "End-of-day submission + carryover",
+      "roles": [
+        "KITCHEN_MANAGER",
+        "KITCHEN_CREW"
+      ],
+      "evidence": [
+        "e2e/eod-lifecycle.spec.ts",
+        "scripts/quick-eod-carryover-test.mjs"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J4",
+      "name": "Generate & export report",
+      "roles": [
+        "ADMIN",
+        "OWNER"
+      ],
+      "evidence": [
+        "scripts/report-rollup-contract-test.mjs",
+        "app/api/account/export/route.ts"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J5",
+      "name": "Tenant isolation (cross-tenant denied)",
+      "roles": [
+        "ALL"
+      ],
+      "evidence": [
+        "e2e/tenant-guard-contract.spec.ts",
+        "scripts/cross-tenant-regression-test.mjs",
+        "scripts/tenant-guard-coverage-test.mjs"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J6",
+      "name": "Role/permission enforcement (URL + API)",
+      "roles": [
+        "ALL"
+      ],
+      "evidence": [
+        "scripts/permission-boundary-test.mjs",
+        "scripts/authorization-coverage-test.mjs",
+        "scripts/api-role-contract-test.mjs"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J7",
+      "name": "Subscription billing lifecycle (webhook idempotency)",
+      "roles": [
+        "OWNER",
+        "SYSTEM"
+      ],
+      "evidence": [
+        "app/api/webhooks/stripe/route.ts",
+        "scripts/payment-webhook-contract-test.ts"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J8",
+      "name": "Notification consent + quiet hours + unsubscribe",
+      "roles": [
+        "SYSTEM"
+      ],
+      "evidence": [
+        "scripts/notification-contract-test.ts",
+        "scripts/compliance-logic-test.ts"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J9",
+      "name": "GDPR data export + account deletion",
+      "roles": [
+        "ADMIN",
+        "OWNER"
+      ],
+      "evidence": [
+        "app/api/account/export/route.ts",
+        "app/account/privacy/actions.ts",
+        "scripts/hardening-contract-test.ts"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J10",
+      "name": "AI assistant cost cap + injection defense",
+      "roles": [
+        "ALL"
+      ],
+      "evidence": [
+        "scripts/hardening-contract-test.ts",
+        "scripts/archer-chat-contract-test.mjs"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J11",
+      "name": "POS import mapping + reconciliation",
+      "roles": [
+        "ADMIN",
+        "OWNER"
+      ],
+      "evidence": [
+        "scripts/pos-import-mapping-test.mjs",
+        "e2e/pos-integration.spec.ts"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "J12",
+      "name": "Backup + restore drill",
+      "roles": [
+        "SYSTEM"
+      ],
+      "evidence": [
+        "scripts/database-restore-drill.mjs"
+      ],
+      "disposition": "PASSED_AUTOMATED"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "R-TENANT",
+      "text": "Tenant A can never access Tenant B data (stop condition)",
+      "journeys": [
+        "J5"
+      ],
+      "critical": true,
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "R-PAY-IDEMP",
+      "text": "A payment/webhook event can never be applied twice (stop condition)",
+      "journeys": [
+        "J7"
+      ],
+      "critical": true,
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "R-PAY-STATUS",
+      "text": "A successful payment is never represented as failed & refund status correct",
+      "journeys": [
+        "J7"
+      ],
+      "critical": true,
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "R-AUTHZ",
+      "text": "Authentication/authorization cannot be materially bypassed",
+      "journeys": [
+        "J6"
+      ],
+      "critical": true,
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "R-TCPA",
+      "text": "Marketing messages require opt-in; STOP honored; quiet hours enforced",
+      "journeys": [
+        "J8"
+      ],
+      "critical": true,
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "R-GDPR",
+      "text": "Users can export data and delete account; erasure preserves audit",
+      "journeys": [
+        "J9"
+      ],
+      "critical": true,
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "R-AICOST",
+      "text": "AI spend capped per conversation and per restaurant per day",
+      "journeys": [
+        "J10"
+      ],
+      "critical": true,
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "R-EOD",
+      "text": "End-of-day carryover rule computes correctly",
+      "journeys": [
+        "J3"
+      ],
+      "critical": true,
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "R-BACKUP",
+      "text": "Backup can be restored and verified",
+      "journeys": [
+        "J12"
+      ],
+      "critical": true,
+      "disposition": "PASSED_AUTOMATED"
+    },
+    {
+      "id": "R-SCALE",
+      "text": "100k-user capacity model profiles pass §64 thresholds",
+      "journeys": [],
+      "critical": true,
+      "external": "load/k6-capacity-model.js (run on staging)",
+      "disposition": "PENDING_EXTERNAL",
+      "note": "load/k6-capacity-model.js (run on staging)"
+    },
+    {
+      "id": "R-PERF",
+      "text": "Performance thresholds (§27.1) gate the release",
+      "journeys": [],
+      "critical": true,
+      "external": "scripts/performance-budget-check.mjs + Lighthouse",
+      "disposition": "PENDING_EXTERNAL",
+      "note": "scripts/performance-budget-check.mjs + Lighthouse"
+    },
+    {
+      "id": "R-NOVICE",
+      "text": "12+ novice users complete critical tasks unassisted (§57)",
+      "journeys": [],
+      "critical": true,
+      "external": "docs/UAT_NOVICE_PROTOCOL.md (human execution)",
+      "disposition": "PENDING_EXTERNAL",
+      "note": "docs/UAT_NOVICE_PROTOCOL.md (human execution)"
+    }
+  ],
+  "summary": {
+    "routes": 34,
+    "controls": {
+      "button": 77,
+      "link": 70,
+      "form": 60,
+      "select": 21,
+      "input": 189,
+      "textarea": 6
+    },
+    "journeys": 12,
+    "journeysAutomated": 12,
+    "requirements": 12,
+    "requirementsAutomated": 9,
+    "requirementsPendingExternal": 3
+  }
+}

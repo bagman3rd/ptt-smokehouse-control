@@ -6,8 +6,8 @@ for (const name of ['test:tenant','test:cross-tenant','test:forecast','test:rest
 const renderBuild=pkg.scripts['render-build']||'';
 assert.match(renderBuild,/prisma migrate deploy/);
 assert.doesNotMatch(renderBuild,/prisma db push|accept-data-loss/);
-for (const file of ['docs/DETAILED_TESTING_PLAN.md','docs/INCIDENT_RESPONSE.md','docs/MIGRATION_HISTORY.md','docs/RELEASE_GATE_10_0_0.md']) assert.ok(fs.existsSync(file), `Missing current staging/release document: ${file}`);
+for (const file of ['docs/DETAILED_TESTING_PLAN.md','docs/INCIDENT_RESPONSE.md','docs/MIGRATION_HISTORY.md','docs/RELEASE_GATE_11_0_0.md']) assert.ok(fs.existsSync(file), `Missing current staging/release document: ${file}`);
 const workflow=fs.readFileSync('.github/workflows/ci.yml','utf8');
 assert.match(workflow,/pnpm run test:e2e:ci/);
 assert.match(workflow,/pnpm run test:restore-drill/);
-console.log('Build 10.0.0 staging verification checks passed.');
+console.log('Build 11.0.0 staging verification checks passed.');

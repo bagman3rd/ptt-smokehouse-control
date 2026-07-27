@@ -1,4 +1,4 @@
-name: Build 10.0.0 CI
+name: Build 11.0.0 CI
 on:
   push:
     branches: [main]
@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: build-10-0-0-${{ github.ref }}
+  group: build-11-0-0-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   quality-and-tests:
@@ -67,6 +67,12 @@ jobs:
         run: psql postgresql://postgres:postgres@127.0.0.1:5432/postgres -v ON_ERROR_STOP=1 -c 'CREATE DATABASE ptt_restore;'
       - name: Static, contract, migration, and production-build checks
         run: pnpm run ci:test
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Performance budget (bundle size, v3.0 §27.1)
+        run: pnpm run test:performance-budget
       - name: Verify migration status
         run: pnpm run ci:migration-status
       - name: Verify schema drift
@@ -83,11 +89,13 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-10.0.0-test-evidence-${{ github.sha }}
+          name: build-11.0.0-test-evidence-${{ github.sha }}
           path: |
             playwright-report/
             test-results/
             artifacts/interaction-manifest.json
+            artifacts/uat-traceability.json
+            docs/UAT_TRACEABILITY.md
             restore-evidence.txt
           if-no-files-found: warn
           retention-days: 30
