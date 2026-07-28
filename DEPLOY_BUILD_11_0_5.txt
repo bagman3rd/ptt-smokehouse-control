@@ -1,0 +1,44 @@
+PTT SMOKEHOUSE CONTROL — BUILD 11.0.5
+INFRASTRUCTURE RECOVERY AND BASELINE VERIFICATION
+
+IMPORTANT
+This ZIP is an OVERLAY package. Do not replace the complete Build 11.0.4 repository with only these files.
+
+INSTALLATION
+1. Extract the ZIP.
+2. Copy its files into the root of the existing ptt-smokehouse-control GitHub working folder.
+3. Do not delete existing app, components, lib, prisma, public, e2e, package.json, pnpm-lock.yaml or other Build 11.0.4 files.
+4. Run:
+   node scripts/verify-build-11.0.5.mjs
+5. Commit:
+   Build 11.0.5 infrastructure recovery and baseline verification
+6. Push to main.
+7. Confirm GitHub Actions passes for the new commit.
+8. Open Render > Blueprints > ptt-smokehouse-control > Syncs.
+9. Confirm a NEW sync runs for the new commit. Use Manual Sync once only if automatic sync does not start.
+10. Complete docs/RELEASE_SIGN_OFF_11_0_5.md.
+
+EXPECTED BLUEPRINT CHANGES
+- Web runtime: node
+- Web plan: starter
+- Three cron runtimes: node
+- Three cron plans: starter
+- Database plan: basic-256mb
+- APP_BUILD_VERSION: 11.0.5
+- AI warning threshold: 100 cents
+- AI daily cap: 200 cents
+
+NO CHANGE
+- No database migration
+- No dependency update
+- No application feature
+- No Render start-command change
+- No Render build-command change
+
+STOP CONDITIONS
+- Blueprint sync references an unexpected commit
+- Blueprint proposes deleting or recreating an existing resource
+- Database becomes unavailable
+- GitHub Actions fails
+- Live health check does not report Build 11.0.5
+- Any P0/P1 infrastructure or data-integrity defect appears

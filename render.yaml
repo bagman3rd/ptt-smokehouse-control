@@ -1,7 +1,7 @@
 services:
   - type: web
     name: ptt-smokehouse-control
-    env: node
+    runtime: node
     plan: starter
     buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && test -s pnpm-lock.yaml && pnpm install --prod=false --frozen-lockfile && pnpm run render-build
     startCommand: pnpm run start
@@ -76,7 +76,7 @@ services:
       - key: AI_DAILY_CENTS_CAP
         value: "200"
       - key: AI_DAILY_ALERT_CENTS
-        value: "1000"
+        value: "100"
       - key: AI_MAX_TOKENS_PER_CONVERSATION
         value: "8000"
       # Build 11.0.0 — payments, observability, performance/scale
@@ -89,11 +89,12 @@ services:
       - key: ERROR_ALERT_THRESHOLD_24H
         value: "25"
       - key: APP_BUILD_VERSION
-        value: "11.0.0"
+        value: "11.0.5"
 
   - type: cron
     name: ptt-smokehouse-control-weekly-backup
-    env: node
+    runtime: node
+    plan: starter
     schedule: "0 8 * * 0"
     buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && test -s pnpm-lock.yaml && pnpm install --prod=false --frozen-lockfile
     startCommand: pnpm run backup:weekly
@@ -109,7 +110,8 @@ services:
 
   - type: cron
     name: ptt-smokehouse-control-daily-retention
-    env: node
+    runtime: node
+    plan: starter
     schedule: "0 7 * * *"
     buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && test -s pnpm-lock.yaml && pnpm install --prod=false --frozen-lockfile
     startCommand: pnpm run cron:retention
@@ -125,7 +127,8 @@ services:
 
   - type: cron
     name: ptt-smokehouse-control-daily-digest
-    env: node
+    runtime: node
+    plan: starter
     schedule: "0 11 * * 1-5"
     buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && test -s pnpm-lock.yaml && pnpm install --prod=false --frozen-lockfile
     startCommand: pnpm run cron:daily-digest
