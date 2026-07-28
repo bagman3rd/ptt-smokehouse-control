@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import CookieConsent from '@/components/CookieConsent';
+import WebVitalsReporter from '@/components/WebVitalsReporter';
 
 export const metadata: Metadata = {
   title: 'Smokehouse Control',
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         {children}
         <CookieConsent />
+        <WebVitalsReporter />
       </body>
     </html>
   );

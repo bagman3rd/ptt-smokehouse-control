@@ -390,9 +390,9 @@
       "text": "Performance thresholds (§27.1) gate the release",
       "journeys": [],
       "critical": true,
-      "external": "scripts/performance-budget-check.mjs + Lighthouse",
+      "external": "scripts/lighthouse-perf-check.mjs (lab) + /api/vitals/summary (field) + scripts/performance-budget-check.mjs (bundle) — run against live site",
       "disposition": "PENDING_EXTERNAL",
-      "note": "scripts/performance-budget-check.mjs + Lighthouse"
+      "note": "scripts/lighthouse-perf-check.mjs (lab) + /api/vitals/summary (field) + scripts/performance-budget-check.mjs (bundle) — run against live site"
     },
     {
       "id": "R-NOVICE",

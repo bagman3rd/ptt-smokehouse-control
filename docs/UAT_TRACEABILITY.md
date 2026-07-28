@@ -47,7 +47,7 @@ Disposition legend: `PASSED_AUTOMATED` (in-repo automated evidence, green in CI)
 | R-EOD | End-of-day carryover rule computes correctly | Yes | J3 | PASSED_AUTOMATED |  |
 | R-BACKUP | Backup can be restored and verified | Yes | J12 | PASSED_AUTOMATED |  |
 | R-SCALE | 100k-user capacity model profiles pass §64 thresholds | Yes | — | PENDING_EXTERNAL | load/k6-capacity-model.js (run on staging) |
-| R-PERF | Performance thresholds (§27.1) gate the release | Yes | — | PENDING_EXTERNAL | scripts/performance-budget-check.mjs + Lighthouse |
+| R-PERF | Performance thresholds (§27.1) gate the release | Yes | — | PENDING_EXTERNAL | scripts/lighthouse-perf-check.mjs (lab) + /api/vitals/summary (field) + scripts/performance-budget-check.mjs (bundle) — run against live site |
 | R-NOVICE | 12+ novice users complete critical tasks unassisted (§57) | Yes | — | PENDING_EXTERNAL | docs/UAT_NOVICE_PROTOCOL.md (human execution) |
 
 ## Route inventory (§53)

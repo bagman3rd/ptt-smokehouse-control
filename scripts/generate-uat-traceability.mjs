@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Build 11.0.2 — Tier 1 UAT traceability matrix generator (v3.0 Part V, §52–55).
+// Build 11.0.3 — Tier 1 UAT traceability matrix generator (v3.0 Part V, §52–55).
 //
 // Produces artifacts/uat-traceability.json and docs/UAT_TRACEABILITY.md:
 //   * Route inventory (every page.tsx) with a disposition slot.
@@ -91,7 +91,7 @@ const REQUIREMENTS = [
   { id: 'R-SCALE', text: '100k-user capacity model profiles pass §64 thresholds',
     journeys: [], critical: true, external: 'load/k6-capacity-model.js (run on staging)' },
   { id: 'R-PERF', text: 'Performance thresholds (§27.1) gate the release',
-    journeys: [], critical: true, external: 'scripts/performance-budget-check.mjs + Lighthouse' },
+    journeys: [], critical: true, external: 'scripts/lighthouse-perf-check.mjs (lab) + /api/vitals/summary (field) + scripts/performance-budget-check.mjs (bundle) — run against live site' },
   { id: 'R-NOVICE', text: '12+ novice users complete critical tasks unassisted (§57)',
     journeys: [], critical: true, external: 'docs/UAT_NOVICE_PROTOCOL.md (human execution)' }
 ];
@@ -136,7 +136,7 @@ function build() {
     requirementsPendingExternal: requirements.filter((r) => r.disposition === 'PENDING_EXTERNAL').length
   };
 
-  return { build: '11.0.2', standard: 'v3.0 Part V', routes, journeys, requirements, summary };
+  return { build: '11.0.3', standard: 'v3.0 Part V', routes, journeys, requirements, summary };
 }
 
 function toMarkdown(data) {

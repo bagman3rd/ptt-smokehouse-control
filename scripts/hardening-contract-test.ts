@@ -1,4 +1,4 @@
-// Build 11.0.2 — static contract test for cost controls, retention, GDPR,
+// Build 11.0.3 — static contract test for cost controls, retention, GDPR,
 // AI safety wiring, and security headers.
 // Run: pnpm exec tsx scripts/hardening-contract-test.ts
 import assert from 'node:assert/strict';

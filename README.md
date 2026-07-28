@@ -1,8 +1,12 @@
-# PTT Smokehouse Control — Build 11.0.2
+# PTT Smokehouse Control — Build 11.0.3
+
+## Build 11.0.3 — R-PERF performance evidence tooling
+
+Makes the R-PERF release gate executable against the live site. Adds a Lighthouse runner (`scripts/lighthouse-perf-check.mjs`) that evaluates LCP/CLS/TBT/TTI against `performance-budget.json`, plus a Web Vitals RUM pipeline (`components/WebVitalsReporter.tsx` → `/api/vitals` → `WebVitalSample`) that captures real-user LCP/CLS/**INP** and an admin p75 summary at `/api/vitals/summary`. Runbook: `docs/RUNBOOK_R_PERF.md`. See `BUILD_11_0_3.md`.
 
 ## Build 11.0.2 — deploy hotfix (TypeScript `as const` type error)
 
-Fixes the `next build` type-check failure in `lib/notifications/dispatch.ts` — `as const` was applied to a ternary expression (TS1355; `as const` is only valid on literals/arrays/objects). Corrected `mapCategory` to use an explicit return type. Adds `scripts/typescript-antipattern-check.mjs` (`pnpm run test:ts-antipatterns`, wired into `ci:test` and `test:compliance`) which catches this class of build-breaking TS syntax error offline. See `BUILD_11_0_2.md`.
+Fixed the `next build` type-check failure in `lib/notifications/dispatch.ts` — `as const` applied to a ternary (TS1355). Corrected `mapCategory` to an explicit return type. Added `scripts/typescript-antipattern-check.mjs` (`pnpm run test:ts-antipatterns`). See `BUILD_11_0_2.md`.
 
 ## Build 11.0.1 — deploy hotfix (broken relative import)
 

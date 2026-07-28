@@ -1089,3 +1089,20 @@ model PaymentEvent {
   @@index([restaurantId, createdAt])
   @@index([stripeObjectId])
 }
+
+// ============================================================================
+// BUILD 11.0.3 — WEB VITALS RUM (field data for v3.0 §27.1: LCP/CLS/INP)
+// ============================================================================
+
+model WebVitalSample {
+  id         String   @id @default(cuid())
+  metric     String   // LCP | CLS | INP | FCP | TTFB
+  value      Float
+  rating     String?  // good | needs-improvement | poor
+  route      String?
+  navType    String?
+  deviceType String?  // mobile | desktop
+  createdAt  DateTime @default(now())
+  @@index([metric, createdAt])
+  @@index([route, metric])
+}

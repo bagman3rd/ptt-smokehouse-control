@@ -1,4 +1,4 @@
-// Build 11.0.2 — static import-resolution guard.
+// Build 11.0.3 — static import-resolution guard.
 //
 // Catches "Module not found: Can't resolve './x'" errors BEFORE they reach
 // `next build` on Render. This is the class of bug that slips through when the

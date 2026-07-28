@@ -4025,9 +4025,9 @@
       "test": "e2e/interaction-manifest.spec.ts#6e44c73a1e80"
     },
     {
-      "id": "ed9879640db6",
+      "id": "a04b4466e826",
       "file": "app/layout.tsx",
-      "line": 16,
+      "line": 17,
       "type": "link",
       "snippet": "<a href=",
       "requiredCoverage": [
@@ -4040,7 +4040,7 @@
         "KITCHEN_MANAGER",
         "KITCHEN_CREW"
       ],
-      "test": "e2e/interaction-manifest.spec.ts#ed9879640db6"
+      "test": "e2e/interaction-manifest.spec.ts#a04b4466e826"
     },
     {
       "id": "6f7654d6d6d9",
