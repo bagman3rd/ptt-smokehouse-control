@@ -1,4 +1,4 @@
-// Build 11.0.3 — TypeScript anti-pattern guard.
+// Build 11.0.4 — TypeScript anti-pattern guard.
 //
 // Catches build-breaking TS *syntax/semantic* errors that do NOT depend on the
 // generated Prisma client, so they can be caught offline in environments where

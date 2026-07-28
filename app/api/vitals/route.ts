@@ -1,4 +1,4 @@
-// Build 11.0.3 — Web Vitals RUM ingest (v3.0 §27.1 field data).
+// Build 11.0.4 — Web Vitals RUM ingest (v3.0 §27.1 field data).
 // Accepts small beacons from the client WebVitalsReporter and stores samples.
 // Unauthenticated by design (fires before/without login) but strictly validated,
 // rate-limited by payload shape, and never trusts client strings beyond a small

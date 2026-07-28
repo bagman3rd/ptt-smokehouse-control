@@ -1,4 +1,4 @@
-// Build 11.0.3 — daily operations digest + cost-alert cron runner.
+// Build 11.0.4 — daily operations digest + cost-alert cron runner.
 // Invokes GET /api/cron/daily-digest with the shared CRON_SECRET.
 const appUrl = (process.env.BACKUP_APP_URL || process.env.APP_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || '').replace(/\/$/, '');
 const secret = process.env.CRON_SECRET || '';

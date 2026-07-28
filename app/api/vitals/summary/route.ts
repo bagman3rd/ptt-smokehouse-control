@@ -1,4 +1,4 @@
-// Build 11.0.3 — Web Vitals summary (v3.0 §27.1 evidence).
+// Build 11.0.4 — Web Vitals summary (v3.0 §27.1 evidence).
 // Admin-only. Computes p75 per Core Web Vital over a window and evaluates
 // against the Google "good" thresholds — the field-data half of the R-PERF
 // evidence that Lighthouse lab runs cannot provide (esp. INP).

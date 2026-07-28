@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Build 11.0.3 — Tier 1 UAT traceability matrix generator (v3.0 Part V, §52–55).
+// Build 11.0.4 — Tier 1 UAT traceability matrix generator (v3.0 Part V, §52–55).
 //
 // Produces artifacts/uat-traceability.json and docs/UAT_TRACEABILITY.md:
 //   * Route inventory (every page.tsx) with a disposition slot.
@@ -136,7 +136,7 @@ function build() {
     requirementsPendingExternal: requirements.filter((r) => r.disposition === 'PENDING_EXTERNAL').length
   };
 
-  return { build: '11.0.3', standard: 'v3.0 Part V', routes, journeys, requirements, summary };
+  return { build: '11.0.4', standard: 'v3.0 Part V', routes, journeys, requirements, summary };
 }
 
 function toMarkdown(data) {

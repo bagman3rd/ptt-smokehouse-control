@@ -1,8 +1,12 @@
-# PTT Smokehouse Control — Build 11.0.3
+# PTT Smokehouse Control — Build 11.0.4
+
+## Build 11.0.4 — enforced CI build gate
+
+Adds a dedicated, standalone `build-gate` CI job (`prisma generate → import/anti-pattern guards → tsc --noEmit → next build`) that catches compile errors — the class that failed the 10.0.0/11.0.0/11.0.1 deploys — in ~2-3 minutes, before merge. The full test job now `needs: build-gate`. Also fixed a pnpm/node setup-order bug in CI. Contract-locked via `ci-release-contract-test`. Activation steps (branch protection) in `docs/CI_ACTIVATION_CHECKLIST.md`. See `BUILD_11_0_4.md`.
 
 ## Build 11.0.3 — R-PERF performance evidence tooling
 
-Makes the R-PERF release gate executable against the live site. Adds a Lighthouse runner (`scripts/lighthouse-perf-check.mjs`) that evaluates LCP/CLS/TBT/TTI against `performance-budget.json`, plus a Web Vitals RUM pipeline (`components/WebVitalsReporter.tsx` → `/api/vitals` → `WebVitalSample`) that captures real-user LCP/CLS/**INP** and an admin p75 summary at `/api/vitals/summary`. Runbook: `docs/RUNBOOK_R_PERF.md`. See `BUILD_11_0_3.md`.
+Made the R-PERF release gate executable against the live site: Lighthouse runner (`scripts/lighthouse-perf-check.mjs`), Web Vitals RUM (`components/WebVitalsReporter.tsx` → `/api/vitals` → `WebVitalSample`), admin p75 summary (`/api/vitals/summary`), runbook (`docs/RUNBOOK_R_PERF.md`). See `BUILD_11_0_3.md`.
 
 ## Build 11.0.2 — deploy hotfix (TypeScript `as const` type error)
 

@@ -1,5 +1,5 @@
 'use client';
-// Build 11.0.3 — Web Vitals field reporter (v3.0 §27.1).
+// Build 11.0.4 — Web Vitals field reporter (v3.0 §27.1).
 // Measures Core Web Vitals in real browsers using native PerformanceObserver
 // (no web-vitals dependency, zero bundle risk) and beacons them to /api/vitals.
 // Captures LCP, CLS, INP (via event-timing), FCP, and TTFB.

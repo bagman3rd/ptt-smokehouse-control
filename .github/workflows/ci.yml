@@ -1,4 +1,4 @@
-name: Build 11.0.3 CI
+name: Build 11.0.4 CI
 on:
   push:
     branches: [main]
@@ -7,10 +7,49 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: build-11-0-3-${{ github.ref }}
+  group: build-11-0-4-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  build-gate:
+    # Dedicated, fast, standalone proof that the app actually compiles.
+    # This is the gate that catches module-resolution and TypeScript errors
+    # (e.g. a wrong relative import, or `as const` on a ternary) BEFORE they
+    # reach Render. It runs prisma generate -> tsc --noEmit -> next build with
+    # nothing else in the way, so a broken build fails in ~2-3 minutes with an
+    # unambiguous signal, independent of the larger test job.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: 'true'
+      # A syntactically-valid dummy URL: `next build` never connects, but Prisma
+      # client generation and Next's build-time checks want it present.
+      DATABASE_URL: postgresql://user:pass@127.0.0.1:5432/build_only?schema=public
+      APP_SESSION_TOKEN: ci-session-token-at-least-32-characters
+      TOTP_ENCRYPTION_KEY: ci-totp-encryption-key-at-least-32-characters
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: pnpm
+      - name: Install exact locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm run prisma:generate
+      - name: Static import + TS anti-pattern guards (fast fail)
+        run: pnpm run test:imports && pnpm run test:ts-antipatterns
+      - name: Type-check (tsc --noEmit)
+        run: pnpm run typecheck
+      - name: Production build (next build)
+        run: pnpm run build
+
   quality-and-tests:
+    needs: build-gate
     runs-on: ubuntu-latest
     timeout-minutes: 60
     services:
@@ -43,14 +82,14 @@ jobs:
       ENFORCE_PRIVILEGED_2FA: 'false'
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22.16.0
-          cache: pnpm
       - uses: pnpm/action-setup@v4
         with:
           version: 9.15.0
           run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: pnpm
       - name: Verify runtime compatibility
         run: pnpm run ci:node-engine-check
       - name: Install exact locked dependencies
@@ -89,7 +128,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-11.0.3-test-evidence-${{ github.sha }}
+          name: build-11.0.4-test-evidence-${{ github.sha }}
           path: |
             playwright-report/
             test-results/

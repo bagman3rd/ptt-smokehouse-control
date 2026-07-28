@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Build 11.0.3 — R-PERF Lighthouse runner (v3.0 §27.1).
+// Build 11.0.4 — R-PERF Lighthouse runner (v3.0 §27.1).
 //
 // Runs Lighthouse (mobile emulation, throttled) against the live/staging site
 // for a set of key routes, then evaluates the results against
