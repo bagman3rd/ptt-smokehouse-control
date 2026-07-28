@@ -141,4 +141,4 @@ services:
 
 databases:
   - name: ptt-smokehouse-control-db
-    plan: starter
+    plan: basic-256mb
