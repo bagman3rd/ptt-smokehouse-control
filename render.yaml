@@ -50,6 +50,7 @@ services:
         sync: false
       - key: BACKUP_APP_URL
         sync: false
+
       # Build 10.0.0 — compliance, notifications, cost, observability
       - key: APP_BASE_URL
         sync: false
@@ -79,6 +80,7 @@ services:
         value: "1000"
       - key: AI_MAX_TOKENS_PER_CONVERSATION
         value: "8000"
+
       # Build 11.0.0 — payments, observability, performance/scale
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
@@ -141,4 +143,3 @@ services:
 
 databases:
   - name: ptt-smokehouse-control-db
-    plan: starter
