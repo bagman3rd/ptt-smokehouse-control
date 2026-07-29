@@ -87,7 +87,7 @@ services:
       - key: ERROR_ALERT_THRESHOLD_24H
         value: "25"
       - key: APP_BUILD_VERSION
-        value: "11.2.0"
+        value: "11.3.0"
 
   - type: cron
     name: ptt-smokehouse-control-weekly-backup

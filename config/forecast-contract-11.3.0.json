@@ -1,0 +1,84 @@
+{
+  "buildVersion": "11.3.0",
+  "calculationVersion": "PTT_FORECAST_11_3_0",
+  "schemaVersion": 1,
+  "stage": "Forecast and Demand",
+  "exitGate": "Known test scenarios reproduce expected demand calculations.",
+  "operatingDateRule": "Use the restaurant operating date. Day-of-week is derived from the service date, not the smoker load date.",
+  "dayOfWeekShares": {
+    "MONDAY": 9,
+    "TUESDAY": 8,
+    "WEDNESDAY": 10,
+    "THURSDAY": 12,
+    "FRIDAY": 17,
+    "SATURDAY": 25,
+    "SUNDAY": 19
+  },
+  "factorRules": {
+    "monthlyFactor": {
+      "minimum": 0.5,
+      "maximum": 2.0,
+      "default": 1.0
+    },
+    "eventAdjustmentPercent": {
+      "minimum": -50,
+      "maximum": 300,
+      "default": 0
+    },
+    "manualAdjustmentPercent": {
+      "minimum": -50,
+      "maximum": 200,
+      "default": 0
+    },
+    "automaticReviewMinimumFactor": 0.5,
+    "automaticReviewMaximumFactor": 2.0,
+    "manualReasonThresholdPercent": 0,
+    "manualHighImpactThresholdPercent": 20
+  },
+  "salesDisplay": {
+    "currency": "USD",
+    "barAllocationPercent": 20,
+    "foodAllocationPercent": 80,
+    "smokedFoodShareOfFoodPercentDefault": 50
+  },
+  "confidence": {
+    "highMinimum": 80,
+    "mediumMinimum": 60,
+    "freshnessTargetDays": 7,
+    "sampleTargetDays": 28,
+    "recentErrorTargetPercent": 10
+  },
+  "products": [
+    {
+      "code": "BRISKET",
+      "name": "Brisket",
+      "forecastUnit": "cooked lb",
+      "displayPrecision": 1
+    },
+    {
+      "code": "PORK",
+      "name": "Pork",
+      "forecastUnit": "cooked lb",
+      "displayPrecision": 1
+    },
+    {
+      "code": "RIBS",
+      "name": "Ribs",
+      "forecastUnit": "rack-equivalent",
+      "displayPrecision": 1
+    },
+    {
+      "code": "CHICKEN",
+      "name": "Pulled Chicken",
+      "forecastUnit": "whole-bird-equivalent double breast",
+      "displayPrecision": 1
+    }
+  ],
+  "approvalRules": [
+    "A non-zero manual adjustment requires a reason.",
+    "An automatic factor outside the review range requires an explicit review reason.",
+    "The approval record retains inputs, factors, final outputs, confidence, actor and timestamp.",
+    "Approval does not erase the original forecast calculation.",
+    "This stage forecasts demand only; raw quantity and smoker-load rounding belong to Build 11.4.0."
+  ]
+}

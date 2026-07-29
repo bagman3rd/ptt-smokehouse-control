@@ -1,0 +1,49 @@
+PTT SMOKEHOUSE CONTROL — BUILD 11.3.0
+FORECAST AND DEMAND
+
+PACKAGE TYPE
+Cumulative safe overlay for the complete existing repository.
+Includes Build 11.1.0 inventory and Build 11.2.0 setup/master-data controls.
+
+INSTALL
+1. Extract the ZIP.
+2. Copy all files into the existing repository root.
+3. Preserve .git and all current application source.
+4. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml or existing workflows.
+5. Run:
+   node scripts/apply-build-11.3.0.mjs
+6. Confirm:
+   Build 11.1.0 inventory verification passed.
+   Build 11.2.0 Setup and Master Data verification passed.
+   Build 11.3.0 forecast fixture test passed.
+   Build 11.3.0 Forecast and Demand verification passed.
+7. Review GitHub Desktop. Existing source must not be shown as deleted.
+8. Commit:
+   Build 11.3.0 forecast and demand
+9. Push origin.
+
+GENERATED ROUTE
+/admin/forecast-lab-1130
+If occupied by a non-generated page:
+/admin/forecast-lab-1130-alt
+
+CI ARTIFACT
+ptt-build-11.3.0-forecast-demand
+
+STAGING ACCEPTANCE
+1. Use isolated staging and the exact release commit.
+2. Download the CI artifact.
+3. Execute every row in forecast-uat-workbook.csv.
+4. Reproduce F-001 through F-008.
+5. Verify reason-coded override and approval history in the real application workflow.
+6. Verify KM/OWNER authority and KC/VIEWER restrictions server-side.
+7. Verify tenant isolation and duplicate-approval protection.
+8. Verify calculation version and historical forecast preservation.
+9. Record screenshots, logs and defects.
+10. Approve only with no open P0/P1 defect.
+
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO PRODUCTION RAW/COOKED CONVERSION CHANGE
+NO SMOKER SCHEDULING CHANGE

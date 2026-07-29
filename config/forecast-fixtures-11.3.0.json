@@ -1,0 +1,239 @@
+{
+  "buildVersion": "11.3.0",
+  "fixtures": [
+    {
+      "id": "F-001",
+      "name": "Monday baseline",
+      "input": {
+        "operatingDate": "2026-08-03",
+        "baselineDemand": {
+          "BRISKET": 100,
+          "PORK": 100,
+          "RIBS": 100,
+          "CHICKEN": 100
+        },
+        "monthlyFactor": 1,
+        "eventAdjustmentPercent": 0,
+        "manualAdjustmentPercent": 0,
+        "reason": "",
+        "eventCertainty": "HIGH",
+        "dataFreshnessDays": 3,
+        "recentSampleDays": 42,
+        "recentMapePercent": 8,
+        "modeledSalesDollars": 0,
+        "smokedFoodShareOfFoodPercent": 50
+      },
+      "expected": {
+        "dayName": "Monday",
+        "dayShare": 9,
+        "dayFactor": 0.63,
+        "BRISKET": 63,
+        "approvalRequired": false
+      }
+    },
+    {
+      "id": "F-002",
+      "name": "Saturday baseline",
+      "input": {
+        "operatingDate": "2026-08-01",
+        "baselineDemand": {
+          "BRISKET": 100,
+          "PORK": 80,
+          "RIBS": 40,
+          "CHICKEN": 70
+        },
+        "monthlyFactor": 1,
+        "eventAdjustmentPercent": 0,
+        "manualAdjustmentPercent": 0,
+        "reason": "",
+        "eventCertainty": "HIGH",
+        "dataFreshnessDays": 2,
+        "recentSampleDays": 35,
+        "recentMapePercent": 9,
+        "modeledSalesDollars": 0,
+        "smokedFoodShareOfFoodPercent": 50
+      },
+      "expected": {
+        "dayName": "Saturday",
+        "dayShare": 25,
+        "dayFactor": 1.75,
+        "BRISKET": 175,
+        "PORK": 140,
+        "RIBS": 70,
+        "CHICKEN": 122.5
+      }
+    },
+    {
+      "id": "F-003",
+      "name": "Saturday event and monthly uplift",
+      "input": {
+        "operatingDate": "2026-08-01",
+        "baselineDemand": {
+          "BRISKET": 100,
+          "PORK": 100,
+          "RIBS": 100,
+          "CHICKEN": 100
+        },
+        "monthlyFactor": 1.1,
+        "eventAdjustmentPercent": 20,
+        "manualAdjustmentPercent": 0,
+        "reason": "Approved event uplift",
+        "eventCertainty": "HIGH",
+        "dataFreshnessDays": 2,
+        "recentSampleDays": 40,
+        "recentMapePercent": 8,
+        "modeledSalesDollars": 60000,
+        "smokedFoodShareOfFoodPercent": 50
+      },
+      "expected": {
+        "automaticFactor": 2.31,
+        "BRISKET": 231,
+        "barSalesDollars": 12000,
+        "foodSalesDollars": 48000,
+        "smokedFoodSalesDollars": 24000,
+        "approvalRequired": true
+      }
+    },
+    {
+      "id": "F-004",
+      "name": "Reason-coded manual reduction",
+      "input": {
+        "operatingDate": "2026-08-01",
+        "baselineDemand": {
+          "BRISKET": 100,
+          "PORK": 100,
+          "RIBS": 100,
+          "CHICKEN": 100
+        },
+        "monthlyFactor": 1.1,
+        "eventAdjustmentPercent": 20,
+        "manualAdjustmentPercent": -10,
+        "reason": "Weather risk reduces patio demand",
+        "eventCertainty": "MEDIUM",
+        "dataFreshnessDays": 5,
+        "recentSampleDays": 35,
+        "recentMapePercent": 12,
+        "modeledSalesDollars": 60000,
+        "smokedFoodShareOfFoodPercent": 50
+      },
+      "expected": {
+        "automaticFactor": 2.31,
+        "finalFactor": 2.079,
+        "BRISKET": 207.9,
+        "approvalRequired": true
+      }
+    },
+    {
+      "id": "F-005",
+      "name": "Sunday demand",
+      "input": {
+        "operatingDate": "2026-08-02",
+        "baselineDemand": {
+          "BRISKET": 100,
+          "PORK": 100,
+          "RIBS": 100,
+          "CHICKEN": 100
+        },
+        "monthlyFactor": 1,
+        "eventAdjustmentPercent": 0,
+        "manualAdjustmentPercent": 0,
+        "reason": "",
+        "eventCertainty": "HIGH",
+        "dataFreshnessDays": 5,
+        "recentSampleDays": 28,
+        "recentMapePercent": 10,
+        "modeledSalesDollars": 0,
+        "smokedFoodShareOfFoodPercent": 50
+      },
+      "expected": {
+        "dayName": "Sunday",
+        "dayShare": 19,
+        "dayFactor": 1.33,
+        "BRISKET": 133
+      }
+    },
+    {
+      "id": "F-006",
+      "name": "Monday service date remains Monday",
+      "input": {
+        "operatingDate": "2026-08-03",
+        "baselineDemand": {
+          "BRISKET": 200,
+          "PORK": 200,
+          "RIBS": 20,
+          "CHICKEN": 20
+        },
+        "monthlyFactor": 1,
+        "eventAdjustmentPercent": 0,
+        "manualAdjustmentPercent": 0,
+        "reason": "",
+        "eventCertainty": "HIGH",
+        "dataFreshnessDays": 7,
+        "recentSampleDays": 28,
+        "recentMapePercent": 10,
+        "modeledSalesDollars": 0,
+        "smokedFoodShareOfFoodPercent": 50
+      },
+      "expected": {
+        "dayName": "Monday",
+        "BRISKET": 126,
+        "PORK": 126
+      }
+    },
+    {
+      "id": "F-007",
+      "name": "Low confidence",
+      "input": {
+        "operatingDate": "2026-08-07",
+        "baselineDemand": {
+          "BRISKET": 100,
+          "PORK": 100,
+          "RIBS": 100,
+          "CHICKEN": 100
+        },
+        "monthlyFactor": 1,
+        "eventAdjustmentPercent": 50,
+        "manualAdjustmentPercent": 25,
+        "reason": "Uncertain first-time event",
+        "eventCertainty": "LOW",
+        "dataFreshnessDays": 45,
+        "recentSampleDays": 7,
+        "recentMapePercent": 40,
+        "modeledSalesDollars": 0,
+        "smokedFoodShareOfFoodPercent": 50
+      },
+      "expected": {
+        "confidenceBadge": "LOW",
+        "approvalRequired": true,
+        "highImpactManualAdjustment": true
+      }
+    },
+    {
+      "id": "F-008",
+      "name": "High confidence",
+      "input": {
+        "operatingDate": "2026-08-05",
+        "baselineDemand": {
+          "BRISKET": 80,
+          "PORK": 100,
+          "RIBS": 40,
+          "CHICKEN": 70
+        },
+        "monthlyFactor": 1,
+        "eventAdjustmentPercent": 0,
+        "manualAdjustmentPercent": 0,
+        "reason": "",
+        "eventCertainty": "HIGH",
+        "dataFreshnessDays": 1,
+        "recentSampleDays": 60,
+        "recentMapePercent": 5,
+        "modeledSalesDollars": 0,
+        "smokedFoodShareOfFoodPercent": 50
+      },
+      "expected": {
+        "confidenceBadge": "HIGH",
+        "approvalRequired": false
+      }
+    }
+  ]
+}
