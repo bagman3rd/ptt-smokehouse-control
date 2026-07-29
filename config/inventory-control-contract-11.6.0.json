@@ -1,0 +1,119 @@
+{
+  "buildVersion": "11.6.0",
+  "engineVersion": "PTT_INVENTORY_CONTROL_11_6_0",
+  "stage": "Inventory, Waste, Quality Holds, and Exception Ownership",
+  "exitGate": "A complete operating-day inventory reconciliation closes with no negative quantity, unexplained variance, unowned critical exception, or unresolved blocking quality hold.",
+  "products": [
+    "BRISKET",
+    "PORK",
+    "RIBS",
+    "CHICKEN"
+  ],
+  "quantityRules": {
+    "inventoryUnit": "COOKED_POUNDS",
+    "operationalUnitCountsRemainVisible": true,
+    "negativeAvailableAllowed": false,
+    "quantityPrecision": 3,
+    "countVarianceWarningPercent": 3,
+    "countVarianceBlockingPercent": 10,
+    "blockingVarianceRequiresManagerAdjustment": true
+  },
+  "transactionTypes": [
+    "PRODUCTION_RECEIPT",
+    "SERVICE_USAGE",
+    "WASTE",
+    "TRANSFER_OUT",
+    "TRANSFER_IN",
+    "ADJUSTMENT_INCREASE",
+    "ADJUSTMENT_DECREASE",
+    "QUALITY_HOLD",
+    "QUALITY_RELEASE",
+    "QUALITY_DISCARD"
+  ],
+  "wasteReasons": [
+    "OVERPRODUCTION",
+    "TRIM_OR_PREP",
+    "QUALITY_FAILURE",
+    "TEMPERATURE_CONTROL",
+    "CONTAMINATION",
+    "DROP_OR_SPILL",
+    "EXPIRED_HOLD",
+    "SERVICE_ERROR",
+    "OTHER"
+  ],
+  "holdStatuses": [
+    "OPEN",
+    "RELEASED",
+    "DISCARDED"
+  ],
+  "holdReasons": [
+    "TEMPERATURE_REVIEW",
+    "QUALITY_REVIEW",
+    "CONTAMINATION_RISK",
+    "ALLERGEN_RISK",
+    "TRACEABILITY_REVIEW",
+    "EQUIPMENT_FAILURE",
+    "OTHER"
+  ],
+  "exceptionSeverities": [
+    "P0",
+    "P1",
+    "P2",
+    "P3"
+  ],
+  "exceptionStatuses": [
+    "OPEN",
+    "ACKNOWLEDGED",
+    "RESOLVED"
+  ],
+  "roleControls": {
+    "ADMIN": [
+      "ALL"
+    ],
+    "OWNER": [
+      "ALL"
+    ],
+    "KM": [
+      "ALL_INVENTORY"
+    ],
+    "PITMASTER": [
+      "RECEIVE_PRODUCTION",
+      "RECORD_WASTE",
+      "OPEN_HOLD",
+      "OPEN_EXCEPTION",
+      "ADD_NOTE"
+    ],
+    "KC": [
+      "RECORD_USAGE",
+      "RECORD_WASTE",
+      "OPEN_HOLD",
+      "OPEN_EXCEPTION",
+      "COUNT_INVENTORY",
+      "ADD_NOTE"
+    ],
+    "VIEWER": [
+      "READ_ONLY"
+    ]
+  },
+  "closeRules": {
+    "allProductsCounted": true,
+    "noNegativeBalance": true,
+    "noOpenP0OrP1Exception": true,
+    "everyOpenExceptionHasOwner": true,
+    "noOpenBlockingHold": true,
+    "blockingVarianceResolved": true
+  },
+  "auditRules": {
+    "appendOnlyLedger": true,
+    "commandIdRequired": true,
+    "duplicateCommandCreatesNoAdditionalMutation": true,
+    "correctionPreservesOriginal": true,
+    "crossTenantReferenceBlocked": true
+  },
+  "scopeBoundary": [
+    "No Prisma migration.",
+    "No dependency change.",
+    "No claim of durable production persistence.",
+    "Supplier purchasing and perpetual raw-food inventory remain later stages."
+  ]
+}

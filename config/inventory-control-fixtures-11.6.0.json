@@ -1,0 +1,130 @@
+{
+  "buildVersion": "11.6.0",
+  "baseInput": {
+    "tenantId": "tenant-ptt-validation",
+    "locationId": "location-main",
+    "operatingDate": "2026-08-03",
+    "timezone": "America/New_York",
+    "products": [
+      {
+        "productCode": "BRISKET",
+        "productName": "Brisket",
+        "openingCookedLb": 10,
+        "cookedLbPerOperationalUnit": 7
+      },
+      {
+        "productCode": "PORK",
+        "productName": "Pork",
+        "openingCookedLb": 15,
+        "cookedLbPerOperationalUnit": 4.95
+      },
+      {
+        "productCode": "RIBS",
+        "productName": "Ribs",
+        "openingCookedLb": 9,
+        "cookedLbPerOperationalUnit": 3
+      },
+      {
+        "productCode": "CHICKEN",
+        "productName": "Pulled Chicken",
+        "openingCookedLb": 7.5,
+        "cookedLbPerOperationalUnit": 1.875
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "IC-001",
+      "name": "Balanced operating day",
+      "expected": {
+        "status": "CLOSED",
+        "productCount": 4,
+        "negativeBalances": 0
+      }
+    },
+    {
+      "id": "IC-002",
+      "name": "Negative inventory prevention",
+      "expected": {
+        "errorField": "payload.quantityCookedLb"
+      }
+    },
+    {
+      "id": "IC-003",
+      "name": "Waste reason required",
+      "expected": {
+        "errorField": "payload.reason"
+      }
+    },
+    {
+      "id": "IC-004",
+      "name": "Quality hold and release",
+      "expected": {
+        "finalHoldStatus": "RELEASED",
+        "availableRestored": true
+      }
+    },
+    {
+      "id": "IC-005",
+      "name": "Quality hold discard creates waste",
+      "expected": {
+        "finalHoldStatus": "DISCARDED",
+        "wasteReason": "QUALITY_FAILURE"
+      }
+    },
+    {
+      "id": "IC-006",
+      "name": "Critical exception ownership",
+      "expected": {
+        "unownedP1BlocksClose": true,
+        "resolvedExceptionStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "IC-007",
+      "name": "Duplicate command idempotency",
+      "expected": {
+        "secondStatus": "DUPLICATE",
+        "eventIncrease": 1
+      }
+    },
+    {
+      "id": "IC-008",
+      "name": "Count variance warning and blocking",
+      "expected": {
+        "warningVariance": true,
+        "blockingVariance": true
+      }
+    },
+    {
+      "id": "IC-009",
+      "name": "Append-only manager adjustment",
+      "expected": {
+        "originalPreserved": true,
+        "adjustmentEventType": "INVENTORY_ADJUSTED"
+      }
+    },
+    {
+      "id": "IC-010",
+      "name": "Transfer pairing",
+      "expected": {
+        "outTransaction": "TRANSFER_OUT",
+        "inTransaction": "TRANSFER_IN"
+      }
+    },
+    {
+      "id": "IC-011",
+      "name": "Viewer mutation denied",
+      "expected": {
+        "errorField": "actor.role"
+      }
+    },
+    {
+      "id": "IC-012",
+      "name": "Tenant isolation",
+      "expected": {
+        "errorField": "tenantId"
+      }
+    }
+  ]
+}

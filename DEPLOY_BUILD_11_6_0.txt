@@ -1,0 +1,73 @@
+PTT SMOKEHOUSE CONTROL — BUILD 11.6.0
+INVENTORY, WASTE, QUALITY HOLDS, AND EXCEPTION OWNERSHIP
+
+PACKAGE TYPE
+Cumulative safe overlay for the complete existing repository.
+Includes Builds 11.1.0 through 11.5.0.
+
+INSTALL
+1. Extract the ZIP directly into the existing repository root.
+2. Preserve .git and all current application source files.
+3. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml, migrations, or existing workflows.
+4. Run:
+   node scripts/apply-build-11.6.0.mjs
+5. Confirm:
+   Build 11.1.0 inventory verification passed.
+   Build 11.2.0 Setup and Master Data verification passed.
+   Build 11.3.0 Forecast and Demand verification passed.
+   Build 11.4.0 Production Planning verification passed.
+   Build 11.5.0 Today Operations verification passed.
+   Build 11.6.0 Inventory Control fixture test passed.
+   Build 11.6.0 Inventory, Waste, Holds, and Exceptions verification passed.
+6. Review GitHub Desktop. Existing application files must not appear deleted.
+7. Commit:
+   Build 11.6.0 inventory waste holds and exception ownership
+8. Push origin.
+
+GENERATED ROUTE
+/inventory-lab-1160
+If occupied by a non-generated page:
+/inventory-lab-1160-alt
+
+CI ARTIFACT
+ptt-build-11.6.0-inventory-control
+
+STAGING ACCEPTANCE
+1. Use isolated persistent staging and the exact release commit.
+2. Download the Build 11.6.0 CI artifact.
+3. Execute IN-001 through IN-030.
+4. Use an inexperienced operator for IN-028.
+5. Reconcile one full operating day:
+   opening inventory -> production receipt -> usage -> waste -> hold/exception
+   -> physical count -> adjustment/correction -> close.
+6. Verify every command has durable actor, tenant, timestamp, command ID,
+   transaction type, reason, reference, and event.
+7. Verify duplicate requests do not create duplicate ledger entries.
+8. Verify negative balances are impossible.
+9. Verify open blocking holds and P0/P1 exceptions prevent close.
+10. Verify every unresolved exception has a named owner.
+11. Verify count warning and blocking thresholds.
+12. Verify count correction and inventory adjustment preserve original evidence.
+13. Verify Viewer denial and tenant isolation server-side.
+14. Verify target tablet controls are visible, labeled, and at least 44px high.
+15. Disable external providers and repeat the core workflow.
+16. Approve only with no open P0/P1 defect.
+
+STOP CONDITIONS
+- Available, held, or on-hand cooked inventory becomes negative.
+- A removal succeeds above available inventory.
+- Waste can be saved without a valid reason.
+- A hold release or discard loses the original hold record.
+- A blocking hold does not block close.
+- A P0/P1 exception closes unresolved.
+- An unresolved exception has no owner but close succeeds.
+- A blocking count variance closes without manager resolution.
+- A correction overwrites original evidence.
+- A duplicate command creates another ledger entry or event.
+- Cross-tenant data is read, inferred, or changed.
+- Validation-only workbench results are represented as durable persistence.
+
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO DURABLE WRITE CLAIM

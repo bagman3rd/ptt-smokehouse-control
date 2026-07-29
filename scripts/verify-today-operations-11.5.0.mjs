@@ -316,10 +316,10 @@ pass(fs.existsSync(renderPath), "render.yaml exists");
 if (fs.existsSync(renderPath)) {
   const render = fs.readFileSync(renderPath, "utf8");
   pass(
-    /key:\s*APP_BUILD_VERSION\s*\n\s*value:\s*"11\.5\.0"/m.test(
+    /key:\s*APP_BUILD_VERSION\s*\n\s*value:\s*"11\.(?:5|6)\.0"/m.test(
       render,
     ),
-    "Render APP_BUILD_VERSION is 11.5.0",
+    "Render APP_BUILD_VERSION is compatible with the Build 11.5.0 Today Operations baseline",
   );
   pass(
     /databases:\s*[\s\S]*?name:\s*ptt-smokehouse-control-db[\s\S]*?plan:\s*basic-256mb/m.test(

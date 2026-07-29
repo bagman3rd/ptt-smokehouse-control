@@ -1,0 +1,49 @@
+name: Build 11.6.0 Inventory Control
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inventory-control:
+    name: Inventory, waste, holds, and exception gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+
+      - name: Use pinned Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Verify Today Operations baseline
+        run: node scripts/test-today-operations-11.5.0.mjs
+
+      - name: Verify Inventory Control scenarios
+        run: node scripts/test-inventory-control-11.6.0.mjs
+
+      - name: Generate Inventory Control Lab
+        run: node scripts/generate-inventory-workbench-11.6.0.mjs
+
+      - name: Generate inventory reconciliation evidence
+        run: node scripts/inventory-control-plane-11.6.0.mjs
+
+      - name: Verify Inventory Control release contract
+        run: node scripts/verify-inventory-control-11.6.0.mjs
+
+      - name: Upload Build 11.6.0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ptt-build-11.6.0-inventory-control
+          path: artifacts/build-11.6.0
+          if-no-files-found: error
+          retention-days: 30
