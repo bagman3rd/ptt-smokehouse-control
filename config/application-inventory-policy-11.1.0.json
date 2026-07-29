@@ -1,0 +1,80 @@
+{
+  "buildVersion": "11.1.0",
+  "inventorySchemaVersion": 1,
+  "canonicalRoles": [
+    "ADMIN",
+    "OWNER",
+    "KM",
+    "KC",
+    "PITMASTER",
+    "VIEWER"
+  ],
+  "allowedDispositions": [
+    "KEEP",
+    "REFACTOR",
+    "REPLACE",
+    "REMOVE"
+  ],
+  "defaultDisposition": "KEEP",
+  "defaultDispositionRationale": "Preserve existing deployed capability during the controlled re-baseline until live role-based audit evidence approves a different disposition.",
+  "defaultVerificationStatus": "PENDING_LIVE_ROLE_AUDIT",
+  "excludedDirectories": [
+    ".git",
+    ".next",
+    "node_modules",
+    "coverage",
+    "dist",
+    "build",
+    ".turbo",
+    ".cache",
+    "rclone-mounts",
+    "artifacts/build-11.1.0"
+  ],
+  "sourceExtensions": [
+    ".js",
+    ".jsx",
+    ".ts",
+    ".tsx",
+    ".mjs",
+    ".cjs",
+    ".json",
+    ".md",
+    ".yaml",
+    ".yml",
+    ".prisma",
+    ".html"
+  ],
+  "integrationProviders": [
+    "square",
+    "stripe",
+    "sentry",
+    "sendgrid",
+    "twilio",
+    "openai",
+    "toast",
+    "clover",
+    "lightspeed",
+    "touchbistro",
+    "spoton",
+    "revel",
+    "simphony",
+    "aloha",
+    "brink"
+  ],
+  "criticalRoutePatterns": [
+    "/",
+    "/login",
+    "/today",
+    "/operations",
+    "/admin",
+    "/help"
+  ],
+  "strictRules": {
+    "failOnDuplicateRoutes": true,
+    "failOnMissingRequiredOutputs": true,
+    "failOnUnclassifiedScreens": true,
+    "failOnInventoryHashMismatch": true,
+    "reportBrokenStaticNavigation": true,
+    "reportUnlabeledControls": true
+  }
+}

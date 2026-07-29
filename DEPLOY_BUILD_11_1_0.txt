@@ -1,0 +1,54 @@
+PTT SMOKEHOUSE CONTROL — BUILD 11.1.0
+PRODUCTION BASELINE AND APPLICATION INVENTORY
+
+PACKAGE TYPE
+Safe overlay. Apply it to the complete PTT Smokehouse Control repository.
+Do not replace the repository with only the overlay files.
+
+PREREQUISITE
+Build 11.0.5 infrastructure recovery should be committed and verified first.
+Build 11.1.0 includes the corrected render.yaml, so it can also be applied directly
+to the complete Build 11.0.4 repository when Build 11.0.5 has not yet been committed.
+
+INSTALL
+1. Extract this ZIP.
+2. Copy all extracted files directly into the existing repository root.
+3. Preserve the hidden .git directory.
+4. Do not delete app, components, lib, prisma, public, src, e2e, load, package.json,
+   pnpm-lock.yaml, existing workflows, or existing build documentation.
+5. Open a terminal in the repository root.
+6. Run:
+   node scripts/apply-build-11.1.0.mjs
+7. Confirm the command ends with:
+   Build 11.1.0 inventory verification passed.
+8. Review GitHub Desktop. Hundreds of existing files must not be shown as deleted.
+9. Commit:
+   Build 11.1.0 production baseline and application inventory
+10. Push origin.
+
+CI
+A new GitHub Actions workflow will generate and verify the inventory and upload:
+ptt-build-11.1.0-application-inventory
+
+RENDER
+The root render.yaml identifies the application as Build 11.1.0 and preserves:
+- web plan: starter
+- three cron plans: starter
+- database plan: basic-256mb
+- pinned Node and pnpm versions
+
+POST-DEPLOY
+1. Confirm the new Render deploy references the exact Build 11.1.0 commit.
+2. Confirm web, cron jobs and PostgreSQL remain healthy.
+3. Download the GitHub Actions inventory artifact.
+4. Execute docs/LIVE_APPLICATION_AUDIT_11_1_0.md.
+5. Complete every row in live-screen-audit-workbook.csv.
+6. Complete every row in role-route-matrix.csv.
+7. Confirm or revise every screen disposition.
+8. Complete docs/RELEASE_EVIDENCE_11_1_0.md.
+9. Do not approve Build 11.1.0 with an open P0 or P1 defect.
+
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO RESTAURANT CALCULATION CHANGE
+NO AUTOMATIC FEATURE REMOVAL

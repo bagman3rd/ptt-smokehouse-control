@@ -1,0 +1,40 @@
+name: Build 11.1.0 Application Inventory
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  application-inventory:
+    name: Production baseline and application inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+
+      - name: Use pinned Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Generate application inventory
+        run: node scripts/application-inventory-11.1.0.mjs
+
+      - name: Verify inventory contract
+        run: node scripts/verify-application-inventory-11.1.0.mjs
+
+      - name: Upload Build 11.1.0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ptt-build-11.1.0-application-inventory
+          path: artifacts/build-11.1.0
+          if-no-files-found: error
+          retention-days: 30

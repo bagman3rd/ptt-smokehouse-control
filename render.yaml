@@ -50,7 +50,6 @@ services:
         sync: false
       - key: BACKUP_APP_URL
         sync: false
-      # Build 10.0.0 — compliance, notifications, cost, observability
       - key: APP_BASE_URL
         sync: false
       - key: COMPANY_POSTAL_ADDRESS
@@ -79,7 +78,6 @@ services:
         value: "100"
       - key: AI_MAX_TOKENS_PER_CONVERSATION
         value: "8000"
-      # Build 11.0.0 — payments, observability, performance/scale
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
       - key: SENTRY_DSN
@@ -89,7 +87,7 @@ services:
       - key: ERROR_ALERT_THRESHOLD_24H
         value: "25"
       - key: APP_BUILD_VERSION
-        value: "11.0.5"
+        value: "11.1.0"
 
   - type: cron
     name: ptt-smokehouse-control-weekly-backup
