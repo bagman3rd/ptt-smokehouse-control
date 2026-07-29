@@ -1,0 +1,137 @@
+{
+  "buildVersion": "11.2.0",
+  "scenario": "C-01 Fresh setup",
+  "mode": "STAGING_ONLY",
+  "tenant": {
+    "name": "PTT Build 11.2.0 UAT",
+    "code": "ptt-build-1120-uat",
+    "status": "ACTIVE"
+  },
+  "restaurant": {
+    "name": "Pigeon Toed Tavern",
+    "timezone": "America/New_York",
+    "serviceHours": {
+      "open": "11:00",
+      "close": "22:00",
+      "days": "DAILY"
+    }
+  },
+  "locations": [
+    {
+      "name": "Pigeon Forge - Primary",
+      "timezone": "America/New_York",
+      "status": "ACTIVE"
+    }
+  ],
+  "products": [
+    {
+      "code": "BRISKET",
+      "name": "Brisket",
+      "planningDisplayUnit": "lb",
+      "inventoryDisplayUnit": "lb",
+      "yieldPercent": null,
+      "yieldPolicy": "CONFIGURABLE_EFFECTIVE_DATED_REQUIRED",
+      "sameDay": false,
+      "sealedCarryoverEligible": false,
+      "notes": "Do not hard-code an unstated brisket yield."
+    },
+    {
+      "code": "PORK",
+      "name": "Pork",
+      "planningDisplayUnit": "lb",
+      "inventoryDisplayUnit": "lb",
+      "yieldPercent": 55,
+      "yieldPolicy": "CONFIGURABLE_EFFECTIVE_DATED_BASELINE",
+      "sameDay": false,
+      "sealedCarryoverEligible": true,
+      "typicalLoadTime": "17:00"
+    },
+    {
+      "code": "RIBS",
+      "name": "Ribs",
+      "planningDisplayUnit": "rack",
+      "inventoryDisplayUnit": "rack",
+      "rawWeightPerDisplayUnitLb": 3.3,
+      "cookedWeightPerDisplayUnitLb": 3.0,
+      "yieldPercent": 90,
+      "yieldPolicy": "CONFIGURABLE_EFFECTIVE_DATED_BASELINE",
+      "sameDay": true,
+      "sealedCarryoverEligible": true,
+      "notes": "Retain weight for calculations and reporting while displaying racks operationally."
+    },
+    {
+      "code": "CHICKEN",
+      "name": "Pulled Chicken",
+      "planningDisplayUnit": "whole-bird-equivalent double breast",
+      "inventoryDisplayUnit": "whole-bird-equivalent double breast",
+      "rawWeightPerDisplayUnitLb": 2.5,
+      "smokerSpaceUnitsPerDisplayUnit": 1,
+      "yieldPercent": 75,
+      "yieldPolicy": "CONFIGURABLE_EFFECTIVE_DATED_BASELINE",
+      "sameDay": true,
+      "sealedCarryoverEligible": true,
+      "notes": "One whole chicken equals one double breast in weight and smoker space."
+    }
+  ],
+  "smokers": [
+    {
+      "brand": "Ole Hickory",
+      "model": "EL-ED/X",
+      "location": "Indoors under hood",
+      "baselineCapacity": [
+        {
+          "product": "PORK",
+          "quantity": 80,
+          "unit": "butt"
+        },
+        {
+          "product": "BRISKET",
+          "quantity": 40,
+          "unit": "brisket"
+        }
+      ],
+      "capacityValidationRequired": [
+        "RIBS",
+        "CHICKEN",
+        "MIXED_LOAD"
+      ]
+    },
+    {
+      "brand": "Southern Pride",
+      "model": "SPK-700",
+      "location": "Outdoor",
+      "baselineCapacity": [
+        {
+          "product": "PORK",
+          "quantity": 84,
+          "unit": "butt"
+        },
+        {
+          "product": "BRISKET",
+          "quantity": 48,
+          "unit": "brisket"
+        }
+      ],
+      "capacityValidationRequired": [
+        "RIBS",
+        "CHICKEN",
+        "MIXED_LOAD"
+      ]
+    }
+  ],
+  "roles": [
+    "ADMIN",
+    "OWNER",
+    "KM",
+    "KC",
+    "PITMASTER",
+    "VIEWER"
+  ],
+  "acceptance": [
+    "All records are created through approved application pages or APIs.",
+    "No direct SQL, Prisma Studio edit, database console edit or manual table mutation is used.",
+    "Configuration is tenant and location scoped.",
+    "Configuration changes are auditable.",
+    "Historical approved calculations are not rewritten by later effective-dated changes."
+  ]
+}

@@ -1,0 +1,49 @@
+name: Build 11.2.0 Setup and Master Data
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  setup-and-master-data:
+    name: Setup and master-data contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+
+      - name: Use pinned Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Generate Build 11.1.0 application inventory
+        run: node scripts/application-inventory-11.1.0.mjs
+
+      - name: Verify Build 11.1.0 inventory
+        run: node scripts/verify-application-inventory-11.1.0.mjs
+
+      - name: Generate Setup Center
+        run: node scripts/generate-setup-center-11.2.0.mjs
+
+      - name: Generate master-data control plane
+        run: node scripts/master-data-control-plane-11.2.0.mjs
+
+      - name: Verify master-data contract
+        run: node scripts/verify-master-data-11.2.0.mjs
+
+      - name: Upload Build 11.2.0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ptt-build-11.2.0-setup-master-data
+          path: artifacts/build-11.2.0
+          if-no-files-found: error
+          retention-days: 30

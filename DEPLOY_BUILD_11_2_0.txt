@@ -1,0 +1,58 @@
+PTT SMOKEHOUSE CONTROL — BUILD 11.2.0
+SETUP AND MASTER DATA
+
+PACKAGE TYPE
+Cumulative safe overlay for the complete existing repository.
+It includes the Build 11.1.0 baseline inventory controls.
+
+INSTALLATION
+1. Extract the ZIP.
+2. Copy every extracted file directly into the existing repository root.
+3. Preserve .git and all existing application source.
+4. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml or existing workflows.
+5. Open a terminal in the repository root.
+6. Run:
+   node scripts/apply-build-11.2.0.mjs
+7. Confirm both messages appear:
+   Build 11.1.0 inventory verification passed.
+   Build 11.2.0 Setup and Master Data verification passed.
+8. Review GitHub Desktop. Existing source files must not be shown as deleted.
+9. Commit:
+   Build 11.2.0 setup and master data
+10. Push origin.
+
+GENERATED APPLICATION ROUTE
+The installer creates an Admin Setup Center at:
+- /admin/setup-center
+or, only when that path already contains a non-generated page:
+- /admin/setup-center-1120
+
+CI ARTIFACT
+ptt-build-11.2.0-setup-master-data
+
+STAGING ACCEPTANCE
+1. Use a separate database and nonproduction provider credentials.
+2. Download the CI artifact.
+3. Execute every row in fresh-tenant-uat-workbook.csv.
+4. Configure the restaurant, one location, four products and two smokers
+   through approved application workflows.
+5. Assign all six canonical roles.
+6. Prove KC and VIEWER cannot mutate privileged setup.
+7. Prove cross-tenant isolation.
+8. Verify effective-dated changes do not rewrite historical approved calculations.
+9. Record every defect and screenshot.
+10. Approve only with no open P0/P1 defect.
+
+OPTIONAL READ-ONLY DATABASE CHECK
+After dependencies are installed and Prisma Client is generated:
+   node scripts/database-readiness-11.2.0.mjs --require-database
+
+STOP CONDITIONS
+- Direct database editing is required to complete normal setup.
+- Render deploy or CI references an unexpected commit.
+- Setup Center causes a route collision.
+- Unauthorized roles can mutate setup/master data.
+- Tenant isolation fails.
+- Historical approved calculations change after a later configuration edit.
+- Any unapproved or invented smoker capacity is represented as validated.

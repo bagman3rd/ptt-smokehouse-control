@@ -1,0 +1,362 @@
+{
+  "buildVersion": "11.2.0",
+  "schemaVersion": 1,
+  "stage": "Setup and Master Data",
+  "acceptanceStatement": "A fresh tenant and location can be configured through approved application workflows without direct database edits.",
+  "operatingRules": {
+    "timezone": "America/New_York",
+    "serviceHours": {
+      "open": "11:00",
+      "close": "22:00",
+      "days": "DAILY"
+    },
+    "operatingDayBasis": "RESTAURANT_OPERATING_DATE",
+    "carryoverLookbackDays": 10,
+    "barAllocationDisplayPercent": 20,
+    "sundayPlanningRule": "Sunday pork and brisket loads use Monday demand."
+  },
+  "canonicalRoles": [
+    {
+      "code": "ADMIN",
+      "label": "Admin",
+      "authority": "Platform and tenant administration, security, feature flags, system configuration and support.",
+      "restriction": "May not silently alter operational history."
+    },
+    {
+      "code": "OWNER",
+      "label": "Owner",
+      "authority": "Full restaurant visibility, approvals, reports, assumptions and overrides.",
+      "restriction": "Financial and operational authority."
+    },
+    {
+      "code": "KM",
+      "label": "Kitchen Manager",
+      "authority": "Forecast review, production approval, staffing coordination, EOD review and exception closure.",
+      "restriction": "Primary daily operating owner."
+    },
+    {
+      "code": "KC",
+      "label": "Kitchen Coordinator",
+      "authority": "Execute plans, update status, complete counts and record exceptions.",
+      "restriction": "No tenant or security administration."
+    },
+    {
+      "code": "PITMASTER",
+      "label": "Pitmaster",
+      "authority": "Smoker loads, temperatures, timing, holds, yields and product quality status.",
+      "restriction": "No finance or security administration."
+    },
+    {
+      "code": "VIEWER",
+      "label": "Viewer",
+      "authority": "Read-only access to approved dashboards and reports.",
+      "restriction": "No operational edits."
+    }
+  ],
+  "smokerLocationValues": [
+    "Outdoor",
+    "Indoors under hood",
+    "In the wall",
+    "Outdoors in smoke house"
+  ],
+  "cookWindowValues": [
+    "Overnight only",
+    "Same-day only",
+    "All day / flexible",
+    "Backup / overflow only",
+    "Not currently active"
+  ],
+  "products": [
+    {
+      "code": "BRISKET",
+      "name": "Brisket",
+      "planningDisplayUnit": "lb",
+      "inventoryDisplayUnit": "lb",
+      "yieldPercent": null,
+      "yieldPolicy": "CONFIGURABLE_EFFECTIVE_DATED_REQUIRED",
+      "sameDay": false,
+      "sealedCarryoverEligible": false,
+      "notes": "Do not hard-code an unstated brisket yield."
+    },
+    {
+      "code": "PORK",
+      "name": "Pork",
+      "planningDisplayUnit": "lb",
+      "inventoryDisplayUnit": "lb",
+      "yieldPercent": 55,
+      "yieldPolicy": "CONFIGURABLE_EFFECTIVE_DATED_BASELINE",
+      "sameDay": false,
+      "sealedCarryoverEligible": true,
+      "typicalLoadTime": "17:00"
+    },
+    {
+      "code": "RIBS",
+      "name": "Ribs",
+      "planningDisplayUnit": "rack",
+      "inventoryDisplayUnit": "rack",
+      "rawWeightPerDisplayUnitLb": 3.3,
+      "cookedWeightPerDisplayUnitLb": 3.0,
+      "yieldPercent": 90,
+      "yieldPolicy": "CONFIGURABLE_EFFECTIVE_DATED_BASELINE",
+      "sameDay": true,
+      "sealedCarryoverEligible": true,
+      "notes": "Retain weight for calculations and reporting while displaying racks operationally."
+    },
+    {
+      "code": "CHICKEN",
+      "name": "Pulled Chicken",
+      "planningDisplayUnit": "whole-bird-equivalent double breast",
+      "inventoryDisplayUnit": "whole-bird-equivalent double breast",
+      "rawWeightPerDisplayUnitLb": 2.5,
+      "smokerSpaceUnitsPerDisplayUnit": 1,
+      "yieldPercent": 75,
+      "yieldPolicy": "CONFIGURABLE_EFFECTIVE_DATED_BASELINE",
+      "sameDay": true,
+      "sealedCarryoverEligible": true,
+      "notes": "One whole chicken equals one double breast in weight and smoker space."
+    }
+  ],
+  "inventoryRules": {
+    "sealedQuantityType": "NON_NEGATIVE_INTEGER",
+    "openQuantityType": "NON_NEGATIVE_COOKED_POUNDS",
+    "priorDayOnlyCarryoverCredit": true,
+    "sealedBrisketCarryoverCredit": false
+  },
+  "smokers": [
+    {
+      "brand": "Ole Hickory",
+      "model": "EL-ED/X",
+      "location": "Indoors under hood",
+      "baselineCapacity": [
+        {
+          "product": "PORK",
+          "quantity": 80,
+          "unit": "butt"
+        },
+        {
+          "product": "BRISKET",
+          "quantity": 40,
+          "unit": "brisket"
+        }
+      ],
+      "capacityValidationRequired": [
+        "RIBS",
+        "CHICKEN",
+        "MIXED_LOAD"
+      ]
+    },
+    {
+      "brand": "Southern Pride",
+      "model": "SPK-700",
+      "location": "Outdoor",
+      "baselineCapacity": [
+        {
+          "product": "PORK",
+          "quantity": 84,
+          "unit": "butt"
+        },
+        {
+          "product": "BRISKET",
+          "quantity": 48,
+          "unit": "brisket"
+        }
+      ],
+      "capacityValidationRequired": [
+        "RIBS",
+        "CHICKEN",
+        "MIXED_LOAD"
+      ]
+    }
+  ],
+  "requiredCapabilities": [
+    {
+      "id": "restaurant",
+      "label": "Restaurant",
+      "required": true,
+      "modelAliases": [
+        "Restaurant",
+        "Tenant",
+        "Organization",
+        "Account"
+      ],
+      "routeTokens": [
+        "restaurant",
+        "tenant",
+        "organization",
+        "account",
+        "settings"
+      ],
+      "fieldTokens": [
+        "name",
+        "timezone",
+        "operating",
+        "serviceHours"
+      ]
+    },
+    {
+      "id": "locations",
+      "label": "Locations",
+      "required": true,
+      "modelAliases": [
+        "Location",
+        "RestaurantLocation",
+        "Site",
+        "Venue"
+      ],
+      "routeTokens": [
+        "location",
+        "locations",
+        "site",
+        "venue"
+      ],
+      "fieldTokens": [
+        "timezone",
+        "active",
+        "status"
+      ]
+    },
+    {
+      "id": "products",
+      "label": "Products",
+      "required": true,
+      "modelAliases": [
+        "Product",
+        "Protein",
+        "ProductRule",
+        "MenuProduct"
+      ],
+      "routeTokens": [
+        "product",
+        "products",
+        "catalog",
+        "protein"
+      ],
+      "fieldTokens": [
+        "yield",
+        "portion",
+        "unit",
+        "carryover"
+      ]
+    },
+    {
+      "id": "units",
+      "label": "Units and yields",
+      "required": true,
+      "modelAliases": [
+        "Unit",
+        "UnitOfMeasure",
+        "ProductUnit",
+        "ProductRule"
+      ],
+      "routeTokens": [
+        "unit",
+        "units",
+        "product",
+        "catalog"
+      ],
+      "fieldTokens": [
+        "unit",
+        "yield",
+        "portion",
+        "rawWeight",
+        "cookedWeight"
+      ]
+    },
+    {
+      "id": "smokers",
+      "label": "Smokers",
+      "required": true,
+      "modelAliases": [
+        "Smoker",
+        "Equipment",
+        "SmokerCapacity",
+        "CapacityRule"
+      ],
+      "routeTokens": [
+        "smoker",
+        "smokers",
+        "equipment",
+        "capacity"
+      ],
+      "fieldTokens": [
+        "brand",
+        "model",
+        "location",
+        "capacity"
+      ]
+    },
+    {
+      "id": "cookWindows",
+      "label": "Cook windows",
+      "required": true,
+      "modelAliases": [
+        "Smoker",
+        "CookWindow",
+        "Availability",
+        "CapacityRule"
+      ],
+      "routeTokens": [
+        "smoker",
+        "cook-window",
+        "availability",
+        "schedule"
+      ],
+      "fieldTokens": [
+        "cookWindow",
+        "cook window",
+        "overnight",
+        "same-day",
+        "overflow"
+      ]
+    },
+    {
+      "id": "roles",
+      "label": "Roles and memberships",
+      "required": true,
+      "modelAliases": [
+        "User",
+        "Membership",
+        "Role",
+        "RestaurantMembership"
+      ],
+      "routeTokens": [
+        "user",
+        "users",
+        "role",
+        "roles",
+        "team",
+        "membership"
+      ],
+      "fieldTokens": [
+        "role",
+        "status",
+        "restaurantId",
+        "tenantId",
+        "locationId"
+      ]
+    },
+    {
+      "id": "onboarding",
+      "label": "Onboarding and validation",
+      "required": true,
+      "modelAliases": [
+        "Onboarding",
+        "Setup",
+        "Tenant",
+        "Restaurant"
+      ],
+      "routeTokens": [
+        "onboarding",
+        "setup",
+        "wizard",
+        "getting-started"
+      ],
+      "fieldTokens": [
+        "complete",
+        "step",
+        "status",
+        "validation"
+      ]
+    }
+  ]
+}
