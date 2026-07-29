@@ -1,0 +1,124 @@
+{
+  "buildVersion": "11.5.0",
+  "engineVersion": "PTT_TODAY_OPERATIONS_11_5_0",
+  "schemaVersion": 1,
+  "stage": "Today Operations and Quick EOD",
+  "exitGate": "An inexperienced user completes a full operating day in deployed UAT.",
+  "todayBoard": {
+    "defaultPage": true,
+    "requiredHeaderFields": [
+      "operatingDate",
+      "dayOfWeek",
+      "weatherNote",
+      "eventNote",
+      "forecastSummary",
+      "urgentActions"
+    ],
+    "loadCardFields": [
+      "product",
+      "quantity",
+      "unit",
+      "smoker",
+      "plannedStart",
+      "plannedEnd",
+      "actualTimes",
+      "status",
+      "owner",
+      "nextAction"
+    ]
+  },
+  "loadStatuses": [
+    "PLANNED",
+    "READY",
+    "LOADED",
+    "COOKING",
+    "RESTING",
+    "HOLDING",
+    "READY_FOR_SERVICE",
+    "COMPLETED",
+    "CANCELLED",
+    "EXCEPTION"
+  ],
+  "standardStatusFlow": [
+    "PLANNED",
+    "READY",
+    "LOADED",
+    "COOKING",
+    "RESTING",
+    "HOLDING",
+    "READY_FOR_SERVICE",
+    "COMPLETED"
+  ],
+  "terminalStatuses": [
+    "COMPLETED",
+    "CANCELLED"
+  ],
+  "roleControls": {
+    "ADMIN": [
+      "ALL"
+    ],
+    "OWNER": [
+      "ALL"
+    ],
+    "KM": [
+      "ALL_OPERATIONS"
+    ],
+    "PITMASTER": [
+      "ADVANCE_LOAD",
+      "FLAG_EXCEPTION",
+      "ADD_NOTE",
+      "SUBMIT_EOD"
+    ],
+    "KC": [
+      "ADVANCE_LOAD",
+      "FLAG_EXCEPTION",
+      "ADD_NOTE",
+      "SUBMIT_EOD"
+    ],
+    "VIEWER": [
+      "READ_ONLY"
+    ]
+  },
+  "eodRules": {
+    "requiredProducts": [
+      "BRISKET",
+      "PORK",
+      "RIBS",
+      "CHICKEN"
+    ],
+    "sealedQuantityType": "NON_NEGATIVE_INTEGER",
+    "openQuantityType": "NON_NEGATIVE_COOKED_POUNDS",
+    "sealedBrisketNextDayEligible": false,
+    "sealedPorkNextDayEligible": true,
+    "sealedRibsNextDayEligible": true,
+    "sealedChickenNextDayEligible": true,
+    "correctionPolicy": "APPEND_ONLY_MANAGER_CORRECTION",
+    "closeRequiresAllProducts": true,
+    "closeRequiresTerminalLoads": true,
+    "closeRequiresNoOpenException": true
+  },
+  "idempotency": {
+    "commandKeyRequired": true,
+    "duplicateCommandResult": "NO_ADDITIONAL_EVENT_OR_MUTATION"
+  },
+  "operatingDayRollover": {
+    "requiresClosedDay": true,
+    "nextDateMustBeConsecutive": true,
+    "carryoverSource": "FINAL_APPROVED_EOD_SUBMISSION",
+    "preserveClosedDay": true
+  },
+  "urgentActionRules": [
+    "Unassigned active load",
+    "Missed load start",
+    "Service-readiness risk",
+    "Active load exception",
+    "Incomplete EOD after 9:00 p.m.",
+    "Operating-day close due after 10:00 p.m."
+  ],
+  "scopeBoundary": [
+    "No database migration.",
+    "No dependency change.",
+    "No durable production-write claim.",
+    "Detailed waste, quality hold and exception ownership expansion remains Build 11.6.0."
+  ]
+}

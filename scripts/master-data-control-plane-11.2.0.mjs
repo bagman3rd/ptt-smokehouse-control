@@ -13,6 +13,7 @@ const scenarioPath = path.join(root, "config", "fresh-tenant-scenario-11.2.0.jso
 const contract = JSON.parse(fs.readFileSync(contractPath, "utf8"));
 const scenario = JSON.parse(fs.readFileSync(scenarioPath, "utf8"));
 fs.mkdirSync(outDir, { recursive: true });
+fs.rmSync(path.join(outDir, "master-data-hash-manifest.json"), { force: true });
 
 const excluded = new Set([".git", ".next", "node_modules", "coverage", "dist", "build", ".turbo", ".cache", "artifacts"]);
 const codeExtensions = new Set([".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs"]);

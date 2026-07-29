@@ -1,0 +1,184 @@
+{
+  "buildVersion": "11.5.0",
+  "baseDayInput": {
+    "operatingDate": "2026-08-03",
+    "locationTimezone": "America/New_York",
+    "planId": "pp-validation-1150",
+    "forecastCalculationId": "fc-validation-1150",
+    "weatherNote": "Warm and dry validation day",
+    "eventNote": "No special event",
+    "forecastSummary": {
+      "BRISKET": 126,
+      "PORK": 126,
+      "RIBS": 20,
+      "CHICKEN": 20
+    },
+    "loads": [
+      {
+        "loadId": "load-brisket",
+        "productCode": "BRISKET",
+        "productName": "Brisket",
+        "plannedQuantity": 18,
+        "unit": "brisket",
+        "cookedEquivalentPerOperationalUnitLb": 7,
+        "smokerId": "ole",
+        "smokerName": "Ole Hickory EL-ED/X",
+        "plannedStartOffsetMinutes": -900,
+        "plannedEndOffsetMinutes": -180
+      },
+      {
+        "loadId": "load-pork",
+        "productCode": "PORK",
+        "productName": "Pork",
+        "plannedQuantity": 26,
+        "unit": "butt",
+        "cookedEquivalentPerOperationalUnitLb": 4.95,
+        "smokerId": "sp",
+        "smokerName": "Southern Pride SPK-700",
+        "plannedStartOffsetMinutes": -420,
+        "plannedEndOffsetMinutes": 300
+      },
+      {
+        "loadId": "load-ribs",
+        "productCode": "RIBS",
+        "productName": "Ribs",
+        "plannedQuantity": 17,
+        "unit": "rack",
+        "cookedEquivalentPerOperationalUnitLb": 3,
+        "smokerId": "ole",
+        "smokerName": "Ole Hickory EL-ED/X",
+        "plannedStartOffsetMinutes": 180,
+        "plannedEndOffsetMinutes": 480
+      },
+      {
+        "loadId": "load-chicken",
+        "productCode": "CHICKEN",
+        "productName": "Pulled Chicken",
+        "plannedQuantity": 17,
+        "unit": "whole-bird-equivalent double breast",
+        "cookedEquivalentPerOperationalUnitLb": 1.875,
+        "smokerId": "sp",
+        "smokerName": "Southern Pride SPK-700",
+        "plannedStartOffsetMinutes": 300,
+        "plannedEndOffsetMinutes": 480
+      }
+    ],
+    "eodProducts": [
+      {
+        "productCode": "BRISKET",
+        "productName": "Brisket",
+        "cookedWeightPerSealedUnitLb": 7,
+        "sealedCarryoverEligible": false
+      },
+      {
+        "productCode": "PORK",
+        "productName": "Pork",
+        "cookedWeightPerSealedUnitLb": 4.95,
+        "sealedCarryoverEligible": true
+      },
+      {
+        "productCode": "RIBS",
+        "productName": "Ribs",
+        "cookedWeightPerSealedUnitLb": 3,
+        "sealedCarryoverEligible": true
+      },
+      {
+        "productCode": "CHICKEN",
+        "productName": "Pulled Chicken",
+        "cookedWeightPerSealedUnitLb": 1.875,
+        "sealedCarryoverEligible": true
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "TO-001",
+      "name": "Complete normal operating day",
+      "expected": {
+        "finalDayStatus": "CLOSED",
+        "completedLoads": 4,
+        "eodProductsComplete": 4,
+        "openExceptions": 0
+      }
+    },
+    {
+      "id": "TO-002",
+      "name": "Invalid status jump",
+      "expected": {
+        "errorField": "payload.status",
+        "statusRemains": "PLANNED"
+      }
+    },
+    {
+      "id": "TO-003",
+      "name": "Duplicate command",
+      "expected": {
+        "secondResult": "DUPLICATE",
+        "eventCountIncrease": 1
+      }
+    },
+    {
+      "id": "TO-004",
+      "name": "Viewer mutation denied",
+      "expected": {
+        "errorField": "actor.role",
+        "statusRemains": "PLANNED"
+      }
+    },
+    {
+      "id": "TO-005",
+      "name": "Urgent action derivation",
+      "expected": {
+        "contains": [
+          "UNASSIGNED_LOAD",
+          "MISSED_LOAD_START",
+          "SERVICE_READINESS_RISK",
+          "EOD_INCOMPLETE",
+          "OPERATING_DAY_CLOSE_DUE"
+        ]
+      }
+    },
+    {
+      "id": "TO-006",
+      "name": "Quick EOD validation",
+      "expected": {
+        "decimalSealedField": "payload.sealedUnits",
+        "impossibleCountField": "payload"
+      }
+    },
+    {
+      "id": "TO-007",
+      "name": "Manager EOD correction",
+      "expected": {
+        "correctionHistoryCount": 1,
+        "currentSealedUnits": 1,
+        "originalSealedUnits": 2
+      }
+    },
+    {
+      "id": "TO-008",
+      "name": "Exception blocks close until resolved",
+      "expected": {
+        "blockedCloseField": "day",
+        "resolvedStatus": "PLANNED"
+      }
+    },
+    {
+      "id": "TO-009",
+      "name": "Operating-day rollover",
+      "expected": {
+        "nextOperatingDate": "2026-08-04",
+        "brisketEligibleSealedUnits": 0,
+        "porkEligibleSealedUnits": 1
+      }
+    },
+    {
+      "id": "TO-010",
+      "name": "Audited load correction",
+      "expected": {
+        "correctedStatus": "READY",
+        "correctionEventType": "LOAD_STATUS_CORRECTED"
+      }
+    }
+  ]
+}

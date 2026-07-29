@@ -1,0 +1,66 @@
+PTT SMOKEHOUSE CONTROL — BUILD 11.5.0
+TODAY OPERATIONS AND QUICK EOD
+
+PACKAGE TYPE
+Cumulative safe overlay for the complete existing repository.
+Includes Builds 11.1.0 through 11.4.0.
+
+INSTALL
+1. Extract the ZIP.
+2. Copy all files directly into the existing repository root.
+3. Preserve .git and every current application source file.
+4. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml or existing workflows.
+5. Run:
+   node scripts/apply-build-11.5.0.mjs
+6. Confirm:
+   Build 11.1.0 inventory verification passed.
+   Build 11.2.0 Setup and Master Data verification passed.
+   Build 11.3.0 Forecast and Demand verification passed.
+   Build 11.4.0 Production Planning verification passed.
+   Build 11.5.0 Today Operations fixture test passed.
+   Build 11.5.0 Today Operations and Quick EOD verification passed.
+7. Review GitHub Desktop. Existing application files must not appear deleted.
+8. Commit:
+   Build 11.5.0 Today Operations and Quick EOD
+9. Push origin.
+
+GENERATED ROUTE
+/today-lab-1150
+If occupied by a non-generated page:
+/today-lab-1150-alt
+
+CI ARTIFACT
+ptt-build-11.5.0-today-operations
+
+STAGING ACCEPTANCE
+1. Use isolated persistent staging and the exact release commit.
+2. Download the Build 11.5.0 CI artifact.
+3. Execute TD-001 through TD-026.
+4. Use an inexperienced operator for TD-026.
+5. Run a complete service date:
+   approved plan -> load ownership -> load execution -> Quick EOD -> close -> rollover.
+6. Verify every load transition, actual quantity, note, exception, correction and close is durable and auditable.
+7. Verify duplicate clicks/retries do not create duplicate events, EOD submissions or closes.
+8. Verify Viewer and unauthorized roles cannot mutate through direct URL or crafted request.
+9. Verify tenant isolation.
+10. Verify target tablet width has no hidden or unlabeled critical action.
+11. Disable email, SMS, Sentry and AI providers; repeat the core workflow.
+12. Approve only with no open P0/P1 defect.
+
+STOP CONDITIONS
+- Any critical load action is hidden behind an unlabeled icon or inaccessible menu.
+- Invalid status jumps are accepted.
+- Duplicate commands create duplicate durable writes.
+- EOD accepts decimal sealed quantities.
+- Impossible EOD inventory is accepted.
+- Original correction history is deleted or overwritten.
+- Operating-day close succeeds with incomplete loads, EOD or unresolved exception.
+- Sealed brisket becomes eligible next-day carryover.
+- Rollover skips or duplicates an operating date.
+- Authorization or tenant isolation fails.
+- The deterministic workbench is mistaken for proof of production persistence.
+
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO DURABLE WRITE CLAIM

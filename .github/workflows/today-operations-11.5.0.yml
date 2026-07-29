@@ -1,0 +1,52 @@
+name: Build 11.5.0 Today Operations
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  today-operations:
+    name: Full operating-day and Quick EOD gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+
+      - name: Use pinned Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Verify forecast baseline
+        run: node scripts/test-forecast-engine-11.3.0.mjs
+
+      - name: Verify production-planning baseline
+        run: node scripts/test-production-planning-11.4.0.mjs
+
+      - name: Verify Today Operations scenarios
+        run: node scripts/test-today-operations-11.5.0.mjs
+
+      - name: Generate Today Operations Lab
+        run: node scripts/generate-today-workbench-11.5.0.mjs
+
+      - name: Generate full operating-day evidence
+        run: node scripts/today-operations-control-plane-11.5.0.mjs
+
+      - name: Verify Today Operations release contract
+        run: node scripts/verify-today-operations-11.5.0.mjs
+
+      - name: Upload Build 11.5.0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ptt-build-11.5.0-today-operations
+          path: artifacts/build-11.5.0
+          if-no-files-found: error
+          retention-days: 30

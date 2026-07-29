@@ -11,6 +11,7 @@ const outDir = path.join(root, "artifacts", "build-11.4.0");
 const contract = JSON.parse(fs.readFileSync(path.join(root, "config", "production-planning-contract-11.4.0.json"), "utf8"));
 const fixtureSet = JSON.parse(fs.readFileSync(path.join(root, "config", "production-planning-fixtures-11.4.0.json"), "utf8"));
 fs.mkdirSync(outDir, { recursive: true });
+fs.rmSync(path.join(outDir, "production-hash-manifest.json"), { force: true });
 
 const excluded = new Set([".git", ".next", "node_modules", "coverage", "dist", "build", ".turbo", ".cache", "artifacts"]);
 const textExtensions = new Set([".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs", ".prisma", ".json", ".md", ".yaml", ".yml"]);

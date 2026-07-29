@@ -16,6 +16,7 @@ const fixtureSet = JSON.parse(
 );
 
 fs.mkdirSync(outDir, { recursive: true });
+fs.rmSync(path.join(outDir, "forecast-hash-manifest.json"), { force: true });
 
 const excluded = new Set([
   ".git", ".next", "node_modules", "coverage", "dist", "build",
