@@ -1,0 +1,142 @@
+{
+  "buildVersion": "11.4.0",
+  "calculationVersion": "PTT_PRODUCTION_PLAN_11_4_0",
+  "schemaVersion": 1,
+  "stage": "Production Planning and Smoker Scheduling",
+  "exitGate": "A seven-day plan can be generated without impossible loads or unexplained negative quantities.",
+  "serviceDateRule": "Demand belongs to the restaurant operating date. Overnight loads may begin on the preceding calendar date.",
+  "planningModes": {
+    "WEIGHT_YIELD": "Forecast demand is cooked pounds. Convert to raw pounds using yield, then round to whole raw units when a configured raw unit weight exists.",
+    "UNIT_COUNT": "Forecast demand is operational units. Apply eligible carryover in equivalent units and round remaining production upward to whole units."
+  },
+  "carryoverRules": {
+    "sourceDate": "PRIOR_OPERATING_DATE_ONLY",
+    "visibleHistoryDays": 10,
+    "sealedQuantityType": "NON_NEGATIVE_INTEGER",
+    "openQuantityType": "NON_NEGATIVE_COOKED_POUNDS",
+    "sealedBrisketEligible": false,
+    "sealedPorkEligible": true,
+    "sealedRibsEligible": true,
+    "sealedChickenEligible": true
+  },
+  "roundingRules": {
+    "negativeProductionAllowed": false,
+    "wholeOperationalUnits": true,
+    "roundingDirection": "UP",
+    "preserveUnroundedCalculation": true
+  },
+  "scheduleRules": {
+    "mixedLoads": "BLOCKED_UNLESS_EXPLICIT_EQUIVALENCY_IS_CONFIGURED",
+    "exclusiveSmokerBookings": true,
+    "backupSmokersUsedAfterPrimary": true,
+    "unvalidatedCapacity": "BLOCKING",
+    "smokerCookWindows": [
+      "Overnight only",
+      "Same-day only",
+      "All day / flexible",
+      "Backup / overflow only",
+      "Not currently active"
+    ]
+  },
+  "canonicalProducts": [
+    {
+      "code": "BRISKET",
+      "name": "Brisket",
+      "planningMode": "WEIGHT_YIELD",
+      "demandUnit": "cooked lb",
+      "yieldPercent": null,
+      "yieldPolicy": "CONFIGURABLE_EFFECTIVE_DATED_REQUIRED",
+      "rawWeightPerUnitLb": null,
+      "rawUnitPolicy": "CONFIGURATION_REQUIRED_FOR_WHOLE_BRISKET_ROUNDING",
+      "sealedCarryoverEligible": false,
+      "scheduleClass": "OVERNIGHT",
+      "windowStartOffsetMinutes": -900,
+      "windowEndOffsetMinutes": -180,
+      "durationMinutes": 720,
+      "timingNote": "Load at 9:00 a.m. on the preceding day, cook to approximately 9:00 p.m., then hold overnight."
+    },
+    {
+      "code": "PORK",
+      "name": "Pork",
+      "planningMode": "WEIGHT_YIELD",
+      "demandUnit": "cooked lb",
+      "yieldPercent": 55,
+      "yieldPolicy": "CONFIGURABLE_EFFECTIVE_DATED_BASELINE",
+      "rawWeightPerUnitLb": null,
+      "rawUnitPolicy": "CONFIGURATION_REQUIRED_FOR_WHOLE_BUTT_ROUNDING",
+      "sealedCarryoverEligible": true,
+      "scheduleClass": "OVERNIGHT",
+      "windowStartOffsetMinutes": -420,
+      "windowEndOffsetMinutes": 660,
+      "durationMinutes": null,
+      "timingNote": "Target load time is 5:00 p.m. on the preceding day. Duration must be configured and approved."
+    },
+    {
+      "code": "RIBS",
+      "name": "Ribs",
+      "planningMode": "UNIT_COUNT",
+      "demandUnit": "rack-equivalent",
+      "yieldPercent": 90,
+      "rawWeightPerUnitLb": 3.3,
+      "cookedWeightPerUnitLb": 3.0,
+      "sealedCarryoverEligible": true,
+      "scheduleClass": "SAME_DAY",
+      "windowStartOffsetMinutes": 0,
+      "windowEndOffsetMinutes": 660,
+      "durationMinutes": null
+    },
+    {
+      "code": "CHICKEN",
+      "name": "Pulled Chicken",
+      "planningMode": "UNIT_COUNT",
+      "demandUnit": "whole-bird-equivalent double breast",
+      "yieldPercent": 75,
+      "rawWeightPerUnitLb": 2.5,
+      "cookedWeightPerUnitLb": 1.875,
+      "sealedCarryoverEligible": true,
+      "scheduleClass": "SAME_DAY",
+      "windowStartOffsetMinutes": 0,
+      "windowEndOffsetMinutes": 660,
+      "durationMinutes": null
+    }
+  ],
+  "knownSmokers": [
+    {
+      "id": "OLE_HICKORY_EL_ED_X",
+      "brand": "Ole Hickory",
+      "model": "EL-ED/X",
+      "location": "Indoors under hood",
+      "validatedCapacities": {
+        "BRISKET": 40,
+        "PORK": 80
+      },
+      "unvalidatedCapacities": [
+        "RIBS",
+        "CHICKEN",
+        "MIXED_LOAD"
+      ]
+    },
+    {
+      "id": "SOUTHERN_PRIDE_SPK_700",
+      "brand": "Southern Pride",
+      "model": "SPK-700",
+      "location": "Outdoor",
+      "validatedCapacities": {
+        "BRISKET": 48,
+        "PORK": 84
+      },
+      "unvalidatedCapacities": [
+        "RIBS",
+        "CHICKEN",
+        "MIXED_LOAD"
+      ]
+    }
+  ],
+  "approvalRules": [
+    "Blocked plans cannot be approved.",
+    "Warnings and shortfalls remain in the approval record.",
+    "Approval retains forecast ID, inputs, requirements, schedule, actor, reason and timestamp.",
+    "The original forecast and unrounded requirements remain immutable.",
+    "Later configuration changes do not rewrite approved historical plans."
+  ]
+}

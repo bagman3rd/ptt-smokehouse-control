@@ -1,0 +1,49 @@
+name: Build 11.4.0 Production Planning
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production-planning:
+    name: Production requirements and smoker scheduling gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+
+      - name: Use pinned Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Verify forecast baseline
+        run: node scripts/test-forecast-engine-11.3.0.mjs
+
+      - name: Verify production fixtures
+        run: node scripts/test-production-planning-11.4.0.mjs
+
+      - name: Generate Production Planning Lab
+        run: node scripts/generate-production-workbench-11.4.0.mjs
+
+      - name: Generate production evidence
+        run: node scripts/production-control-plane-11.4.0.mjs
+
+      - name: Verify production release contract
+        run: node scripts/verify-production-planning-11.4.0.mjs
+
+      - name: Upload Build 11.4.0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ptt-build-11.4.0-production-planning
+          path: artifacts/build-11.4.0
+          if-no-files-found: error
+          retention-days: 30

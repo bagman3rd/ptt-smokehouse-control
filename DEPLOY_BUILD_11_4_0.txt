@@ -1,0 +1,59 @@
+PTT SMOKEHOUSE CONTROL — BUILD 11.4.0
+PRODUCTION PLANNING AND SMOKER SCHEDULING
+
+PACKAGE TYPE
+Cumulative safe overlay for the complete existing repository.
+Includes Builds 11.1.0, 11.2.0 and 11.3.0 controls.
+
+INSTALL
+1. Extract the ZIP.
+2. Copy all files into the existing repository root.
+3. Preserve .git and all current source files.
+4. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml or existing workflows.
+5. Run:
+   node scripts/apply-build-11.4.0.mjs
+6. Confirm:
+   Build 11.1.0 inventory verification passed.
+   Build 11.2.0 Setup and Master Data verification passed.
+   Build 11.3.0 Forecast and Demand verification passed.
+   Build 11.4.0 production-planning fixture test passed.
+   Build 11.4.0 Production Planning verification passed.
+7. Review GitHub Desktop. Existing source must not be shown as deleted.
+8. Commit:
+   Build 11.4.0 production planning and smoker scheduling
+9. Push origin.
+
+GENERATED ROUTE
+/admin/production-lab-1140
+If occupied by a non-generated page:
+/admin/production-lab-1140-alt
+
+CI ARTIFACT
+ptt-build-11.4.0-production-planning
+
+STAGING ACCEPTANCE
+1. Use isolated staging and the exact release commit.
+2. Download the CI artifact.
+3. Execute PD-001 through PD-020.
+4. Replace validation-only weights, durations and capacities with measured approved values.
+5. Generate a seven-day plan.
+6. Confirm no negative quantity, overlap or unexplained shortfall.
+7. Verify prior-day carryover and sealed brisket exclusion.
+8. Verify Monday demand uses Monday forecast while overnight loads may begin Sunday.
+9. Verify server-side role restrictions, tenant isolation and approval idempotency.
+10. Approve only with no open P0/P1 defect.
+
+STOP CONDITIONS
+- A product has missing or invented production configuration.
+- A smoker booking overlaps another exclusive booking.
+- Unscheduled quantity is hidden or approval remains enabled.
+- Carryover from more than one prior day is credited.
+- Brisket sealed inventory is credited.
+- Historical approved plans change after yield/capacity edits.
+- Tenant isolation or authorization fails.
+
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO DURABLE PRODUCTION APPROVAL CLAIM
+NO UNVALIDATED CAPACITY CLAIM

@@ -1,0 +1,1197 @@
+{
+  "buildVersion": "11.4.0",
+  "fixtures": [
+    {
+      "id": "PP-001",
+      "name": "Core requirements with prior-day carryover",
+      "input": {
+        "serviceDate": "2026-08-03",
+        "forecastCalculationId": "fc-pp001",
+        "demand": {
+          "BRISKET": 126,
+          "PORK": 126,
+          "RIBS": 20,
+          "CHICKEN": 20
+        },
+        "products": [
+          {
+            "code": "BRISKET",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 50,
+            "rawWeightPerUnitLb": 14,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": false,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -900,
+              "windowEndOffsetMinutes": -180,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "PORK",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 55,
+            "rawWeightPerUnitLb": 9,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -420,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "RIBS",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 90,
+            "rawWeightPerUnitLb": 3.3,
+            "cookedWeightPerUnitLb": 3.0,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 2,
+              "openCookedLb": 3
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 300
+            }
+          },
+          {
+            "code": "CHICKEN",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 75,
+            "rawWeightPerUnitLb": 2.5,
+            "cookedWeightPerUnitLb": 1.875,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 2,
+              "openCookedLb": 1.875
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 180
+            }
+          }
+        ],
+        "smokers": [
+          {
+            "id": "ole",
+            "name": "Ole Hickory EL-ED/X",
+            "brand": "Ole Hickory",
+            "model": "EL-ED/X",
+            "location": "Indoors under hood",
+            "cookWindow": "All day / flexible",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -1440,
+                "endOffsetMinutes": 1440
+              }
+            ],
+            "capacities": {
+              "BRISKET": 40,
+              "PORK": 80,
+              "RIBS": 30,
+              "CHICKEN": 70
+            },
+            "validationOnlyCapacities": [
+              "RIBS",
+              "CHICKEN"
+            ]
+          },
+          {
+            "id": "sp",
+            "name": "Southern Pride SPK-700",
+            "brand": "Southern Pride",
+            "model": "SPK-700",
+            "location": "Outdoor",
+            "cookWindow": "All day / flexible",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -1440,
+                "endOffsetMinutes": 1440
+              }
+            ],
+            "capacities": {
+              "BRISKET": 48,
+              "PORK": 84,
+              "RIBS": 36,
+              "CHICKEN": 84
+            },
+            "validationOnlyCapacities": [
+              "RIBS",
+              "CHICKEN"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "REVIEW",
+        "BRISKET_plannedUnits": 18,
+        "PORK_plannedUnits": 26,
+        "RIBS_plannedUnits": 17,
+        "CHICKEN_plannedUnits": 17,
+        "batchCount": 4,
+        "unscheduledUnits": 0
+      }
+    },
+    {
+      "id": "PP-002",
+      "name": "Stale carryover is excluded",
+      "input": {
+        "serviceDate": "2026-08-03",
+        "forecastCalculationId": "fc-pp002",
+        "demand": {
+          "BRISKET": 0,
+          "PORK": 55,
+          "RIBS": 0,
+          "CHICKEN": 0
+        },
+        "products": [
+          {
+            "code": "BRISKET",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 50,
+            "rawWeightPerUnitLb": 14,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": false,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -900,
+              "windowEndOffsetMinutes": -180,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "PORK",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 55,
+            "rawWeightPerUnitLb": 10,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-01",
+              "sealedUnits": 2,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -420,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "RIBS",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 90,
+            "rawWeightPerUnitLb": 3.3,
+            "cookedWeightPerUnitLb": 3.0,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 300
+            }
+          },
+          {
+            "code": "CHICKEN",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 75,
+            "rawWeightPerUnitLb": 2.5,
+            "cookedWeightPerUnitLb": 1.875,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 180
+            }
+          }
+        ],
+        "smokers": [
+          {
+            "id": "ole",
+            "name": "Ole Hickory EL-ED/X",
+            "brand": "Ole Hickory",
+            "model": "EL-ED/X",
+            "location": "Indoors under hood",
+            "cookWindow": "All day / flexible",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -1440,
+                "endOffsetMinutes": 1440
+              }
+            ],
+            "capacities": {
+              "BRISKET": 40,
+              "PORK": 80,
+              "RIBS": 30,
+              "CHICKEN": 70
+            },
+            "validationOnlyCapacities": [
+              "RIBS",
+              "CHICKEN"
+            ]
+          },
+          {
+            "id": "sp",
+            "name": "Southern Pride SPK-700",
+            "brand": "Southern Pride",
+            "model": "SPK-700",
+            "location": "Outdoor",
+            "cookWindow": "All day / flexible",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -1440,
+                "endOffsetMinutes": 1440
+              }
+            ],
+            "capacities": {
+              "BRISKET": 48,
+              "PORK": 84,
+              "RIBS": 36,
+              "CHICKEN": 84
+            },
+            "validationOnlyCapacities": [
+              "RIBS",
+              "CHICKEN"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "REVIEW",
+        "PORK_plannedUnits": 10,
+        "staleCarryoverWarning": true
+      }
+    },
+    {
+      "id": "PP-003",
+      "name": "Sealed brisket is not credited",
+      "input": {
+        "serviceDate": "2026-08-03",
+        "forecastCalculationId": "fc-pp003",
+        "demand": {
+          "BRISKET": 35,
+          "PORK": 0,
+          "RIBS": 0,
+          "CHICKEN": 0
+        },
+        "products": [
+          {
+            "code": "BRISKET",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 50,
+            "rawWeightPerUnitLb": 14,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": false,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 3,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -900,
+              "windowEndOffsetMinutes": -180,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "PORK",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 55,
+            "rawWeightPerUnitLb": 9,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -420,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "RIBS",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 90,
+            "rawWeightPerUnitLb": 3.3,
+            "cookedWeightPerUnitLb": 3.0,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 300
+            }
+          },
+          {
+            "code": "CHICKEN",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 75,
+            "rawWeightPerUnitLb": 2.5,
+            "cookedWeightPerUnitLb": 1.875,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 180
+            }
+          }
+        ],
+        "smokers": [
+          {
+            "id": "ole",
+            "name": "Ole Hickory EL-ED/X",
+            "brand": "Ole Hickory",
+            "model": "EL-ED/X",
+            "location": "Indoors under hood",
+            "cookWindow": "All day / flexible",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -1440,
+                "endOffsetMinutes": 1440
+              }
+            ],
+            "capacities": {
+              "BRISKET": 40,
+              "PORK": 80,
+              "RIBS": 30,
+              "CHICKEN": 70
+            },
+            "validationOnlyCapacities": [
+              "RIBS",
+              "CHICKEN"
+            ]
+          },
+          {
+            "id": "sp",
+            "name": "Southern Pride SPK-700",
+            "brand": "Southern Pride",
+            "model": "SPK-700",
+            "location": "Outdoor",
+            "cookWindow": "All day / flexible",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -1440,
+                "endOffsetMinutes": 1440
+              }
+            ],
+            "capacities": {
+              "BRISKET": 48,
+              "PORK": 84,
+              "RIBS": 36,
+              "CHICKEN": 84
+            },
+            "validationOnlyCapacities": [
+              "RIBS",
+              "CHICKEN"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "REVIEW",
+        "BRISKET_plannedUnits": 5,
+        "sealedBrisketWarning": true
+      }
+    },
+    {
+      "id": "PP-004",
+      "name": "Missing pork raw unit weight blocks scheduling",
+      "input": {
+        "serviceDate": "2026-08-03",
+        "forecastCalculationId": "fc-pp004",
+        "demand": {
+          "BRISKET": 0,
+          "PORK": 55,
+          "RIBS": 0,
+          "CHICKEN": 0
+        },
+        "products": [
+          {
+            "code": "BRISKET",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 50,
+            "rawWeightPerUnitLb": 14,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": false,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -900,
+              "windowEndOffsetMinutes": -180,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "PORK",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 55,
+            "rawWeightPerUnitLb": null,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -420,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "RIBS",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 90,
+            "rawWeightPerUnitLb": 3.3,
+            "cookedWeightPerUnitLb": 3.0,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 300
+            }
+          },
+          {
+            "code": "CHICKEN",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 75,
+            "rawWeightPerUnitLb": 2.5,
+            "cookedWeightPerUnitLb": 1.875,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 180
+            }
+          }
+        ],
+        "smokers": [
+          {
+            "id": "ole",
+            "name": "Ole Hickory EL-ED/X",
+            "brand": "Ole Hickory",
+            "model": "EL-ED/X",
+            "location": "Indoors under hood",
+            "cookWindow": "All day / flexible",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -1440,
+                "endOffsetMinutes": 1440
+              }
+            ],
+            "capacities": {
+              "BRISKET": 40,
+              "PORK": 80,
+              "RIBS": 30,
+              "CHICKEN": 70
+            },
+            "validationOnlyCapacities": [
+              "RIBS",
+              "CHICKEN"
+            ]
+          },
+          {
+            "id": "sp",
+            "name": "Southern Pride SPK-700",
+            "brand": "Southern Pride",
+            "model": "SPK-700",
+            "location": "Outdoor",
+            "cookWindow": "All day / flexible",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -1440,
+                "endOffsetMinutes": 1440
+              }
+            ],
+            "capacities": {
+              "BRISKET": 48,
+              "PORK": 84,
+              "RIBS": 36,
+              "CHICKEN": 84
+            },
+            "validationOnlyCapacities": [
+              "RIBS",
+              "CHICKEN"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "BLOCKED",
+        "PORK_exactRawLb": 100,
+        "missingRawUnitWeight": true
+      }
+    },
+    {
+      "id": "PP-005",
+      "name": "Capacity shortfall is explicit",
+      "input": {
+        "serviceDate": "2026-08-03",
+        "forecastCalculationId": "fc-pp005",
+        "demand": {
+          "BRISKET": 700,
+          "PORK": 0,
+          "RIBS": 0,
+          "CHICKEN": 0
+        },
+        "products": [
+          {
+            "code": "BRISKET",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 50,
+            "rawWeightPerUnitLb": 14,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": false,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -900,
+              "windowEndOffsetMinutes": -180,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "PORK",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 55,
+            "rawWeightPerUnitLb": 9,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -420,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "RIBS",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 90,
+            "rawWeightPerUnitLb": 3.3,
+            "cookedWeightPerUnitLb": 3.0,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 300
+            }
+          },
+          {
+            "code": "CHICKEN",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 75,
+            "rawWeightPerUnitLb": 2.5,
+            "cookedWeightPerUnitLb": 1.875,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 180
+            }
+          }
+        ],
+        "smokers": [
+          {
+            "id": "one",
+            "name": "Single 40-brisket smoker",
+            "brand": "Validation",
+            "model": "One Cycle",
+            "location": "Outdoor",
+            "cookWindow": "Overnight only",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -900,
+                "endOffsetMinutes": -180
+              }
+            ],
+            "capacities": {
+              "BRISKET": 40
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "BLOCKED",
+        "BRISKET_plannedUnits": 100,
+        "unscheduledUnits": 60
+      }
+    },
+    {
+      "id": "PP-006",
+      "name": "Multiple same-day cycles",
+      "input": {
+        "serviceDate": "2026-08-03",
+        "forecastCalculationId": "fc-pp006",
+        "demand": {
+          "BRISKET": 0,
+          "PORK": 0,
+          "RIBS": 0,
+          "CHICKEN": 70
+        },
+        "products": [
+          {
+            "code": "BRISKET",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 50,
+            "rawWeightPerUnitLb": 14,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": false,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -900,
+              "windowEndOffsetMinutes": -180,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "PORK",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 55,
+            "rawWeightPerUnitLb": 9,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -420,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "RIBS",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 90,
+            "rawWeightPerUnitLb": 3.3,
+            "cookedWeightPerUnitLb": 3.0,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 300
+            }
+          },
+          {
+            "code": "CHICKEN",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 75,
+            "rawWeightPerUnitLb": 2.5,
+            "cookedWeightPerUnitLb": 1.875,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 600,
+              "durationMinutes": 180
+            }
+          }
+        ],
+        "smokers": [
+          {
+            "id": "cycle",
+            "name": "Validation chicken smoker",
+            "brand": "Validation",
+            "model": "30",
+            "location": "Outdoor",
+            "cookWindow": "Same-day only",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": 0,
+                "endOffsetMinutes": 600
+              }
+            ],
+            "capacities": {
+              "CHICKEN": 30
+            },
+            "validationOnlyCapacities": [
+              "CHICKEN"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "REVIEW",
+        "CHICKEN_plannedUnits": 70,
+        "batchCount": 3,
+        "lastBatchQuantity": 10
+      }
+    },
+    {
+      "id": "PP-007",
+      "name": "Backup smoker use",
+      "input": {
+        "serviceDate": "2026-08-03",
+        "forecastCalculationId": "fc-pp007",
+        "demand": {
+          "BRISKET": 0,
+          "PORK": 0,
+          "RIBS": 40,
+          "CHICKEN": 0
+        },
+        "products": [
+          {
+            "code": "BRISKET",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 50,
+            "rawWeightPerUnitLb": 14,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": false,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -900,
+              "windowEndOffsetMinutes": -180,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "PORK",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 55,
+            "rawWeightPerUnitLb": 9,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -420,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "RIBS",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 90,
+            "rawWeightPerUnitLb": 3.3,
+            "cookedWeightPerUnitLb": 3.0,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 180,
+              "durationMinutes": 180
+            }
+          },
+          {
+            "code": "CHICKEN",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 75,
+            "rawWeightPerUnitLb": 2.5,
+            "cookedWeightPerUnitLb": 1.875,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 180
+            }
+          }
+        ],
+        "smokers": [
+          {
+            "id": "primary",
+            "name": "Primary smoker",
+            "brand": "Validation",
+            "model": "20",
+            "location": "Outdoor",
+            "cookWindow": "Same-day only",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": 0,
+                "endOffsetMinutes": 180
+              }
+            ],
+            "capacities": {
+              "RIBS": 20
+            },
+            "validationOnlyCapacities": [
+              "RIBS"
+            ]
+          },
+          {
+            "id": "backup",
+            "name": "Backup smoker",
+            "brand": "Validation",
+            "model": "50",
+            "location": "Outdoor",
+            "cookWindow": "Backup / overflow only",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": 0,
+                "endOffsetMinutes": 180
+              }
+            ],
+            "capacities": {
+              "RIBS": 50
+            },
+            "validationOnlyCapacities": [
+              "RIBS"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "REVIEW",
+        "batchCount": 2,
+        "backupUsed": true
+      }
+    },
+    {
+      "id": "PP-008",
+      "name": "Monday demand schedules brisket on Sunday",
+      "input": {
+        "serviceDate": "2026-08-03",
+        "forecastCalculationId": "fc-pp008",
+        "demand": {
+          "BRISKET": 126,
+          "PORK": 0,
+          "RIBS": 0,
+          "CHICKEN": 0
+        },
+        "products": [
+          {
+            "code": "BRISKET",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 50,
+            "rawWeightPerUnitLb": 14,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": false,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -900,
+              "windowEndOffsetMinutes": -180,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "PORK",
+            "planningMode": "WEIGHT_YIELD",
+            "yieldPercent": 55,
+            "rawWeightPerUnitLb": 9,
+            "cookedWeightPerUnitLb": null,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "OVERNIGHT",
+              "windowStartOffsetMinutes": -420,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 720
+            }
+          },
+          {
+            "code": "RIBS",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 90,
+            "rawWeightPerUnitLb": 3.3,
+            "cookedWeightPerUnitLb": 3.0,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 300
+            }
+          },
+          {
+            "code": "CHICKEN",
+            "planningMode": "UNIT_COUNT",
+            "yieldPercent": 75,
+            "rawWeightPerUnitLb": 2.5,
+            "cookedWeightPerUnitLb": 1.875,
+            "sealedCarryoverEligible": true,
+            "bufferPercent": 0,
+            "bufferReason": "",
+            "carryover": {
+              "sourceOperatingDate": "2026-08-02",
+              "sealedUnits": 0,
+              "openCookedLb": 0
+            },
+            "schedule": {
+              "classification": "SAME_DAY",
+              "windowStartOffsetMinutes": 0,
+              "windowEndOffsetMinutes": 660,
+              "durationMinutes": 180
+            }
+          }
+        ],
+        "smokers": [
+          {
+            "id": "ole",
+            "name": "Ole Hickory EL-ED/X",
+            "brand": "Ole Hickory",
+            "model": "EL-ED/X",
+            "location": "Indoors under hood",
+            "cookWindow": "All day / flexible",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -1440,
+                "endOffsetMinutes": 1440
+              }
+            ],
+            "capacities": {
+              "BRISKET": 40,
+              "PORK": 80,
+              "RIBS": 30,
+              "CHICKEN": 70
+            },
+            "validationOnlyCapacities": [
+              "RIBS",
+              "CHICKEN"
+            ]
+          },
+          {
+            "id": "sp",
+            "name": "Southern Pride SPK-700",
+            "brand": "Southern Pride",
+            "model": "SPK-700",
+            "location": "Outdoor",
+            "cookWindow": "All day / flexible",
+            "active": true,
+            "availability": [
+              {
+                "startOffsetMinutes": -1440,
+                "endOffsetMinutes": 1440
+              }
+            ],
+            "capacities": {
+              "BRISKET": 48,
+              "PORK": 84,
+              "RIBS": 36,
+              "CHICKEN": 84
+            },
+            "validationOnlyCapacities": [
+              "RIBS",
+              "CHICKEN"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "READY",
+        "serviceDayName": "Monday",
+        "firstBatchStartDate": "2026-08-02"
+      }
+    }
+  ]
+}
