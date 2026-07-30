@@ -1,0 +1,141 @@
+{
+  "buildVersion": "11.9.0",
+  "engineVersion": "PTT_SECURITY_PERFORMANCE_RECOVERY_11_9_0",
+  "stage": "Security, Performance, and Recovery",
+  "exitGate": "The release is GO only when security controls pass, performance budgets pass, database health is within limits, recovery evidence is current, rollback is executable, and no open P0/P1 defect remains.",
+  "renderTopology": {
+    "webServices": 1,
+    "cronServices": 0,
+    "databases": 1,
+    "cronJobsDeliberatelyExcluded": true
+  },
+  "sessionPolicy": {
+    "absoluteTimeoutMinutes": 720,
+    "idleTimeoutMinutes": 30,
+    "privilegedReauthenticationMinutes": 15,
+    "maximumFailedAttempts": 5,
+    "lockoutMinutes": 15,
+    "privilegedRoles": [
+      "ADMIN",
+      "OWNER",
+      "KM"
+    ],
+    "privileged2FARequired": true,
+    "secureCookieRequired": true,
+    "httpOnlyCookieRequired": true,
+    "sameSite": "LAX",
+    "sessionRotationAfterAuthentication": true,
+    "sessionRevocationRequired": true
+  },
+  "authorization": {
+    "denyByDefault": true,
+    "tenantContextRequired": true,
+    "crossTenantAccessBlocked": true,
+    "serverSideEnforcementRequired": true,
+    "roles": [
+      "ADMIN",
+      "OWNER",
+      "KM",
+      "PITMASTER",
+      "KC",
+      "VIEWER"
+    ]
+  },
+  "requestSecurity": {
+    "maximumJsonBodyBytes": 1048576,
+    "csrfRequiredForBrowserMutations": true,
+    "webhookSignatureRequired": true,
+    "contentTypeValidationRequired": true,
+    "securityHeadersRequired": [
+      "content-security-policy",
+      "x-content-type-options",
+      "referrer-policy",
+      "permissions-policy",
+      "strict-transport-security"
+    ],
+    "rateLimits": {
+      "AUTH": {
+        "limit": 10,
+        "windowSeconds": 60
+      },
+      "API_READ": {
+        "limit": 120,
+        "windowSeconds": 60
+      },
+      "API_MUTATION": {
+        "limit": 60,
+        "windowSeconds": 60
+      },
+      "WEBHOOK": {
+        "limit": 300,
+        "windowSeconds": 60
+      }
+    }
+  },
+  "auditIntegrity": {
+    "appendOnly": true,
+    "previousHashRequired": true,
+    "actorRequired": true,
+    "tenantRequired": true,
+    "requestIdRequired": true,
+    "tamperDetectionRequired": true
+  },
+  "performanceBudgets": {
+    "apiReadP95Ms": 500,
+    "criticalMutationP95Ms": 750,
+    "dashboardP95Ms": 2000,
+    "databaseQueryP95Ms": 250,
+    "errorRatePercent": 1,
+    "minimumThroughputRps": 50,
+    "maximumMemoryMb": 768,
+    "maximumEventLoopLagP95Ms": 100
+  },
+  "databaseHealth": {
+    "maximumPoolUtilizationPercent": 80,
+    "maximumLongTransactionMs": 5000,
+    "maximumReplicationLagSeconds": 5,
+    "requiredMigrationStatus": "CURRENT",
+    "connectionHeadroomRequired": 4
+  },
+  "recovery": {
+    "rpoHours": 24,
+    "rtoHours": 4,
+    "maximumBackupAgeHours": 26,
+    "maximumRestoreDrillAgeDays": 90,
+    "rollbackArtifactRequired": true,
+    "rollbackProcedureRequired": true,
+    "verifiedBackupRequired": true,
+    "restoreEvidenceRequired": true,
+    "dataReconciliationRequired": true
+  },
+  "releaseGate": {
+    "openP0Allowed": 0,
+    "openP1Allowed": 0,
+    "securityWarningsAllowed": 0,
+    "performanceFailuresAllowed": 0,
+    "recoveryFailuresAllowed": 0
+  },
+  "sanitization": {
+    "redactedKeyPatterns": [
+      "password",
+      "pin",
+      "secret",
+      "token",
+      "authorization",
+      "cookie",
+      "api_key",
+      "apikey",
+      "private_key",
+      "database_url"
+    ],
+    "secretValuesNeverExported": true
+  },
+  "scopeBoundary": [
+    "No Prisma migration.",
+    "No dependency change.",
+    "No destructive security configuration is automatically enabled.",
+    "No live load test is executed against production.",
+    "No backup or restore is performed by this overlay.",
+    "Build 12.0.0 remains the PTT production release."
+  ]
+}

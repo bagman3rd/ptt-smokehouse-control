@@ -1,0 +1,79 @@
+PTT SMOKEHOUSE CONTROL — BUILD 11.9.0
+SECURITY, PERFORMANCE, AND RECOVERY
+
+PACKAGE TYPE
+Cumulative safe overlay for the complete existing repository.
+Includes Builds 11.1.0 through 11.8.0.
+
+RENDER TOPOLOGY
+- One web service
+- Zero cron services
+- One PostgreSQL database
+
+INSTALL
+1. Extract the ZIP directly into the existing repository root.
+2. Preserve .git and every current application source file.
+3. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml, migrations, or existing workflows.
+4. Run:
+   node scripts/apply-build-11.9.0.mjs
+5. Confirm every cumulative verifier passes.
+6. Confirm Build 11.9.0 reports a GO deterministic release gate.
+7. Review GitHub Desktop. Existing application files must not appear deleted.
+8. Commit:
+   Build 11.9.0 security performance and recovery
+9. Push origin.
+
+GENERATED ROUTE
+/hardening-lab-1190
+If occupied by a non-generated page:
+/hardening-lab-1190-alt
+
+CI ARTIFACT
+ptt-build-11.9.0-hardening
+
+STAGING ACCEPTANCE
+1. Use isolated persistent staging and the exact release commit.
+2. Download the Build 11.9.0 CI artifact.
+3. Execute HR-001 through HR-034.
+4. Verify production-equivalent authentication and session behavior.
+5. Verify every authorization and tenant-isolation control server-side.
+6. Verify CSRF, signature, request-size, content-type, header, and rate-limit controls.
+7. Verify audit hash-chain integrity and tamper detection.
+8. Run the controlled staging load profile; do not load-test production.
+9. Verify API, mutation, dashboard, query, error-rate, throughput, memory,
+   and event-loop budgets.
+10. Verify database pool headroom, migration status, long transactions,
+    and replication lag.
+11. Verify a current backup and a restore drill with data reconciliation.
+12. Execute the rollback runbook against staging.
+13. Verify post-rollback health, authorization, and tenant isolation.
+14. Generate the sanitized support bundle with test secrets present.
+15. Run the release gate with zero open P0/P1 defects.
+16. Approve Build 12.0.0 only when the deployed decision is GO.
+
+STOP CONDITIONS
+- Privileged authentication or session controls fail.
+- Viewer or unauthorized mutation succeeds.
+- Cross-tenant data is returned, inferred, or changed.
+- Browser mutation succeeds without CSRF.
+- Webhook succeeds without valid signature.
+- Required security headers are absent.
+- Rate limits fail or cause duplicate writes.
+- Audit tampering is not detected.
+- Any performance budget fails.
+- Database pool exceeds 80% or lacks four connections of headroom.
+- Backup age exceeds 26 hours.
+- Recovery point exceeds 24 hours.
+- Restore drill evidence exceeds 90 days.
+- Restore duration exceeds four hours.
+- Rollback artifact, procedure, or test is missing.
+- Any P0/P1 defect remains open.
+- Release decision is HOLD.
+- render.yaml contains any cron service.
+
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO PRODUCTION LOAD TEST
+NO AUTOMATIC BACKUP OR RESTORE
+NO DURABLE SECURITY OR RECOVERY CLAIM

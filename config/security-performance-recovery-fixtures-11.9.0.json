@@ -1,0 +1,587 @@
+{
+  "buildVersion": "11.9.0",
+  "secureSessionConfig": {
+    "absoluteTimeoutMinutes": 720,
+    "idleTimeoutMinutes": 30,
+    "privilegedReauthenticationMinutes": 15,
+    "maximumFailedAttempts": 5,
+    "lockoutMinutes": 15,
+    "privileged2FAEnabled": true,
+    "secureCookie": true,
+    "httpOnlyCookie": true,
+    "sameSite": "LAX",
+    "rotateAfterAuthentication": true,
+    "revocationSupported": true
+  },
+  "securityHeaders": {
+    "content-security-policy": "default-src 'self'; frame-ancestors 'none'",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(), microphone=(), geolocation=()",
+    "strict-transport-security": "max-age=31536000; includeSubDomains"
+  },
+  "authorizationPolicy": {
+    "ADMIN": [
+      "*"
+    ],
+    "OWNER": [
+      "*"
+    ],
+    "KM": [
+      "today:read",
+      "today:write",
+      "inventory:read",
+      "inventory:write",
+      "reports:read",
+      "reports:approve",
+      "admin:read"
+    ],
+    "PITMASTER": [
+      "today:read",
+      "today:write",
+      "inventory:read",
+      "inventory:waste",
+      "inventory:hold"
+    ],
+    "KC": [
+      "today:read",
+      "today:write",
+      "inventory:read",
+      "inventory:count",
+      "inventory:waste"
+    ],
+    "VIEWER": [
+      "today:read",
+      "inventory:read",
+      "reports:read"
+    ]
+  },
+  "performanceSamples": {
+    "apiRead": [
+      {
+        "durationMs": 120,
+        "success": true
+      },
+      {
+        "durationMs": 150,
+        "success": true
+      },
+      {
+        "durationMs": 180,
+        "success": true
+      },
+      {
+        "durationMs": 210,
+        "success": true
+      },
+      {
+        "durationMs": 240,
+        "success": true
+      },
+      {
+        "durationMs": 260,
+        "success": true
+      },
+      {
+        "durationMs": 280,
+        "success": true
+      },
+      {
+        "durationMs": 300,
+        "success": true
+      },
+      {
+        "durationMs": 320,
+        "success": true
+      },
+      {
+        "durationMs": 340,
+        "success": true
+      },
+      {
+        "durationMs": 360,
+        "success": true
+      },
+      {
+        "durationMs": 380,
+        "success": true
+      },
+      {
+        "durationMs": 400,
+        "success": true
+      },
+      {
+        "durationMs": 420,
+        "success": true
+      },
+      {
+        "durationMs": 450,
+        "success": true
+      },
+      {
+        "durationMs": 470,
+        "success": true
+      },
+      {
+        "durationMs": 490,
+        "success": true
+      },
+      {
+        "durationMs": 495,
+        "success": true
+      },
+      {
+        "durationMs": 498,
+        "success": true
+      },
+      {
+        "durationMs": 500,
+        "success": true
+      }
+    ],
+    "criticalMutation": [
+      {
+        "durationMs": 220,
+        "success": true
+      },
+      {
+        "durationMs": 260,
+        "success": true
+      },
+      {
+        "durationMs": 300,
+        "success": true
+      },
+      {
+        "durationMs": 340,
+        "success": true
+      },
+      {
+        "durationMs": 380,
+        "success": true
+      },
+      {
+        "durationMs": 420,
+        "success": true
+      },
+      {
+        "durationMs": 460,
+        "success": true
+      },
+      {
+        "durationMs": 500,
+        "success": true
+      },
+      {
+        "durationMs": 540,
+        "success": true
+      },
+      {
+        "durationMs": 580,
+        "success": true
+      },
+      {
+        "durationMs": 620,
+        "success": true
+      },
+      {
+        "durationMs": 650,
+        "success": true
+      },
+      {
+        "durationMs": 680,
+        "success": true
+      },
+      {
+        "durationMs": 700,
+        "success": true
+      },
+      {
+        "durationMs": 720,
+        "success": true
+      },
+      {
+        "durationMs": 730,
+        "success": true
+      },
+      {
+        "durationMs": 740,
+        "success": true
+      },
+      {
+        "durationMs": 745,
+        "success": true
+      },
+      {
+        "durationMs": 748,
+        "success": true
+      },
+      {
+        "durationMs": 750,
+        "success": true
+      }
+    ],
+    "dashboard": [
+      {
+        "durationMs": 700,
+        "success": true
+      },
+      {
+        "durationMs": 850,
+        "success": true
+      },
+      {
+        "durationMs": 1000,
+        "success": true
+      },
+      {
+        "durationMs": 1100,
+        "success": true
+      },
+      {
+        "durationMs": 1200,
+        "success": true
+      },
+      {
+        "durationMs": 1300,
+        "success": true
+      },
+      {
+        "durationMs": 1400,
+        "success": true
+      },
+      {
+        "durationMs": 1500,
+        "success": true
+      },
+      {
+        "durationMs": 1600,
+        "success": true
+      },
+      {
+        "durationMs": 1700,
+        "success": true
+      },
+      {
+        "durationMs": 1800,
+        "success": true
+      },
+      {
+        "durationMs": 1850,
+        "success": true
+      },
+      {
+        "durationMs": 1900,
+        "success": true
+      },
+      {
+        "durationMs": 1925,
+        "success": true
+      },
+      {
+        "durationMs": 1950,
+        "success": true
+      },
+      {
+        "durationMs": 1970,
+        "success": true
+      },
+      {
+        "durationMs": 1980,
+        "success": true
+      },
+      {
+        "durationMs": 1990,
+        "success": true
+      },
+      {
+        "durationMs": 1995,
+        "success": true
+      },
+      {
+        "durationMs": 2000,
+        "success": true
+      }
+    ],
+    "databaseQuery": [
+      {
+        "durationMs": 40,
+        "success": true
+      },
+      {
+        "durationMs": 50,
+        "success": true
+      },
+      {
+        "durationMs": 60,
+        "success": true
+      },
+      {
+        "durationMs": 70,
+        "success": true
+      },
+      {
+        "durationMs": 80,
+        "success": true
+      },
+      {
+        "durationMs": 90,
+        "success": true
+      },
+      {
+        "durationMs": 100,
+        "success": true
+      },
+      {
+        "durationMs": 110,
+        "success": true
+      },
+      {
+        "durationMs": 120,
+        "success": true
+      },
+      {
+        "durationMs": 130,
+        "success": true
+      },
+      {
+        "durationMs": 140,
+        "success": true
+      },
+      {
+        "durationMs": 150,
+        "success": true
+      },
+      {
+        "durationMs": 160,
+        "success": true
+      },
+      {
+        "durationMs": 170,
+        "success": true
+      },
+      {
+        "durationMs": 180,
+        "success": true
+      },
+      {
+        "durationMs": 190,
+        "success": true
+      },
+      {
+        "durationMs": 200,
+        "success": true
+      },
+      {
+        "durationMs": 220,
+        "success": true
+      },
+      {
+        "durationMs": 240,
+        "success": true
+      },
+      {
+        "durationMs": 250,
+        "success": true
+      }
+    ],
+    "windowSeconds": 10,
+    "requestCount": 600,
+    "memoryMb": 420,
+    "eventLoopLagSamplesMs": [
+      12,
+      18,
+      22,
+      25,
+      30,
+      34,
+      40,
+      45,
+      55,
+      70
+    ]
+  },
+  "databaseSnapshot": {
+    "poolMaximum": 20,
+    "poolActive": 12,
+    "poolIdle": 8,
+    "longestTransactionMs": 820,
+    "replicationLagSeconds": 0,
+    "migrationStatus": "CURRENT",
+    "databaseReachable": true
+  },
+  "recoverySnapshot": {
+    "now": "2026-08-04T00:00:00.000Z",
+    "lastVerifiedBackupAt": "2026-08-03T08:00:00.000Z",
+    "lastRestoreDrillAt": "2026-07-15T15:00:00.000Z",
+    "restoreDurationMinutes": 95,
+    "recoveryPointAgeHours": 16,
+    "rollbackArtifact": "render-revision-synthetic-1190",
+    "rollbackProcedure": "docs/ROLLBACK_RUNBOOK_11_9_0.md",
+    "restoreEvidence": "evidence/restore-drill-2026-07-15.json",
+    "dataReconciliationPassed": true,
+    "backupVerified": true
+  },
+  "releaseSnapshot": {
+    "openP0": 0,
+    "openP1": 0,
+    "rollbackTestPassed": true,
+    "healthEndpointPassed": true,
+    "tenantIsolationPassed": true,
+    "authorizationPassed": true
+  },
+  "scenarios": [
+    {
+      "id": "SPR-001",
+      "name": "Secure session policy passes",
+      "expected": {
+        "status": "PASS"
+      }
+    },
+    {
+      "id": "SPR-002",
+      "name": "Missing privileged 2FA blocks",
+      "expected": {
+        "status": "FAIL",
+        "control": "privileged2FAEnabled"
+      }
+    },
+    {
+      "id": "SPR-003",
+      "name": "Cross-tenant request denied",
+      "expected": {
+        "allowed": false,
+        "reason": "CROSS_TENANT"
+      }
+    },
+    {
+      "id": "SPR-004",
+      "name": "Viewer mutation denied",
+      "expected": {
+        "allowed": false,
+        "reason": "ROLE_DENIED"
+      }
+    },
+    {
+      "id": "SPR-005",
+      "name": "Browser mutation requires CSRF",
+      "expected": {
+        "status": "REJECTED",
+        "control": "CSRF"
+      }
+    },
+    {
+      "id": "SPR-006",
+      "name": "Webhook requires signature",
+      "expected": {
+        "status": "REJECTED",
+        "control": "WEBHOOK_SIGNATURE"
+      }
+    },
+    {
+      "id": "SPR-007",
+      "name": "Oversized request rejected",
+      "expected": {
+        "status": "REJECTED",
+        "control": "REQUEST_SIZE"
+      }
+    },
+    {
+      "id": "SPR-008",
+      "name": "Rate limit enforced",
+      "expected": {
+        "lastAllowed": false
+      }
+    },
+    {
+      "id": "SPR-009",
+      "name": "Audit hash chain verifies",
+      "expected": {
+        "valid": true
+      }
+    },
+    {
+      "id": "SPR-010",
+      "name": "Audit tamper detected",
+      "expected": {
+        "valid": false
+      }
+    },
+    {
+      "id": "SPR-011",
+      "name": "Performance budgets pass",
+      "expected": {
+        "status": "PASS"
+      }
+    },
+    {
+      "id": "SPR-012",
+      "name": "API p95 regression blocks",
+      "expected": {
+        "status": "FAIL",
+        "metric": "apiReadP95Ms"
+      }
+    },
+    {
+      "id": "SPR-013",
+      "name": "Error-rate regression blocks",
+      "expected": {
+        "status": "FAIL",
+        "metric": "errorRatePercent"
+      }
+    },
+    {
+      "id": "SPR-014",
+      "name": "Database pool saturation blocks",
+      "expected": {
+        "status": "FAIL",
+        "metric": "poolUtilizationPercent"
+      }
+    },
+    {
+      "id": "SPR-015",
+      "name": "Stale backup blocks recovery",
+      "expected": {
+        "status": "FAIL",
+        "control": "backupAgeHours"
+      }
+    },
+    {
+      "id": "SPR-016",
+      "name": "Stale restore drill blocks recovery",
+      "expected": {
+        "status": "FAIL",
+        "control": "restoreDrillAgeDays"
+      }
+    },
+    {
+      "id": "SPR-017",
+      "name": "Missing rollback artifact blocks",
+      "expected": {
+        "status": "FAIL",
+        "control": "rollbackArtifact"
+      }
+    },
+    {
+      "id": "SPR-018",
+      "name": "Sanitized bundle removes secrets",
+      "expected": {
+        "secretLeakCount": 0
+      }
+    },
+    {
+      "id": "SPR-019",
+      "name": "All gates produce GO",
+      "expected": {
+        "decision": "GO"
+      }
+    },
+    {
+      "id": "SPR-020",
+      "name": "Open P1 produces HOLD",
+      "expected": {
+        "decision": "HOLD"
+      }
+    }
+  ]
+}
