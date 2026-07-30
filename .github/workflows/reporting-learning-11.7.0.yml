@@ -1,0 +1,49 @@
+name: Build 11.7.0 Reporting and Learning
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reporting-learning:
+    name: Report reconciliation and forecast-learning gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+
+      - name: Use pinned Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Verify inventory baseline
+        run: node scripts/test-inventory-control-11.6.0.mjs
+
+      - name: Verify reporting and learning scenarios
+        run: node scripts/test-reporting-learning-11.7.0.mjs
+
+      - name: Generate Reporting and Learning Lab
+        run: node scripts/generate-reporting-workbench-11.7.0.mjs
+
+      - name: Generate report reconciliation evidence
+        run: node scripts/reporting-learning-control-plane-11.7.0.mjs
+
+      - name: Verify reporting release contract
+        run: node scripts/verify-reporting-learning-11.7.0.mjs
+
+      - name: Upload Build 11.7.0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ptt-build-11.7.0-reporting-learning
+          path: artifacts/build-11.7.0
+          if-no-files-found: error
+          retention-days: 30

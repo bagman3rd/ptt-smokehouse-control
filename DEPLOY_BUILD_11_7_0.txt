@@ -1,0 +1,67 @@
+PTT SMOKEHOUSE CONTROL — BUILD 11.7.0
+REPORTING AND FORECAST LEARNING
+
+PACKAGE TYPE
+Cumulative safe overlay for the complete existing repository.
+Includes Builds 11.1.0 through 11.6.0.
+
+INSTALL
+1. Extract the ZIP directly into the existing repository root.
+2. Preserve .git and all current source files.
+3. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml, migrations, or existing workflows.
+4. Run:
+   node scripts/apply-build-11.7.0.mjs
+5. Confirm all cumulative verification scripts pass.
+6. Review GitHub Desktop. Existing application files must not appear deleted.
+7. Commit:
+   Build 11.7.0 reporting and forecast learning
+8. Push origin.
+
+GENERATED ROUTE
+/reports-lab-1170
+If occupied by a non-generated page:
+/reports-lab-1170-alt
+
+CI ARTIFACT
+ptt-build-11.7.0-reporting-learning
+
+STAGING ACCEPTANCE
+1. Use isolated persistent staging and the exact release commit.
+2. Download the Build 11.7.0 CI artifact.
+3. Execute RP-001 through RP-030.
+4. Reconcile one daily report to forecast, plan, execution, inventory ledger,
+   waste, smoker, and physical-count source records.
+5. Reconcile one seven-day report to its daily reports.
+6. Verify every formula and denominator.
+7. Verify zero denominators display N/A.
+8. Verify any missing source or unexplained difference blocks completion.
+9. Verify CSV and JSON exports preserve formulas and lineage.
+10. Verify learning excludes incomplete or unreconciled observations.
+11. Verify recommendations never exceed 1.15 or fall below 0.85.
+12. Verify no recommendation applies automatically.
+13. Verify only ADMIN, OWNER, or KM can approve.
+14. Verify approval preserves recommendation and evidence.
+15. Verify tenant and location isolation server-side.
+16. Approve only with no open P0/P1 defect.
+
+STOP CONDITIONS
+- A report total does not match source transactions.
+- An unexplained difference is hidden or marked complete.
+- A missing physical count or source ID is ignored.
+- Weekly accuracy is calculated as a simple average instead of WAPE.
+- Yield uses an unstated or incorrect denominator.
+- Waste or ending-inventory rate uses an undocumented denominator.
+- Smoker utilization exceeds 100% without blocking.
+- An incomplete or unreconciled date influences learning.
+- A recommendation exceeds the approved bounds.
+- A recommendation auto-applies.
+- A Viewer or unauthorized role approves a recommendation.
+- Cross-tenant or cross-location data is combined.
+- Export omits formulas or lineage.
+- Validation-lab results are represented as durable production persistence.
+
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO AUTONOMOUS FORECAST CHANGE
+NO DURABLE WRITE CLAIM

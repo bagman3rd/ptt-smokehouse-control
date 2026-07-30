@@ -1,0 +1,120 @@
+{
+  "buildVersion": "11.7.0",
+  "engineVersion": "PTT_REPORTING_LEARNING_11_7_0",
+  "stage": "Reporting and Forecast Learning",
+  "exitGate": "Daily and weekly reports reconcile to source transactions, expose every calculation, and produce only bounded human-approved recommendations.",
+  "coreProducts": [
+    "BRISKET",
+    "PORK",
+    "RIBS",
+    "CHICKEN"
+  ],
+  "reportPeriods": [
+    "DAILY",
+    "WEEKLY"
+  ],
+  "requiredSourceDomains": [
+    "FORECAST",
+    "PRODUCTION_PLAN",
+    "LOAD_EXECUTION",
+    "SMOKER_CAPACITY",
+    "INVENTORY_LEDGER",
+    "PHYSICAL_COUNT"
+  ],
+  "metrics": {
+    "forecastVariance": {
+      "formula": "actual service usage cooked lb - approved forecast cooked lb",
+      "percentageDenominator": "approved forecast cooked lb",
+      "zeroDenominatorResult": "NOT_APPLICABLE"
+    },
+    "forecastAccuracy": {
+      "dailyFormula": "max(0, 100 - absolute forecast variance percent)",
+      "weeklyFormula": "max(0, 100 - WAPE percent)"
+    },
+    "productionVariance": {
+      "formula": "actual cooked production lb - planned cooked production lb"
+    },
+    "actualYield": {
+      "formula": "actual cooked production lb / actual raw input lb",
+      "requiresPositiveRawInput": true
+    },
+    "wasteRate": {
+      "formula": "waste cooked lb / total cooked inventory available during period",
+      "denominator": "opening cooked lb + production receipts cooked lb + transfer-in cooked lb"
+    },
+    "endingInventoryRate": {
+      "formula": "closing on-hand cooked lb / total cooked inventory available during period"
+    },
+    "planAdherence": {
+      "formula": "loads started and completed within approved tolerances / completed non-cancelled loads"
+    },
+    "smokerUtilization": {
+      "formula": "scheduled occupied capacity-minutes / available capacity-minutes",
+      "range": "0 through 100 percent"
+    }
+  },
+  "reconciliation": {
+    "quantityPrecision": 3,
+    "toleranceCookedLb": 0.01,
+    "inventoryEquation": "opening + production receipts + transfer in - service usage - waste - transfer out + adjustments = closing on hand",
+    "reportCompleteRequiresZeroUnexplainedDifference": true,
+    "missingRequiredSourceBlocksCompletion": true,
+    "sourceIdsAndHashesRetained": true
+  },
+  "learning": {
+    "minimumCompleteObservations": 4,
+    "highConfidenceObservations": 7,
+    "maximumAdjustmentPercent": 15,
+    "minimumRecommendedFactor": 0.85,
+    "maximumRecommendedFactor": 1.15,
+    "basis": "weighted actual service usage divided by approved forecast",
+    "humanApprovalRequired": true,
+    "autoApplyAllowed": false,
+    "approvedRecommendationPreservesEvidence": true
+  },
+  "exports": {
+    "formats": [
+      "CSV",
+      "JSON"
+    ],
+    "formulaGlossaryIncluded": true,
+    "sourceLineageIncluded": true,
+    "generationMustBeDeterministic": true
+  },
+  "roleControls": {
+    "ADMIN": [
+      "VIEW",
+      "EXPORT",
+      "GENERATE_RECOMMENDATION",
+      "APPROVE_RECOMMENDATION"
+    ],
+    "OWNER": [
+      "VIEW",
+      "EXPORT",
+      "GENERATE_RECOMMENDATION",
+      "APPROVE_RECOMMENDATION"
+    ],
+    "KM": [
+      "VIEW",
+      "EXPORT",
+      "GENERATE_RECOMMENDATION",
+      "APPROVE_RECOMMENDATION"
+    ],
+    "PITMASTER": [
+      "VIEW_OPERATIONAL"
+    ],
+    "KC": [
+      "VIEW_OPERATIONAL"
+    ],
+    "VIEWER": [
+      "VIEW_APPROVED"
+    ]
+  },
+  "scopeBoundary": [
+    "No Prisma migration.",
+    "No dependency change.",
+    "No autonomous forecast change.",
+    "No claim of durable report or recommendation persistence.",
+    "Notification delivery and administration remain Build 11.8.0."
+  ]
+}

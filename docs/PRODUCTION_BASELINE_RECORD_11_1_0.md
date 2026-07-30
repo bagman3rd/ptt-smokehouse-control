@@ -19,9 +19,7 @@
 | Resource | Expected name | Status | Evidence |
 |---|---|---|---|
 | Web | ptt-smokehouse-control |  |  |
-| Cron | ptt-smokehouse-control-weekly-backup |  |  |
-| Cron | ptt-smokehouse-control-daily-retention |  |  |
-| Cron | ptt-smokehouse-control-daily-digest |  |  |
+| Cron | No Render cron services defined | N/A | Removed from Blueprint |
 | PostgreSQL | ptt-smokehouse-control-db |  |  |
 
 ## Application baseline

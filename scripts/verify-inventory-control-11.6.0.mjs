@@ -300,10 +300,10 @@ pass(fs.existsSync(renderPath), "render.yaml exists");
 if (fs.existsSync(renderPath)) {
   const render = fs.readFileSync(renderPath, "utf8");
   pass(
-    /key:\s*APP_BUILD_VERSION\s*\n\s*value:\s*"11\.6\.0"/m.test(
+    /key:\s*APP_BUILD_VERSION\s*\n\s*value:\s*"11\.(?:6|7|8)\.0"/m.test(
       render,
     ),
-    "Render APP_BUILD_VERSION is 11.6.0",
+    "Render APP_BUILD_VERSION is compatible with the Build 11.6.0 inventory baseline",
   );
   pass(
     /databases:\s*[\s\S]*?name:\s*ptt-smokehouse-control-db[\s\S]*?plan:\s*basic-256mb/m.test(
@@ -312,8 +312,8 @@ if (fs.existsSync(renderPath)) {
     "database plan remains basic-256mb",
   );
   pass(
-    (render.match(/^\s*runtime:\s*node\s*$/gm) || []).length === 4,
-    "all four Render services use runtime: node",
+    (render.match(/^\s*runtime:\s*node\s*$/gm) || []).length === 1,
+    "the single Render web service uses runtime: node",
   );
 }
 

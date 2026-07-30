@@ -1,0 +1,49 @@
+name: Build 11.8.0 Notifications and Administration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notification-admin:
+    name: Notification routing, admin, and support gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 26
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+
+      - name: Use pinned Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Verify reporting baseline
+        run: node scripts/test-reporting-learning-11.7.0.mjs
+
+      - name: Verify notification and administration scenarios
+        run: node scripts/test-notification-admin-11.8.0.mjs
+
+      - name: Generate Notification and Administration Lab
+        run: node scripts/generate-notification-admin-workbench-11.8.0.mjs
+
+      - name: Generate notification and support evidence
+        run: node scripts/notification-admin-control-plane-11.8.0.mjs
+
+      - name: Verify notification/admin release contract
+        run: node scripts/verify-notification-admin-11.8.0.mjs
+
+      - name: Upload Build 11.8.0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ptt-build-11.8.0-notification-admin
+          path: artifacts/build-11.8.0
+          if-no-files-found: error
+          retention-days: 30

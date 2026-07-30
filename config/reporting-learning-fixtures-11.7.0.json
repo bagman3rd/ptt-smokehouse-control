@@ -1,0 +1,1115 @@
+{
+  "buildVersion": "11.7.0",
+  "baseDailySource": {
+    "tenantId": "tenant-ptt-validation",
+    "locationId": "location-main",
+    "operatingDate": "2026-08-03",
+    "dayType": "NORMAL_WEEKDAY",
+    "complete": true,
+    "sources": {
+      "forecastId": "forecast-2026-08-03",
+      "productionPlanId": "plan-2026-08-03",
+      "executionRecordId": "execution-2026-08-03",
+      "inventoryDayId": "inventory-2026-08-03",
+      "physicalCountRecordId": "count-2026-08-03",
+      "sourceRevision": "revision-2026-08-03"
+    },
+    "products": {
+      "BRISKET": {
+        "forecastCookedLb": 100.0,
+        "plannedCookedLb": 105.0,
+        "actualRawInputLb": 210.0,
+        "actualCookedProductionLb": 105.0,
+        "openingCookedLb": 8.0,
+        "productionReceiptCookedLb": 105.0,
+        "transferInCookedLb": 0,
+        "serviceUsageCookedLb": 96.0,
+        "wasteCookedLb": 2.0,
+        "transferOutCookedLb": 0,
+        "adjustmentCookedLb": 0,
+        "closingOnHandCookedLb": 15.0
+      },
+      "PORK": {
+        "forecastCookedLb": 110.0,
+        "plannedCookedLb": 112.0,
+        "actualRawInputLb": 200.0,
+        "actualCookedProductionLb": 110.0,
+        "openingCookedLb": 10.0,
+        "productionReceiptCookedLb": 110.0,
+        "transferInCookedLb": 0,
+        "serviceUsageCookedLb": 104.0,
+        "wasteCookedLb": 3.0,
+        "transferOutCookedLb": 0,
+        "adjustmentCookedLb": 0,
+        "closingOnHandCookedLb": 13.0
+      },
+      "RIBS": {
+        "forecastCookedLb": 60.0,
+        "plannedCookedLb": 63.0,
+        "actualRawInputLb": 70.0,
+        "actualCookedProductionLb": 63.0,
+        "openingCookedLb": 6.0,
+        "productionReceiptCookedLb": 63.0,
+        "transferInCookedLb": 0,
+        "serviceUsageCookedLb": 58.0,
+        "wasteCookedLb": 1.0,
+        "transferOutCookedLb": 0,
+        "adjustmentCookedLb": 0,
+        "closingOnHandCookedLb": 10.0
+      },
+      "CHICKEN": {
+        "forecastCookedLb": 40.0,
+        "plannedCookedLb": 41.25,
+        "actualRawInputLb": 55.0,
+        "actualCookedProductionLb": 41.25,
+        "openingCookedLb": 4.0,
+        "productionReceiptCookedLb": 41.25,
+        "transferInCookedLb": 0,
+        "serviceUsageCookedLb": 38.0,
+        "wasteCookedLb": 0.75,
+        "transferOutCookedLb": 0,
+        "adjustmentCookedLb": 0,
+        "closingOnHandCookedLb": 6.5
+      }
+    },
+    "loads": [
+      {
+        "loadId": "brisket-2026-08-03",
+        "productCode": "BRISKET",
+        "plannedStartOffsetMinutes": -900,
+        "actualStartOffsetMinutes": -890,
+        "plannedEndOffsetMinutes": -180,
+        "actualEndOffsetMinutes": -170,
+        "cancelled": false
+      },
+      {
+        "loadId": "pork-2026-08-03",
+        "productCode": "PORK",
+        "plannedStartOffsetMinutes": -420,
+        "actualStartOffsetMinutes": -415,
+        "plannedEndOffsetMinutes": 300,
+        "actualEndOffsetMinutes": 305,
+        "cancelled": false
+      },
+      {
+        "loadId": "ribs-2026-08-03",
+        "productCode": "RIBS",
+        "plannedStartOffsetMinutes": 180,
+        "actualStartOffsetMinutes": 190,
+        "plannedEndOffsetMinutes": 480,
+        "actualEndOffsetMinutes": 485,
+        "cancelled": false
+      },
+      {
+        "loadId": "chicken-2026-08-03",
+        "productCode": "CHICKEN",
+        "plannedStartOffsetMinutes": 300,
+        "actualStartOffsetMinutes": 305,
+        "plannedEndOffsetMinutes": 480,
+        "actualEndOffsetMinutes": 490,
+        "cancelled": false
+      }
+    ],
+    "smokers": [
+      {
+        "smokerId": "ole",
+        "smokerName": "Ole Hickory EL-ED/X",
+        "availableCapacityMinutes": 8400,
+        "occupiedCapacityMinutes": 5880.0
+      },
+      {
+        "smokerId": "sp",
+        "smokerName": "Southern Pride SPK-700",
+        "availableCapacityMinutes": 9600,
+        "occupiedCapacityMinutes": 6720.0
+      }
+    ]
+  },
+  "weeklySources": [
+    {
+      "tenantId": "tenant-ptt-validation",
+      "locationId": "location-main",
+      "operatingDate": "2026-07-27",
+      "dayType": "NORMAL_WEEKDAY",
+      "complete": true,
+      "sources": {
+        "forecastId": "forecast-2026-07-27",
+        "productionPlanId": "plan-2026-07-27",
+        "executionRecordId": "execution-2026-07-27",
+        "inventoryDayId": "inventory-2026-07-27",
+        "physicalCountRecordId": "count-2026-07-27",
+        "sourceRevision": "revision-2026-07-27"
+      },
+      "products": {
+        "BRISKET": {
+          "forecastCookedLb": 98.0,
+          "plannedCookedLb": 102.9,
+          "actualRawInputLb": 205.8,
+          "actualCookedProductionLb": 102.9,
+          "openingCookedLb": 7.84,
+          "productionReceiptCookedLb": 102.9,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 94.08,
+          "wasteCookedLb": 1.96,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 14.7
+        },
+        "PORK": {
+          "forecastCookedLb": 107.8,
+          "plannedCookedLb": 109.76,
+          "actualRawInputLb": 196.0,
+          "actualCookedProductionLb": 107.8,
+          "openingCookedLb": 9.8,
+          "productionReceiptCookedLb": 107.8,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 101.92,
+          "wasteCookedLb": 2.94,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 12.74
+        },
+        "RIBS": {
+          "forecastCookedLb": 58.8,
+          "plannedCookedLb": 61.74,
+          "actualRawInputLb": 68.6,
+          "actualCookedProductionLb": 61.74,
+          "openingCookedLb": 5.88,
+          "productionReceiptCookedLb": 61.74,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 56.84,
+          "wasteCookedLb": 0.98,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 9.8
+        },
+        "CHICKEN": {
+          "forecastCookedLb": 39.2,
+          "plannedCookedLb": 40.425,
+          "actualRawInputLb": 53.9,
+          "actualCookedProductionLb": 40.425,
+          "openingCookedLb": 3.92,
+          "productionReceiptCookedLb": 40.425,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 37.24,
+          "wasteCookedLb": 0.735,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 6.37
+        }
+      },
+      "loads": [
+        {
+          "loadId": "brisket-2026-07-27",
+          "productCode": "BRISKET",
+          "plannedStartOffsetMinutes": -900,
+          "actualStartOffsetMinutes": -890,
+          "plannedEndOffsetMinutes": -180,
+          "actualEndOffsetMinutes": -170,
+          "cancelled": false
+        },
+        {
+          "loadId": "pork-2026-07-27",
+          "productCode": "PORK",
+          "plannedStartOffsetMinutes": -420,
+          "actualStartOffsetMinutes": -415,
+          "plannedEndOffsetMinutes": 300,
+          "actualEndOffsetMinutes": 305,
+          "cancelled": false
+        },
+        {
+          "loadId": "ribs-2026-07-27",
+          "productCode": "RIBS",
+          "plannedStartOffsetMinutes": 180,
+          "actualStartOffsetMinutes": 190,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 485,
+          "cancelled": false
+        },
+        {
+          "loadId": "chicken-2026-07-27",
+          "productCode": "CHICKEN",
+          "plannedStartOffsetMinutes": 300,
+          "actualStartOffsetMinutes": 305,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 490,
+          "cancelled": false
+        }
+      ],
+      "smokers": [
+        {
+          "smokerId": "ole",
+          "smokerName": "Ole Hickory EL-ED/X",
+          "availableCapacityMinutes": 8400,
+          "occupiedCapacityMinutes": 5762.4
+        },
+        {
+          "smokerId": "sp",
+          "smokerName": "Southern Pride SPK-700",
+          "availableCapacityMinutes": 9600,
+          "occupiedCapacityMinutes": 6585.6
+        }
+      ]
+    },
+    {
+      "tenantId": "tenant-ptt-validation",
+      "locationId": "location-main",
+      "operatingDate": "2026-07-28",
+      "dayType": "NORMAL_WEEKDAY",
+      "complete": true,
+      "sources": {
+        "forecastId": "forecast-2026-07-28",
+        "productionPlanId": "plan-2026-07-28",
+        "executionRecordId": "execution-2026-07-28",
+        "inventoryDayId": "inventory-2026-07-28",
+        "physicalCountRecordId": "count-2026-07-28",
+        "sourceRevision": "revision-2026-07-28"
+      },
+      "products": {
+        "BRISKET": {
+          "forecastCookedLb": 100.0,
+          "plannedCookedLb": 105.0,
+          "actualRawInputLb": 210.0,
+          "actualCookedProductionLb": 105.0,
+          "openingCookedLb": 8.0,
+          "productionReceiptCookedLb": 105.0,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 96.0,
+          "wasteCookedLb": 2.0,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 15.0
+        },
+        "PORK": {
+          "forecastCookedLb": 110.0,
+          "plannedCookedLb": 112.0,
+          "actualRawInputLb": 200.0,
+          "actualCookedProductionLb": 110.0,
+          "openingCookedLb": 10.0,
+          "productionReceiptCookedLb": 110.0,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 104.0,
+          "wasteCookedLb": 3.0,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 13.0
+        },
+        "RIBS": {
+          "forecastCookedLb": 60.0,
+          "plannedCookedLb": 63.0,
+          "actualRawInputLb": 70.0,
+          "actualCookedProductionLb": 63.0,
+          "openingCookedLb": 6.0,
+          "productionReceiptCookedLb": 63.0,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 58.0,
+          "wasteCookedLb": 1.0,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 10.0
+        },
+        "CHICKEN": {
+          "forecastCookedLb": 40.0,
+          "plannedCookedLb": 41.25,
+          "actualRawInputLb": 55.0,
+          "actualCookedProductionLb": 41.25,
+          "openingCookedLb": 4.0,
+          "productionReceiptCookedLb": 41.25,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 38.0,
+          "wasteCookedLb": 0.75,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 6.5
+        }
+      },
+      "loads": [
+        {
+          "loadId": "brisket-2026-07-28",
+          "productCode": "BRISKET",
+          "plannedStartOffsetMinutes": -900,
+          "actualStartOffsetMinutes": -890,
+          "plannedEndOffsetMinutes": -180,
+          "actualEndOffsetMinutes": -170,
+          "cancelled": false
+        },
+        {
+          "loadId": "pork-2026-07-28",
+          "productCode": "PORK",
+          "plannedStartOffsetMinutes": -420,
+          "actualStartOffsetMinutes": -415,
+          "plannedEndOffsetMinutes": 300,
+          "actualEndOffsetMinutes": 305,
+          "cancelled": false
+        },
+        {
+          "loadId": "ribs-2026-07-28",
+          "productCode": "RIBS",
+          "plannedStartOffsetMinutes": 180,
+          "actualStartOffsetMinutes": 190,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 485,
+          "cancelled": false
+        },
+        {
+          "loadId": "chicken-2026-07-28",
+          "productCode": "CHICKEN",
+          "plannedStartOffsetMinutes": 300,
+          "actualStartOffsetMinutes": 305,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 490,
+          "cancelled": false
+        }
+      ],
+      "smokers": [
+        {
+          "smokerId": "ole",
+          "smokerName": "Ole Hickory EL-ED/X",
+          "availableCapacityMinutes": 8400,
+          "occupiedCapacityMinutes": 5880.0
+        },
+        {
+          "smokerId": "sp",
+          "smokerName": "Southern Pride SPK-700",
+          "availableCapacityMinutes": 9600,
+          "occupiedCapacityMinutes": 6720.0
+        }
+      ]
+    },
+    {
+      "tenantId": "tenant-ptt-validation",
+      "locationId": "location-main",
+      "operatingDate": "2026-07-29",
+      "dayType": "NORMAL_WEEKDAY",
+      "complete": true,
+      "sources": {
+        "forecastId": "forecast-2026-07-29",
+        "productionPlanId": "plan-2026-07-29",
+        "executionRecordId": "execution-2026-07-29",
+        "inventoryDayId": "inventory-2026-07-29",
+        "physicalCountRecordId": "count-2026-07-29",
+        "sourceRevision": "revision-2026-07-29"
+      },
+      "products": {
+        "BRISKET": {
+          "forecastCookedLb": 102.0,
+          "plannedCookedLb": 107.1,
+          "actualRawInputLb": 214.2,
+          "actualCookedProductionLb": 107.1,
+          "openingCookedLb": 8.16,
+          "productionReceiptCookedLb": 107.1,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 97.92,
+          "wasteCookedLb": 2.04,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 15.3
+        },
+        "PORK": {
+          "forecastCookedLb": 112.2,
+          "plannedCookedLb": 114.24,
+          "actualRawInputLb": 204.0,
+          "actualCookedProductionLb": 112.2,
+          "openingCookedLb": 10.2,
+          "productionReceiptCookedLb": 112.2,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 106.08,
+          "wasteCookedLb": 3.06,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 13.26
+        },
+        "RIBS": {
+          "forecastCookedLb": 61.2,
+          "plannedCookedLb": 64.26,
+          "actualRawInputLb": 71.4,
+          "actualCookedProductionLb": 64.26,
+          "openingCookedLb": 6.12,
+          "productionReceiptCookedLb": 64.26,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 59.16,
+          "wasteCookedLb": 1.02,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 10.2
+        },
+        "CHICKEN": {
+          "forecastCookedLb": 40.8,
+          "plannedCookedLb": 42.075,
+          "actualRawInputLb": 56.1,
+          "actualCookedProductionLb": 42.075,
+          "openingCookedLb": 4.08,
+          "productionReceiptCookedLb": 42.075,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 38.76,
+          "wasteCookedLb": 0.765,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 6.63
+        }
+      },
+      "loads": [
+        {
+          "loadId": "brisket-2026-07-29",
+          "productCode": "BRISKET",
+          "plannedStartOffsetMinutes": -900,
+          "actualStartOffsetMinutes": -890,
+          "plannedEndOffsetMinutes": -180,
+          "actualEndOffsetMinutes": -170,
+          "cancelled": false
+        },
+        {
+          "loadId": "pork-2026-07-29",
+          "productCode": "PORK",
+          "plannedStartOffsetMinutes": -420,
+          "actualStartOffsetMinutes": -415,
+          "plannedEndOffsetMinutes": 300,
+          "actualEndOffsetMinutes": 305,
+          "cancelled": false
+        },
+        {
+          "loadId": "ribs-2026-07-29",
+          "productCode": "RIBS",
+          "plannedStartOffsetMinutes": 180,
+          "actualStartOffsetMinutes": 190,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 485,
+          "cancelled": false
+        },
+        {
+          "loadId": "chicken-2026-07-29",
+          "productCode": "CHICKEN",
+          "plannedStartOffsetMinutes": 300,
+          "actualStartOffsetMinutes": 305,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 490,
+          "cancelled": false
+        }
+      ],
+      "smokers": [
+        {
+          "smokerId": "ole",
+          "smokerName": "Ole Hickory EL-ED/X",
+          "availableCapacityMinutes": 8400,
+          "occupiedCapacityMinutes": 5997.6
+        },
+        {
+          "smokerId": "sp",
+          "smokerName": "Southern Pride SPK-700",
+          "availableCapacityMinutes": 9600,
+          "occupiedCapacityMinutes": 6854.4
+        }
+      ]
+    },
+    {
+      "tenantId": "tenant-ptt-validation",
+      "locationId": "location-main",
+      "operatingDate": "2026-07-30",
+      "dayType": "NORMAL_WEEKDAY",
+      "complete": true,
+      "sources": {
+        "forecastId": "forecast-2026-07-30",
+        "productionPlanId": "plan-2026-07-30",
+        "executionRecordId": "execution-2026-07-30",
+        "inventoryDayId": "inventory-2026-07-30",
+        "physicalCountRecordId": "count-2026-07-30",
+        "sourceRevision": "revision-2026-07-30"
+      },
+      "products": {
+        "BRISKET": {
+          "forecastCookedLb": 104.0,
+          "plannedCookedLb": 109.2,
+          "actualRawInputLb": 218.4,
+          "actualCookedProductionLb": 109.2,
+          "openingCookedLb": 8.32,
+          "productionReceiptCookedLb": 109.2,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 99.84,
+          "wasteCookedLb": 2.08,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 15.6
+        },
+        "PORK": {
+          "forecastCookedLb": 114.4,
+          "plannedCookedLb": 116.48,
+          "actualRawInputLb": 208.0,
+          "actualCookedProductionLb": 114.4,
+          "openingCookedLb": 10.4,
+          "productionReceiptCookedLb": 114.4,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 108.16,
+          "wasteCookedLb": 3.12,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 13.52
+        },
+        "RIBS": {
+          "forecastCookedLb": 62.4,
+          "plannedCookedLb": 65.52,
+          "actualRawInputLb": 72.8,
+          "actualCookedProductionLb": 65.52,
+          "openingCookedLb": 6.24,
+          "productionReceiptCookedLb": 65.52,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 60.32,
+          "wasteCookedLb": 1.04,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 10.4
+        },
+        "CHICKEN": {
+          "forecastCookedLb": 41.6,
+          "plannedCookedLb": 42.9,
+          "actualRawInputLb": 57.2,
+          "actualCookedProductionLb": 42.9,
+          "openingCookedLb": 4.16,
+          "productionReceiptCookedLb": 42.9,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 39.52,
+          "wasteCookedLb": 0.78,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 6.76
+        }
+      },
+      "loads": [
+        {
+          "loadId": "brisket-2026-07-30",
+          "productCode": "BRISKET",
+          "plannedStartOffsetMinutes": -900,
+          "actualStartOffsetMinutes": -890,
+          "plannedEndOffsetMinutes": -180,
+          "actualEndOffsetMinutes": -170,
+          "cancelled": false
+        },
+        {
+          "loadId": "pork-2026-07-30",
+          "productCode": "PORK",
+          "plannedStartOffsetMinutes": -420,
+          "actualStartOffsetMinutes": -415,
+          "plannedEndOffsetMinutes": 300,
+          "actualEndOffsetMinutes": 305,
+          "cancelled": false
+        },
+        {
+          "loadId": "ribs-2026-07-30",
+          "productCode": "RIBS",
+          "plannedStartOffsetMinutes": 180,
+          "actualStartOffsetMinutes": 190,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 485,
+          "cancelled": false
+        },
+        {
+          "loadId": "chicken-2026-07-30",
+          "productCode": "CHICKEN",
+          "plannedStartOffsetMinutes": 300,
+          "actualStartOffsetMinutes": 305,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 490,
+          "cancelled": false
+        }
+      ],
+      "smokers": [
+        {
+          "smokerId": "ole",
+          "smokerName": "Ole Hickory EL-ED/X",
+          "availableCapacityMinutes": 8400,
+          "occupiedCapacityMinutes": 6115.2
+        },
+        {
+          "smokerId": "sp",
+          "smokerName": "Southern Pride SPK-700",
+          "availableCapacityMinutes": 9600,
+          "occupiedCapacityMinutes": 6988.8
+        }
+      ]
+    },
+    {
+      "tenantId": "tenant-ptt-validation",
+      "locationId": "location-main",
+      "operatingDate": "2026-07-31",
+      "dayType": "NORMAL_WEEKDAY",
+      "complete": true,
+      "sources": {
+        "forecastId": "forecast-2026-07-31",
+        "productionPlanId": "plan-2026-07-31",
+        "executionRecordId": "execution-2026-07-31",
+        "inventoryDayId": "inventory-2026-07-31",
+        "physicalCountRecordId": "count-2026-07-31",
+        "sourceRevision": "revision-2026-07-31"
+      },
+      "products": {
+        "BRISKET": {
+          "forecastCookedLb": 106.0,
+          "plannedCookedLb": 111.3,
+          "actualRawInputLb": 222.6,
+          "actualCookedProductionLb": 111.3,
+          "openingCookedLb": 8.48,
+          "productionReceiptCookedLb": 111.3,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 101.76,
+          "wasteCookedLb": 2.12,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 15.9
+        },
+        "PORK": {
+          "forecastCookedLb": 116.6,
+          "plannedCookedLb": 118.72,
+          "actualRawInputLb": 212.0,
+          "actualCookedProductionLb": 116.6,
+          "openingCookedLb": 10.6,
+          "productionReceiptCookedLb": 116.6,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 110.24,
+          "wasteCookedLb": 3.18,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 13.78
+        },
+        "RIBS": {
+          "forecastCookedLb": 63.6,
+          "plannedCookedLb": 66.78,
+          "actualRawInputLb": 74.2,
+          "actualCookedProductionLb": 66.78,
+          "openingCookedLb": 6.36,
+          "productionReceiptCookedLb": 66.78,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 61.48,
+          "wasteCookedLb": 1.06,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 10.6
+        },
+        "CHICKEN": {
+          "forecastCookedLb": 42.4,
+          "plannedCookedLb": 43.725,
+          "actualRawInputLb": 58.3,
+          "actualCookedProductionLb": 43.725,
+          "openingCookedLb": 4.24,
+          "productionReceiptCookedLb": 43.725,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 40.28,
+          "wasteCookedLb": 0.795,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 6.89
+        }
+      },
+      "loads": [
+        {
+          "loadId": "brisket-2026-07-31",
+          "productCode": "BRISKET",
+          "plannedStartOffsetMinutes": -900,
+          "actualStartOffsetMinutes": -890,
+          "plannedEndOffsetMinutes": -180,
+          "actualEndOffsetMinutes": -170,
+          "cancelled": false
+        },
+        {
+          "loadId": "pork-2026-07-31",
+          "productCode": "PORK",
+          "plannedStartOffsetMinutes": -420,
+          "actualStartOffsetMinutes": -415,
+          "plannedEndOffsetMinutes": 300,
+          "actualEndOffsetMinutes": 305,
+          "cancelled": false
+        },
+        {
+          "loadId": "ribs-2026-07-31",
+          "productCode": "RIBS",
+          "plannedStartOffsetMinutes": 180,
+          "actualStartOffsetMinutes": 190,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 485,
+          "cancelled": false
+        },
+        {
+          "loadId": "chicken-2026-07-31",
+          "productCode": "CHICKEN",
+          "plannedStartOffsetMinutes": 300,
+          "actualStartOffsetMinutes": 305,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 490,
+          "cancelled": false
+        }
+      ],
+      "smokers": [
+        {
+          "smokerId": "ole",
+          "smokerName": "Ole Hickory EL-ED/X",
+          "availableCapacityMinutes": 8400,
+          "occupiedCapacityMinutes": 6232.8
+        },
+        {
+          "smokerId": "sp",
+          "smokerName": "Southern Pride SPK-700",
+          "availableCapacityMinutes": 9600,
+          "occupiedCapacityMinutes": 7123.2
+        }
+      ]
+    },
+    {
+      "tenantId": "tenant-ptt-validation",
+      "locationId": "location-main",
+      "operatingDate": "2026-08-01",
+      "dayType": "NORMAL_WEEKDAY",
+      "complete": true,
+      "sources": {
+        "forecastId": "forecast-2026-08-01",
+        "productionPlanId": "plan-2026-08-01",
+        "executionRecordId": "execution-2026-08-01",
+        "inventoryDayId": "inventory-2026-08-01",
+        "physicalCountRecordId": "count-2026-08-01",
+        "sourceRevision": "revision-2026-08-01"
+      },
+      "products": {
+        "BRISKET": {
+          "forecastCookedLb": 108.0,
+          "plannedCookedLb": 113.4,
+          "actualRawInputLb": 226.8,
+          "actualCookedProductionLb": 113.4,
+          "openingCookedLb": 8.64,
+          "productionReceiptCookedLb": 113.4,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 103.68,
+          "wasteCookedLb": 2.16,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 16.2
+        },
+        "PORK": {
+          "forecastCookedLb": 118.8,
+          "plannedCookedLb": 120.96,
+          "actualRawInputLb": 216.0,
+          "actualCookedProductionLb": 118.8,
+          "openingCookedLb": 10.8,
+          "productionReceiptCookedLb": 118.8,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 112.32,
+          "wasteCookedLb": 3.24,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 14.04
+        },
+        "RIBS": {
+          "forecastCookedLb": 64.8,
+          "plannedCookedLb": 68.04,
+          "actualRawInputLb": 75.6,
+          "actualCookedProductionLb": 68.04,
+          "openingCookedLb": 6.48,
+          "productionReceiptCookedLb": 68.04,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 62.64,
+          "wasteCookedLb": 1.08,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 10.8
+        },
+        "CHICKEN": {
+          "forecastCookedLb": 43.2,
+          "plannedCookedLb": 44.55,
+          "actualRawInputLb": 59.4,
+          "actualCookedProductionLb": 44.55,
+          "openingCookedLb": 4.32,
+          "productionReceiptCookedLb": 44.55,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 41.04,
+          "wasteCookedLb": 0.81,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 7.02
+        }
+      },
+      "loads": [
+        {
+          "loadId": "brisket-2026-08-01",
+          "productCode": "BRISKET",
+          "plannedStartOffsetMinutes": -900,
+          "actualStartOffsetMinutes": -890,
+          "plannedEndOffsetMinutes": -180,
+          "actualEndOffsetMinutes": -170,
+          "cancelled": false
+        },
+        {
+          "loadId": "pork-2026-08-01",
+          "productCode": "PORK",
+          "plannedStartOffsetMinutes": -420,
+          "actualStartOffsetMinutes": -415,
+          "plannedEndOffsetMinutes": 300,
+          "actualEndOffsetMinutes": 305,
+          "cancelled": false
+        },
+        {
+          "loadId": "ribs-2026-08-01",
+          "productCode": "RIBS",
+          "plannedStartOffsetMinutes": 180,
+          "actualStartOffsetMinutes": 190,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 485,
+          "cancelled": false
+        },
+        {
+          "loadId": "chicken-2026-08-01",
+          "productCode": "CHICKEN",
+          "plannedStartOffsetMinutes": 300,
+          "actualStartOffsetMinutes": 305,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 490,
+          "cancelled": false
+        }
+      ],
+      "smokers": [
+        {
+          "smokerId": "ole",
+          "smokerName": "Ole Hickory EL-ED/X",
+          "availableCapacityMinutes": 8400,
+          "occupiedCapacityMinutes": 6350.4
+        },
+        {
+          "smokerId": "sp",
+          "smokerName": "Southern Pride SPK-700",
+          "availableCapacityMinutes": 9600,
+          "occupiedCapacityMinutes": 7257.6
+        }
+      ]
+    },
+    {
+      "tenantId": "tenant-ptt-validation",
+      "locationId": "location-main",
+      "operatingDate": "2026-08-02",
+      "dayType": "NORMAL_WEEKDAY",
+      "complete": true,
+      "sources": {
+        "forecastId": "forecast-2026-08-02",
+        "productionPlanId": "plan-2026-08-02",
+        "executionRecordId": "execution-2026-08-02",
+        "inventoryDayId": "inventory-2026-08-02",
+        "physicalCountRecordId": "count-2026-08-02",
+        "sourceRevision": "revision-2026-08-02"
+      },
+      "products": {
+        "BRISKET": {
+          "forecastCookedLb": 110.0,
+          "plannedCookedLb": 115.5,
+          "actualRawInputLb": 231.0,
+          "actualCookedProductionLb": 115.5,
+          "openingCookedLb": 8.8,
+          "productionReceiptCookedLb": 115.5,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 105.6,
+          "wasteCookedLb": 2.2,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 16.5
+        },
+        "PORK": {
+          "forecastCookedLb": 121.0,
+          "plannedCookedLb": 123.2,
+          "actualRawInputLb": 220.0,
+          "actualCookedProductionLb": 121.0,
+          "openingCookedLb": 11.0,
+          "productionReceiptCookedLb": 121.0,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 114.4,
+          "wasteCookedLb": 3.3,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 14.3
+        },
+        "RIBS": {
+          "forecastCookedLb": 66.0,
+          "plannedCookedLb": 69.3,
+          "actualRawInputLb": 77.0,
+          "actualCookedProductionLb": 69.3,
+          "openingCookedLb": 6.6,
+          "productionReceiptCookedLb": 69.3,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 63.8,
+          "wasteCookedLb": 1.1,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 11.0
+        },
+        "CHICKEN": {
+          "forecastCookedLb": 44.0,
+          "plannedCookedLb": 45.375,
+          "actualRawInputLb": 60.5,
+          "actualCookedProductionLb": 45.375,
+          "openingCookedLb": 4.4,
+          "productionReceiptCookedLb": 45.375,
+          "transferInCookedLb": 0,
+          "serviceUsageCookedLb": 41.8,
+          "wasteCookedLb": 0.825,
+          "transferOutCookedLb": 0,
+          "adjustmentCookedLb": 0,
+          "closingOnHandCookedLb": 7.15
+        }
+      },
+      "loads": [
+        {
+          "loadId": "brisket-2026-08-02",
+          "productCode": "BRISKET",
+          "plannedStartOffsetMinutes": -900,
+          "actualStartOffsetMinutes": -890,
+          "plannedEndOffsetMinutes": -180,
+          "actualEndOffsetMinutes": -170,
+          "cancelled": false
+        },
+        {
+          "loadId": "pork-2026-08-02",
+          "productCode": "PORK",
+          "plannedStartOffsetMinutes": -420,
+          "actualStartOffsetMinutes": -415,
+          "plannedEndOffsetMinutes": 300,
+          "actualEndOffsetMinutes": 305,
+          "cancelled": false
+        },
+        {
+          "loadId": "ribs-2026-08-02",
+          "productCode": "RIBS",
+          "plannedStartOffsetMinutes": 180,
+          "actualStartOffsetMinutes": 190,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 485,
+          "cancelled": false
+        },
+        {
+          "loadId": "chicken-2026-08-02",
+          "productCode": "CHICKEN",
+          "plannedStartOffsetMinutes": 300,
+          "actualStartOffsetMinutes": 305,
+          "plannedEndOffsetMinutes": 480,
+          "actualEndOffsetMinutes": 490,
+          "cancelled": false
+        }
+      ],
+      "smokers": [
+        {
+          "smokerId": "ole",
+          "smokerName": "Ole Hickory EL-ED/X",
+          "availableCapacityMinutes": 8400,
+          "occupiedCapacityMinutes": 6468.0
+        },
+        {
+          "smokerId": "sp",
+          "smokerName": "Southern Pride SPK-700",
+          "availableCapacityMinutes": 9600,
+          "occupiedCapacityMinutes": 7392.0
+        }
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "RL-001",
+      "name": "Complete daily reconciliation",
+      "expected": {
+        "status": "COMPLETE",
+        "unexplainedDifferenceCookedLb": 0
+      }
+    },
+    {
+      "id": "RL-002",
+      "name": "Forecast variance and accuracy",
+      "expected": {
+        "BRISKET_varianceCookedLb": -4,
+        "BRISKET_accuracyPercent": 96
+      }
+    },
+    {
+      "id": "RL-003",
+      "name": "Zero forecast denominator",
+      "expected": {
+        "variancePercent": null,
+        "accuracyPercent": null
+      }
+    },
+    {
+      "id": "RL-004",
+      "name": "Actual yield calculation",
+      "expected": {
+        "PORK_yieldPercent": 55
+      }
+    },
+    {
+      "id": "RL-005",
+      "name": "Waste rate calculation",
+      "expected": {
+        "PORK_wasteRatePercent": 2.5
+      }
+    },
+    {
+      "id": "RL-006",
+      "name": "Plan adherence",
+      "expected": {
+        "adherencePercent": 100
+      }
+    },
+    {
+      "id": "RL-007",
+      "name": "Smoker utilization",
+      "expected": {
+        "utilizationPercent": 70
+      }
+    },
+    {
+      "id": "RL-008",
+      "name": "Missing required source blocks completion",
+      "expected": {
+        "status": "BLOCKED",
+        "missingSource": "physicalCountRecordId"
+      }
+    },
+    {
+      "id": "RL-009",
+      "name": "Weekly aggregation reconciles",
+      "expected": {
+        "days": 7,
+        "status": "COMPLETE"
+      }
+    },
+    {
+      "id": "RL-010",
+      "name": "Recommendation is bounded",
+      "expected": {
+        "minimumFactor": 0.85,
+        "maximumFactor": 1.15
+      }
+    },
+    {
+      "id": "RL-011",
+      "name": "Insufficient observations produce no recommendation",
+      "expected": {
+        "status": "INSUFFICIENT_DATA"
+      }
+    },
+    {
+      "id": "RL-012",
+      "name": "Approved recommendation preserves evidence",
+      "expected": {
+        "recordVersion": "PTT_FORECAST_RECOMMENDATION_APPROVAL_11_7_0"
+      }
+    },
+    {
+      "id": "RL-013",
+      "name": "Exports retain formulas and lineage",
+      "expected": {
+        "formats": [
+          "CSV",
+          "JSON"
+        ],
+        "formulaGlossary": true
+      }
+    },
+    {
+      "id": "RL-014",
+      "name": "Cross-tenant observations are rejected",
+      "expected": {
+        "errorField": "tenantId"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+defect_id,severity,title,environment,build,git_commit,role,tenant,location,report_type,period_start,period_end,operating_date,product,route,scenario,source_ids,preconditions,steps,expected,actual,evidence,status,owner,target_build,retest_result

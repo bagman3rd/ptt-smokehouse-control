@@ -1,0 +1,345 @@
+{
+  "buildVersion": "11.8.0",
+  "tenant": {
+    "tenantId": "tenant-ptt-validation",
+    "locationId": "location-main",
+    "timezone": "America/New_York",
+    "recipients": [
+      {
+        "recipientId": "user-owner",
+        "name": "Owner Validation",
+        "role": "OWNER",
+        "status": "ACTIVE",
+        "channels": {
+          "IN_APP": true,
+          "EMAIL": true,
+          "SMS": true
+        },
+        "quietHours": {
+          "start": "22:00",
+          "end": "07:00"
+        }
+      },
+      {
+        "recipientId": "user-km",
+        "name": "Kitchen Manager",
+        "role": "KM",
+        "status": "ACTIVE",
+        "channels": {
+          "IN_APP": true,
+          "EMAIL": true,
+          "SMS": true
+        },
+        "quietHours": {
+          "start": "23:00",
+          "end": "06:00"
+        }
+      },
+      {
+        "recipientId": "user-pit",
+        "name": "Pitmaster",
+        "role": "PITMASTER",
+        "status": "ACTIVE",
+        "channels": {
+          "IN_APP": true,
+          "EMAIL": false,
+          "SMS": true
+        },
+        "quietHours": {
+          "start": "23:00",
+          "end": "06:00"
+        }
+      },
+      {
+        "recipientId": "user-kc",
+        "name": "Kitchen Coordinator",
+        "role": "KC",
+        "status": "ACTIVE",
+        "channels": {
+          "IN_APP": true,
+          "EMAIL": true,
+          "SMS": false
+        },
+        "quietHours": {
+          "start": "22:30",
+          "end": "06:30"
+        }
+      },
+      {
+        "recipientId": "user-viewer",
+        "name": "Viewer",
+        "role": "VIEWER",
+        "status": "ACTIVE",
+        "channels": {
+          "IN_APP": true,
+          "EMAIL": false,
+          "SMS": false
+        },
+        "quietHours": {
+          "start": "22:00",
+          "end": "07:00"
+        }
+      },
+      {
+        "recipientId": "user-inactive",
+        "name": "Former Manager",
+        "role": "KM",
+        "status": "INACTIVE",
+        "channels": {
+          "IN_APP": true,
+          "EMAIL": true,
+          "SMS": true
+        },
+        "quietHours": {
+          "start": "22:00",
+          "end": "07:00"
+        }
+      }
+    ]
+  },
+  "providers": [
+    {
+      "providerId": "in-app",
+      "channel": "IN_APP",
+      "configured": true,
+      "enabled": true,
+      "lastSuccessAt": "2026-08-03T20:00:00.000Z",
+      "lastFailureAt": null,
+      "consecutiveFailures": 0
+    },
+    {
+      "providerId": "email-primary",
+      "channel": "EMAIL",
+      "configured": true,
+      "enabled": true,
+      "lastSuccessAt": "2026-08-03T19:55:00.000Z",
+      "lastFailureAt": "2026-08-03T18:00:00.000Z",
+      "consecutiveFailures": 0
+    },
+    {
+      "providerId": "sms-primary",
+      "channel": "SMS",
+      "configured": true,
+      "enabled": true,
+      "lastSuccessAt": "2026-08-03T19:50:00.000Z",
+      "lastFailureAt": null,
+      "consecutiveFailures": 0
+    }
+  ],
+  "rules": [
+    {
+      "ruleId": "critical-ops",
+      "eventTypes": [
+        "NEGATIVE_INVENTORY",
+        "SERVICE_READINESS_RISK",
+        "LOAD_EXCEPTION_OPENED",
+        "QUALITY_HOLD_OPENED",
+        "BLOCKING_COUNT_VARIANCE"
+      ],
+      "minimumSeverity": "P1",
+      "roles": [
+        "OWNER",
+        "KM"
+      ],
+      "channels": [
+        "IN_APP",
+        "EMAIL",
+        "SMS"
+      ],
+      "P1BypassesQuietHours": true,
+      "enabled": true
+    },
+    {
+      "ruleId": "operations-standard",
+      "eventTypes": [
+        "MISSED_LOAD_START",
+        "OPERATING_DAY_CLOSE_DUE"
+      ],
+      "minimumSeverity": "P2",
+      "roles": [
+        "KM",
+        "PITMASTER",
+        "KC"
+      ],
+      "channels": [
+        "IN_APP",
+        "EMAIL"
+      ],
+      "P1BypassesQuietHours": false,
+      "enabled": true
+    },
+    {
+      "ruleId": "management-reporting",
+      "eventTypes": [
+        "REPORT_RECONCILIATION_BLOCKED",
+        "FORECAST_RECOMMENDATION_READY",
+        "BACKUP_STALE",
+        "CRON_FAILURE",
+        "PROVIDER_DEGRADED"
+      ],
+      "minimumSeverity": "P3",
+      "roles": [
+        "ADMIN",
+        "OWNER",
+        "KM"
+      ],
+      "channels": [
+        "IN_APP",
+        "EMAIL"
+      ],
+      "P1BypassesQuietHours": false,
+      "enabled": true
+    }
+  ],
+  "adminSnapshot": {
+    "buildIdentity": {
+      "appBuildVersion": "11.8.0",
+      "gitCommit": "synthetic-commit-1180",
+      "environment": "staging"
+    },
+    "services": [
+      {
+        "name": "ptt-smokehouse-control",
+        "type": "web",
+        "status": "HEALTHY"
+      }
+    ],
+    "cronInventory": [],
+    "database": {
+      "name": "ptt-smokehouse-control-db",
+      "plan": "basic-256mb",
+      "region": "oregon",
+      "postgresMajorVersion": 18,
+      "lastVerifiedBackupAt": "2026-08-03T08:05:00.000Z"
+    },
+    "configurationPresence": {
+      "DATABASE_URL": true,
+      "ADMIN_PASSWORD": true,
+      "APP_SESSION_TOKEN": true,
+      "EMAIL_PROVIDER_KEY": true,
+      "SMS_PROVIDER_KEY": true,
+      "SENTRY_DSN": false,
+      "OPENAI_API_KEY": false
+    }
+  },
+  "scenarios": [
+    {
+      "id": "NA-001",
+      "name": "P0 route bypasses quiet hours",
+      "expected": {
+        "deferred": 0,
+        "suppressedInactive": true
+      }
+    },
+    {
+      "id": "NA-002",
+      "name": "P2 respects quiet hours",
+      "expected": {
+        "deferredAtLeast": 1
+      }
+    },
+    {
+      "id": "NA-003",
+      "name": "Channel preference suppresses disabled channel",
+      "expected": {
+        "pitmasterEmail": 0
+      }
+    },
+    {
+      "id": "NA-004",
+      "name": "Inactive recipient excluded",
+      "expected": {
+        "inactiveDeliveries": 0
+      }
+    },
+    {
+      "id": "NA-005",
+      "name": "Duplicate event recipient channel suppressed",
+      "expected": {
+        "secondStatus": "SUPPRESSED"
+      }
+    },
+    {
+      "id": "NA-006",
+      "name": "Retry backoff and terminal dead letter",
+      "expected": {
+        "attempts": 4,
+        "status": "DEAD_LETTERED"
+      }
+    },
+    {
+      "id": "NA-007",
+      "name": "Acknowledgement stops escalation",
+      "expected": {
+        "futureEscalations": 0
+      }
+    },
+    {
+      "id": "NA-008",
+      "name": "Provider health degrades after failures",
+      "expected": {
+        "state": "DEGRADED"
+      }
+    },
+    {
+      "id": "NA-009",
+      "name": "Unconfigured provider is explicit",
+      "expected": {
+        "state": "NOT_CONFIGURED"
+      }
+    },
+    {
+      "id": "NA-010",
+      "name": "Admin change preserves before and after",
+      "expected": {
+        "auditVersion": "PTT_ADMIN_AUDIT_11_8_0"
+      }
+    },
+    {
+      "id": "NA-011",
+      "name": "Viewer admin mutation denied",
+      "expected": {
+        "errorField": "actor.role"
+      }
+    },
+    {
+      "id": "NA-012",
+      "name": "Cross-tenant event rejected",
+      "expected": {
+        "errorField": "tenantId"
+      }
+    },
+    {
+      "id": "NA-013",
+      "name": "Support bundle removes secrets",
+      "expected": {
+        "secretLeakCount": 0
+      }
+    },
+    {
+      "id": "NA-014",
+      "name": "Support bundle checksum deterministic",
+      "expected": {
+        "sameChecksum": true
+      }
+    },
+    {
+      "id": "NA-015",
+      "name": "Provider outage preserves in-app routing",
+      "expected": {
+        "inAppStillPending": true
+      }
+    },
+    {
+      "id": "NA-016",
+      "name": "P1 escalation schedule",
+      "expected": {
+        "minutes": [
+          0,
+          15,
+          45
+        ]
+      }
+    }
+  ]
+}

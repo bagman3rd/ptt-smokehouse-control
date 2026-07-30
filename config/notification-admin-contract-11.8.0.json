@@ -1,0 +1,157 @@
+{
+  "buildVersion": "11.8.0",
+  "engineVersion": "PTT_NOTIFICATION_ADMIN_11_8_0",
+  "stage": "Notifications, Administration, and Support Diagnostics",
+  "exitGate": "Critical operational events route exactly once to authorized recipients, respect quiet-hour and escalation controls, expose provider health without secrets, and generate a sanitized support bundle.",
+  "channels": [
+    "IN_APP",
+    "EMAIL",
+    "SMS"
+  ],
+  "deliveryStatuses": [
+    "PENDING",
+    "DEFERRED",
+    "SENT",
+    "DELIVERED",
+    "FAILED_RETRYABLE",
+    "FAILED_TERMINAL",
+    "DEAD_LETTERED",
+    "SUPPRESSED"
+  ],
+  "eventSeverities": [
+    "P0",
+    "P1",
+    "P2",
+    "P3"
+  ],
+  "supportedEventTypes": [
+    "MISSED_LOAD_START",
+    "SERVICE_READINESS_RISK",
+    "LOAD_EXCEPTION_OPENED",
+    "QUALITY_HOLD_OPENED",
+    "NEGATIVE_INVENTORY",
+    "BLOCKING_COUNT_VARIANCE",
+    "OPERATING_DAY_CLOSE_DUE",
+    "REPORT_RECONCILIATION_BLOCKED",
+    "FORECAST_RECOMMENDATION_READY",
+    "BACKUP_STALE",
+    "CRON_FAILURE",
+    "PROVIDER_DEGRADED"
+  ],
+  "routing": {
+    "criticalRoles": [
+      "ADMIN",
+      "OWNER",
+      "KM"
+    ],
+    "operationsRoles": [
+      "KM",
+      "PITMASTER",
+      "KC"
+    ],
+    "reportingRoles": [
+      "ADMIN",
+      "OWNER",
+      "KM"
+    ],
+    "recipientMustBelongToTenant": true,
+    "inactiveRecipientExcluded": true,
+    "dedupeWindowMinutes": 30,
+    "sameEventRecipientChannelOnlyOnce": true
+  },
+  "quietHours": {
+    "supported": true,
+    "timezoneRequired": true,
+    "P0BypassesQuietHours": true,
+    "P1MayBypassWhenRuleAllows": true,
+    "deferredDeliveryRequired": true
+  },
+  "retryPolicy": {
+    "maximumAttempts": 4,
+    "backoffMinutes": [
+      1,
+      5,
+      15,
+      60
+    ],
+    "terminalAfterMaximumAttempts": true,
+    "deadLetterRequired": true,
+    "idempotencyKeyRequired": true
+  },
+  "escalation": {
+    "P0Minutes": [
+      0,
+      5,
+      15
+    ],
+    "P1Minutes": [
+      0,
+      15,
+      45
+    ],
+    "P2Minutes": [
+      0,
+      60
+    ],
+    "P3Minutes": [
+      0
+    ],
+    "acknowledgementStopsFutureEscalation": true
+  },
+  "providerHealth": {
+    "states": [
+      "HEALTHY",
+      "DEGRADED",
+      "UNAVAILABLE",
+      "NOT_CONFIGURED"
+    ],
+    "secretValuesMustNeverBeExposed": true,
+    "configurationPresenceMayBeExposed": true,
+    "lastSuccessAndLastFailureRetained": true
+  },
+  "administration": {
+    "auditedSettings": [
+      "notificationRules",
+      "recipientPreferences",
+      "quietHours",
+      "escalationPolicies",
+      "providerEnablement",
+      "supportBundleRetention"
+    ],
+    "beforeAfterSnapshotsRequired": true,
+    "actorAndReasonRequired": true,
+    "ViewerReadOnly": true
+  },
+  "supportBundle": {
+    "sanitized": true,
+    "includes": [
+      "buildIdentity",
+      "serviceInventory",
+      "providerHealth",
+      "cronInventory",
+      "databaseMetadata",
+      "recentDeliverySummary",
+      "recentDeadLetters",
+      "recentAdminAudit",
+      "configurationPresence"
+    ],
+    "excludes": [
+      "secretValues",
+      "accessTokens",
+      "passwords",
+      "pins",
+      "sessionTokens",
+      "applicationSecrets",
+      "customerPersonalData"
+    ],
+    "deterministicChecksumRequired": true
+  },
+  "scopeBoundary": [
+    "No Prisma migration.",
+    "No dependency change.",
+    "No live email or SMS provider call.",
+    "No claim of durable delivery persistence.",
+    "No secret value is read or exported.",
+    "Production release hardening remains Build 11.9.0."
+  ]
+}

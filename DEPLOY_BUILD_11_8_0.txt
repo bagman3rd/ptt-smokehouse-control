@@ -1,0 +1,68 @@
+PTT SMOKEHOUSE CONTROL — BUILD 11.8.0
+NOTIFICATIONS, ADMINISTRATION, AND SUPPORT DIAGNOSTICS
+
+PACKAGE TYPE
+Cumulative safe overlay for the complete existing repository.
+Includes Builds 11.1.0 through 11.7.0.
+
+INSTALL
+1. Extract the ZIP directly into the existing repository root.
+2. Preserve .git and all current source files.
+3. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml, migrations, or existing workflows.
+4. Run:
+   node scripts/apply-build-11.8.0.mjs
+5. Confirm all cumulative verification scripts pass.
+6. Review GitHub Desktop. Existing application files must not appear deleted.
+7. Commit:
+   Build 11.8.0 notifications administration and support diagnostics
+8. Push origin.
+
+GENERATED ROUTE
+/admin-lab-1180
+If occupied by a non-generated page:
+/admin-lab-1180-alt
+
+CI ARTIFACT
+ptt-build-11.8.0-notification-admin
+
+STAGING ACCEPTANCE
+1. Use isolated persistent staging and the exact release commit.
+2. Download the Build 11.8.0 CI artifact.
+3. Execute NT-001 through NT-030.
+4. Connect only approved provider sandbox accounts for live-delivery UAT.
+5. Verify P0, P1, P2, and P3 routing by event type, role, channel, and tenant.
+6. Verify quiet hours and deferred-delivery timestamps in the restaurant timezone.
+7. Verify duplicate requests create no duplicate delivery.
+8. Verify retry attempts, backoff, terminal failure, and dead-letter persistence.
+9. Verify acknowledgement cancels future escalation.
+10. Verify provider health never exposes credentials.
+11. Verify all admin changes retain before, after, actor, reason, and timestamp.
+12. Verify Viewer denial and tenant isolation server-side.
+13. Seed synthetic passwords, tokens, PINs, and API keys; verify none appear in support bundle.
+14. Verify support bundle is sufficient for a support case without customer personal data.
+15. Approve only with no open P0/P1 defect.
+
+STOP CONDITIONS
+- P0 is deferred by quiet hours.
+- An inactive or cross-tenant recipient receives a notification.
+- A disabled recipient channel receives a notification.
+- Duplicate routing creates another delivery.
+- Retry exceeds four attempts or loses the failed delivery.
+- Dead-letter evidence is absent.
+- Acknowledgement does not stop future escalation.
+- Provider health exposes a credential or secret value.
+- Viewer or unauthorized role changes administration settings.
+- Admin audit overwrites before/after evidence.
+- Support bundle contains a password, PIN, session token, access token, application secret, or customer personal data.
+- Validation-lab results are represented as live provider delivery or durable persistence.
+
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO LIVE PROVIDER CLAIM
+NO DURABLE WRITE CLAIM
+
+RENDER BLUEPRINT CHANGE
+- render.yaml defines one web service and one PostgreSQL database.
+- The weekly-backup, daily-retention, and daily-digest Render cron services are removed.
+- Existing cron services already created in Render must be deleted separately in the Render dashboard.
