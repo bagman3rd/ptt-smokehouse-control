@@ -1,0 +1,76 @@
+PTT SMOKEHOUSE CONTROL — BUILD 12.0.0
+PTT PRODUCTION RELEASE
+
+PACKAGE TYPE
+Cumulative safe overlay containing Builds 11.1.0 through 12.0.0.
+
+RENDER TOPOLOGY
+- One web service
+- Zero cron services
+- One PostgreSQL database
+
+INSTALL
+1. Extract directly into the existing repository root.
+2. Preserve .git and every existing source file.
+3. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml, migrations, or existing workflows.
+4. Run:
+   node scripts/apply-build-12.0.0.mjs
+5. Confirm every cumulative verifier passes.
+6. Confirm the Build 12.0.0 package reports:
+   Package status: COMPLETE
+   Controlled evidence decision: GO
+   Production authorization: PENDING_DEPLOYED_SIGN_OFF
+7. Review GitHub Desktop. Existing application files must not appear deleted.
+8. Commit:
+   Build 12.0.0 PTT production release
+9. Push origin.
+
+GENERATED CERTIFICATION ROUTE
+/release-lab-1200
+If occupied by a non-generated page:
+/release-lab-1200-alt
+
+PRODUCTION RULE
+The certification route must be disabled or ADMIN-only in production.
+
+CI ARTIFACT
+ptt-build-12.0.0-production-release
+
+DEPLOYED ACCEPTANCE
+1. Deploy the exact commit to isolated production-equivalent staging.
+2. Download the Build 12.0.0 CI evidence artifact.
+3. Execute PD-001 through PD-048.
+4. Replace every synthetic evidence ID and sign-off with deployed evidence.
+5. Complete the cutover, support, first-day, incident, recovery, and rollback runbooks.
+6. Verify one web service, zero cron services, and one database.
+7. Verify every core workflow persists durable data.
+8. Verify role authorization and tenant isolation server-side.
+9. Verify no validation lab is public.
+10. Verify backup, restore, RPO, RTO, and rollback.
+11. Verify zero open P0/P1 defects.
+12. Generate a fresh release assessment.
+13. Confirm the deployed evidence decision is GO.
+14. Complete the production authorization template as RELEASE_OWNER.
+15. Create an AUTHORIZED release manifest.
+16. Deploy/cut over only after the authorization record is signed.
+
+STOP CONDITIONS
+- Production authorization still says PENDING_DEPLOYED_SIGN_OFF.
+- Any required workflow lacks durable persistence.
+- Any role or tenant-isolation test fails.
+- A normal-navigation link is broken.
+- Any validation route is public.
+- Debug, fixtures, or sandbox payment mode is enabled.
+- Health, database, migration, HTTPS, or domain validation fails.
+- render.yaml contains any cron service.
+- Security or performance acceptance fails.
+- Backup, restore, reconciliation, or rollback fails.
+- Required owner or sign-off is missing.
+- Any P0/P1 defect remains.
+- Evidence decision is HOLD.
+
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO AUTOMATIC PRODUCTION AUTHORIZATION
+NO FABRICATED DURABLE-PERSISTENCE CLAIM

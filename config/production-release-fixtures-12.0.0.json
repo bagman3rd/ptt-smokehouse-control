@@ -1,0 +1,605 @@
+{
+  "buildVersion": "12.0.0",
+  "releaseCandidate": {
+    "releaseIdentity": {
+      "buildVersion": "12.0.0",
+      "gitCommit": "synthetic-commit-1200",
+      "renderRevision": "synthetic-render-revision-1200",
+      "environment": "STAGING",
+      "candidateGeneratedAt": "2026-08-05T12:00:00.000Z"
+    },
+    "baselineBuilds": {
+      "11.1.0": {
+        "status": "PASS",
+        "artifactId": "artifact-11-1-0",
+        "evidenceHash": "hash-11-1-0"
+      },
+      "11.2.0": {
+        "status": "PASS",
+        "artifactId": "artifact-11-2-0",
+        "evidenceHash": "hash-11-2-0"
+      },
+      "11.3.0": {
+        "status": "PASS",
+        "artifactId": "artifact-11-3-0",
+        "evidenceHash": "hash-11-3-0"
+      },
+      "11.4.0": {
+        "status": "PASS",
+        "artifactId": "artifact-11-4-0",
+        "evidenceHash": "hash-11-4-0"
+      },
+      "11.5.0": {
+        "status": "PASS",
+        "artifactId": "artifact-11-5-0",
+        "evidenceHash": "hash-11-5-0"
+      },
+      "11.6.0": {
+        "status": "PASS",
+        "artifactId": "artifact-11-6-0",
+        "evidenceHash": "hash-11-6-0"
+      },
+      "11.7.0": {
+        "status": "PASS",
+        "artifactId": "artifact-11-7-0",
+        "evidenceHash": "hash-11-7-0"
+      },
+      "11.8.0": {
+        "status": "PASS",
+        "artifactId": "artifact-11-8-0",
+        "evidenceHash": "hash-11-8-0"
+      },
+      "11.9.0": {
+        "status": "PASS",
+        "artifactId": "artifact-11-9-0",
+        "evidenceHash": "hash-11-9-0"
+      }
+    },
+    "workflowEvidence": {
+      "SETUP_MASTER_DATA": {
+        "routeIntegrated": true,
+        "durablePersistenceVerified": true,
+        "serverAuthorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "auditVerified": true,
+        "uatPassed": true,
+        "openP0": 0,
+        "openP1": 0,
+        "evidenceIds": [
+          "setup_master_data-route",
+          "setup_master_data-persistence",
+          "setup_master_data-uat"
+        ]
+      },
+      "FORECAST_DEMAND": {
+        "routeIntegrated": true,
+        "durablePersistenceVerified": true,
+        "serverAuthorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "auditVerified": true,
+        "uatPassed": true,
+        "openP0": 0,
+        "openP1": 0,
+        "evidenceIds": [
+          "forecast_demand-route",
+          "forecast_demand-persistence",
+          "forecast_demand-uat"
+        ]
+      },
+      "PRODUCTION_SMOKER_SCHEDULING": {
+        "routeIntegrated": true,
+        "durablePersistenceVerified": true,
+        "serverAuthorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "auditVerified": true,
+        "uatPassed": true,
+        "openP0": 0,
+        "openP1": 0,
+        "evidenceIds": [
+          "production_smoker_scheduling-route",
+          "production_smoker_scheduling-persistence",
+          "production_smoker_scheduling-uat"
+        ]
+      },
+      "TODAY_OPERATIONS": {
+        "routeIntegrated": true,
+        "durablePersistenceVerified": true,
+        "serverAuthorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "auditVerified": true,
+        "uatPassed": true,
+        "openP0": 0,
+        "openP1": 0,
+        "evidenceIds": [
+          "today_operations-route",
+          "today_operations-persistence",
+          "today_operations-uat"
+        ]
+      },
+      "QUICK_EOD": {
+        "routeIntegrated": true,
+        "durablePersistenceVerified": true,
+        "serverAuthorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "auditVerified": true,
+        "uatPassed": true,
+        "openP0": 0,
+        "openP1": 0,
+        "evidenceIds": [
+          "quick_eod-route",
+          "quick_eod-persistence",
+          "quick_eod-uat"
+        ]
+      },
+      "INVENTORY_WASTE_EXCEPTIONS": {
+        "routeIntegrated": true,
+        "durablePersistenceVerified": true,
+        "serverAuthorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "auditVerified": true,
+        "uatPassed": true,
+        "openP0": 0,
+        "openP1": 0,
+        "evidenceIds": [
+          "inventory_waste_exceptions-route",
+          "inventory_waste_exceptions-persistence",
+          "inventory_waste_exceptions-uat"
+        ]
+      },
+      "REPORTING_FORECAST_LEARNING": {
+        "routeIntegrated": true,
+        "durablePersistenceVerified": true,
+        "serverAuthorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "auditVerified": true,
+        "uatPassed": true,
+        "openP0": 0,
+        "openP1": 0,
+        "evidenceIds": [
+          "reporting_forecast_learning-route",
+          "reporting_forecast_learning-persistence",
+          "reporting_forecast_learning-uat"
+        ]
+      },
+      "NOTIFICATIONS_ADMINISTRATION": {
+        "routeIntegrated": true,
+        "durablePersistenceVerified": true,
+        "serverAuthorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "auditVerified": true,
+        "uatPassed": true,
+        "openP0": 0,
+        "openP1": 0,
+        "evidenceIds": [
+          "notifications_administration-route",
+          "notifications_administration-persistence",
+          "notifications_administration-uat"
+        ]
+      }
+    },
+    "routeEvidence": {
+      "availableRoutes": [
+        "/",
+        "/onboarding",
+        "/forecast",
+        "/production",
+        "/today",
+        "/eod",
+        "/inventory",
+        "/reports",
+        "/admin",
+        "/api/health",
+        "/api/forecast",
+        "/api/production",
+        "/api/today",
+        "/api/eod",
+        "/api/inventory",
+        "/api/reports",
+        "/api/admin"
+      ],
+      "normalNavigationRoutes": [
+        "/",
+        "/onboarding",
+        "/forecast",
+        "/production",
+        "/today",
+        "/eod",
+        "/inventory",
+        "/reports",
+        "/admin"
+      ],
+      "deadLinks": [],
+      "validationRouteExposure": {
+        "/inventory-lab-1160": "ADMIN_ONLY",
+        "/forecast-lab-1130": "ADMIN_ONLY",
+        "/production-lab-1140": "ADMIN_ONLY",
+        "/today-lab-1150": "ADMIN_ONLY",
+        "/reports-lab-1170": "ADMIN_ONLY",
+        "/admin-lab-1180": "ADMIN_ONLY",
+        "/hardening-lab-1190": "ADMIN_ONLY",
+        "/release-lab-1200": "ADMIN_ONLY"
+      }
+    },
+    "apiEvidence": {
+      "HEALTH": {
+        "routePresent": true,
+        "authorizationVerified": false,
+        "tenantIsolationVerified": false,
+        "idempotencyVerified": false,
+        "deployedTestPassed": true
+      },
+      "AUTHENTICATION": {
+        "routePresent": true,
+        "authorizationVerified": true,
+        "tenantIsolationVerified": false,
+        "idempotencyVerified": false,
+        "deployedTestPassed": true
+      },
+      "FORECAST": {
+        "routePresent": true,
+        "authorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "deployedTestPassed": true
+      },
+      "PRODUCTION": {
+        "routePresent": true,
+        "authorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "deployedTestPassed": true
+      },
+      "TODAY": {
+        "routePresent": true,
+        "authorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "deployedTestPassed": true
+      },
+      "EOD": {
+        "routePresent": true,
+        "authorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "deployedTestPassed": true
+      },
+      "INVENTORY": {
+        "routePresent": true,
+        "authorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "deployedTestPassed": true
+      },
+      "REPORTING": {
+        "routePresent": true,
+        "authorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "deployedTestPassed": true
+      },
+      "ADMINISTRATION": {
+        "routePresent": true,
+        "authorizationVerified": true,
+        "tenantIsolationVerified": true,
+        "idempotencyVerified": true,
+        "deployedTestPassed": true
+      }
+    },
+    "configurationEvidence": {
+      "NODE_ENV": "production",
+      "debugMode": false,
+      "testFixturesEnabled": false,
+      "sandboxPaymentsEnabled": false,
+      "configurationPresence": {
+        "DATABASE_URL": true,
+        "ADMIN_PASSWORD": true,
+        "APP_SESSION_TOKEN": true,
+        "TOTP_ENCRYPTION_KEY": true,
+        "SENTRY_DSN": false
+      }
+    },
+    "deploymentEvidence": {
+      "gitCommitVerified": true,
+      "renderRevisionVerified": true,
+      "healthEndpointPassed": true,
+      "databaseReachable": true,
+      "migrationStatus": "CURRENT",
+      "buildIdentity": "12.0.0",
+      "httpsPassed": true,
+      "customDomainPassed": true,
+      "deployedAt": "2026-08-05T13:00:00.000Z"
+    },
+    "renderTopology": {
+      "webServices": 1,
+      "cronServices": 0,
+      "databases": 1
+    },
+    "hardeningEvidence": {
+      "sessionSecurityPassed": true,
+      "requestSecurityPassed": true,
+      "authorizationPassed": true,
+      "tenantIsolationPassed": true,
+      "auditIntegrityPassed": true,
+      "performancePassed": true,
+      "databaseHealthPassed": true,
+      "securityHeadersPassed": true,
+      "rateLimitsPassed": true,
+      "openP0": 0,
+      "openP1": 0
+    },
+    "recoveryEvidence": {
+      "verifiedBackupCurrent": true,
+      "restoreDrillPassed": true,
+      "rollbackTestPassed": true,
+      "dataReconciliationPassed": true,
+      "rpoHoursObserved": 16,
+      "rtoHoursObserved": 1.6,
+      "backupEvidenceId": "backup-evidence-1200",
+      "restoreEvidenceId": "restore-evidence-1200",
+      "rollbackEvidenceId": "rollback-evidence-1200"
+    },
+    "launchEvidence": {
+      "releaseOwner": "Release Owner",
+      "operationsOwner": "Operations Owner",
+      "supportOwner": "Support Owner",
+      "incidentOwner": "Incident Owner",
+      "openingDayChecklistComplete": true,
+      "firstDayMonitoringPlanComplete": true,
+      "supportRunbook": "docs/PRODUCTION_SUPPORT_RUNBOOK_12_0_0.md",
+      "rollbackRunbook": "docs/PRODUCTION_ROLLBACK_RUNBOOK_12_0_0.md",
+      "staffTrainingComplete": true,
+      "openingDataLoaded": true
+    },
+    "signOffs": {
+      "RELEASE_OWNER": {
+        "signed": true,
+        "name": "Release Owner",
+        "signedAt": "2026-08-05T14:00:00.000Z",
+        "evidenceId": "signoff-release_owner"
+      },
+      "OPERATIONS_OWNER": {
+        "signed": true,
+        "name": "Operations Owner",
+        "signedAt": "2026-08-05T14:00:00.000Z",
+        "evidenceId": "signoff-operations_owner"
+      },
+      "SECURITY_TESTER": {
+        "signed": true,
+        "name": "Security Tester",
+        "signedAt": "2026-08-05T14:00:00.000Z",
+        "evidenceId": "signoff-security_tester"
+      },
+      "QA_TESTER": {
+        "signed": true,
+        "name": "Qa Tester",
+        "signedAt": "2026-08-05T14:00:00.000Z",
+        "evidenceId": "signoff-qa_tester"
+      },
+      "RECOVERY_TESTER": {
+        "signed": true,
+        "name": "Recovery Tester",
+        "signedAt": "2026-08-05T14:00:00.000Z",
+        "evidenceId": "signoff-recovery_tester"
+      }
+    },
+    "defects": {
+      "openP0": 0,
+      "openP1": 0,
+      "openP2": 0,
+      "openP3": 0
+    }
+  },
+  "scenarios": [
+    {
+      "id": "PR-001",
+      "name": "Complete controlled release evidence produces GO",
+      "expected": {
+        "evidenceDecision": "GO"
+      }
+    },
+    {
+      "id": "PR-002",
+      "name": "Deterministic GO leaves production authorization pending",
+      "expected": {
+        "productionAuthorization": "PENDING_DEPLOYED_SIGN_OFF"
+      }
+    },
+    {
+      "id": "PR-003",
+      "name": "Missing baseline build blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "baselineBuilds"
+      }
+    },
+    {
+      "id": "PR-004",
+      "name": "Missing required route blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "requiredRoutes"
+      }
+    },
+    {
+      "id": "PR-005",
+      "name": "Dead navigation link blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "deadLinks"
+      }
+    },
+    {
+      "id": "PR-006",
+      "name": "Public validation lab blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "validationRouteExposure"
+      }
+    },
+    {
+      "id": "PR-007",
+      "name": "Missing durable workflow persistence blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "durablePersistenceVerified"
+      }
+    },
+    {
+      "id": "PR-008",
+      "name": "Workflow authorization failure blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "serverAuthorizationVerified"
+      }
+    },
+    {
+      "id": "PR-009",
+      "name": "Workflow tenant isolation failure blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "tenantIsolationVerified"
+      }
+    },
+    {
+      "id": "PR-010",
+      "name": "Workflow UAT failure blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "uatPassed"
+      }
+    },
+    {
+      "id": "PR-011",
+      "name": "Sandbox configuration blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "sandboxPaymentsEnabled"
+      }
+    },
+    {
+      "id": "PR-012",
+      "name": "Missing required configuration blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "configurationPresence"
+      }
+    },
+    {
+      "id": "PR-013",
+      "name": "Health failure blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "healthEndpointPassed"
+      }
+    },
+    {
+      "id": "PR-014",
+      "name": "Migration drift blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "migrationStatus"
+      }
+    },
+    {
+      "id": "PR-015",
+      "name": "Cron service blocks corrected topology",
+      "expected": {
+        "decision": "HOLD",
+        "control": "cronServices"
+      }
+    },
+    {
+      "id": "PR-016",
+      "name": "Security failure blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "hardeningEvidence"
+      }
+    },
+    {
+      "id": "PR-017",
+      "name": "Performance failure blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "performancePassed"
+      }
+    },
+    {
+      "id": "PR-018",
+      "name": "Stale or unverified backup blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "verifiedBackupCurrent"
+      }
+    },
+    {
+      "id": "PR-019",
+      "name": "Restore drill failure blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "restoreDrillPassed"
+      }
+    },
+    {
+      "id": "PR-020",
+      "name": "Rollback failure blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "rollbackTestPassed"
+      }
+    },
+    {
+      "id": "PR-021",
+      "name": "Missing launch owner blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "launchOwners"
+      }
+    },
+    {
+      "id": "PR-022",
+      "name": "Missing sign-off blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "signOffs"
+      }
+    },
+    {
+      "id": "PR-023",
+      "name": "Open P1 defect blocks release",
+      "expected": {
+        "decision": "HOLD",
+        "control": "openP1"
+      }
+    },
+    {
+      "id": "PR-024",
+      "name": "Authorized deployed sign-off promotes production authorization",
+      "expected": {
+        "productionAuthorization": "AUTHORIZED"
+      }
+    },
+    {
+      "id": "PR-025",
+      "name": "Release manifest is deterministic",
+      "expected": {
+        "sameManifestId": true
+      }
+    },
+    {
+      "id": "PR-026",
+      "name": "Handoff bundle redacts secret-bearing keys",
+      "expected": {
+        "secretLeakCount": 0
+      }
+    }
+  ]
+}

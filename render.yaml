@@ -87,7 +87,7 @@ services:
   - key: ERROR_ALERT_THRESHOLD_24H
     value: '25'
   - key: APP_BUILD_VERSION
-    value: "11.9.0"
+    value: "12.0.0"
 databases:
 - name: ptt-smokehouse-control-db
   plan: basic-256mb
