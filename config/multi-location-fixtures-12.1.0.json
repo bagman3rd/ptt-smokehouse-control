@@ -1,0 +1,635 @@
+{
+  "buildVersion": "12.1.0",
+  "registry": {
+    "tenant": {
+      "tenantId": "tenant-ptt",
+      "name": "Pigeon Toed Tavern",
+      "status": "ACTIVE"
+    },
+    "locations": [
+      {
+        "locationId": "loc-pigeon-forge",
+        "tenantId": "tenant-ptt",
+        "name": "Pigeon Toed Tavern \u2014 Pigeon Forge",
+        "code": "PTT-PF",
+        "status": "ACTIVE",
+        "timezone": "America/New_York",
+        "serviceHours": {
+          "MONDAY": {
+            "open": "11:00",
+            "close": "22:00"
+          },
+          "TUESDAY": {
+            "open": "11:00",
+            "close": "22:00"
+          },
+          "WEDNESDAY": {
+            "open": "11:00",
+            "close": "22:00"
+          },
+          "THURSDAY": {
+            "open": "11:00",
+            "close": "22:00"
+          },
+          "FRIDAY": {
+            "open": "11:00",
+            "close": "23:00"
+          },
+          "SATURDAY": {
+            "open": "11:00",
+            "close": "23:00"
+          },
+          "SUNDAY": {
+            "open": "11:00",
+            "close": "22:00"
+          }
+        },
+        "forecastProfile": {
+          "profileId": "forecast-pf",
+          "active": true
+        },
+        "inventoryPolicy": {
+          "policyId": "inventory-pf",
+          "active": true
+        }
+      },
+      {
+        "locationId": "loc-knoxville-lab",
+        "tenantId": "tenant-ptt",
+        "name": "PTT Knoxville Validation Location",
+        "code": "PTT-KX",
+        "status": "ACTIVE",
+        "timezone": "America/New_York",
+        "serviceHours": {
+          "MONDAY": {
+            "open": "11:00",
+            "close": "21:00"
+          },
+          "TUESDAY": {
+            "open": "11:00",
+            "close": "21:00"
+          },
+          "WEDNESDAY": {
+            "open": "11:00",
+            "close": "21:00"
+          },
+          "THURSDAY": {
+            "open": "11:00",
+            "close": "21:00"
+          },
+          "FRIDAY": {
+            "open": "11:00",
+            "close": "22:00"
+          },
+          "SATURDAY": {
+            "open": "11:00",
+            "close": "22:00"
+          },
+          "SUNDAY": {
+            "open": "11:00",
+            "close": "21:00"
+          }
+        },
+        "forecastProfile": {
+          "profileId": "forecast-kx",
+          "active": true
+        },
+        "inventoryPolicy": {
+          "policyId": "inventory-kx",
+          "active": true
+        }
+      },
+      {
+        "locationId": "loc-future",
+        "tenantId": "tenant-ptt",
+        "name": "Future PTT Location",
+        "code": "PTT-FUT",
+        "status": "ONBOARDING",
+        "timezone": "America/New_York",
+        "serviceHours": {},
+        "forecastProfile": null,
+        "inventoryPolicy": null
+      }
+    ],
+    "memberships": [
+      {
+        "membershipId": "membership-owner",
+        "tenantId": "tenant-ptt",
+        "userId": "user-owner",
+        "name": "Owner Validation",
+        "role": "OWNER",
+        "status": "ACTIVE",
+        "scope": "ALL_LOCATIONS",
+        "locationIds": []
+      },
+      {
+        "membershipId": "membership-km-pf",
+        "tenantId": "tenant-ptt",
+        "userId": "user-km-pf",
+        "name": "Pigeon Forge Kitchen Manager",
+        "role": "KM",
+        "status": "ACTIVE",
+        "scope": "ASSIGNED_LOCATIONS",
+        "locationIds": [
+          "loc-pigeon-forge"
+        ]
+      },
+      {
+        "membershipId": "membership-km-both",
+        "tenantId": "tenant-ptt",
+        "userId": "user-km-both",
+        "name": "Regional Kitchen Manager",
+        "role": "KM",
+        "status": "ACTIVE",
+        "scope": "ASSIGNED_LOCATIONS",
+        "locationIds": [
+          "loc-pigeon-forge",
+          "loc-knoxville-lab"
+        ]
+      },
+      {
+        "membershipId": "membership-pit-pf",
+        "tenantId": "tenant-ptt",
+        "userId": "user-pit-pf",
+        "name": "Pigeon Forge Pitmaster",
+        "role": "PITMASTER",
+        "status": "ACTIVE",
+        "scope": "ASSIGNED_LOCATIONS",
+        "locationIds": [
+          "loc-pigeon-forge"
+        ]
+      },
+      {
+        "membershipId": "membership-kc-kx",
+        "tenantId": "tenant-ptt",
+        "userId": "user-kc-kx",
+        "name": "Knoxville Kitchen Coordinator",
+        "role": "KC",
+        "status": "ACTIVE",
+        "scope": "ASSIGNED_LOCATIONS",
+        "locationIds": [
+          "loc-knoxville-lab"
+        ]
+      },
+      {
+        "membershipId": "membership-viewer",
+        "tenantId": "tenant-ptt",
+        "userId": "user-viewer",
+        "name": "Read Only",
+        "role": "VIEWER",
+        "status": "ACTIVE",
+        "scope": "ALL_LOCATIONS",
+        "locationIds": []
+      },
+      {
+        "membershipId": "membership-inactive",
+        "tenantId": "tenant-ptt",
+        "userId": "user-inactive",
+        "name": "Inactive Manager",
+        "role": "KM",
+        "status": "INACTIVE",
+        "scope": "ALL_LOCATIONS",
+        "locationIds": []
+      }
+    ],
+    "products": [
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-pigeon-forge",
+        "productCode": "BRISKET",
+        "active": true,
+        "yieldPercent": 52,
+        "unitWeightRawLb": 7.8,
+        "forecastBaselineCookedLb": 100.0
+      },
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-pigeon-forge",
+        "productCode": "PORK",
+        "active": true,
+        "yieldPercent": 55,
+        "unitWeightRawLb": 4.4,
+        "forecastBaselineCookedLb": 120.0
+      },
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-pigeon-forge",
+        "productCode": "RIBS",
+        "active": true,
+        "yieldPercent": 72,
+        "unitWeightRawLb": 2.5,
+        "forecastBaselineCookedLb": 75.0
+      },
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-pigeon-forge",
+        "productCode": "CHICKEN",
+        "active": true,
+        "yieldPercent": 70,
+        "unitWeightRawLb": 2.5,
+        "forecastBaselineCookedLb": 65.0
+      },
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-knoxville-lab",
+        "productCode": "BRISKET",
+        "active": true,
+        "yieldPercent": 52,
+        "unitWeightRawLb": 7.8,
+        "forecastBaselineCookedLb": 60.0
+      },
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-knoxville-lab",
+        "productCode": "PORK",
+        "active": true,
+        "yieldPercent": 55,
+        "unitWeightRawLb": 4.4,
+        "forecastBaselineCookedLb": 72.0
+      },
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-knoxville-lab",
+        "productCode": "RIBS",
+        "active": true,
+        "yieldPercent": 72,
+        "unitWeightRawLb": 2.5,
+        "forecastBaselineCookedLb": 45.0
+      },
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-knoxville-lab",
+        "productCode": "CHICKEN",
+        "active": true,
+        "yieldPercent": 70,
+        "unitWeightRawLb": 2.5,
+        "forecastBaselineCookedLb": 39.0
+      }
+    ],
+    "smokers": [
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-pigeon-forge",
+        "smokerId": "smoker-pf-1",
+        "name": "Ole Hickory EL/EDX",
+        "active": true,
+        "capacityProfileId": "capacity-pf-oh"
+      },
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-pigeon-forge",
+        "smokerId": "smoker-pf-2",
+        "name": "Southern Pride SPX-700",
+        "active": true,
+        "capacityProfileId": "capacity-pf-sp"
+      },
+      {
+        "tenantId": "tenant-ptt",
+        "locationId": "loc-knoxville-lab",
+        "smokerId": "smoker-kx-1",
+        "name": "Validation Smoker",
+        "active": true,
+        "capacityProfileId": "capacity-kx"
+      }
+    ]
+  },
+  "locationMetrics": [
+    {
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "operatingDate": "2026-08-01",
+      "sales": 60000,
+      "foodSales": 48000,
+      "barSales": 12000,
+      "forecastCookedLb": 420,
+      "actualUsageCookedLb": 432,
+      "wasteCookedLb": 8.5,
+      "endingInventoryCookedLb": 74,
+      "completedLoads": 12,
+      "adherentLoads": 11,
+      "transferInCookedLb": 0,
+      "transferOutCookedLb": 20
+    },
+    {
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-knoxville-lab",
+      "operatingDate": "2026-08-01",
+      "sales": 26000,
+      "foodSales": 20800,
+      "barSales": 5200,
+      "forecastCookedLb": 245,
+      "actualUsageCookedLb": 238,
+      "wasteCookedLb": 4.2,
+      "endingInventoryCookedLb": 48,
+      "completedLoads": 7,
+      "adherentLoads": 7,
+      "transferInCookedLb": 20,
+      "transferOutCookedLb": 0
+    }
+  ],
+  "transferRequest": {
+    "tenantId": "tenant-ptt",
+    "sourceLocationId": "loc-pigeon-forge",
+    "destinationLocationId": "loc-knoxville-lab",
+    "commandId": "transfer-create-001",
+    "createdAt": "2026-08-02T12:00:00.000Z",
+    "requestedBy": {
+      "userId": "user-km-both",
+      "role": "KM"
+    },
+    "reason": "Knoxville validation demand exceeds forecast",
+    "items": [
+      {
+        "productCode": "BRISKET",
+        "quantityCookedLb": 12,
+        "lotIds": [
+          "lot-brisket-pf-0802"
+        ]
+      },
+      {
+        "productCode": "PORK",
+        "quantityCookedLb": 8,
+        "lotIds": [
+          "lot-pork-pf-0802"
+        ]
+      }
+    ]
+  },
+  "onboardingEvidence": {
+    "identity": true,
+    "timezone": true,
+    "serviceHours": true,
+    "products": true,
+    "smokers": true,
+    "users": true,
+    "forecastProfile": true,
+    "inventoryPolicy": true,
+    "openingInventory": true,
+    "training": true
+  },
+  "deactivationEvidence": {
+    "openOperatingDay": false,
+    "openTransfer": false,
+    "activeQualityHold": false,
+    "unreconciledInventory": false,
+    "unresolvedP0OrP1": false
+  },
+  "migrationSnapshot": {
+    "tenantId": "tenant-ptt",
+    "defaultLocationId": "loc-pigeon-forge",
+    "tables": [
+      {
+        "name": "Forecast",
+        "totalRecords": 1000,
+        "unscopedRecords": 0
+      },
+      {
+        "name": "ProductionPlan",
+        "totalRecords": 900,
+        "unscopedRecords": 0
+      },
+      {
+        "name": "OperatingDay",
+        "totalRecords": 365,
+        "unscopedRecords": 0
+      },
+      {
+        "name": "InventoryDay",
+        "totalRecords": 365,
+        "unscopedRecords": 0
+      },
+      {
+        "name": "OperationsReport",
+        "totalRecords": 420,
+        "unscopedRecords": 0
+      }
+    ],
+    "rollbackPlan": "docs/MULTI_LOCATION_MIGRATION_RUNBOOK_12_1_0.md"
+  },
+  "scenarios": [
+    {
+      "id": "ML-001",
+      "name": "Owner resolves all active locations",
+      "expected": {
+        "locationCount": 2
+      }
+    },
+    {
+      "id": "ML-002",
+      "name": "Assigned manager resolves only assigned location",
+      "expected": {
+        "locationCount": 1
+      }
+    },
+    {
+      "id": "ML-003",
+      "name": "Inactive membership is rejected",
+      "expected": {
+        "errorField": "membership.status"
+      }
+    },
+    {
+      "id": "ML-004",
+      "name": "Cross-tenant location selection is rejected",
+      "expected": {
+        "errorField": "tenantId"
+      }
+    },
+    {
+      "id": "ML-005",
+      "name": "Onboarding location cannot be selected for operations",
+      "expected": {
+        "errorField": "location.status"
+      }
+    },
+    {
+      "id": "ML-006",
+      "name": "Authorized location switch creates audit record",
+      "expected": {
+        "recordVersion": "PTT_LOCATION_SWITCH_12_1_0"
+      }
+    },
+    {
+      "id": "ML-007",
+      "name": "Unauthorized location switch is denied",
+      "expected": {
+        "errorField": "locationId"
+      }
+    },
+    {
+      "id": "ML-008",
+      "name": "Active location master data is complete",
+      "expected": {
+        "status": "READY"
+      }
+    },
+    {
+      "id": "ML-009",
+      "name": "Missing required product blocks location readiness",
+      "expected": {
+        "status": "BLOCKED"
+      }
+    },
+    {
+      "id": "ML-010",
+      "name": "Cross-location master-data fallback is forbidden",
+      "expected": {
+        "errorField": "locationId"
+      }
+    },
+    {
+      "id": "ML-011",
+      "name": "Location-scoped record receives deterministic identity",
+      "expected": {
+        "recordVersion": "PTT_LOCATION_RECORD_12_1_0"
+      }
+    },
+    {
+      "id": "ML-012",
+      "name": "Record location mismatch is rejected",
+      "expected": {
+        "errorField": "locationId"
+      }
+    },
+    {
+      "id": "ML-013",
+      "name": "Transfer creation requires distinct active locations",
+      "expected": {
+        "status": "DRAFT"
+      }
+    },
+    {
+      "id": "ML-014",
+      "name": "Same-location transfer is rejected",
+      "expected": {
+        "errorField": "destinationLocationId"
+      }
+    },
+    {
+      "id": "ML-015",
+      "name": "Transfer approval requires source permission",
+      "expected": {
+        "status": "APPROVED"
+      }
+    },
+    {
+      "id": "ML-016",
+      "name": "Transfer dispatch decrements source once",
+      "expected": {
+        "status": "IN_TRANSIT"
+      }
+    },
+    {
+      "id": "ML-017",
+      "name": "Duplicate dispatch command is idempotent",
+      "expected": {
+        "duplicate": true
+      }
+    },
+    {
+      "id": "ML-018",
+      "name": "Transfer receipt increments destination once",
+      "expected": {
+        "status": "RECEIVED"
+      }
+    },
+    {
+      "id": "ML-019",
+      "name": "Over receipt is rejected",
+      "expected": {
+        "errorField": "receivedItems"
+      }
+    },
+    {
+      "id": "ML-020",
+      "name": "Receipt variance is retained",
+      "expected": {
+        "status": "RECEIVED_WITH_VARIANCE"
+      }
+    },
+    {
+      "id": "ML-021",
+      "name": "Consolidated owner report preserves location breakdown",
+      "expected": {
+        "locationCount": 2
+      }
+    },
+    {
+      "id": "ML-022",
+      "name": "Consolidated report excludes transfer double counting",
+      "expected": {
+        "netTransferCookedLb": 0
+      }
+    },
+    {
+      "id": "ML-023",
+      "name": "Non-owner consolidated report is denied",
+      "expected": {
+        "errorField": "actor.role"
+      }
+    },
+    {
+      "id": "ML-024",
+      "name": "Cross-tenant metrics are rejected",
+      "expected": {
+        "errorField": "tenantId"
+      }
+    },
+    {
+      "id": "ML-025",
+      "name": "Complete onboarding is ready for activation",
+      "expected": {
+        "status": "READY_FOR_ACTIVATION"
+      }
+    },
+    {
+      "id": "ML-026",
+      "name": "Incomplete onboarding is blocked",
+      "expected": {
+        "status": "BLOCKED"
+      }
+    },
+    {
+      "id": "ML-027",
+      "name": "Activation requires owner or admin",
+      "expected": {
+        "recordVersion": "PTT_LOCATION_ACTIVATION_12_1_0"
+      }
+    },
+    {
+      "id": "ML-028",
+      "name": "Open transfer blocks deactivation",
+      "expected": {
+        "status": "BLOCKED"
+      }
+    },
+    {
+      "id": "ML-029",
+      "name": "Clean deactivation is ready",
+      "expected": {
+        "status": "READY_FOR_DEACTIVATION"
+      }
+    },
+    {
+      "id": "ML-030",
+      "name": "Migration readiness requires zero unscoped records",
+      "expected": {
+        "status": "READY"
+      }
+    },
+    {
+      "id": "ML-031",
+      "name": "Unscoped legacy record blocks migration",
+      "expected": {
+        "status": "BLOCKED"
+      }
+    },
+    {
+      "id": "ML-032",
+      "name": "Render topology remains no-cron",
+      "expected": {
+        "cronServices": 0
+      }
+    }
+  ]
+}

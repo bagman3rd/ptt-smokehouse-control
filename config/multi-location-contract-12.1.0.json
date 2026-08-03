@@ -1,0 +1,207 @@
+{
+  "buildVersion": "12.1.0",
+  "engineVersion": "PTT_MULTI_LOCATION_12_1_0",
+  "stage": "Multi-Location Foundation",
+  "exitGate": "Every operational read and write resolves an explicit tenant and location, location switching is authorized, active locations have complete operating configuration, inter-location transfers reconcile exactly once, and consolidated reporting never crosses tenant boundaries.",
+  "renderTopology": {
+    "webServices": 1,
+    "cronServices": 0,
+    "databases": 1,
+    "cronServicesForbidden": true
+  },
+  "roles": [
+    "ADMIN",
+    "OWNER",
+    "KM",
+    "PITMASTER",
+    "KC",
+    "VIEWER"
+  ],
+  "locationStatuses": [
+    "DRAFT",
+    "ONBOARDING",
+    "ACTIVE",
+    "SUSPENDED",
+    "DEACTIVATION_PENDING",
+    "INACTIVE"
+  ],
+  "membershipScopes": [
+    "ALL_LOCATIONS",
+    "ASSIGNED_LOCATIONS"
+  ],
+  "requiredProducts": [
+    "BRISKET",
+    "PORK",
+    "RIBS",
+    "CHICKEN"
+  ],
+  "locationScopedDomains": [
+    "MASTER_DATA",
+    "FORECAST",
+    "PRODUCTION_PLAN",
+    "TODAY_OPERATIONS",
+    "EOD",
+    "INVENTORY",
+    "REPORTING",
+    "NOTIFICATION_RULE"
+  ],
+  "locationContext": {
+    "explicitLocationRequired": true,
+    "implicitFirstLocationSelectionForbidden": true,
+    "inactiveLocationSelectionForbidden": true,
+    "crossTenantSelectionForbidden": true,
+    "serverSideMembershipCheckRequired": true,
+    "switchAuditRequired": true
+  },
+  "authorization": {
+    "ADMIN": [
+      "*"
+    ],
+    "OWNER": [
+      "*"
+    ],
+    "KM": [
+      "location:read",
+      "location:switch",
+      "master-data:read",
+      "master-data:write",
+      "forecast:read",
+      "forecast:write",
+      "production:read",
+      "production:write",
+      "today:read",
+      "today:write",
+      "eod:read",
+      "eod:write",
+      "inventory:read",
+      "inventory:write",
+      "transfer:create",
+      "transfer:approve",
+      "transfer:dispatch",
+      "transfer:receive",
+      "reports:read"
+    ],
+    "PITMASTER": [
+      "location:read",
+      "location:switch",
+      "production:read",
+      "today:read",
+      "today:write",
+      "inventory:read",
+      "inventory:waste",
+      "transfer:dispatch"
+    ],
+    "KC": [
+      "location:read",
+      "location:switch",
+      "today:read",
+      "today:write",
+      "eod:read",
+      "eod:write",
+      "inventory:read",
+      "inventory:count",
+      "inventory:waste",
+      "transfer:receive"
+    ],
+    "VIEWER": [
+      "location:read",
+      "location:switch",
+      "forecast:read",
+      "production:read",
+      "today:read",
+      "eod:read",
+      "inventory:read",
+      "reports:read"
+    ]
+  },
+  "masterData": {
+    "locationSpecificRequired": [
+      "timezone",
+      "serviceHours",
+      "products",
+      "smokers",
+      "forecastProfile",
+      "inventoryPolicy"
+    ],
+    "crossLocationFallbackForbidden": true,
+    "fourRequiredProducts": true,
+    "activeLocationRequiresAtLeastOneActiveSmoker": true,
+    "yieldAndCapacityMustBeExplicit": true
+  },
+  "transfer": {
+    "statuses": [
+      "DRAFT",
+      "APPROVED",
+      "IN_TRANSIT",
+      "RECEIVED",
+      "RECEIVED_WITH_VARIANCE",
+      "CANCELLED"
+    ],
+    "sameTenantRequired": true,
+    "distinctLocationsRequired": true,
+    "sourceAndDestinationMustBeActive": true,
+    "positiveQuantityRequired": true,
+    "sourceInventoryDecrementsAtDispatch": true,
+    "destinationInventoryIncrementsAtReceipt": true,
+    "commandIdIdempotencyRequired": true,
+    "overReceiptForbidden": true,
+    "approvalRequired": true,
+    "receiptVarianceRecorded": true
+  },
+  "onboarding": {
+    "requiredControls": [
+      "identity",
+      "timezone",
+      "serviceHours",
+      "products",
+      "smokers",
+      "users",
+      "forecastProfile",
+      "inventoryPolicy",
+      "openingInventory",
+      "training"
+    ],
+    "activationRoles": [
+      "ADMIN",
+      "OWNER"
+    ],
+    "allControlsRequired": true
+  },
+  "deactivation": {
+    "blockingConditions": [
+      "openOperatingDay",
+      "openTransfer",
+      "activeQualityHold",
+      "unreconciledInventory",
+      "unresolvedP0OrP1"
+    ],
+    "deactivationRoles": [
+      "ADMIN",
+      "OWNER"
+    ],
+    "historicalDataRetained": true,
+    "newOperationsBlockedAfterDeactivation": true
+  },
+  "reporting": {
+    "consolidatedRoles": [
+      "ADMIN",
+      "OWNER"
+    ],
+    "sameTenantRequired": true,
+    "locationBreakdownRequired": true,
+    "transferDoubleCountingForbidden": true,
+    "inactiveLocationsExcludedByDefault": true
+  },
+  "migration": {
+    "singleLocationDefaultMappingRequired": true,
+    "unscopedRecordCountMustBeZero": true,
+    "rollbackPlanRequired": true,
+    "noAutomaticDatabaseMigrationInOverlay": true
+  },
+  "scopeBoundary": [
+    "No Prisma migration is included because the complete deployed repository schema is not available in this environment.",
+    "No durable multi-location persistence is claimed by this overlay.",
+    "No production location is activated, deactivated, or transferred automatically.",
+    "Build 12.1.0 supplies deterministic domain logic, certification controls, a migration-readiness plan, and deployed UAT evidence requirements."
+  ]
+}

@@ -1,0 +1,79 @@
+PTT SMOKEHOUSE CONTROL — BUILD 12.1.0
+MULTI-LOCATION FOUNDATION
+
+PACKAGE TYPE
+Cumulative safe overlay containing Builds 11.1.0 through 12.1.0.
+
+RENDER TOPOLOGY
+- One web service
+- Zero cron services
+- One PostgreSQL database
+
+INSTALL
+1. Extract directly into the existing repository root.
+2. Preserve .git and all existing application files.
+3. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml, migrations, or existing workflows.
+4. Run:
+   node scripts/apply-build-12.1.0.mjs
+5. Confirm every cumulative verifier passes.
+6. Confirm Build 12.1.0 reports:
+   - two active controlled locations ready
+   - transfer status RECEIVED
+   - source transfer effect -20 cooked lb
+   - destination transfer effect +20 cooked lb
+   - consolidated transfer net 0
+   - migration unscoped records 0
+   - durable persistence status PENDING_DEPLOYED_SCHEMA_AND_UAT
+7. Review GitHub Desktop for unintended deletions.
+8. Commit:
+   Build 12.1.0 multi-location foundation
+9. Push origin.
+
+GENERATED ROUTE
+/multi-location-lab-1210
+If occupied:
+/multi-location-lab-1210-alt
+
+PRODUCTION RULE
+The validation route must be disabled or ADMIN-only.
+
+CI ARTIFACT
+ptt-build-12.1.0-multi-location
+
+DEPLOYED ACCEPTANCE
+1. Inspect the real Prisma schema and migrations.
+2. Add or validate tenantId/locationId fields, foreign keys, uniqueness,
+   and indexes in the complete repository.
+3. Rehearse single-location mapping in isolated staging.
+4. Confirm zero unscoped records before migration approval.
+5. Execute MX-001 through MX-042.
+6. Operate two locations concurrently.
+7. Verify every page, API, cache, audit event, report, and notification
+   uses explicit tenant and location predicates.
+8. Verify transfer dispatch and receipt are durable and idempotent.
+9. Verify consolidated reporting excludes internal-transfer double counting.
+10. Verify onboarding, activation, deactivation, and historical access.
+11. Execute migration rollback and reconcile record counts.
+12. Release only with zero open P0/P1 defects.
+
+STOP CONDITIONS
+- Any operational record lacks tenantId or locationId.
+- Location is silently selected without user or server context.
+- An unassigned user accesses a location.
+- Cross-location configuration fallback occurs.
+- Cross-tenant data is returned, inferred, or changed.
+- Transfer dispatch or receipt applies twice.
+- Source and destination transfer effects do not reconcile.
+- Consolidated reporting double-counts internal transfers.
+- Active location lacks a required product, yield, smoker, or capacity.
+- Activation succeeds with incomplete onboarding.
+- Deactivation succeeds with an open day, transfer, hold, discrepancy, or P0/P1.
+- Any legacy record remains unscoped.
+- Migration rollback is untested.
+- render.yaml contains any cron service.
+
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO AUTOMATIC LOCATION ACTIVATION
+NO DURABLE MULTI-LOCATION PERSISTENCE CLAIM

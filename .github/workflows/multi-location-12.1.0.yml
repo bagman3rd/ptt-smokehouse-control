@@ -1,0 +1,49 @@
+name: Build 12.1.0 Multi-Location Foundation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  multi-location:
+    name: Multi-location context, transfer, reporting, and migration gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 34
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+
+      - name: Use pinned Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Verify production release baseline
+        run: node scripts/test-production-release-12.0.0.mjs
+
+      - name: Verify multi-location scenarios
+        run: node scripts/test-multi-location-12.1.0.mjs
+
+      - name: Generate Multi-Location Lab
+        run: node scripts/generate-multi-location-workbench-12.1.0.mjs
+
+      - name: Generate multi-location evidence
+        run: node scripts/multi-location-control-plane-12.1.0.mjs
+
+      - name: Verify multi-location release contract
+        run: node scripts/verify-multi-location-12.1.0.mjs
+
+      - name: Upload Build 12.1.0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ptt-build-12.1.0-multi-location
+          path: artifacts/build-12.1.0
+          if-no-files-found: error
+          retention-days: 60
