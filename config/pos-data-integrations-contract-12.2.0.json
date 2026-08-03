@@ -1,0 +1,233 @@
+{
+  "buildVersion": "12.2.0",
+  "engineVersion": "PTT_POS_DATA_INTEGRATIONS_12_2_0",
+  "stage": "POS and Data Integrations",
+  "exitGate": "Every imported record is tenant- and location-scoped, mapped or explicitly quarantined, idempotent, reconciled to its source, recoverable after failure, auditable, and safe to use for reporting or forecast learning only after the applicable release gates pass.",
+  "renderTopology": {
+    "webServices": 1,
+    "cronServices": 0,
+    "databases": 1,
+    "cronServicesForbidden": true
+  },
+  "providers": [
+    "SQUARE_API",
+    "SQUARE_WEBHOOK",
+    "CSV_UPLOAD",
+    "MANUAL_ENTRY",
+    "SUPPLIER_CSV"
+  ],
+  "connectionStatuses": [
+    "DISCONNECTED",
+    "CONFIGURED",
+    "HEALTHY",
+    "DEGRADED",
+    "FAILED",
+    "PAUSED"
+  ],
+  "batchStatuses": [
+    "RECEIVED",
+    "VALIDATED",
+    "PARTIAL",
+    "RECONCILED",
+    "FAILED",
+    "RETRY_PENDING",
+    "MANUAL"
+  ],
+  "mappingStatuses": [
+    "ACTIVE",
+    "UNMAPPED",
+    "IGNORED"
+  ],
+  "roles": [
+    "ADMIN",
+    "OWNER",
+    "KM",
+    "PITMASTER",
+    "KC",
+    "VIEWER"
+  ],
+  "authorization": {
+    "ADMIN": [
+      "*"
+    ],
+    "OWNER": [
+      "*"
+    ],
+    "KM": [
+      "integration:read",
+      "integration:import",
+      "integration:retry",
+      "mapping:read",
+      "mapping:write",
+      "reconciliation:read",
+      "reconciliation:approve",
+      "manual-entry:create",
+      "forecast-input:read",
+      "supplier-cost:read"
+    ],
+    "PITMASTER": [
+      "integration:read",
+      "reconciliation:read",
+      "forecast-input:read"
+    ],
+    "KC": [
+      "integration:read",
+      "reconciliation:read",
+      "manual-entry:create"
+    ],
+    "VIEWER": [
+      "integration:read",
+      "mapping:read",
+      "reconciliation:read",
+      "forecast-input:read",
+      "supplier-cost:read"
+    ]
+  },
+  "tenantLocationScope": {
+    "explicitTenantRequired": true,
+    "explicitLocationRequired": true,
+    "providerLocationMappingRequired": true,
+    "crossTenantImportForbidden": true,
+    "crossLocationImportForbidden": true,
+    "locationMembershipRequired": true
+  },
+  "salesImport": {
+    "requiredFields": [
+      "provider",
+      "providerEventId",
+      "tenantId",
+      "locationId",
+      "providerLocationId",
+      "businessDate",
+      "currency",
+      "lines"
+    ],
+    "supportedCurrency": "USD",
+    "idempotencyKeyFields": [
+      "provider",
+      "tenantId",
+      "locationId",
+      "providerEventId"
+    ],
+    "lineIdentityFields": [
+      "orderId",
+      "lineId"
+    ],
+    "negativeNetSalesAllowedOnlyForRefunds": true,
+    "duplicateLineForbidden": true,
+    "futureBusinessDateForbidden": true,
+    "sourcePayloadHashRequired": true,
+    "rawSecretStorageForbidden": true
+  },
+  "mapping": {
+    "targetCategories": [
+      "BRISKET",
+      "PORK",
+      "RIBS",
+      "CHICKEN",
+      "BAR",
+      "MERCHANDISE",
+      "OTHER_FOOD",
+      "IGNORED"
+    ],
+    "unmappedLinesQuarantined": true,
+    "unmappedLinesExcludedFromForecastLearning": true,
+    "mappingVersionRequired": true,
+    "effectiveDateRequired": true,
+    "locationSpecificOverrideAllowed": true,
+    "crossTenantMappingForbidden": true
+  },
+  "reconciliation": {
+    "maximumDifferenceCents": 1,
+    "sourceTotalRequired": true,
+    "mappedPlusUnmappedMustEqualImported": true,
+    "refundsReportedSeparately": true,
+    "approvalRoles": [
+      "ADMIN",
+      "OWNER",
+      "KM"
+    ],
+    "reconciledStatusRequiredForReporting": true,
+    "reconciledAndMappedRequiredForForecastLearning": true
+  },
+  "retryRecovery": {
+    "maximumAttempts": 5,
+    "sameIdempotencyKeyRequired": true,
+    "lastErrorRequired": true,
+    "nextRetryAtRequired": true,
+    "successfulLinesCannotBeDuplicated": true,
+    "partialBatchRecoveryRequired": true,
+    "manualEscalationAfterMaximumAttempts": true
+  },
+  "manualFallback": {
+    "roles": [
+      "ADMIN",
+      "OWNER",
+      "KM",
+      "KC"
+    ],
+    "reasonRequired": true,
+    "sourceDocumentReferenceRequired": true,
+    "managerApprovalRequiredAboveCents": 50000,
+    "cannotOverwriteProviderBatch": true,
+    "auditRequired": true
+  },
+  "forecastLearning": {
+    "reconciledBatchRequired": true,
+    "activeMappingRequired": true,
+    "unmappedAmountMustBeZero": true,
+    "productDemandInputs": [
+      "BRISKET",
+      "PORK",
+      "RIBS",
+      "CHICKEN"
+    ],
+    "sourceBatchIdsRequired": true,
+    "sourceHashRequired": true,
+    "automaticForecastFactorChangeForbidden": true,
+    "managerApprovalRequired": true
+  },
+  "supplierCost": {
+    "provider": "SUPPLIER_CSV",
+    "requiredFields": [
+      "tenantId",
+      "locationId",
+      "vendorId",
+      "vendorItemId",
+      "productCode",
+      "purchaseUnit",
+      "packSize",
+      "totalCostCents",
+      "effectiveAt"
+    ],
+    "positiveCostRequired": true,
+    "idempotencyRequired": true,
+    "costChangeAlertPercent": 10,
+    "automaticMenuPriceChangeForbidden": true
+  },
+  "connectionHealth": {
+    "healthyMaximumAgeMinutes": 30,
+    "degradedMaximumAgeMinutes": 120,
+    "failureRequiresErrorCode": true,
+    "pausedConnectionBlocksAutomaticImport": true,
+    "manualFallbackRemainsAvailable": true
+  },
+  "deployment": {
+    "liveProviderCredentialsRequiredForProduction": true,
+    "credentialsMustRemainServerSide": true,
+    "webhookSignatureVerificationRequired": true,
+    "productionProviderEnvironmentRequired": true,
+    "sandboxProviderEnvironmentBlocksProduction": true,
+    "durablePersistenceRequired": true,
+    "databaseUniqueConstraintsRequired": true,
+    "providerRateLimitHandlingRequired": true,
+    "observabilityRequired": true
+  },
+  "scopeBoundary": [
+    "No live provider credentials are included.",
+    "No provider API call, webhook registration, or supplier download is executed by this overlay.",
+    "No Prisma migration is included because the complete deployed repository schema is unavailable in this environment.",
+    "No durable import, mapping, reconciliation, retry, or supplier-cost persistence is claimed.",
+    "Build 12.2.0 provides deterministic integration-domain logic, adapter contracts, evidence generation, migration requirements, and deployed UAT."
+  ]
+}

@@ -1,0 +1,684 @@
+{
+  "buildVersion": "12.2.0",
+  "locationRegistry": {
+    "tenantId": "tenant-ptt",
+    "locations": [
+      {
+        "locationId": "loc-pigeon-forge",
+        "providerLocationMappings": {
+          "SQUARE_API": "square-location-pf",
+          "SQUARE_WEBHOOK": "square-location-pf"
+        },
+        "status": "ACTIVE"
+      },
+      {
+        "locationId": "loc-knoxville-lab",
+        "providerLocationMappings": {
+          "SQUARE_API": "square-location-kx",
+          "SQUARE_WEBHOOK": "square-location-kx"
+        },
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  "connections": [
+    {
+      "connectionId": "connection-square-pf",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "provider": "SQUARE_API",
+      "providerLocationId": "square-location-pf",
+      "status": "HEALTHY",
+      "lastSuccessfulSyncAt": "2026-08-02T05:55:00.000Z",
+      "lastAttemptAt": "2026-08-02T05:55:00.000Z",
+      "lastErrorCode": null,
+      "credentialPresent": true,
+      "providerEnvironment": "PRODUCTION"
+    },
+    {
+      "connectionId": "connection-square-kx",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-knoxville-lab",
+      "provider": "SQUARE_API",
+      "providerLocationId": "square-location-kx",
+      "status": "HEALTHY",
+      "lastSuccessfulSyncAt": "2026-08-02T05:50:00.000Z",
+      "lastAttemptAt": "2026-08-02T05:50:00.000Z",
+      "lastErrorCode": null,
+      "credentialPresent": true,
+      "providerEnvironment": "PRODUCTION"
+    }
+  ],
+  "mappings": [
+    {
+      "mappingId": "map-pf-brisket",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "provider": "SQUARE_API",
+      "providerItemId": "sq-pf-brisket-plate",
+      "providerItemName": "Brisket Plate",
+      "targetCategory": "BRISKET",
+      "productCode": "BRISKET",
+      "cookedLbPerUnit": 0.42,
+      "status": "ACTIVE",
+      "mappingVersion": 1,
+      "effectiveDate": "2026-08-01"
+    },
+    {
+      "mappingId": "map-pf-pork",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "provider": "SQUARE_API",
+      "providerItemId": "sq-pf-pork-sandwich",
+      "providerItemName": "Pulled Pork Sandwich",
+      "targetCategory": "PORK",
+      "productCode": "PORK",
+      "cookedLbPerUnit": 0.3,
+      "status": "ACTIVE",
+      "mappingVersion": 1,
+      "effectiveDate": "2026-08-01"
+    },
+    {
+      "mappingId": "map-pf-bar",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "provider": "SQUARE_API",
+      "providerItemId": "sq-pf-bar",
+      "providerItemName": "Bar Sales",
+      "targetCategory": "BAR",
+      "productCode": null,
+      "cookedLbPerUnit": 0,
+      "status": "ACTIVE",
+      "mappingVersion": 1,
+      "effectiveDate": "2026-08-01"
+    },
+    {
+      "mappingId": "map-pf-merch",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "provider": "SQUARE_API",
+      "providerItemId": "sq-pf-merch",
+      "providerItemName": "T-Shirt",
+      "targetCategory": "MERCHANDISE",
+      "productCode": null,
+      "cookedLbPerUnit": 0,
+      "status": "ACTIVE",
+      "mappingVersion": 1,
+      "effectiveDate": "2026-08-01"
+    },
+    {
+      "mappingId": "map-kx-ribs",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-knoxville-lab",
+      "provider": "SQUARE_API",
+      "providerItemId": "sq-kx-ribs",
+      "providerItemName": "Half Rack Ribs",
+      "targetCategory": "RIBS",
+      "productCode": "RIBS",
+      "cookedLbPerUnit": 1.25,
+      "status": "ACTIVE",
+      "mappingVersion": 1,
+      "effectiveDate": "2026-08-01"
+    },
+    {
+      "mappingId": "map-kx-chicken",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-knoxville-lab",
+      "provider": "SQUARE_API",
+      "providerItemId": "sq-kx-chicken",
+      "providerItemName": "Chicken Plate",
+      "targetCategory": "CHICKEN",
+      "productCode": "CHICKEN",
+      "cookedLbPerUnit": 0.7,
+      "status": "ACTIVE",
+      "mappingVersion": 1,
+      "effectiveDate": "2026-08-01"
+    },
+    {
+      "mappingId": "map-kx-bar",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-knoxville-lab",
+      "provider": "SQUARE_API",
+      "providerItemId": "sq-kx-bar",
+      "providerItemName": "Bar Sales",
+      "targetCategory": "BAR",
+      "productCode": null,
+      "cookedLbPerUnit": 0,
+      "status": "ACTIVE",
+      "mappingVersion": 1,
+      "effectiveDate": "2026-08-01"
+    }
+  ],
+  "salesBatches": [
+    {
+      "provider": "SQUARE_API",
+      "providerEventId": "square-event-pf-2026-08-01-v1",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "providerLocationId": "square-location-pf",
+      "businessDate": "2026-08-01",
+      "currency": "USD",
+      "receivedAt": "2026-08-02T06:00:00.000Z",
+      "sourceTotalNetSalesCents": 26000,
+      "sourceOrderCount": 4,
+      "lines": [
+        {
+          "orderId": "pf-order-1",
+          "lineId": "pf-line-1",
+          "providerItemId": "sq-pf-brisket-plate",
+          "providerItemName": "Brisket Plate",
+          "quantity": 20,
+          "grossSalesCents": 12000,
+          "discountCents": 1000,
+          "netSalesCents": 11000,
+          "taxCents": 1018,
+          "tipCents": 1200,
+          "refundCents": 0,
+          "voided": false
+        },
+        {
+          "orderId": "pf-order-2",
+          "lineId": "pf-line-2",
+          "providerItemId": "sq-pf-pork-sandwich",
+          "providerItemName": "Pulled Pork Sandwich",
+          "quantity": 25,
+          "grossSalesCents": 8000,
+          "discountCents": 0,
+          "netSalesCents": 8000,
+          "taxCents": 740,
+          "tipCents": 800,
+          "refundCents": 0,
+          "voided": false
+        },
+        {
+          "orderId": "pf-order-3",
+          "lineId": "pf-line-3",
+          "providerItemId": "sq-pf-bar",
+          "providerItemName": "Bar Sales",
+          "quantity": 10,
+          "grossSalesCents": 5000,
+          "discountCents": 0,
+          "netSalesCents": 5000,
+          "taxCents": 463,
+          "tipCents": 500,
+          "refundCents": 0,
+          "voided": false
+        },
+        {
+          "orderId": "pf-order-4",
+          "lineId": "pf-line-4",
+          "providerItemId": "sq-pf-merch",
+          "providerItemName": "T-Shirt",
+          "quantity": 2,
+          "grossSalesCents": 2000,
+          "discountCents": 0,
+          "netSalesCents": 2000,
+          "taxCents": 185,
+          "tipCents": 0,
+          "refundCents": 0,
+          "voided": false
+        }
+      ]
+    },
+    {
+      "provider": "SQUARE_API",
+      "providerEventId": "square-event-kx-2026-08-01-v1",
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-knoxville-lab",
+      "providerLocationId": "square-location-kx",
+      "businessDate": "2026-08-01",
+      "currency": "USD",
+      "receivedAt": "2026-08-02T06:05:00.000Z",
+      "sourceTotalNetSalesCents": 14000,
+      "sourceOrderCount": 3,
+      "lines": [
+        {
+          "orderId": "kx-order-1",
+          "lineId": "kx-line-1",
+          "providerItemId": "sq-kx-ribs",
+          "providerItemName": "Half Rack Ribs",
+          "quantity": 6,
+          "grossSalesCents": 7000,
+          "discountCents": 0,
+          "netSalesCents": 7000,
+          "taxCents": 648,
+          "tipCents": 700,
+          "refundCents": 0,
+          "voided": false
+        },
+        {
+          "orderId": "kx-order-2",
+          "lineId": "kx-line-2",
+          "providerItemId": "sq-kx-chicken",
+          "providerItemName": "Chicken Plate",
+          "quantity": 8,
+          "grossSalesCents": 4000,
+          "discountCents": 0,
+          "netSalesCents": 4000,
+          "taxCents": 370,
+          "tipCents": 400,
+          "refundCents": 0,
+          "voided": false
+        },
+        {
+          "orderId": "kx-order-3",
+          "lineId": "kx-line-3",
+          "providerItemId": "sq-kx-bar",
+          "providerItemName": "Bar Sales",
+          "quantity": 6,
+          "grossSalesCents": 3000,
+          "discountCents": 0,
+          "netSalesCents": 3000,
+          "taxCents": 278,
+          "tipCents": 300,
+          "refundCents": 0,
+          "voided": false
+        }
+      ]
+    }
+  ],
+  "forecastSnapshots": [
+    {
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "businessDate": "2026-08-01",
+      "forecastNetSalesCents": 25000,
+      "forecastProductCookedLb": {
+        "BRISKET": 8.0,
+        "PORK": 7.0,
+        "RIBS": 0,
+        "CHICKEN": 0
+      }
+    },
+    {
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-knoxville-lab",
+      "businessDate": "2026-08-01",
+      "forecastNetSalesCents": 15000,
+      "forecastProductCookedLb": {
+        "BRISKET": 0,
+        "PORK": 0,
+        "RIBS": 8.0,
+        "CHICKEN": 6.0
+      }
+    }
+  ],
+  "manualEntry": {
+    "provider": "MANUAL_ENTRY",
+    "providerEventId": "manual-pf-2026-08-02",
+    "tenantId": "tenant-ptt",
+    "locationId": "loc-pigeon-forge",
+    "providerLocationId": "manual-loc-pf",
+    "businessDate": "2026-08-02",
+    "currency": "USD",
+    "receivedAt": "2026-08-03T01:00:00.000Z",
+    "sourceTotalNetSalesCents": 40000,
+    "sourceOrderCount": 1,
+    "manualReason": "Square provider outage",
+    "sourceDocumentReference": "closing-report-2026-08-02",
+    "enteredBy": {
+      "userId": "user-km-pf",
+      "role": "KM"
+    },
+    "approvedBy": null,
+    "lines": [
+      {
+        "orderId": "manual-summary-1",
+        "lineId": "manual-line-1",
+        "providerItemId": "sq-pf-brisket-plate",
+        "providerItemName": "Brisket Plate",
+        "quantity": 40,
+        "grossSalesCents": 22000,
+        "discountCents": 0,
+        "netSalesCents": 22000,
+        "taxCents": 0,
+        "tipCents": 0,
+        "refundCents": 0,
+        "voided": false
+      },
+      {
+        "orderId": "manual-summary-1",
+        "lineId": "manual-line-2",
+        "providerItemId": "sq-pf-pork-sandwich",
+        "providerItemName": "Pulled Pork Sandwich",
+        "quantity": 30,
+        "grossSalesCents": 12000,
+        "discountCents": 0,
+        "netSalesCents": 12000,
+        "taxCents": 0,
+        "tipCents": 0,
+        "refundCents": 0,
+        "voided": false
+      },
+      {
+        "orderId": "manual-summary-1",
+        "lineId": "manual-line-3",
+        "providerItemId": "sq-pf-bar",
+        "providerItemName": "Bar Sales",
+        "quantity": 10,
+        "grossSalesCents": 6000,
+        "discountCents": 0,
+        "netSalesCents": 6000,
+        "taxCents": 0,
+        "tipCents": 0,
+        "refundCents": 0,
+        "voided": false
+      }
+    ]
+  },
+  "failedBatch": {
+    "batchId": "batch-failed-pf",
+    "tenantId": "tenant-ptt",
+    "locationId": "loc-pigeon-forge",
+    "provider": "SQUARE_API",
+    "providerEventId": "square-event-pf-failed",
+    "idempotencyKey": "SQUARE_API:tenant-ptt:loc-pigeon-forge:square-event-pf-failed",
+    "status": "FAILED",
+    "attemptCount": 2,
+    "lastErrorCode": "PROVIDER_TIMEOUT",
+    "lastErrorMessage": "Provider request timed out",
+    "lastAttemptAt": "2026-08-02T06:10:00.000Z",
+    "nextRetryAt": "2026-08-02T06:25:00.000Z",
+    "successfulLineKeys": [
+      "pf-order-1:pf-line-1"
+    ]
+  },
+  "supplierRows": [
+    {
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "vendorId": "vendor-us-foods",
+      "vendorItemId": "vendor-brisket-001",
+      "productCode": "BRISKET",
+      "purchaseUnit": "CASE",
+      "packSize": "2 x 20 lb",
+      "totalCostCents": 16800,
+      "effectiveAt": "2026-08-01T00:00:00.000Z",
+      "sourceFileId": "supplier-price-2026-08-01"
+    },
+    {
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "vendorId": "vendor-us-foods",
+      "vendorItemId": "vendor-pork-001",
+      "productCode": "PORK",
+      "purchaseUnit": "CASE",
+      "packSize": "8 x 10 lb",
+      "totalCostCents": 12800,
+      "effectiveAt": "2026-08-01T00:00:00.000Z",
+      "sourceFileId": "supplier-price-2026-08-01"
+    }
+  ],
+  "priorSupplierCosts": [
+    {
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "vendorId": "vendor-us-foods",
+      "vendorItemId": "vendor-brisket-001",
+      "totalCostCents": 15000,
+      "effectiveAt": "2026-07-01T00:00:00.000Z"
+    },
+    {
+      "tenantId": "tenant-ptt",
+      "locationId": "loc-pigeon-forge",
+      "vendorId": "vendor-us-foods",
+      "vendorItemId": "vendor-pork-001",
+      "totalCostCents": 12500,
+      "effectiveAt": "2026-07-01T00:00:00.000Z"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "DI-001",
+      "name": "Healthy production connection passes",
+      "expected": {
+        "status": "HEALTHY"
+      }
+    },
+    {
+      "id": "DI-002",
+      "name": "Stale connection becomes degraded",
+      "expected": {
+        "status": "DEGRADED"
+      }
+    },
+    {
+      "id": "DI-003",
+      "name": "Paused connection blocks automatic import",
+      "expected": {
+        "errorField": "connection.status"
+      }
+    },
+    {
+      "id": "DI-004",
+      "name": "Provider location mismatch is rejected",
+      "expected": {
+        "errorField": "providerLocationId"
+      }
+    },
+    {
+      "id": "DI-005",
+      "name": "Cross-tenant import is rejected",
+      "expected": {
+        "errorField": "tenantId"
+      }
+    },
+    {
+      "id": "DI-006",
+      "name": "Sales payload normalizes deterministically",
+      "expected": {
+        "lineCount": 4
+      }
+    },
+    {
+      "id": "DI-007",
+      "name": "Duplicate line identity is rejected",
+      "expected": {
+        "errorField": "lines"
+      }
+    },
+    {
+      "id": "DI-008",
+      "name": "Negative non-refund sales are rejected",
+      "expected": {
+        "errorField": "netSalesCents"
+      }
+    },
+    {
+      "id": "DI-009",
+      "name": "Import batch receives deterministic idempotency key",
+      "expected": {
+        "status": "VALIDATED"
+      }
+    },
+    {
+      "id": "DI-010",
+      "name": "Duplicate provider event is idempotent",
+      "expected": {
+        "duplicate": true
+      }
+    },
+    {
+      "id": "DI-011",
+      "name": "Mapped batch separates food bar and merchandise",
+      "expected": {
+        "mappedNetSalesCents": 26000
+      }
+    },
+    {
+      "id": "DI-012",
+      "name": "Unmapped item is quarantined",
+      "expected": {
+        "status": "PARTIAL"
+      }
+    },
+    {
+      "id": "DI-013",
+      "name": "Ignored mapping does not become forecast demand",
+      "expected": {
+        "learningEligible": false
+      }
+    },
+    {
+      "id": "DI-014",
+      "name": "Exact source reconciliation passes",
+      "expected": {
+        "status": "RECONCILED"
+      }
+    },
+    {
+      "id": "DI-015",
+      "name": "Source total difference blocks reconciliation",
+      "expected": {
+        "status": "FAILED"
+      }
+    },
+    {
+      "id": "DI-016",
+      "name": "Mapped plus unmapped equals imported total",
+      "expected": {
+        "differenceCents": 0
+      }
+    },
+    {
+      "id": "DI-017",
+      "name": "Daily summary groups by tenant location and date",
+      "expected": {
+        "netSalesCents": 26000
+      }
+    },
+    {
+      "id": "DI-018",
+      "name": "Forecast comparison calculates positive variance",
+      "expected": {
+        "varianceCents": 1000
+      }
+    },
+    {
+      "id": "DI-019",
+      "name": "Forecast comparison calculates negative variance",
+      "expected": {
+        "varianceCents": -1000
+      }
+    },
+    {
+      "id": "DI-020",
+      "name": "Learning input contains mapped product pounds",
+      "expected": {
+        "productCount": 2
+      }
+    },
+    {
+      "id": "DI-021",
+      "name": "Unmapped amount blocks forecast learning",
+      "expected": {
+        "errorField": "unmappedNetSalesCents"
+      }
+    },
+    {
+      "id": "DI-022",
+      "name": "Forecast learning never changes factor automatically",
+      "expected": {
+        "automaticFactorChangeApplied": false
+      }
+    },
+    {
+      "id": "DI-023",
+      "name": "Failed batch schedules retry",
+      "expected": {
+        "status": "RETRY_PENDING"
+      }
+    },
+    {
+      "id": "DI-024",
+      "name": "Retry preserves idempotency key",
+      "expected": {
+        "sameIdempotencyKey": true
+      }
+    },
+    {
+      "id": "DI-025",
+      "name": "Successful lines remain protected during retry",
+      "expected": {
+        "protectedLineCount": 1
+      }
+    },
+    {
+      "id": "DI-026",
+      "name": "Maximum attempts require manual escalation",
+      "expected": {
+        "status": "FAILED"
+      }
+    },
+    {
+      "id": "DI-027",
+      "name": "Manual fallback requires reason",
+      "expected": {
+        "errorField": "manualReason"
+      }
+    },
+    {
+      "id": "DI-028",
+      "name": "Manual fallback under threshold is accepted",
+      "expected": {
+        "status": "MANUAL"
+      }
+    },
+    {
+      "id": "DI-029",
+      "name": "Large manual entry requires manager approval",
+      "expected": {
+        "errorField": "approvedBy"
+      }
+    },
+    {
+      "id": "DI-030",
+      "name": "Manual entry cannot overwrite provider batch",
+      "expected": {
+        "errorField": "providerEventId"
+      }
+    },
+    {
+      "id": "DI-031",
+      "name": "Supplier cost snapshot is deterministic",
+      "expected": {
+        "itemCount": 2
+      }
+    },
+    {
+      "id": "DI-032",
+      "name": "Supplier duplicate row is idempotent",
+      "expected": {
+        "duplicate": true
+      }
+    },
+    {
+      "id": "DI-033",
+      "name": "Large supplier cost increase creates alert",
+      "expected": {
+        "alertCount": 1
+      }
+    },
+    {
+      "id": "DI-034",
+      "name": "Supplier cost does not change menu price automatically",
+      "expected": {
+        "automaticMenuPriceChangeApplied": false
+      }
+    },
+    {
+      "id": "DI-035",
+      "name": "Two locations remain isolated in imported summaries",
+      "expected": {
+        "locationCount": 2
+      }
+    },
+    {
+      "id": "DI-036",
+      "name": "Render topology remains no-cron",
+      "expected": {
+        "cronServices": 0
+      }
+    }
+  ]
+}

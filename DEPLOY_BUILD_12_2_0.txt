@@ -1,0 +1,85 @@
+PTT SMOKEHOUSE CONTROL — BUILD 12.2.0
+POS AND DATA INTEGRATIONS
+
+PACKAGE TYPE
+Cumulative safe overlay containing Builds 11.1.0 through 12.2.0.
+
+RENDER TOPOLOGY
+- One web service
+- Zero cron services
+- One PostgreSQL database
+
+INSTALL
+1. Extract directly into the existing repository root.
+2. Preserve .git and every existing application file.
+3. Do not delete app, components, lib, prisma, public, src, e2e, load,
+   package.json, pnpm-lock.yaml, migrations, or existing workflows.
+4. Run:
+   node scripts/apply-build-12.2.0.mjs
+5. Confirm every cumulative verifier passes.
+6. Confirm Build 12.2.0 reports:
+   - two reconciled controlled batches
+   - $400.00 controlled imported sales across two locations
+   - zero source reconciliation difference
+   - zero unmapped controlled sales
+   - Pigeon Forge variance +$10.00
+   - Knoxville variance -$10.00
+   - retry status RETRY_PENDING
+   - manual fallback status MANUAL and learning disabled
+   - one supplier cost alert
+   - automatic menu-price change false
+   - live provider status NOT_CONNECTED_BY_OVERLAY
+7. Review GitHub Desktop for unintended deletions.
+8. Commit:
+   Build 12.2.0 POS and data integrations
+9. Push origin.
+
+GENERATED ROUTE
+/integration-lab-1220
+If occupied:
+/integration-lab-1220-alt
+
+PRODUCTION RULE
+The validation route must be disabled or ADMIN-only.
+
+CI ARTIFACT
+ptt-build-12.2.0-pos-data-integrations
+
+DEPLOYED ACCEPTANCE
+1. Inspect the real repository schema and adapter architecture.
+2. Add or validate durable tables, unique constraints, foreign keys, and indexes.
+3. Configure server-side production provider credentials.
+4. Register and verify provider webhook signatures where used.
+5. Map each provider location to exactly one active application location.
+6. Import a complete controlled business day for each location.
+7. Execute IX-001 through IX-044.
+8. Reconcile imported totals to official POS close reports.
+9. Resolve every unmapped item before forecast learning.
+10. Verify provider-event and line-level idempotency.
+11. Verify partial-batch recovery without duplicate lines.
+12. Verify manual fallback and provider collision behavior.
+13. Import supplier costs and verify alerts without automatic pricing.
+14. Run rate-limit, outage, security, performance, and rollback tests.
+15. Release only with zero open P0/P1 defects and no unreconciled production batch.
+
+STOP CONDITIONS
+- Provider credentials appear in client code, logs, bundles, or evidence.
+- Sandbox provider mode is active in production.
+- Provider location does not map exactly to the active location.
+- Cross-tenant or cross-location import succeeds.
+- Duplicate provider event or order line creates a second durable record.
+- Imported totals do not reconcile within one cent.
+- Mapped, unmapped, and ignored totals do not equal imported net sales.
+- Unmapped sales enter forecast learning.
+- Retry duplicates a previously successful line.
+- Manual entry overwrites a provider batch.
+- Supplier cost changes a menu price automatically.
+- Any production batch remains FAILED or PARTIAL without an approved disposition.
+- render.yaml contains a cron service.
+
+NO LIVE PROVIDER CREDENTIALS
+NO DATABASE MIGRATION
+NO DEPENDENCY CHANGE
+NO PROVIDER API CALL
+NO AUTOMATIC FORECAST OR MENU-PRICE CHANGE
+NO DURABLE INTEGRATION CLAIM

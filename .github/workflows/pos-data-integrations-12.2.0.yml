@@ -1,0 +1,49 @@
+name: Build 12.2.0 POS and Data Integrations
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  integrations:
+    name: POS imports, mapping, reconciliation, retry, and supplier costs
+    runs-on: ubuntu-latest
+    timeout-minutes: 36
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+
+      - name: Use pinned Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Verify multi-location baseline
+        run: node scripts/test-multi-location-12.1.0.mjs
+
+      - name: Verify integration scenarios
+        run: node scripts/test-pos-data-integrations-12.2.0.mjs
+
+      - name: Generate Integration Lab
+        run: node scripts/generate-pos-data-integrations-workbench-12.2.0.mjs
+
+      - name: Generate integration evidence
+        run: node scripts/pos-data-integrations-control-plane-12.2.0.mjs
+
+      - name: Verify integration release contract
+        run: node scripts/verify-pos-data-integrations-12.2.0.mjs
+
+      - name: Upload Build 12.2.0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ptt-build-12.2.0-pos-data-integrations
+          path: artifacts/build-12.2.0
+          if-no-files-found: error
+          retention-days: 60

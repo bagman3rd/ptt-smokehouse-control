@@ -412,10 +412,10 @@ pass(fs.existsSync(renderPath), "render.yaml exists");
 if (fs.existsSync(renderPath)) {
   const render = fs.readFileSync(renderPath, "utf8");
   pass(
-    /key:\s*APP_BUILD_VERSION\s*\n\s*value:\s*"12\.1\.0"/m.test(
+    /key:\s*APP_BUILD_VERSION\s*\n\s*value:\s*"12\.(?:1|2)\.0"/m.test(
       render,
     ),
-    "Render APP_BUILD_VERSION is 12.1.0",
+    "Render APP_BUILD_VERSION is compatible with the Build 12.1.0 multi-location baseline",
   );
   pass(
     (render.match(/^\s*-\s*type:\s*web\s*$/gm) || [])
